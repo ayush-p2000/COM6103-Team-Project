@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel='stylesheet' , href="/stylesheets/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron bg-warning-subtle rounded-3 p-1">
+        <h1> <%= title %> </h1>
+        <p> Welcome to <%= title %> </p>
+      <small class="text-danger">If this is red and in a jumbotron, it works!</small>
+    </div>
+
+</div>
+</body>
+
+<script src="/javascripts/jquery-1.11.1.min.js"></script>
+<script src="/javascripts/bootstrap.min.js"></script>
 </html>
