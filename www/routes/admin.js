@@ -3,6 +3,7 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/user-details', function(req, res, next) {
+    // TODO Remove dummy data
     const user = {
         firstName: "Elon",
         lastName: "Musk",
