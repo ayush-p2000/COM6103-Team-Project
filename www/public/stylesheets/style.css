@@ -1,8 +1,32 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    padding: 50px;
+
+    /* Set the font to roboto. */
+    font-family: 'Roboto', sans-serif;
+
+    /* Set the background color to a light gray. */
+    background-color: #f4f4f4;
 }
 
 a {
-  color: #00B7FF;
+    color: #00B7FF;
+}
+
+.hover-shadow {
+    transition: 0.2s;
+}
+
+.hover-shadow:hover {
+    /* When hovering over the element with the class "hover-shadow", add a shadow larger shadow
+    that makes the element appear to rise off the page. */
+    transition: 0.5s;
+
+    /* Grow the item slightly during the hover transition. */
+    transform: scale(1.02);
+
+    /* Make the border a baby blue color. */
+    border-color: #71d5ff;
+
+    /* Add a light blue shadow to the item. */
+    box-shadow: 0 0 10px rgba(113, 213, 255, 0.6);
 }
