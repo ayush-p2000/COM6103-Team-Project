@@ -1,0 +1,83 @@
+<%- include("../components/header.ejs") %>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="w-50 d-flex justify-content-start align-items-start border-1 border-black border flex-column p-5">
+        <h2>
+            User Details
+            <small class="text-muted">ID: <%= user.id %></small>
+        </h2>
+        <div class="mt-3 me-auto ms-auto">
+            <img src="<%= user.avatar %>>" class="me-auto ms-auto d-block rounded-circle" alt="..." style="width: 150px;">
+            <p class="d-block text-muted text-center me-auto ms-auto mb-0 mt-1">Avatar</p>
+        </div>
+
+        <h4 class="text-center mt-4 mb-3">Basic details</h4>
+        <div class="d-flex w-100 shadow-lg flex-column ps-4 pe-4 pt-3 pb-3" style="width: 18rem;">
+            <div>
+                <p class="d-inline-block w-25">First Name: </p>
+                <span class="d-inline-block w-50 text-center"><%= user.firstName %></span>
+            </div>
+            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-3"/>
+            <div>
+                <p class="d-inline-block w-25">Last Name: </p>
+                <span class="d-inline-block w-50 text-center"><%= user.lastName %></span>
+            </div>
+            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-3"/>
+            <div>
+                <p class="d-inline-block w-25">Date of Birth: </p>
+                <span class="d-inline-block w-50 text-center"><%= user.dateOfBirth %></span>
+            </div>
+            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-1"/>
+        </div>
+        <h4 class="text-center mt-4 mb-3">Address & Contact Information</h4>
+        <div class="d-flex w-100 shadow-lg flex-column ps-4 pe-4 pt-3 pb-3" style="width: 18rem;">
+            <div>
+                <p class="d-inline-block w-25">Email: </p>
+                <span class="d-inline-block w-50 text-center"><%= user.email %></span>
+            </div>
+            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-3"/>
+            <div>
+                <p class="d-inline-block w-25">Telephone: </p>
+                <span class="d-inline-block w-50 text-center"><%= user.phone %></span>
+            </div>
+            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-3"/>
+
+            <div>
+                <p class="d-inline-block w-25">Address Line 1: </p>
+                <span class="d-inline-block w-50 text-center"><%= user.addressFirst %></span>
+            </div>
+            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-3"/>
+
+            <div>
+                <p class="d-inline-block w-25">Address Line 2: </p>
+                <span class="d-inline-block w-50 text-center"><%= user.addressSecond %></span>
+            </div>
+            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-3"/>
+
+            <div>
+                <p class="d-inline-block w-25">Post Code: </p>
+                <span class="d-inline-block w-50 text-center"><%= user.postCode %></span>
+            </div>
+            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-3"/>
+
+            <div>
+                <p class="d-inline-block w-25">City: </p>
+                <span class="d-inline-block w-50 text-center"><%= user.city %></span>
+            </div>
+            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-3"/>
+
+            <div>
+                <p class="d-inline-block w-25">Country: </p>
+                <span class="d-inline-block w-50 text-center"><%= user.country %></span>
+            </div>
+            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-3"/>
+
+
+        </div>
+        <h4 class="text-center mt-4 mb-3">Owned Items</h4>
+        <div class="d-flex shadow-lg w-100 ps-3 pe-3 pt-3 pb-3" style="width: 18rem;">
+            <div class="d-flex ">
+                <h5>Item Name</h5>
+            </div>
+        </div>
+    </div>
+</div>
