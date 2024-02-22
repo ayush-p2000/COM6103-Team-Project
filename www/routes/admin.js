@@ -15,7 +15,21 @@ router.get('/user-details', function(req, res, next) {
         postCode: "SPACE-X",
         email: "elon@musk.com",
         phone: "+44 111 222 333",
-        dateOfBirth: "28.06.1971"
+        dateOfBirth: "28.06.1971",
+        items: [
+            {
+                id: 321,
+                name: "Intel Xeon E5",
+                details: "https://www.etb-tech.com/intel-xeon-e5-2650-v4-2-20ghz-12-core-cpu-sr2n3.html?currency=GBP&gad_source=1&gclid=CjwKCAiA_tuuBhAUEiwAvxkgTo9_Kq6ILUWOwvAuIErKt9HN8bRVO8hS4eNyqKKMYWaGYN-ckYyg0xoCwKAQAvD_BwE",
+                status: "Approved",
+            },
+            {
+                id: 231,
+                name: "Philips Kettle",
+                details: "https://www.philips.co.uk/c-m-ho/kettles/kettle/latest#availability=instock&filters=KETTLES_SU",
+                status: "In process",
+            }
+        ]
     }
     res.render('admin/user_details', { user });
 });

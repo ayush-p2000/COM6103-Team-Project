@@ -29,7 +29,7 @@
             <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-1"/>
         </div>
         <h4 class="text-center mt-4 mb-3">Address & Contact Information</h4>
-        <div class="d-flex w-100 shadow-lg flex-column ps-4 pe-4 pt-3 pb-3" style="width: 18rem;">
+        <div class="d-flex w-100 shadow-lg flex-column ps-4 pe-4 pt-3 pb-1" style="width: 18rem;">
             <div>
                 <p class="d-inline-block w-25">Email: </p>
                 <span class="d-inline-block w-50 text-center"><%= user.email %></span>
@@ -69,14 +69,33 @@
                 <p class="d-inline-block w-25">Country: </p>
                 <span class="d-inline-block w-50 text-center"><%= user.country %></span>
             </div>
-            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1 mb-3"/>
-
-
+            <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-1"/>
+        </div>
+        <div class="d-flex mt-2 align-items-center justify-content-center mt-3">
+            <button class="btn btn-lg btn-primary">Edit User</button>
+            <button class="btn btn-lg btn-danger ms-3">Delete User</button>
+            <button class="btn btn-lg btn-danger ms-3">Deactivate User</button>
         </div>
         <h4 class="text-center mt-4 mb-3">Owned Items</h4>
         <div class="d-flex shadow-lg w-100 ps-3 pe-3 pt-3 pb-3" style="width: 18rem;">
-            <div class="d-flex ">
-                <h5>Item Name</h5>
+            <div class="container">
+                <div class="row mb-2">
+                    <div class="col-sm fw-bold text-center">Item ID:</div>
+                    <div class="col fw-bold text-center">Item Name</div>
+                    <div class="col-sm fw-bold text-center">Details Page</div>
+                    <div class="col-sm fw-bold text-center">Status</div>
+                </div>
+                <hr class="w-100"/>
+            <% user.items.forEach( item => {
+                    const statusStyle = item.status === "Approved" ? "btn-success" : "btn-warning";
+                    %>
+                    <div class="row mb-3">
+                        <div class="col-sm text-center"><%= item.id %></div>
+                        <div class="col text-center"><%= item.name %></div>
+                        <div class="col-sm text-center"><a class="btn btn-primary" href="<%= item.details %>">Details</a></div>
+                        <div class="col-sm text-center"><div class="btn <%= statusStyle %>"><%= item.status %></div></div>
+                    </div>
+            <% }) %>
             </div>
         </div>
     </div>
