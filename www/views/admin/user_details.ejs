@@ -78,22 +78,22 @@
         </div>
         <h4 class="text-center mt-4 mb-3">Owned Items</h4>
         <div class="d-flex shadow-lg w-100 ps-3 pe-3 pt-3 pb-3" style="width: 18rem;">
-            <div class="container">
+            <div class="container text-center">
                 <div class="row mb-2">
-                    <div class="col-sm fw-bold text-center">Item ID:</div>
-                    <div class="col fw-bold text-center">Item Name</div>
-                    <div class="col-sm fw-bold text-center">Details Page</div>
-                    <div class="col-sm fw-bold text-center">Status</div>
+                    <div class="col-sm fw-bold ">Item ID:</div>
+                    <div class="col fw-bold ">Item Name</div>
+                    <div class="col-sm fw-bold ">Details Page</div>
+                    <div class="col-sm fw-bold ">Status</div>
                 </div>
                 <hr class="w-100"/>
             <% user.items.forEach( item => {
                     const statusStyle = item.status === "Approved" ? "btn-success" : "btn-warning";
                     %>
                     <div class="row mb-3">
-                        <div class="col-sm text-center"><%= item.id %></div>
-                        <div class="col text-center"><%= item.name %></div>
-                        <div class="col-sm text-center"><a class="btn btn-primary" href="<%= item.details %>">Details</a></div>
-                        <div class="col-sm text-center"><div class="btn <%= statusStyle %>"><%= item.status %></div></div>
+                        <div class="col-sm"><%= item.id %></div>
+                        <div class="col"><%= item.name %></div>
+                        <div class="col-sm"><a class="btn btn-primary" href="<%= item.details %>">Details</a></div>
+                        <div class="col-sm"><div class="btn <%= statusStyle %>"><%= item.status %></div></div>
                     </div>
             <% }) %>
             </div>
