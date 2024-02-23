@@ -3,14 +3,38 @@
 <script src="/javascripts/jquery.min.js"></script>
 <script src="/javascripts/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" crossorigin="anonymous"></script>
-<script src="/javascripts/reports/report.js"></script>
+
+<link href="https://cdn.datatables.net/v/bs5/dt-2.0.0/af-2.7.0/b-3.0.0/b-colvis-3.0.0/b-print-3.0.0/cr-2.0.0/date-1.5.2/fc-5.0.0/fh-4.0.0/kt-2.12.0/r-3.0.0/rg-1.5.0/rr-1.5.0/sc-2.4.0/sb-1.7.0/sp-2.3.0/sl-2.0.0/datatables.min.css"
+      rel="stylesheet">
+<script src="https://cdn.datatables.net/v/bs5/dt-2.0.0/af-2.7.0/b-3.0.0/b-colvis-3.0.0/b-print-3.0.0/cr-2.0.0/date-1.5.2/fc-5.0.0/fh-4.0.0/kt-2.12.0/r-3.0.0/rg-1.5.0/rr-1.5.0/sc-2.4.0/sb-1.7.0/sp-2.3.0/sl-2.0.0/datatables.min.js"></script>
+
+<script src="/javascripts/reports/reports_util.js"></script>
+
+<% if (report === "sales") { %>
+    <script src="/javascripts/reports/sales.js"></script>
+<% } else if (report === "referrals") { %>
+    <script src="/javascripts/reports/referrals.js"></script>
+<% } else if (report === "classes") { %>
+    <script src="/javascripts/reports/classes.js"></script>
+<% } else if (report === "accounts") { %>
+    <script src="/javascripts/reports/accounts.js"></script>
+<% } else if (report === "account_types") { %>
+    <script src="/javascripts/reports/account_types.js"></script>
+<% } else if (report === "cases") { %>
+    <script src="/javascripts/reports/cases.js"></script>
+<% } else if (report === "devices") { %>
+    <script src="/javascripts/reports/devices.js"></script>
+<% } %>
 
 <div class="container">
     <div class="row">
         <div class="col-md-12">
             <div class="card shadow-sm">
                 <div class="row">
-                    <div class="col-md-12 py-4">
+                    <div class="col-md-4 text-left align-content-center my-auto">
+                            <a class="btn btn-primary mx-4" href="/staff/reports">Back</a>
+                    </div>
+                    <div class="col-md-4 py-4">
                         <div class="text-center">
                             <h1><%= title %> Report</h1>
                         </div>
@@ -22,7 +46,40 @@
                     </div>
                 </div>
 
-                <
+                <div class="row">
+                    <div class="col-md-12">
+                        <% if (false)  { %>
+                            <div class="row">
+                                <div class="col-md-12 px-4">
+                                    <h1 class="text-center">[Placeholder]</h1>
+                                </div>
+                            </div>
+                        <%# TODO: Remove this TRUE once other reports exist%>
+                        <% } else if (report === "sales" || true) { %>
+                            <%- include("sales", {labels: data.labels, data: data.datasets, table: data.table}) -%>
+                        <% } else if (report === "referrals") { %>
+                            <%- include("referrals", {labels: data.labels, data: data.data}) -%>
+                        <% } else if (report === "classes") { %>
+                            <%- include("classes", {labels: data.labels, data: data.data}) -%>
+                        <% } else if (report === "accounts") { %>
+                            <%- include("accounts", {labels: data.labels, data: data.data}) -%>
+                        <% } else if (report === "account_types") { %>
+                            <%- include("account_types", {labels: data.labels, data: data.data}) -%>
+                        <% } else if (report === "cases") { %>
+                            <%- include("cases", {labels: data.labels, data: data.data}) -%>
+                        <% } else if (report === "devices") { %>
+                            <%- include("devices", {labels: data.labels, data: data.data}) -%>
+                        <% } else { %>
+                            <div class="row">
+                                <div class="col-md-12 py-4">
+                                    <div class="text-center">
+                                        <h1>Report Not Found</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
