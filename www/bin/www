@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 
+require('dotenv').config()
 var app = require('../app');
 var debug = require('debug')('www:server');
 var http = require('http');
@@ -87,4 +88,7 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+
+  // For DEV purposes
+  console.log('Server is running on: http://localhost:' + addr.port)
 }

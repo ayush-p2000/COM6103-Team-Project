@@ -1,0 +1,112 @@
+<%- include("../components/header.ejs") %>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="w-50 d-flex justify-content-start align-items-start border-1 border-black border flex-column p-5">
+        <form method="POST" name="editUserDetails" class="w-100">
+            <h2>
+                User Details
+                <small class="text-muted">ID: <%= user.id %></small>
+            </h2>
+            <div class="mt-3 me-auto ms-auto">
+                <img src="<%= user.avatar %>>" class="me-auto ms-auto d-block rounded-circle" alt="Avatar"
+                     style="max-width: 150px;">
+            </div>
+
+            <h4 class="text-center mt-4 mb-3">Basic details</h4>
+            <div class="d-flex w-100 shadow-lg flex-column ps-4 pe-4 pt-3 pb-3">
+                <div>
+                    <label for="firstName" class="d-inline-block w-25">First Name: </label>
+                    <input name="firstName" id="firstName" class="d-inline-block w-50 form-control"
+                           value="<%= user.firstName %>"/>
+                </div>
+                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
+                <div>
+                    <label for="lastName" class="d-inline-block w-25">Last Name: </label>
+                    <input name="lastName" id="lastName" class="d-inline-block w-50 form-control"
+                           value="<%= user.lastName %>"/>
+                </div>
+                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
+                <div>
+                    <label for="email" class="d-inline-block w-25">Email: </label>
+                    <input name="email" id="email" class="d-inline-block w-50 form-control" value="<%= user.email %>"/>
+                </div>
+                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-1"/>
+            </div>
+            <h4 class="text-center mt-4 mb-3">Address & Contact Information</h4>
+            <div class="d-flex w-100 shadow-lg flex-column ps-4 pe-4 pt-3 pb-1">
+                <div>
+                    <label for="email" class="d-inline-block w-25">Email: </label>
+                    <input name="email" id="email" class="d-inline-block w-50 form-control" value="<%= user.email %>"/>
+                </div>
+                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
+                <div>
+                    <label for="phone" class="d-inline-block w-25">Telephone: </label>
+                    <input name="phone" id="phone" class="d-inline-block w-50 form-control" value="<%= user.phone %>"/>
+                </div>
+                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
+
+                <div>
+                    <label for="addressFirst" class="d-inline-block w-25">Address Line 1: </label>
+                    <input name="addressFirst" id="addressFirst" class="d-inline-block w-50 form-control"
+                           value="<%= user.addressFirst %>"/>
+                </div>
+                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
+
+                <div>
+                    <label for="addressSecond" class="d-inline-block w-25">Address Line 2: </label>
+                    <input name="addressSecond" id="addressSecond" class="d-inline-block w-50 form-control"
+                           value="<%= user.addressSecond %>"/>
+                </div>
+                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
+
+                <div>
+                    <label for="postCode" class="d-inline-block w-25">Post Code: </label>
+                    <input name="postCode" id="postCode" class="d-inline-block w-50 form-control"
+                           value="<%= user.postCode %>"/>
+                </div>
+                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
+
+                <div>
+                    <label for="city" class="d-inline-block w-25">City: </label>
+                    <input name="city" id="city" class="d-inline-block w-50 form-control" value="<%= user.city %>"/>
+                </div>
+                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
+
+                <div>
+                    <label for="country" class="d-inline-block w-25">Country: </label>
+                    <input name="country" id="country" class="d-inline-block w-50 form-control"
+                           value="<%= user.country %>"/>
+                </div>
+                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3"/>
+            </div>
+            <div class="d-flex mt-2 align-items-center justify-content-start mt-3">
+                <button class="btn btn-primary" type="submit">Save details</button>
+                <button class="btn btn-danger ms-3" name="deleteUser">Delete User</button>
+                <button class="btn btn-danger ms-3" name="deactivateUser">Deactivate User</button>
+            </div>
+        </form>
+        <h4 class="text-center mt-4 mb-3">Owned Items</h4>
+        <div class="d-flex shadow-lg w-100 ps-3 pe-3 pt-3 pb-3">
+            <div class="container text-center">
+                <div class="row mb-2">
+                    <div class="col-sm fw-bold ">Item ID:</div>
+                    <div class="col fw-bold ">Item Name</div>
+                    <div class="col-sm fw-bold ">Details Page</div>
+                    <div class="col-sm fw-bold ">Status</div>
+                </div>
+                <hr class="w-100"/>
+                <% user.items.forEach( item => {
+                    const statusStyle = item.status === "Approved" ? "btn-success" : "btn-warning";
+                %>
+                <div class="row mb-3">
+                    <div class="col-sm"><%= item.id %></div>
+                    <div class="col"><%= item.name %></div>
+                    <div class="col-sm"><a class="btn btn-primary" href="<%= item.details %>">Details</a></div>
+                    <div class="col-sm">
+                        <div class="btn <%= statusStyle %>"><%= item.status %></div>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</div>
