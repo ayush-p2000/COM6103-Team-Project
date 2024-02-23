@@ -1,0 +1,102 @@
+<!-- TODO: Remove these links once headers are in place correctly -->
+<link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+<link rel="stylesheet" href="/stylesheets/style.css">
+<script src="/javascripts/jquery.min.js"></script>
+<script src="/javascripts/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/4d524946a0.js" crossorigin="anonymous"></script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card rounded shadow">
+                <div class="card-body">
+                    <h1 class="fw-bold text-center">Checkout</h1>
+
+                    <div class="row">
+                        <div class="col-auto">
+                            <i class="fa-regular fa-circle-check fa-3x"></i>
+                        </div>
+                        <div class="col">
+                        <p class="pb-0 mb-0">Order #<%= order.id %></p>
+                        <h5 class="fw-bold">Thank you for your purchase!</h5>
+                        </div>
+                    </div>
+
+
+                    <hr>
+
+                    <div class="row pb-2">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="fw-bold">Order Details</h3>
+                                    <hr>
+                                    <p><strong>ID:</strong> <%= order.id %></p>
+                                    <p>
+                                        <strong>Date:</strong> <%= new Date(order.date.toISOString()).toLocaleDateString() %>
+                                    </p>
+                                    <p><strong>Total:</strong> <%= order.currency %><%= order.amount %></p>
+
+                                    <div class="text-center">
+                                        <p>Paid via:</p>
+                                        <div class="border border-2 rounded p-2">
+                                            <% if (order.paymentMethod === "PayPal") { %>
+                                                <img src="/images/paypal.png" alt="PayPal" width="100">
+                                            <% } else if (order.paymentMethod === "Stripe") { %>
+                                                <img src="/images/stripe.png" alt="Stripe" width="100">
+                                            <% } %>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <p class="m-0">By selling your device with us,</p>
+                                    <h5 class="fw-bold">You Have:</h5>
+
+                                    <div class="alert alert-success rounded-5">
+                                        <p class="mb-0">
+                                            <i class="fa-solid fa-leaf"></i>
+                                            <strong>Saved </strong> Nkg of CO2
+                                        </p>
+                                    </div>
+
+                                    <div class="alert alert-success rounded-5">
+                                        <p class="mb-0">
+                                            <i class="fa-solid fa-recycle"></i>
+                                            <strong>Recycled </strong> Nkg of electronic waste
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <p> [Additional Green Stats]</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="fw-bold">Product Details</h3>
+                                    <% order.products.forEach(product => { %>
+                                        <hr>
+                                        <p><strong><%= product.name %></strong></p>
+                                        <p><strong>Price:</strong> <%= order.currency %><%= product.price %></p>
+                                        <div class="alert <%= (product.data_retrieval) ? "alert-success" : "alert-secondary" %> p-0 m-0 w-auto">
+                                            <p class="p-0 m-0 text-center"><%= (product.data_retrieval) ? "Data Retrieval (+ £4.99)" : "No Data Retrieval" %></p>
+                                        </div>
+                                    <% }) %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
