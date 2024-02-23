@@ -24,7 +24,7 @@ app.use("/javascripts", express.static(path.join(__dirname, "node_modules/bootst
 app.use("/javascripts", express.static(path.join(__dirname, "node_modules/jquery/dist")))
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
