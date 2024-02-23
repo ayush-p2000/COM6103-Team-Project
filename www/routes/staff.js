@@ -2,6 +2,7 @@ var express = require('express');
 const {faker} = require("@faker-js/faker");
 var router = express.Router();
 
+//TOOD: Remove these once real data is available
 function getMockSalesData() {
     const {faker} = require('@faker-js/faker');
 
