@@ -1,0 +1,77 @@
+<link rel='stylesheet' href="/stylesheets/bootstrap.min.css">
+<link rel='stylesheet' href="/stylesheets/style.css">
+
+
+<div class="mx-4 marketplace">
+<!--    Search Bar-->
+    <input type="search" class="form-control ds-input" id="search-input"
+           placeholder="Search items...">
+
+    <!--Filter and Sorter-->
+    <div class="row mt-4">
+        <p class="fw-bold">Classification: </p>
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+            <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btncheck1">Current</label>
+
+            <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btncheck2">Recycle</label>
+
+            <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btncheck3">Rare</label>
+
+            <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btncheck3">Unknow</label>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <p class="fw-bold">Device Type: </p>
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+            <input type="checkbox" class="btn-check" id="phonecheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="phonecheck">Phone</label>
+
+            <input type="checkbox" class="btn-check" id="tabletcheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="tabletcheck">Tablet</label>
+
+            <input type="checkbox" class="btn-check" id="laptopcheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="laptopcheck">Laptop</label>
+
+            <input type="checkbox" class="btn-check" id="watchcheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="watchcheck">Watch</label>
+
+            <input type="checkbox" class="btn-check" id="pccheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="pccheck">PC</label>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <p class="fw-bold">Pricing: </p>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="btnradio1">Descending</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio2">Ascending</label>
+
+        </div>
+    </div>
+
+<!--items list-->
+    <div class="row g-2 mt-2">
+        <% items.forEach(item => { %>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="card h-100">
+                    <img src="<%= item.picUrl %>" class="card-img-top img-fluid item-img" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= item.name %></h5>
+                        <p class="m-0 ">Device Type: <span class="fw-light fst-italic text-muted"><%= item.deviceType %></span></p>
+                        <p class="m-0">Classifications: <span class="fw-light fst-italic text-muted"><%= item.classification %></span></p>
+                        <p class="m-0 mb-3">Reference Price: <span class="fw-light fst-italic text-muted">£<%= item.price %></span></p>
+                        <p class="m-0 text-end item-owner">By: <span class="fw-light fst-italic text-muted"><%= item.owner %></span></p>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>

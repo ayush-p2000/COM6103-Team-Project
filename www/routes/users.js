@@ -10,7 +10,7 @@ router.get("/payment", (req,res,next) => {
   res.render('payment', {})
 })
 
-router.get("/marketPlace", (req,res,next) => {
+router.get("/marketplace", (req,res,next) => {
   // Dummy Data
   const items = [
       {
@@ -19,7 +19,8 @@ router.get("/marketPlace", (req,res,next) => {
         picUrl: "https://ee.co.uk/medias/iphone-15-pro-natural-titanium-desktop-detail-1-WebP-Format-488?context=bWFzdGVyfHJvb3R8MjQ1MTh8aW1hZ2Uvd2VicHxzeXMtbWFzdGVyL3Jvb3QvaGExL2hhMC8xMDA3MzUxMjM0NTYzMC9pcGhvbmUtMTUtcHJvLW5hdHVyYWwtdGl0YW5pdW0tZGVza3RvcC1kZXRhaWwtMV9XZWJQLUZvcm1hdC00ODh8YzIxNTNmMjQ2NWVkNTAzMDA4NjgxOWEzMThmMjJhNTY4MTgwYjAzN2NkOWVkZDBjZWM0YmNkNWIyNjAwNmM1NQ",
         classification: "Current",
         deviceType: "Phone",
-        price: 599
+        price: 599,
+        owner: "Terenz"
       },
       {
         id: 2,
@@ -27,7 +28,8 @@ router.get("/marketPlace", (req,res,next) => {
         picUrl: "https://majormobiles.com/cdn/shop/products/blue_20fc3cd7-c225-45e1-bdad-7e1537f8fa00_295x.jpg?v=1667829428",
         classification: "Recycle",
         deviceType: "Tablet",
-        price: 399
+        price: 399,
+        owner: "Terenz"
       },
       {
         id: 3,
@@ -36,7 +38,8 @@ router.get("/marketPlace", (req,res,next) => {
             "201810?wid=1078&hei=624&fmt=jpeg&qlt=90&.v=1664499515473",
         classification: "Current",
         deviceType: "Laptop",
-        price: 899
+        price: 899,
+        owner: "Terenz"
       },
       {
         id: 4,
@@ -45,10 +48,11 @@ router.get("/marketPlace", (req,res,next) => {
             "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
         classification: "Recycle",
         deviceType: "Watch",
-        price: 169
+        price: 169,
+        owner: "Terenz"
       },
   ]
-  res.render('marketPlace', {items})
+  res.render('marketplace', {items})
 })
 
 
