@@ -48,6 +48,10 @@ router.get('/', function (req, res, next) {
     res.send('respond with a resource');
 });
 
+router.get('/list_item', function (req, res, next) {
+    res.render('list_item', {})
+});
+
 router.get('/payment/completed', function (req, res, next) {
     res.render('payment_completed', {title: 'Payment Completed', order: getMockPurchaseData()});
 });

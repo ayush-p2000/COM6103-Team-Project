@@ -1,0 +1,126 @@
+<link rel='stylesheet' href="/stylesheets/bootstrap.min.css">
+
+<div class="m-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card rounded shadow">
+                <div class="card-body p-4">
+                    <h1 class="fw-bold text-center">Listing an Item</h1>
+<!--                    Image of item-->
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Select an image of the item</label>
+                        <input class="form-control" type="file" id="formFile">
+                    </div>
+<!--                    Device information-->
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">Device information</p>
+
+                        <div class="mb-3 row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Device Type</label>
+                            <div class="col-sm-10">
+                                <select class="form-select" id="exampleFormControlSelect1">
+                                    <option selected>Smartphone</option>
+                                    <option value="1">Tablet</option>
+                                    <option value="2">PC</option>
+                                    <option value="3">Watch</option>
+                                    <option value="4">Other devices</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Brand and Model</label>
+                            <div class="col-sm-5">
+                                <select class="form-select" id="brandSelect">
+                                    <option selected>Apple</option>
+                                    <option value="1">BlackBerry</option>
+                                    <option value="2">Google</option>
+                                    <option value="3">HTC</option>
+                                    <option value="4">Huawei</option>
+                                    <option value="5">Microsoft</option>
+                                    <option value="6">Samsung</option>
+                                    <option value="7">Other brand</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-5">
+                                <select class="form-select" id="modelSelect">
+                                    <option selected>Model 1</option>
+                                    <option value="1">Model 2</option>
+                                    <option value="2">Model 3</option>
+                                    <option value="3">Model 4</option>
+                                    <option value="4">Other model</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Capacity</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" id="capacitySelect">
+                                <option selected>128GB</option>
+                                <option value="1">128GB</option>
+                                <option value="2">128GB</option>
+                                <option value="3">Other</option>
+                            </select>
+                        </div>
+                    </div>
+<!--                    Device Demage-->
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">Device Damage</p>
+                        <label for="inputPassword" class="col-sm-4 col-form-label ">Is your device in good condition?</label>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionYes" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="conditionYes">Yes</label>
+
+                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionNo" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="conditionNo">No</label>
+                        </div>
+                        <ul class="text-muted">
+                            <li>It turns on and functions normally</li>
+                            <li>All the buttons work</li>
+                            <li>The cameras work and all lenses are free of damage</li>
+                            <li>The battery holds a charge</li>
+                            <li>The body is free of dents and scratches</li>
+                            <li>The touchscreen and back glass are undamaged</li>
+                            <li>The display is free of distortion, lines and black or white spots</li>
+                        </ul>
+                    </div>
+<!--                    Service add-on-->
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">Service add-on</p>
+                        <div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Data Service</label>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                                <input type="radio" class="btn-check" name="dataRadio" id="dataRetrieval" autocomplete="off" checked>
+                                <label class="btn btn-outline-primary" for="dataRetrieval">Data retrieval</label>
+
+                                <input type="radio" class="btn-check" name="dataRadio" id="dataWiping" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="dataWiping">Wiping by third party</label>
+
+                                <input type="radio" class="btn-check" name="dataRadio" id="none" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="none">None</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+<!--                    Additional Information-->
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">Additional Information</p>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                  placeholder="Tell us some special you want"></textarea>
+                    </div>
+
+<!--                    Submit Button-->
+                    <div class="row justify-content-center">
+                        <div class="col-sm-6">
+                            <button type="submit" class="btn btn-primary mb-3 d-block mx-auto">Submit for approve</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
