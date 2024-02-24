@@ -16,6 +16,6 @@ a {
   object-fit: contain;
 }
 
-.marketplace .item-owner{
+.marketplace .item-detail-btn{
   position: absolute; bottom: 5px; right: 10px;
 }
