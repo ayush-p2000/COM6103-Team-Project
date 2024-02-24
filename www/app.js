@@ -26,6 +26,7 @@ app.use("/javascripts", express.static(path.join(__dirname, "node_modules/jquery
 
 app.use('/', indexRouter);
 app.use('/', usersRouter);
+app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
