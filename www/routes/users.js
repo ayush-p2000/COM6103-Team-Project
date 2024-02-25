@@ -104,8 +104,8 @@ router.get("/marketplace", (req,res,next) => {
 router.get('/item-detail', (req, res, next) => {
     const item = {
         name : 'Iphone 12',
-        classification: 'current',
-        purchaseDate: '12-10-2022',
+        classification: 'Current',
+        purchaseYear: 2022,
         capacity: 128,
         colour: 'Red',
         os: 'IOS',
