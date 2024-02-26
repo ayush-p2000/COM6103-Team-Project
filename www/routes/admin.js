@@ -35,4 +35,13 @@ router.get('/user-details', function(req, res, next) {
     res.render('admin/user_details', { user });
 });
 
+router.get('/user-management',function (req,res,next){
+   const gridData = [
+       {user:'John',device:'Phone', level:'user'},
+       {user:'Alice',device: 'Laptop', level:'staff'},
+       {user:'Bob',device: 'Tablet',level:'user'},
+   ];
+   res.render('admin/userManagement',{gridData});
+});
+
 module.exports = router;
