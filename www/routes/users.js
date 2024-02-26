@@ -62,7 +62,7 @@ router.get("/marketplace", (req,res,next) => {
       {
         id: 1,
         name: "Iphone15 pro",
-        picUrl: "https://ee.co.uk/medias/iphone-15-pro-natural-titanium-desktop-detail-1-WebP-Format-488?context=bWFzdGVyfHJvb3R8MjQ1MTh8aW1hZ2Uvd2VicHxzeXMtbWFzdGVyL3Jvb3QvaGExL2hhMC8xMDA3MzUxMjM0NTYzMC9pcGhvbmUtMTUtcHJvLW5hdHVyYWwtdGl0YW5pdW0tZGVza3RvcC1kZXRhaWwtMV9XZWJQLUZvcm1hdC00ODh8YzIxNTNmMjQ2NWVkNTAzMDA4NjgxOWEzMThmMjJhNTY4MTgwYjAzN2NkOWVkZDBjZWM0YmNkNWIyNjAwNmM1NQ",
+        picUrl: "https://m.media-amazon.com/images/I/81Wwngkh2OL.__AC_SY445_SX342_QL70_ML2_.jpg",
         classification: "Current",
         deviceType: "Phone",
         price: 599,
@@ -106,7 +106,7 @@ router.get("/user_dashboard", (req,res,next) => {
         {
             id: 1,
             name: "Iphone15 pro",
-            picUrl: "https://ee.co.uk/medias/iphone-15-pro-natural-titanium-desktop-detail-1-WebP-Format-488?context=bWFzdGVyfHJvb3R8MjQ1MTh8aW1hZ2Uvd2VicHxzeXMtbWFzdGVyL3Jvb3QvaGExL2hhMC8xMDA3MzUxMjM0NTYzMC9pcGhvbmUtMTUtcHJvLW5hdHVyYWwtdGl0YW5pdW0tZGVza3RvcC1kZXRhaWwtMV9XZWJQLUZvcm1hdC00ODh8YzIxNTNmMjQ2NWVkNTAzMDA4NjgxOWEzMThmMjJhNTY4MTgwYjAzN2NkOWVkZDBjZWM0YmNkNWIyNjAwNmM1NQ",
+            picUrl: "https://m.media-amazon.com/images/I/81Wwngkh2OL.__AC_SY445_SX342_QL70_ML2_.jpg",
             classification: "Current",
             deviceType: "Phone",
             price: 599,
