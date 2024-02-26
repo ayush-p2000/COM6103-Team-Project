@@ -10,9 +10,10 @@
         </div>
     </div>
 
+
     <% items.forEach(item => { %>
         <div class="card mt-4">
-            <div class="card-body row">
+            <div class="card-body row d-flex align-items-center">
                 <div class="col-3 col-md-2 col-lg-2 col-xl-1">
                     <img src="<%= item.picUrl %>" class="img-fluid item-img">
                 </div>
@@ -22,7 +23,7 @@
                     <p class="m-0 p-0 text-muted"><small>Classification: </small><%= item.classification %></p>
                     <p class="m-0 p-0 text-muted"><small>Price: </small>£<%= item.price %></p>
                 </div>
-                <div class="col-3 col-md-2 col-lg-3 col-xl-3 d-flex justify-content-center align-items-center">
+                <div class="col-3 col-md-2 col-lg-3 col-xl-3 d-flex justify-content-end align-items-center">
                     <div class="btn btn-primary">View</div>
                 </div>
             </div>
