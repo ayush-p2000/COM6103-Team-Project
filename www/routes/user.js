@@ -164,5 +164,21 @@ router.get("/user_dashboard", (req,res,next) => {
     res.render('user_dashboard', {items})
 })
 
+router.get('/item-detail', (req, res, next) => {
+    const item = {
+        name : 'Iphone 12',
+        classification: 'Current',
+        purchaseYear: 2022,
+        capacity: 128,
+        colour: 'Red',
+        os: 'IOS',
+        deviceType: 'Mobile',
+        condition: 'Good'
+    }
+
+    res.render('itemDetails', {item})
+})
+
+
 
 module.exports = router;

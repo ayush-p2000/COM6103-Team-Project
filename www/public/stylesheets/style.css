@@ -27,3 +27,10 @@ a {
   max-height: 200px;
   object-fit: contain;
 }
+
+/* item Detail page */
+.item-detail img {
+  margin: 0 10px;
+  max-width: 90%;
+  max-height: 90%;
+}
