@@ -1,12 +1,12 @@
-var express = require('express');
+const express = require('express');
 const {faker} = require("@faker-js/faker");
-var router = express.Router();
+const router = express.Router();
 
 //TOOD: Remove these once real data is available
 function getMockSalesData() {
     const {faker} = require('@faker-js/faker');
 
-    var data = [];
+    const data = [];
 
     const devices = [
         'iPhone 12', 'iPhone 12 Pro', 'iPhone 12 Pro Max', 'iPhone 11', 'iPhone 11 Pro', 'iPhone 11 Pro Max',
@@ -17,7 +17,7 @@ function getMockSalesData() {
         'Huawei P40', 'Huawei P40 Pro', 'Huawei Mate 40 Pro'
     ];
 
-    for (var i = 0; i < 7; i++) {
+    for (let i = 0; i < 7; i++) {
         data.push(
             {
                 date: faker.date.past().toLocaleDateString(),
@@ -41,11 +41,11 @@ function getMockGraphData() {
     const {faker} = require('@faker-js/faker');
 
     //Months Jan-Jul
-    var labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
+    const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
 
     //Sales and Value
-    var sales = [];
-    var value = [];
+    const sales = [];
+    const value = [];
     for (var i = 0; i < 7; i++) {
         sales.push(faker.number.int({min: 0, max: 50}));
         value.push(faker.finance.amount({min: 0, max: 1000}));
@@ -79,65 +79,13 @@ router.get('/reports', function (req, res, next) {
     res.render('reports/reports', {title: 'Reports'});
 });
 
-router.get('/reports/sales', function (req, res, next) {
-    var data = getMockGraphData();
+router.get('/reports/:reportType', function (req, res, next) {
+    const type = req.params.reportType;
+    const title = type.charAt(0).toUpperCase() + type.slice(1);
+    const data = getMockGraphData();
     res.render('reports/report', {
-        title: 'Sales',
-        report: 'sales',
-        data: {labels: data.labels, datasets: data.datasets, table: getMockSalesData()}
-    });
-});
-
-router.get('/reports/referrals', function (req, res, next) {
-    var data = getMockGraphData();
-    res.render('reports/report', {
-        title: 'Referrals',
-        report: 'referrals',
-        data: {labels: data.labels, datasets: data.datasets, table: getMockSalesData()}
-    });
-});
-
-router.get('/reports/classes', function (req, res, next) {
-    var data = getMockGraphData();
-    res.render('reports/report', {
-        title: 'Device Classes',
-        report: 'device_classes',
-        data: {labels: data.labels, datasets: data.datasets, table: getMockSalesData()}
-    });
-});
-
-router.get('/reports/accounts', function (req, res, next) {
-    var data = getMockGraphData();
-    res.render('reports/report', {
-        title: 'Accounts',
-        report: 'accounts',
-        data: {labels: data.labels, datasets: data.datasets, table: getMockSalesData()}
-    });
-});
-
-router.get('/reports/account_types', function (req, res, next) {
-    var data = getMockGraphData();
-    res.render('reports/report', {
-        title: 'Account Types',
-        report: 'account_types',
-        data: {labels: data.labels, datasets: data.datasets, table: getMockSalesData()}
-    });
-});
-
-router.get('/reports/cases', function (req, res, next) {
-    var data = getMockGraphData();
-    res.render('reports/report', {
-        title: 'Cases',
-        report: 'cases',
-        data: {labels: data.labels, datasets: data.datasets, table: getMockSalesData()}
-    });
-});
-
-router.get('/reports/devices', function (req, res, next) {
-    var data = getMockGraphData();
-    res.render('reports/report', {
-        title: 'Devices',
-        report: 'devices',
+        title: title,
+        report: type,
         data: {labels: data.labels, datasets: data.datasets, table: getMockSalesData()}
     });
 });

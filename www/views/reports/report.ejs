@@ -14,20 +14,8 @@
 
 <script src="/javascripts/reports/reports_util.js"></script>
 
-<% if (report === "sales") { %>
-    <script src="/javascripts/reports/sales.js"></script>
-<% } else if (report === "referrals") { %>
-    <script src="/javascripts/reports/referrals.js"></script>
-<% } else if (report === "classes") { %>
-    <script src="/javascripts/reports/classes.js"></script>
-<% } else if (report === "accounts") { %>
-    <script src="/javascripts/reports/accounts.js"></script>
-<% } else if (report === "account_types") { %>
-    <script src="/javascripts/reports/account_types.js"></script>
-<% } else if (report === "cases") { %>
-    <script src="/javascripts/reports/cases.js"></script>
-<% } else if (report === "devices") { %>
-    <script src="/javascripts/reports/devices.js"></script>
+<% if (report !== undefined) { %>
+    <script src="/javascripts/reports/<%= report %>.js"></script>
 <% } %>
 
 <div class="container">
@@ -36,7 +24,7 @@
             <div class="card shadow-sm">
                 <div class="row">
                     <div class="col-md-4 text-left align-content-center my-auto">
-                            <a class="btn btn-primary mx-4" href="/staff/reports">Back</a>
+                        <a class="btn btn-primary mx-4" href="/staff/reports">Back</a>
                     </div>
                     <div class="col-md-4 py-4">
                         <div class="text-center">
@@ -52,34 +40,15 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <% if (false)  { %>
-                            <div class="row">
-                                <div class="col-md-12 px-4">
-                                    <h1 class="text-center">[Placeholder]</h1>
-                                </div>
-                            </div>
+
                         <%# TODO: Remove this TRUE once other reports exist%>
-                        <% } else if (report === "sales" || true) { %>
+                        <% if (true) { %>
                             <%- include("sales", {labels: data.labels, data: data.datasets, table: data.table}) -%>
-                        <% } else if (report === "referrals") { %>
-                            <%- include("referrals", {labels: data.labels, data: data.data}) -%>
-                        <% } else if (report === "classes") { %>
-                            <%- include("classes", {labels: data.labels, data: data.data}) -%>
-                        <% } else if (report === "accounts") { %>
-                            <%- include("accounts", {labels: data.labels, data: data.data}) -%>
-                        <% } else if (report === "account_types") { %>
-                            <%- include("account_types", {labels: data.labels, data: data.data}) -%>
-                        <% } else if (report === "cases") { %>
-                            <%- include("cases", {labels: data.labels, data: data.data}) -%>
-                        <% } else if (report === "devices") { %>
-                            <%- include("devices", {labels: data.labels, data: data.data}) -%>
+                        <% } else if (report !== undefined) { %>
+                            <%- include(report, {labels: data.labels, data: data.data}) -%>
                         <% } else { %>
-                            <div class="row">
-                                <div class="col-md-12 py-4">
-                                    <div class="text-center">
-                                        <h1>Report Not Found</h1>
-                                    </div>
-                                </div>
+                            <div class="text-center">
+                                <h1>Report not found</h1>
                             </div>
                         <% } %>
                     </div>

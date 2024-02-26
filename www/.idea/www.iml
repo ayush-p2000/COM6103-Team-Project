@@ -4,7 +4,7 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="datatables" level="application" />
     <orderEntry type="library" name="4d524946a0" level="application" />
+    <orderEntry type="library" name="chart.js" level="application" />
   </component>
 </module>
