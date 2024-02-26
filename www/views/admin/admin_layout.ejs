@@ -9,23 +9,25 @@
                     <span class="fs-3 fw-medium d-none d-sm-inline">Admin <%= admin.name %></span>
                 </a>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <!-- TODO: If dashboard is considered home need to remove Home -->
                     <li class="nav-item">
-                        <a href="javascript:void(0)" class="nav-link align-middle px-0 .text-primary-emphasis">
+                        <a href="javascript:void(0)" class="nav-link align-middle px-0 .text-primary-emphasis fs-5">
                             <span class="ms-1 d-none d-sm-inline">Home</span>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:void(0)" class="nav-link px-0 align-middle .text-primary-emphasis" onclick="loadContent('dashboard')">
+                        <a href="javascript:void(0)" class="nav-link align-middle px-0 .text-primary-emphasis fs-5" onclick="loadContent('dashboard')">
                             <span class="ms-1 d-none d-sm-inline">Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:void(0)" class="nav-link px-0 align-middle .text-primary-emphasis" onclick="loadContent('userDetails')">
+                        <a href="javascript:void(0)" class="nav-link px-0 align-middle .text-primary-emphasis fs-5" onclick="loadContent('userDetails')">
                             <span class="ms-1 d-none d-sm-inline">User Details</span>
                         </a>
                     </li>
+                    <!-- TODO: Add the manage users link after the page is developed -->
                     <li>
-                        <a href="#" class="nav-link px-0 align-middle .text-primary-emphasis">
+                        <a href="#" class="nav-link px-0 align-middle .text-primary-emphasis fs-5">
                             <span class="ms-1 d-none d-sm-inline">Manage Users</span>
                         </a>
                     </li>
