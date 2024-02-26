@@ -1,19 +1,24 @@
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding: 50px;
+
+  /* Set the font to Roboto */
+    font-family: 'Roboto', sans-serif;
+
 }
 
 a {
   color: #00B7FF;
 }
 
-.navbar {
-  padding: 10px 20px;
-  margin: 0 0 20px;
+/*marketplace style*/
+.marketplace .item-img{
+  padding: 20px;
+  border-radius: 30px 30px 0px 0px;
+  height: 200px;
+  max-height: 200px;
+  object-fit: contain;
 }
-.navbar-brand {
-  font-size: 25px;
-  font-weight: bold;
-}
-.navbar-link {
-  font-size: 17px;
+
+.marketplace .item-detail-btn{
+  position: absolute; bottom: 5px; right: 10px;
 }
