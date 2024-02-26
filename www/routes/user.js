@@ -119,6 +119,8 @@ router.get("/marketplace", (req,res,next) => {
   ]
   res.render('marketplace', {items})
 })
-
+router.get('/list_item', function (req, res, next) {
+    res.render('list_item', {})
+});
 
 module.exports = router;
