@@ -22,3 +22,16 @@ a {
 .marketplace .item-detail-btn{
   position: absolute; bottom: 5px; right: 10px;
 }
+
+/* item Detail page */
+
+.item-detail img {
+  margin: 0 10px;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+
+
+
+
