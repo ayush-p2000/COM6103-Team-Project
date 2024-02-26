@@ -1,52 +1,54 @@
 <%- include('components/header.ejs') %>
 
-<div class="container item-detail">
-    <div class="row">
-        <div class="col-5">
-            <img src="https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D640/https://d2e6ccujb3mkqf.cloudfront.net/af874b95-0a58-4efa-b0f4-cd020fed146b-1_6ae90150-3ee4-4659-8fc3-19d483bfed00.jpg"  alt="item"/>
+<div class="container item-detail mt-5">
+    <div class="row bg-light p-4">
+        <div class="col-md-6 mb-4">
+            <img src="https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D640/https://d2e6ccujb3mkqf.cloudfront.net/af874b95-0a58-4efa-b0f4-cd020fed146b-1_6ae90150-3ee4-4659-8fc3-19d483bfed00.jpg" class="img-fluid rounded-3" alt="Item Image">
         </div>
-        <div class="col-5">
-            <h3><%= item.name %></h3>
-            <p class="item-class"><%= item.classification %></p>
-            <h5>Description: </h5>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book</p>
-            <h5>Information: </h5>
+        <div class="col-md-6">
+            <h3 class="display-4 fw-bold mb-3"><%= item.name %></h3>
+            <p class="lead text-muted"><%= item.classification %></p>
+            <hr class="my-4">
+            <h5 class="fw-bold mb-4">Specification: </h5>
             <div class="row" id="item-info">
                 <div class="col-6">
-                    <p><b>Purchased year:</b> <%= item.purchaseYear %></p>
-                    <p><b>Capacity:</b> <%= item.capacity %> GB</p>
-                    <p><b>Colour:</b> <%= item.colour %></p>
+                    <p><span class="fw-bold">Purchased Year:</span> <%= item.purchaseYear %></p>
+                    <p><span class="fw-bold">Capacity:</span> <%= item.capacity %> GB</p>
+                    <p><span class="fw-bold">Colour:</span> <span class="fw-bold" style="color: red;"><%= item.colour %></span></p>
                 </div>
                 <div class="col-6">
-                    <p><b>Operating System:</b> <%= item.os %></p>
-                    <p><b>Device Type:</b> <%= item.deviceType %></p>
-                    <p><b>Device Condition:</b> <%= item.condition %></p>
+                    <p><span class="fw-bold">Operating System:</span> <%= item.os %></p>
+                    <p><span class="fw-bold">Device Type:</span> <%= item.deviceType %></p>
+                    <p><span class="fw-bold">Device Condition:</span> <%= item.condition %></p>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row quote-card">
-        <h4>Quotes</h4>
-        <div class="card mb-3">
-            <div class="row g-0">
-                <div class="col-md-4 logo">
-                    <img src="/assets/cex-logo.png" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Price: £350</h5>
-                        <p class="card-text">Quotation from CEX for same product or similar products.</p>
-                        <p class="card-text"><small class="text-body-secondary">Fetched from CEX site</small></p>
+
+    <div class="row bg-secondary text-light p-4 mt-4">
+        <div class="col-md-12">
+            <h5 class="fw-bold">Description: </h5>
+            <p class="lead">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...</p>
+            <h5 class="fw-bold mt-4">Quotes</h5>
+            <div class="card mt-3">
+                <div class="row g-0">
+                    <div class="col-md-2 mt-2 align-middle">
+                        <img src="/assets/cex-logo.png" class="img-fluid rounded-start" alt="CEX Logo">
+                    </div>
+                    <div class="col-md-5">
+                        <div class="card-body">
+                            <h5 class="card-title">Price: £350</h5>
+                            <p class="card-text">Quotation from CEX for the same product or similar products.</p>
+                            <p class="card-text"><small>Fetched from CEX site</small></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
-</body>
 
 <script src="/javascripts/jquery-1.11.1.min.js"></script>
 <script src="/javascripts/bootstrap.min.js"></script>
+</body>
 </html>
-

@@ -24,59 +24,13 @@ a {
 }
 
 /* item Detail page */
-.item-detail {
-  margin: 10px auto;
-  border-radius: 15px;
-}
-.item-detail h3 {
-  font-weight: bold;
-  font-size: 2.2rem;
-}
-.item-class {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: darkgray;
-}
-.item-detail h5 {
-  font-weight: bold;
-  font-size: 1.4rem;
-  margin-top: 20px;
-}
-.item-detail .row {
-  padding: 20px;
-}
+
 .item-detail img {
   margin: 0 10px;
   max-width: 90%;
   max-height: 90%;
 }
-#item-info {
-  margin-top: 20px;
-  padding: 0;
-}
-#item-info p {
-  font-weight: normal;
-  font-size: 18px;
-}
 
-.quote-card {
-  padding: 10px;
-  max-width: 50%;
-}
-.quote-card h4 {
-  font-weight: bold;
-  padding-left: 0;
-}
-.quote-card .img-fluid {
-  padding-top: 5px;
-  height: 150px;
-}
-.quote-card .card-body {
-  padding-top: 0;
-}
-.quote-card .card:hover {
-  background-color: #FAFAFA;
-}
 
 
 
