@@ -1,12 +1,12 @@
-var express = require('express');
+const express = require('express');
 const {faker} = require("@faker-js/faker");
-var router = express.Router();
+const router = express.Router();
 
 //TODO: Remove these once real data is available
 function getMockPurchaseData() {
     const {faker} = require('@faker-js/faker');
 
-    var data = [];
+    const data = [];
 
     const devices = [
         'iPhone 12', 'iPhone 12 Pro', 'iPhone 12 Pro Max', 'iPhone 11', 'iPhone 11 Pro', 'iPhone 11 Pro Max',
@@ -47,6 +47,25 @@ function getMockPurchaseData() {
 router.get('/', function (req, res, next) {
     res.send('respond with a resource');
 });
+
+router.get('/my-profile', (req,res,next) => {
+    const user = {
+        firstName: "Elon",
+        lastName: "Musk",
+        id: 4643123,
+        avatar: "https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg?size=338&ext=jpg&ga=GA1.1.1700460183.1708387200&semt=ais",
+        addressSecond: "31 Tesla Road",
+        addressFirst: "Moon Campus",
+        city: "Interstellar",
+        country: "Mars",
+        postCode: "SPACE-X",
+        email: "elon@musk.com",
+        phone: "+44 111 222 333",
+        dateOfBirth: "28.06.1971",
+        savedCo2: 1232.1
+    }
+    res.render("user_profile", {user})
+})
 
 router.get('/payment/completed', function (req, res, next) {
     res.render('payment_completed', {title: 'Payment Completed', order: getMockPurchaseData()});
