@@ -10,4 +10,12 @@ router.get("/payment", (req,res,next) => {
   res.render('payment', {})
 })
 
+router.get("/signup", (req,res,next) => {
+  res.render('user/signup', {})
+})
+
+router.get("/login", (req,res,next) => {
+  res.render('user/login', {})
+})
+
 module.exports = router;
