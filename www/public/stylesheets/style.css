@@ -23,6 +23,7 @@ a {
   position: absolute; bottom: 5px; right: 10px;
 }
 
+
 .user-dashboard .item-img{
   max-height: 200px;
   object-fit: contain;
@@ -34,3 +35,4 @@ a {
   max-width: 90%;
   max-height: 90%;
 }
+
