@@ -1,8 +1,24 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+
+  /* Set the font to Roboto */
+    font-family: 'Roboto', sans-serif;
+
 }
 
 a {
   color: #00B7FF;
+}
+
+/*marketplace style*/
+.marketplace .item-img{
+  padding: 20px;
+  border-radius: 30px 30px 0px 0px;
+  height: 200px;
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.marketplace .item-detail-btn{
+  position: absolute; bottom: 5px; right: 10px;
 }
