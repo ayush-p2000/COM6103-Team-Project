@@ -8,56 +8,63 @@
                     <h1 class="fw-bold text-center">Listing an Item</h1>
 <!--                    Image of item-->
                     <div class="mb-3">
-                        <label for="formFile" class="form-label">Select an image of the item</label>
-                        <input class="form-control" type="file" id="formFile">
+                        <label for="itemImage" class="form-label">Pick images of the device</label>
+                        <input class="form-control" type="file" id="itemImage" name="itemImage" multiple>
                     </div>
+
 <!--                    Device information-->
                     <div class="my-3">
                         <p class="fw-bold fs-5">Device information</p>
 
                         <div class="mb-3 row">
-                            <label for="inputPassword" class="col-sm-2 col-form-label">Device Type</label>
-                            <div class="col-sm-10">
-                                <select class="form-select" id="exampleFormControlSelect1">
+                            <label for="deviceType" class="col-sm-3 col-lg-2 col-form-label">Device Type</label>
+                            <div class="col-sm-5">
+                                <select class="form-select" id="deviceType">
                                     <option selected>Smartphone</option>
-                                    <option value="1">Tablet</option>
-                                    <option value="2">PC</option>
-                                    <option value="3">Watch</option>
-                                    <option value="4">Other devices</option>
+                                    <option value="tablet">Tablet</option>
+                                    <option value="pc">PC</option>
+                                    <option value="watch">Watch</option>
+                                    <option value="other">Other devices</option>
                                 </select>
                             </div>
                         </div>
 
+<!--                        Brand -->
                         <div class="mb-3 row">
-                            <label for="inputPassword" class="col-sm-2 col-form-label">Brand and Model</label>
+                            <label for="deviceBrand" class="col-sm-3 col-lg-2 col-form-label">Brand</label>
                             <div class="col-sm-5">
-                                <select class="form-select" id="brandSelect">
+                                <select class="form-select" id="deviceBrand">
                                     <option selected>Apple</option>
-                                    <option value="1">BlackBerry</option>
-                                    <option value="2">Google</option>
-                                    <option value="3">HTC</option>
-                                    <option value="4">Huawei</option>
-                                    <option value="5">Microsoft</option>
-                                    <option value="6">Samsung</option>
-                                    <option value="7">Other brand</option>
+                                    <option value="BlackBerry">BlackBerry</option>
+                                    <option value="Google">Google</option>
+                                    <option value="HTC">HTC</option>
+                                    <option value="Huawei">Huawei</option>
+                                    <option value="Microsoft">Microsoft</option>
+                                    <option value="Samsung">Samsung</option>
+                                    <option value="Other">Other brand</option>
                                 </select>
                             </div>
+                        </div>
+
+<!--                        Model-->
+                        <div class="mb-3 row">
+                            <label for="deviceModel" class="col-sm-3 col-lg-2 col-form-label">Model</label>
                             <div class="col-sm-5">
-                                <select class="form-select" id="modelSelect">
-                                    <option selected>Model 1</option>
-                                    <option value="1">Model 2</option>
-                                    <option value="2">Model 3</option>
-                                    <option value="3">Model 4</option>
-                                    <option value="4">Other model</option>
+                                <select class="form-select" id="deviceModel">
+                                    <option value="Model 1" selected>Model 1</option>
+                                    <option value="Model 2">Model 2</option>
+                                    <option value="Model 3">Model 3</option>
+                                    <option value="Model 4">Model 4</option>
+                                    <option value="Other">Other model</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label for="inputPassword" class="col-sm-2 col-form-label">Capacity</label>
-                        <div class="col-sm-10">
-                            <select class="form-select" id="capacitySelect">
+                        <label for="deviceCapacity" class="col-sm-3 col-lg-2 col-form-label">Capacity</label>
+                        <div class="col-sm-5">
+                            <select class="form-select" id="deviceCapacity">
                                 <option selected>128GB</option>
                                 <option value="1">128GB</option>
                                 <option value="2">128GB</option>
@@ -67,9 +74,9 @@
                     </div>
 <!--                    Device Demage-->
                     <div class="my-3">
-                        <p class="fw-bold fs-5">Device Damage</p>
-                        <label for="inputPassword" class="col-sm-4 col-form-label ">Is your device in good condition?</label>
-                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                        <p class="fw-bold fs-5">Device Condition</p>
+                        <label for="deviceCondition" class="col-sm-4 col-form-label ">Is your device in good condition?</label>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Device Condition Choose">
                             <input type="radio" class="btn-check" name="conditionRadio" id="conditionYes" autocomplete="off" checked>
                             <label class="btn btn-outline-primary" for="conditionYes">Yes</label>
 
@@ -90,16 +97,16 @@
                     <div class="my-3">
                         <p class="fw-bold fs-5">Service add-on</p>
                         <div>
-                            <label for="inputPassword" class="col-sm-2 col-form-label">Data Service</label>
-                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                            <label for="dataService" class="col-sm-2 col-form-label">Data Service</label>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Data Service Choose">
                                 <input type="radio" class="btn-check" name="dataRadio" id="dataRetrieval" autocomplete="off" checked>
-                                <label class="btn btn-outline-primary" for="dataRetrieval">Data retrieval</label>
+                                <label class="btn btn-outline-primary" for="dataRetrieval">Data retrieval (+ £8.99)</label>
 
                                 <input type="radio" class="btn-check" name="dataRadio" id="dataWiping" autocomplete="off">
                                 <label class="btn btn-outline-primary" for="dataWiping">Wiping by third party</label>
 
-                                <input type="radio" class="btn-check" name="dataRadio" id="none" autocomplete="off">
-                                <label class="btn btn-outline-primary" for="none">None</label>
+                                <input type="radio" class="btn-check" name="dataRadio" id="dataNone" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="dataNone">None</label>
                             </div>
                         </div>
                     </div>
@@ -109,14 +116,14 @@
 <!--                    Additional Information-->
                     <div class="my-3">
                         <p class="fw-bold fs-5">Additional Information</p>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                                  placeholder="Tell us some special you want"></textarea>
+                        <textarea class="form-control" id="additionalInfo" rows="3" placeholder="Please provide any additional details or special requests regarding your device."></textarea>
                     </div>
+
 
 <!--                    Submit Button-->
                     <div class="row justify-content-center">
                         <div class="col-sm-6">
-                            <button type="submit" class="btn btn-primary mb-3 d-block mx-auto">Submit for approve</button>
+                            <button type="submit" class="btn btn-primary mb-3 d-block mx-auto">Submit for Approval</button>
                         </div>
                     </div>
                 </div>
