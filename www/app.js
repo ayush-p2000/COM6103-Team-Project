@@ -4,10 +4,14 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+//Load routers
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/user');
-const adminRouter = require("./routes/admin");
-const staffRouter = require('./routes/staff');
+const adminRouter = require('./routes/admin');
+const authRouter = require('./routes/authentication');
+const dataRouter = require('./routes/data');
+const paymentRouter = require('./routes/payment');
+const marketplaceRouter = require('./routes/marketplace');
+const userRouter = require('./routes/user');
 
 const app = express();
 
@@ -25,10 +29,38 @@ app.use("/stylesheets", express.static(path.join(__dirname, "node_modules/bootst
 app.use("/javascripts", express.static(path.join(__dirname, "node_modules/bootstrap/dist/js")))
 app.use("/javascripts", express.static(path.join(__dirname, "node_modules/jquery/dist")))
 
+// Most routes start with / rather than /<name of file> as the files are being used as descriptive groups of routes
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/staff', staffRouter);
 app.use('/admin', adminRouter);
+app.use('/', authRouter);
+app.use('/', dataRouter);
+app.use('/', paymentRouter);
+app.use('/', marketplaceRouter);
+app.use('/', userRouter);
+
+app.get('/debug_routes', function (req, res) {
+    let routes = [];
+    app._router.stack.forEach(function (middleware) {
+        if (middleware.route) {
+            routes.push(middleware.route.path);
+        } else if (middleware.name === 'router') {
+            middleware.handle.stack.forEach(function (handler) {
+                let route = handler.route;
+                route && routes.push(route.path);
+            });
+        }
+    });
+
+    //Sort the routes alphabetically
+    routes = routes.sort();
+
+    //Remove duplicate routes
+    routes = routes.filter(function(item, pos, self) {
+        return self.indexOf(item) == pos;
+    });
+
+    res.render('debug_links', {routes: routes});
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

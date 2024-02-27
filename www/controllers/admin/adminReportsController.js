@@ -1,8 +1,23 @@
-const express = require('express');
-const {faker} = require("@faker-js/faker");
-const router = express.Router();
+/*
+ * This controller should handle any operations related to reports
+ */
 
-//TOOD: Remove these once real data is available
+function getReportsPage(req, res, next) {
+    res.render('admin/reports/reports', {title: 'Reports'});
+}
+
+function getReportPage(req, res, next) {
+    const type = req.params.report_type;
+    const title = type.charAt(0).toUpperCase() + type.slice(1);
+    const data = getMockGraphData();
+    res.render('admin/reports/report', {
+        title: title,
+        report: type,
+        data: {labels: data.labels, datasets: data.datasets, table: getMockSalesData()}
+    });
+}
+
+//TODO: Remove these once real retrieval is available
 function getMockSalesData() {
     const {faker} = require('@faker-js/faker');
 
@@ -74,20 +89,7 @@ function getMockGraphData() {
 
 }
 
-/* GET users listing. */
-router.get('/reports', function (req, res, next) {
-    res.render('reports/reports', {title: 'Reports'});
-});
-
-router.get('/reports/:reportType', function (req, res, next) {
-    const type = req.params.reportType;
-    const title = type.charAt(0).toUpperCase() + type.slice(1);
-    const data = getMockGraphData();
-    res.render('reports/report', {
-        title: title,
-        report: type,
-        data: {labels: data.labels, datasets: data.datasets, table: getMockSalesData()}
-    });
-});
-
-module.exports = router;
+module.exports = {
+    getReportsPage,
+    getReportPage
+}

@@ -43,9 +43,9 @@
 
                         <%# TODO: Remove this TRUE once other reports exist%>
                         <% if (true) { %>
-                            <%- include("sales", {labels: data.labels, data: data.datasets, table: data.table}) -%>
+                            <%- include("sales", {labels: retrieval.labels, retrieval: retrieval.datasets, table: retrieval.table}) -%>
                         <% } else if (report !== undefined) { %>
-                            <%- include(report, {labels: data.labels, data: data.data}) -%>
+                            <%- include(report, {labels: retrieval.labels, retrieval: retrieval.retrieval}) -%>
                         <% } else { %>
                             <div class="text-center">
                                 <h1>Report not found</h1>
