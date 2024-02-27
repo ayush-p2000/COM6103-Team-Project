@@ -1,11 +1,100 @@
 body {
-  padding: 50px;
-
-  /* Set the font to Roboto */
+    /* Set the font to Roboto */
     font-family: 'Roboto', sans-serif;
+    height: 100vh;
+    background-color: antiquewhite;
 }
 
 a {
-  color: #00B7FF;
+  color: #0c0fff;
 }
 
+.form-signin {
+    max-width: 450px;
+    max-height: 900px;
+    height: 690px;
+    padding: 1rem;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-weight: bold;
+}
+
+.form-signin .form-floating:focus-within {
+    z-index: 2;
+}
+
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.form-signin p{
+    margin-top: 2rem;
+}
+
+.login-register{
+    font-size: .9em;
+    color: #162938;
+    text-align: center;
+    font-weight: 500;
+    margin: 25px 0 10px;
+}
+
+.login-register p a{
+    color: #162938;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-register p{
+    color: #162938;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-register p a:hover{
+    text-decoration: underline;
+}
+
+.form-floating{
+    width: 350px;
+    margin: 10px;
+}
+.card-footer {
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+.card-footer-sign{
+    margin-top: 1rem;
+}
+.my-3{
+    margin-top: 2rem !important;
+    margin-bottom: 3rem !important;
+}
+.h3{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3rem;
+    font-size: 35px;
+    font-weight: bold;
+    font-family: "Microsoft JhengHei UI", serif;
+}
+.seperate{
+    display: flex;
+    justify-content: space-between;
+}

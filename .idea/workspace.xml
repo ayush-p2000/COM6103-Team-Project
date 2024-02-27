@@ -5,6 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fd71b7b2-d40b-4f2d-8553-28c1983bc5c8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/www/public/stylesheets/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/www/public/stylesheets/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/www/routes/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/www/routes/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/www/routes/users.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/www/views/user/login.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/www/views/user/login.ejs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/www/views/user/signup.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/www/views/user/signup.ejs" afterDir="false" />
     </list>
@@ -23,6 +27,7 @@
   &quot;associatedIndex&quot;: 3
 }</component>
   <component name="ProjectId" id="2cosVri0MEuqyC4bs8qOEMO7NFP" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -32,6 +37,7 @@
     "Node.js.index.js.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "tsp-56",
     "last_opened_file_path": "C:/Users/ayush/OneDrive/Documents/GitHub/project/www/public/assets",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -92,7 +98,7 @@
       <workItem from="1708789293549" duration="4182000" />
       <workItem from="1708817824972" duration="2426000" />
       <workItem from="1708953628720" duration="858000" />
-      <workItem from="1708964143760" duration="12935000" />
+      <workItem from="1708964143760" duration="28314000" />
     </task>
     <servers />
   </component>

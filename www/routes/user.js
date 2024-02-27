@@ -185,6 +185,14 @@ router.get('/item-detail', (req, res, next) => {
     res.render('itemDetails', {item})
 })
 
+router.get("/signup", (req,res,next) => {
+    res.render('user/signup', {})
+})
+
+router.get("/login", (req,res,next) => {
+    res.render('user/login', {})
+})
+
 
 
 module.exports = router;
