@@ -64,7 +64,7 @@ router.get('/my-profile', (req,res,next) => {
         dateOfBirth: "28.06.1971",
         savedCo2: 1232.1
     }
-    res.render("user_profile", {user})
+    res.render("user_profile", {user, auth:true, role:'user' })
 })
 
 router.get('/payment/completed', function (req, res, next) {
@@ -117,12 +117,12 @@ router.get("/marketplace", (req,res,next) => {
         owner: "Terenz"
       },
   ]
-  res.render('marketplace', {items})
+  res.render('marketplace', {items, auth:true, role:'user'})
 })
 
 
 router.get('/list_item', function (req, res, next) {
-    res.render('list_item', {})
+    res.render('list_item', {auth:true, role:'user'})
 });
 
 router.get("/dashboard", (req,res,next) => {
@@ -166,7 +166,7 @@ router.get("/dashboard", (req,res,next) => {
             owner: "Terenz"
         },
     ]
-    res.render('dashboard', {items})
+    res.render('dashboard', {items, auth:true, role:'user'})
 })
 
 router.get("/my_items", (req,res,next) => {
@@ -210,7 +210,7 @@ router.get("/my_items", (req,res,next) => {
             owner: "Terenz"
         },
     ]
-    res.render('my_items', {items})
+    res.render('my_items', {items,auth:true, role:'user'})
 })
 
 
