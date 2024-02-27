@@ -1,6 +1,4 @@
 body {
-    padding: 50px;
-
     /* Set the font to roboto. */
     font-family: 'Roboto', sans-serif;
 
@@ -57,12 +55,22 @@ a {
 }
 
 /* landing page */
-.feature {
-  margin: 50px 0;
+#features {
+  margin: 50px auto;
 }
 .carousel-inner img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+/* To make the website responsive*/
+@media (max-width: 768px) {
+    .carousel-caption h1 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-caption p {
+        font-size: 1rem;
+    }
 }
 

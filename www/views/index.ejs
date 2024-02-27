@@ -1,36 +1,43 @@
 <%- include("components/header.ejs") %>
 <%- include("components/navbar.ejs") %>
-<!-- Hero Section with Carousel -->
-<div class="jumbotron text-center">
-    <h1 class="display-4">Recycle Your E-Waste</h1>
-    <p class="lead">Helping you responsibly dispose of electronic waste for a sustainable future.</p>
-    <a class="btn btn-primary btn-lg" href="#contact" role="button">Contact Us</a>
+<!-- Hero Section-->
+<div id="carouselExample" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://via.placeholder.com/1600x600" class="d-block w-100" alt="E-Waste Recycling">
+            <div class="carousel-caption d-sm-block">
+                <h1 class="display-4">Recycle Your E-Waste</h1>
+                <p class="lead">Helping you responsibly dispose of electronic waste for a sustainable future.</p>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <!-- Features Section -->
 <div class="container feature" id="features">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <h2 class="card-title text-primary">Placeholder Feature</h2>
-                    <p class="card-text">We offer convenient pickup services for your electronic waste, ensuring a hassle-free recycling process.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body text-center">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
                     <h2 class="card-title text-primary">Eco-Friendly Recycling</h2>
                     <p class="card-text">Our recycling processes adhere to environmentally friendly standards to minimize the impact on the planet.</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body text-center">
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
                     <h2 class="card-title text-primary">Data Security</h2>
                     <p class="card-text">Your data is safe with us. We guarantee the secure destruction of data-containing devices.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title text-primary">Placeholder Feature</h2>
+                    <p class="card-text">We offer convenient pickup services for your electronic waste, ensuring a hassle-free recycling process.</p>
                 </div>
             </div>
         </div>
@@ -42,7 +49,7 @@
     <div class="row">
         <div class="col-md-6">
             <h2 class="text-primary">Contact Us</h2>
-            <p>Have questions or want to schedule a pickup? Contact us today!</p>
+            <p>Have any questions? Contact us today!</p>
         </div>
         <div class="col-md-6">
             <form class="contact-form p-4 border-2 rounded-2 shadow-sm">
