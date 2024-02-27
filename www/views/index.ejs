@@ -1,11 +1,79 @@
 <%- include("components/header.ejs") %>
-<div class="container">
-    <div class="jumbotron bg-warning-subtle rounded-3 p-1">
-        <h1> <%= title %> </h1>
-        <p> Welcome to <%= title %> </p>
-      <small class="text-danger">If this is red and in a jumbotron, it works!</small>
-    </div>
+<!--    <div class="jumbotron bg-warning-subtle rounded-3 p-1">-->
+<!--        <h1> <%= title %> </h1>-->
+<!--        <p> Welcome to <%= title %> </p>-->
+<!--      <small class="text-danger">If this is red and in a jumbotron, it works!</small>-->
+<!--    </div>-->
 
+<!-- Hero Section with Carousel -->
+<div id="carouselExample" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://via.placeholder.com/1600x600" class="d-block w-100" alt="E-Waste Recycling">
+            <div class="carousel-caption d-none d-md-block">
+                <h1 class="display-4">Recycle Your E-Waste</h1>
+                <p class="lead">Helping you responsibly dispose of electronic waste for a sustainable future.</p>
+            </div>
+        </div>
+        <!-- Add more carousel items as needed -->
+    </div>
+</div>
+
+<!-- Features Section with Bootstrap Cards -->
+<div class="container feature" id="features">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="card-title text-primary">Convenient Pickup</h2>
+                    <p class="card-text">We offer convenient pickup services for your electronic waste, ensuring a hassle-free recycling process.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="card-title text-primary">Eco-Friendly Recycling</h2>
+                    <p class="card-text">Our recycling processes adhere to environmentally friendly standards to minimize the impact on the planet.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="card-title text-primary">Data Security</h2>
+                    <p class="card-text">Your data is safe with us. We guarantee the secure destruction of data-containing devices.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Section -->
+<div class="container feature" id="contact">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="text-primary">Contact Us</h2>
+            <p>Have questions or want to schedule a pickup? Contact us today!</p>
+        </div>
+        <div class="col-md-6">
+            <form class="contact-form p-4 border-2 rounded-2 shadow-sm">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" class="form-control mb-2" id="name" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control mb-2" id="email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea class="form-control mb-2" id="message" rows="3" placeholder="Your message"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 
