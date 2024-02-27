@@ -1,6 +1,4 @@
 body {
-  /*Removing body padding because navbar and other components are pushed down*/
-  /*padding: 50px;*/
 
   /* Set the font to Roboto */
     font-family: 'Roboto', sans-serif;
