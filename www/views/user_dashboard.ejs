@@ -1,0 +1,42 @@
+<link rel='stylesheet' href="/stylesheets/bootstrap.min.css">
+<link rel='stylesheet' href="/stylesheets/style.css">
+
+
+<div class="mx-4 user-dashboard">
+    <!--    TODO change to Navbar component once its finished -->
+    <div class="row mb-3 mx-4">
+        <div class="bg-body-secondary d-flex justify-content-around align-items-center col">
+            <h3 class="text-muted">Navbar Placeholder</h3>
+        </div>
+    </div>
+
+
+    <% items.forEach(item => { %>
+        <div class="card mt-4">
+            <div class="card-body row d-flex align-items-center">
+                <div class="col-3 col-md-2 col-lg-2 col-xl-1">
+                    <img src="<%= item.picUrl %>" class="img-fluid item-img">
+                </div>
+                <div class="col-6 col-md-8 col-lg-7 col-xl-8">
+                    <h4 class="d-flex align-items-center"><%= item.name %><span class="badge bg-success ms-2" style="font-size: 0.4em;">Approved</span></h4>
+                    <p class="m-0 p-0 text-muted"><small>Device Type: </small><%= item.deviceType %></p>
+                    <p class="m-0 p-0 text-muted"><small>Classification: </small><%= item.classification %></p>
+                    <p class="m-0 p-0 text-muted"><small>Price: </small>£<%= item.price %></p>
+                </div>
+                <div class="col-3 col-md-2 col-lg-3 col-xl-3 d-flex justify-content-end align-items-center">
+                    <div class="btn btn-primary">View</div>
+                </div>
+            </div>
+        </div>
+    <% }) %>
+
+
+
+    <!--    TODO change to Footer component once its finished -->
+    <div class="row mb-3 mx-4 mt-5">
+        <div class="bg-body-secondary d-flex justify-content-around align-items-center col">
+            <h3 class="text-muted">Footer Placeholder</h3>
+        </div>
+    </div>
+
+</div>
