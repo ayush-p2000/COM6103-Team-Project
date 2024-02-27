@@ -57,3 +57,7 @@ a {
   max-height: 90%;
 }
 
+.admin-layout a {
+    color: #222222;
+}
+
