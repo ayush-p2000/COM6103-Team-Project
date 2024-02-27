@@ -1,4 +1,5 @@
 body {
+<<<<<<< www/public/stylesheets/style.css
     /* Set the font to Roboto */
     font-family: 'Roboto', sans-serif;
     height: 100vh;
@@ -24,6 +25,45 @@ a {
     align-items: center;
     overflow: hidden;
     font-weight: bold;
+=======
+    padding: 50px;
+
+    /* Set the font to roboto. */
+    font-family: 'Roboto', sans-serif;
+
+    /* Set the background color to a light gray. */
+    background-color: #f4f4f4;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.hover-shadow {
+    transition: 0.2s;
+}
+
+.hover-shadow:hover {
+    /* When hovering over the element with the class "hover-shadow", add a shadow larger shadow
+    that makes the element appear to rise off the page. */
+    transition: 0.5s;
+
+    /* Grow the item slightly during the hover transition. */
+    transform: scale(1.02);
+
+    /* Make the border a baby blue color. */
+    border-color: #71d5ff;
+
+    /* Add a light blue shadow to the item. */
+    box-shadow: 0 0 10px rgba(113, 213, 255, 0.6);
+}
+/*marketplace style*/
+.marketplace .item-img{
+  padding: 20px;
+  border-radius: 30px 30px 0px 0px;
+  height: 200px;
+  max-height: 200px;
+  object-fit: contain;
 }
 
 .form-signin .form-floating:focus-within {
