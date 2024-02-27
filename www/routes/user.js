@@ -121,7 +121,7 @@ router.get("/marketplace", (req,res,next) => {
 })
 
 
-router.get('/list_item', function (req, res, next) {
+router.get('/list-item', function (req, res, next) {
     res.render('list_item', {auth:true, role:'user'})
 });
 
@@ -169,7 +169,7 @@ router.get("/dashboard", (req,res,next) => {
     res.render('dashboard', {items, auth:true, role:'user'})
 })
 
-router.get("/my_items", (req,res,next) => {
+router.get("/my-items", (req,res,next) => {
     const items = [
         {
             id: 1,
