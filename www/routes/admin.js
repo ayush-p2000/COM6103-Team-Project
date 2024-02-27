@@ -2,9 +2,15 @@ const express = require('express');
 const router = express.Router();
 
 const {getAdminDashboard} = require("../controllers/admin/adminController");
-const {getAccountDetailsPage, getAccountsPage, getEditAccountPage} = require("../controllers/admin/adminAccountsController");
+const {
+    getAccountDetailsPage, getAccountsPage, getEditAccountPage
+} = require("../controllers/admin/adminAccountsController");
+
 const {getReportsPage, getReportPage} = require("../controllers/admin/adminReportsController");
-const {getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage} = require("../controllers/admin/adminDevicesController");
+const {
+    getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage
+} = require("../controllers/admin/adminDevicesController");
+
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
 
 /* GET home page. */
@@ -29,7 +35,5 @@ router.get('/reports/:report_type', getReportPage);
 router.get('/types', getDeviceTypePage);
 
 router.get('/types/:id', getDeviceTypeDetailsPage);
-
-
 
 module.exports = router;
