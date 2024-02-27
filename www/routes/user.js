@@ -120,6 +120,11 @@ router.get("/marketplace", (req,res,next) => {
   res.render('marketplace', {items})
 })
 
+
+router.get('/list_item', function (req, res, next) {
+    res.render('list_item', {})
+});
+
 router.get("/user_dashboard", (req,res,next) => {
     const items = [
         {
@@ -163,6 +168,7 @@ router.get("/user_dashboard", (req,res,next) => {
     ]
     res.render('user_dashboard', {items})
 })
+
 
 router.get('/item-detail', (req, res, next) => {
     const item = {
