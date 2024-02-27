@@ -2,7 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 /* GET home page. */
-router.get('/user-details', function(req, res, next) {
+router.get("/", (req,res,next) => {
+    const admin = {
+        name: "Chuck",
+        lastName: "Norris"
+    }
+    res.render("admin/dashboard", {admin, numOfUsers: 11, savedCo2:124.3, numOfFinishedTransactions: 1121})
+})
+router.get('/user-details', (req, res, next) => {
     // TODO Remove dummy data
     const user = {
         firstName: "Elon",

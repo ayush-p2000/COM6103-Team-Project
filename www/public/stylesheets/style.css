@@ -9,3 +9,30 @@ body {
 a {
   color: #00B7FF;
 }
+
+/*marketplace style*/
+.marketplace .item-img{
+  padding: 20px;
+  border-radius: 30px 30px 0px 0px;
+  height: 200px;
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.marketplace .item-detail-btn{
+  position: absolute; bottom: 5px; right: 10px;
+}
+
+
+.user-dashboard .item-img{
+  max-height: 200px;
+  object-fit: contain;
+}
+
+/* item Detail page */
+.item-detail img {
+  margin: 0 10px;
+  max-width: 90%;
+  max-height: 90%;
+}
+
