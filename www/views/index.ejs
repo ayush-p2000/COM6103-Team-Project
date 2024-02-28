@@ -1,14 +1,30 @@
 <%- include("components/header.ejs") %>
 <%- include("components/navbar.ejs") %>
 <!-- Hero Section-->
-<div id="carouselExample" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="https://via.placeholder.com/1600x600" class="d-block w-100" alt="E-Waste Recycling">
-            <div class="carousel-caption d-sm-block">
-                <h1 class="display-4">Recycle Your E-Waste</h1>
-                <p class="lead">Helping you responsibly dispose of electronic waste for a sustainable future.</p>
+
+<div class="container py-6 mt-3 hero mx-0" style="background-color: #B2BEB5; max-width: 100%">
+    <div class="row flex-lg-row-reverse align-items-center g-5">
+        <div class="col-10 mx-auto col-sm-8 col-lg-6">
+            <img src="https://images.unsplash.com/photo-1530435460869-d13625c69bbf?crop=entropy&amp;cs=tinysrgb&amp;fit=crop&amp;fm=jpg&amp;ixid=MnwzNzg0fDB8MXxzZWFyY2h8MTB8fHdlYnNpdGV8ZW58MHwwfHx8MTYyMTQ0NjkyNg&amp;ixlib=rb-1.2.1&amp;q=80&amp;w=1080&amp;h=768" class="d-block mx-lg-auto my-3 img-fluid rounded-5 h-50  shadow" alt="" loading="lazy">
+        </div>
+        <div class="col-lg-6">
+            <div class="lc-block mb-3">
+                <div>
+                    <h2 class="fw-bold display-5">Recycle Your <span class="hero-text">E-Waste</span></h2>
+                </div>
             </div>
+
+            <div class="lc-block mb-3 fs-5 fw-medium">
+                <div>
+                    <p>Helping you responsibly dispose of electronic waste for a sustainable future.
+                    </p>
+                </div>
+            </div>
+
+            <div class="lc-block d-grid gap-2 d-md-flex justify-content-md-start">
+                <a class="btn px-4 me-md-2 mb-2" href="#" role="button">Click me, I'm a button</a>
+            </div>
+
         </div>
     </div>
 </div>
@@ -16,27 +32,29 @@
 
 <!-- Features Section -->
 <div class="container feature" id="features">
+
     <div class="row row-cols-1 row-cols-md-3 g-4">
+        <h2 class="fw-medium fs-1 text-light w-100">Why Sell E-Waste?</h2>
         <div class="col">
-            <div class="card h-100">
+            <div class="card h-100 shadow">
                 <div class="card-body">
-                    <h2 class="card-title text-primary">Eco-Friendly Recycling</h2>
+                    <h2 class="card-title">Eco-Friendly Recycling</h2>
                     <p class="card-text">Our recycling processes adhere to environmentally friendly standards to minimize the impact on the planet.</p>
                 </div>
             </div>
         </div>
         <div class="col">
-            <div class="card h-100">
+            <div class="card h-100 shadow">
                 <div class="card-body">
-                    <h2 class="card-title text-primary">Data Security</h2>
+                    <h2 class="card-title">Data Security</h2>
                     <p class="card-text">Your data is safe with us. We guarantee the secure destruction of data-containing devices.</p>
                 </div>
             </div>
         </div>
         <div class="col">
-            <div class="card h-100">
+            <div class="card h-100 shadow">
                 <div class="card-body">
-                    <h2 class="card-title text-primary">Placeholder Feature</h2>
+                    <h2 class="card-title">Placeholder Feature</h2>
                     <p class="card-text">We offer convenient pickup services for your electronic waste, ensuring a hassle-free recycling process.</p>
                 </div>
             </div>
@@ -71,6 +89,7 @@
     </div>
 
 </div>
+
 </body>
 
 <script src="/javascripts/jquery-1.11.1.min.js"></script>

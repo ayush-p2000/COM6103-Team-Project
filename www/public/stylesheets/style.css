@@ -56,21 +56,29 @@ a {
 
 /* landing page */
 #features {
-  margin: 50px auto;
+    margin: 24px 0;
+    background-color: #2E8B57;
+    max-width: 100%;
+    max-height: fit-content;
+    padding: 0 10px 40px;
 }
-.carousel-inner img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+
+#features .card {
+    background-color: #097969;
+    color: #f4f4f4;
+}
+.hero-text {
+    color: #097969;
+}
+.hero p {
+    color: #71797E;
+}
+.hero .btn {
+    background-color: #097969;
+    color: #f4f4f4;
 }
 /* To make the website responsive*/
 @media (max-width: 768px) {
-    .carousel-caption h1 {
-        font-size: 1.5rem;
-    }
 
-    .carousel-caption p {
-        font-size: 1rem;
-    }
 }
 
