@@ -3,8 +3,12 @@
  */
 
 function getAccountsPage(req, res, next) {
-    //TODO: Add functionality for the accounts page
-   res.send('[Accounts Page Here]')
+    const users = [
+        {user: 'John', device: 'Phone', level: 'user'},
+        {user: 'Alice', device: 'Laptop', level: 'staff'},
+        {user: 'Bob', device: 'Tablet', level: 'user'},
+    ];
+    res.render('admin/user_management', {users});
 }
 
 function getAccountDetailsPage(req, res, next) {
@@ -37,7 +41,7 @@ function getAccountDetailsPage(req, res, next) {
             }
         ]
     }
-    res.render('admin/user_details', { user });
+    res.render('admin/user_details', {user});
 }
 
 function getEditAccountPage(req, res, next) {
