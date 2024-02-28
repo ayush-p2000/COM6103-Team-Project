@@ -1,5 +1,4 @@
 body {
-<<<<<<< www/public/stylesheets/style.css
     /* Set the font to Roboto */
     font-family: 'Roboto', sans-serif;
     height: 100vh;
@@ -66,6 +65,8 @@ a {
   object-fit: contain;
 }
 
+/*--- Sign in Form Style ----*/
+
 .form-signin .form-floating:focus-within {
     z-index: 2;
 }
@@ -85,6 +86,8 @@ a {
 .form-signin p{
     margin-top: 2rem;
 }
+
+/*----- Login Page Style ------*/
 
 .login-register{
     font-size: .9em;
@@ -109,6 +112,8 @@ a {
 .login-register p a:hover{
     text-decoration: underline;
 }
+
+/*------ Extra required styling for clean UI ------*/
 
 .form-floating{
     width: 350px;
