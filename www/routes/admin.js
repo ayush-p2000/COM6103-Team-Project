@@ -43,12 +43,12 @@ router.get('/user-details', (req, res, next) => {
 });
 
 router.get('/user-management',function (req,res,next){
-   const gridData = [
+   const users = [
        {user:'John',device:'Phone', level:'user'},
        {user:'Alice',device: 'Laptop', level:'staff'},
        {user:'Bob',device: 'Tablet',level:'user'},
    ];
-   res.render('admin/userManagement',{gridData});
+   res.render('admin/userManagement',{users});
 });
 
 module.exports = router;
