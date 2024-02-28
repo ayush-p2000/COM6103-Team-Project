@@ -166,7 +166,7 @@ router.get("/user_dashboard", (req,res,next) => {
             owner: "Ayush"
         },
     ]
-    res.render('user_dashboard_2', {items})
+    res.render('user_dashboard', {items})
 })
 
 
