@@ -56,13 +56,12 @@ a {
 
 /* landing page */
 #features {
-    margin: 24px 0;
+    margin: 24px 0 0;
     background-color: #2E8B57;
     max-width: 100%;
     max-height: fit-content;
     padding: 0 10px 40px;
 }
-
 #features .card {
     background-color: #097969;
     color: #f4f4f4;
@@ -72,10 +71,6 @@ a {
 }
 .hero p {
     color: #71797E;
-}
-.hero .btn {
-    background-color: #097969;
-    color: #f4f4f4;
 }
 
 
