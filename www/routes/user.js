@@ -134,7 +134,7 @@ router.get("/user_dashboard", (req,res,next) => {
             classification: "Current",
             deviceType: "Phone",
             price: 599,
-            owner: "Terenz"
+            owner: "Ayush"
         },
         {
             id: 2,
@@ -143,7 +143,7 @@ router.get("/user_dashboard", (req,res,next) => {
             classification: "Recycle",
             deviceType: "Tablet",
             price: 399,
-            owner: "Terenz"
+            owner: "Ayush"
         },
         {
             id: 3,
@@ -153,7 +153,7 @@ router.get("/user_dashboard", (req,res,next) => {
             classification: "Current",
             deviceType: "Laptop",
             price: 899,
-            owner: "Terenz"
+            owner: "Ayush"
         },
         {
             id: 4,
@@ -163,10 +163,10 @@ router.get("/user_dashboard", (req,res,next) => {
             classification: "Recycle",
             deviceType: "Watch",
             price: 169,
-            owner: "Terenz"
+            owner: "Ayush"
         },
     ]
-    res.render('user_dashboard', {items})
+    res.render('user_dashboard_2', {items})
 })
 
 

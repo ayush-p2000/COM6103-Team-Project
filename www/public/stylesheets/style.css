@@ -1,3 +1,6 @@
+/*--------GOOGLE FONT API------*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 body {
     padding: 50px;
 
@@ -56,3 +59,63 @@ a {
   max-height: 90%;
 }
 
+<<<<<<< Updated upstream
+=======
+.login-register{
+    font-size: .9em;
+    color: #162938;
+    text-align: center;
+    font-weight: 500;
+    margin: 25px 0 10px;
+}
+
+.login-register p a{
+    color: #162938;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-register p{
+    color: #162938;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-register p a:hover{
+    text-decoration: underline;
+}
+
+.form-floating{
+    width: 350px;
+    margin: 10px;
+}
+.card-footer {
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+.card-footer-sign{
+    margin-top: 1rem;
+}
+.my-3{
+    margin-top: 2rem !important;
+    margin-bottom: 3rem !important;
+}
+.h3{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3rem;
+    font-size: 35px;
+    font-weight: bold;
+    font-family: "Microsoft JhengHei UI", serif;
+}
+.seperate{
+    display: flex;
+    justify-content: space-between;
+}
+
+.bi {
+    vertical-align: -0.125em;
+    fill: currentColor;
+}
+>>>>>>> Stashed changes
