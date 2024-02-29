@@ -3,16 +3,17 @@
  */
 
 const {getMockGraphData, getMockSalesData} = require("../../util/mock/mockData");
+const {renderAdminLayout} = require("../../util/layout/layoutUtils");
 
 function getReportsPage(req, res, next) {
-    res.render('admin/reports/reports', {title: 'Reports'});
+    renderAdminLayout(res, "reports/reports", {})
 }
 
 function getReportPage(req, res, next) {
     const type = req.params.report_type;
     const title = type.charAt(0).toUpperCase() + type.slice(1);
     const data = getMockGraphData();
-    res.render('admin/reports/report', {
+    renderAdminLayout(res, `reports/report`, {
         title: title,
         report: type,
         data: {labels: data.labels, datasets: data.datasets, table: getMockSalesData()}

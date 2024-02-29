@@ -5,13 +5,13 @@
 const {getMockItem} = require("../../util/mock/mockData");
 
 function getListItem(req, res, next) {
-    res.render('marketplace/list_item', {})
+    res.render('marketplace/list_item', {auth: true, role: 'user'})
 }
 
 function getItemDetails(req, res, next) {
     const item = getMockItem()
 
-    res.render('marketplace/item_details', {item})
+    res.render('marketplace/item_details', {item, auth: true, role: 'user'})
 }
 
 function getItemQrCode(req, res, next) {

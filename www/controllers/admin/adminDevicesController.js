@@ -2,25 +2,27 @@
  * This controller should handle any operations related to device management or device type management
  */
 
+const {renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
+
 function getDevicesPage(req, res, next) {
     //TODO: Add functionality for the devices page
-    res.send('[Devices Page Here]')
+    renderAdminLayoutPlaceholder(res, "devices", {}, "Devices Page Here")
 }
 
 function getFlaggedDevicesPage(req, res, next) {
     //TODO: Add functionality for the flagged devices page
-    res.send('[Flagged Devices Page Here]')
+    renderAdminLayoutPlaceholder(res, "flagged_devices", {}, "Flagged Devices Page Here")
 
 }
 
 function getDeviceTypePage(req, res, next) {
     //TODO: Add functionality for the device type page
-    res.send('[Device Type Page Here]')
+    renderAdminLayoutPlaceholder(res, "device_types", {}, "Device Type Page Here")
 }
 
 function getDeviceTypeDetailsPage(req, res, next) {
     //TODO: Add functionality for the device type details page
-    res.send('[Device Type Details Page Here]')
+    renderAdminLayoutPlaceholder(res, "device_type_details", {}, "Device Type Details Page Here")
 }
 
 module.exports = {

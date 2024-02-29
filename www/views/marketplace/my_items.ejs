@@ -1,76 +1,82 @@
-<link rel='stylesheet' href="/stylesheets/bootstrap.min.css">
-<link rel='stylesheet' href="/stylesheets/style.css">
+<%- include("../components/header") %>
 
+<%- include("../components/navbar") %>
 
-<div class="mx-4 my_items">
-    <%- include("../components/navbar.ejs") %>
-    <!--Filter and Sorter-->
-    <div class="row mt-4 mt-3">
-        <p class="fw-bold">Classification: </p>
-        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-            <input type="checkbox" class="btn-check" id="currentClass" autocomplete="off">
-            <label class="btn btn-outline-primary" for="currentClass">Current</label>
+<div class="container-fluid vh-100">
+    <div class="mx-4 my_items">
 
-            <input type="checkbox" class="btn-check" id="recycleClass" autocomplete="off">
-            <label class="btn btn-outline-primary" for="recycleClass">Recycle</label>
+        <!--Filter and Sorter-->
+        <div class="row mt-4 mt-3">
+            <p class="fw-bold">Classification: </p>
+            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                <input type="checkbox" class="btn-check" id="currentClass" autocomplete="off">
+                <label class="btn btn-outline-primary" for="currentClass">Current</label>
 
-            <input type="checkbox" class="btn-check" id="rareClass" autocomplete="off">
-            <label class="btn btn-outline-primary" for="rareClass">Rare</label>
+                <input type="checkbox" class="btn-check" id="recycleClass" autocomplete="off">
+                <label class="btn btn-outline-primary" for="recycleClass">Recycle</label>
 
-            <input type="checkbox" class="btn-check" id="UnknownClass" autocomplete="off">
-            <label class="btn btn-outline-primary" for="UnknownClass">Unknown</label>
-        </div>
-    </div>
+                <input type="checkbox" class="btn-check" id="rareClass" autocomplete="off">
+                <label class="btn btn-outline-primary" for="rareClass">Rare</label>
 
-    <div class="row mt-2">
-        <p class="fw-bold">Device Type: </p>
-        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-            <input type="checkbox" class="btn-check" id="phoneCheck" autocomplete="off">
-            <label class="btn btn-outline-primary" for="phoneCheck">Phone</label>
-
-            <input type="checkbox" class="btn-check" id="tabletCheck" autocomplete="off">
-            <label class="btn btn-outline-primary" for="tabletCheck">Tablet</label>
-
-            <input type="checkbox" class="btn-check" id="laptopCheck" autocomplete="off">
-            <label class="btn btn-outline-primary" for="laptopCheck">Laptop</label>
-
-            <input type="checkbox" class="btn-check" id="watchCheck" autocomplete="off">
-            <label class="btn btn-outline-primary" for="watchCheck">Watch</label>
-
-            <input type="checkbox" class="btn-check" id="pcCheck" autocomplete="off">
-            <label class="btn btn-outline-primary" for="pcCheck">PC</label>
-        </div>
-    </div>
-
-    <div class="row mt-2">
-        <p class="fw-bold">Pricing: </p>
-        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check" name="priceOrder" id="priceDescending" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="priceDescending">Descending</label>
-
-            <input type="radio" class="btn-check" name="priceOrder" id="priceAscending" autocomplete="off">
-            <label class="btn btn-outline-primary" for="priceAscending">Ascending</label>
-
-        </div>
-    </div>
-
-
-    <% items.forEach(item => { %>
-        <div class="card mt-4">
-            <div class="card-body row d-flex align-items-center">
-                <div class="col-3 col-md-2 col-lg-2 col-xl-1">
-                    <img src="<%= item.picUrl %>" class="img-fluid item-img">
-                </div>
-                <div class="col-6 col-md-8 col-lg-7 col-xl-8">
-                    <h4 class="d-flex align-items-center"><%= item.name %><span class="badge bg-success ms-2" style="font-size: 0.4em;">Approved</span></h4>
-                    <p class="m-0 p-0 text-muted"><small>Device Type: </small><%= item.deviceType %></p>
-                    <p class="m-0 p-0 text-muted"><small>Classification: </small><%= item.classification %></p>
-                    <p class="m-0 p-0 text-muted"><small>Price: </small>£<%= item.price %></p>
-                </div>
-                <div class="col-3 col-md-2 col-lg-3 col-xl-3 d-flex justify-content-end align-items-center">
-                    <div class="btn btn-primary">View</div>
-                </div>
+                <input type="checkbox" class="btn-check" id="UnknownClass" autocomplete="off">
+                <label class="btn btn-outline-primary" for="UnknownClass">Unknown</label>
             </div>
         </div>
-    <% }) %>
+
+        <div class="row mt-2">
+            <p class="fw-bold">Device Type: </p>
+            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                <input type="checkbox" class="btn-check" id="phoneCheck" autocomplete="off">
+                <label class="btn btn-outline-primary" for="phoneCheck">Phone</label>
+
+                <input type="checkbox" class="btn-check" id="tabletCheck" autocomplete="off">
+                <label class="btn btn-outline-primary" for="tabletCheck">Tablet</label>
+
+                <input type="checkbox" class="btn-check" id="laptopCheck" autocomplete="off">
+                <label class="btn btn-outline-primary" for="laptopCheck">Laptop</label>
+
+                <input type="checkbox" class="btn-check" id="watchCheck" autocomplete="off">
+                <label class="btn btn-outline-primary" for="watchCheck">Watch</label>
+
+                <input type="checkbox" class="btn-check" id="pcCheck" autocomplete="off">
+                <label class="btn btn-outline-primary" for="pcCheck">PC</label>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <p class="fw-bold">Pricing: </p>
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check" name="priceOrder" id="priceDescending" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="priceDescending">Descending</label>
+
+                <input type="radio" class="btn-check" name="priceOrder" id="priceAscending" autocomplete="off">
+                <label class="btn btn-outline-primary" for="priceAscending">Ascending</label>
+
+            </div>
+        </div>
+
+        <% items.forEach(item => { %>
+            <div class="card mt-4">
+                <div class="card-body row d-flex align-items-center">
+                    <div class="col-3 col-md-2 col-lg-2 col-xl-1">
+                        <img src="<%= item.picUrl %>" class="img-fluid item-img">
+                    </div>
+                    <div class="col-6 col-md-8 col-lg-7 col-xl-8">
+                        <h4 class="d-flex align-items-center"><%= item.name %><span class="badge bg-success ms-2"
+                                                                                    style="font-size: 0.4em;">Approved</span>
+                        </h4>
+                        <p class="m-0 p-0 text-muted"><small>Device Type: </small><%= item.deviceType %></p>
+                        <p class="m-0 p-0 text-muted"><small>Classification: </small><%= item.classification %></p>
+                        <p class="m-0 p-0 text-muted"><small>Price: </small>£<%= item.price %></p>
+                    </div>
+                    <div class="col-3 col-md-2 col-lg-3 col-xl-3 d-flex justify-content-end align-items-center">
+                        <div class="btn btn-primary">View</div>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
 </div>
+
+<%- include("../components/footer") %>
+```

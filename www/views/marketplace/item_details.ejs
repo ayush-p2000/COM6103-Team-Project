@@ -1,6 +1,8 @@
-<%- include('../components/header.ejs') %>
+<%- include('../components/header') %>
 
-<div class="container item-detail mt-5">
+<%- include('../components/navbar') %>
+
+<div class="container-fluid item-detail mt-5">
     <div class="row bg-light p-4">
         <div class="col-md-6 mb-4">
             <img src="https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D640/https://d2e6ccujb3mkqf.cloudfront.net/af874b95-0a58-4efa-b0f4-cd020fed146b-1_6ae90150-3ee4-4659-8fc3-19d483bfed00.jpg" class="img-fluid rounded-3" alt="Item Image">
@@ -48,7 +50,4 @@
     </div>
 </div>
 
-<script src="/javascripts/jquery.min.js"></script>
-<script src="/javascripts/bootstrap.min.js"></script>
-</body>
-</html>
+<%- include('../components/footer.ejs') %>

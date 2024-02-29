@@ -31,9 +31,9 @@ const getMockUser = () => {
 
 const getMockAccountsList = () => {
     return [
-        {user: 'John', device: 'Phone', level: 'user'},
-        {user: 'Alice', device: 'Laptop', level: 'staff'},
-        {user: 'Bob', device: 'Tablet', level: 'user'},
+        {id: '123', user: 'John', device: 'Phone', level: 'user'},
+        {id: '456', user: 'Alice', device: 'Laptop', level: 'staff'},
+        {id: '789', user: 'Bob', device: 'Tablet', level: 'user'},
     ];
 }
 
