@@ -2,7 +2,7 @@
 <%- include("components/navbar.ejs") %>
 <!-- Hero Section-->
 
-<div class="container mt-3 hero mx-0 object-fit-cover">
+<div class="container-fluid mt-3 hero mx-0 object-fit-cover landing-page">
     <div class="row flex-lg-row-reverse align-items-center g-3">
         <div class="col-10 mx-auto col-sm-8 col-lg-6  my-4 ">
             <img src="https://assets.ey.com/content/dam/ey-sites/ey-com/en_us/topics/climate-change/ey-waste-bin-full-of-e-waste.jpg" class="d-block mx-lg-auto img-fluid rounded-5 h-50  shadow" alt="" loading="lazy">
@@ -21,8 +21,8 @@
                 </div>
             </div>
 
-            <div class="lc-block d-grid gap-2 d-md-flex justify-content-md-start">
-                <a class="btn px-4 me-md-2 mb-2 primary-btn" href="/login" role="button">Login</a>
+            <div class="lc-block d-grid gap-2 d-md-flex justify-content-md-start pb-3">
+                <a class="btn btn-success px-4 me-md-2 mb-2 btn-bg" href="/login" role="button">Login</a>
                 <a class="btn btn-outline-secondary px-4 me-md-2 mb-2" href="/register" role="button">SignUp</a>
             </div>
 
@@ -32,7 +32,7 @@
 
 
 <!-- Features Section -->
-<div class="container feature mt-3" id="features">
+<div class="container-fluid feature mt-3 landing-page px-3 pb-5" id="features">
 
     <div class="row row-cols-1 row-cols-md-3 g-3 py-3">
         <h2 class="fw-medium fs-1 pt-2 text-light w-100">Why Use Our Website?</h2>
@@ -64,7 +64,7 @@
 </div>
 
 
-<div class="container feature impact bg-secondary pt-3" id="impact">
+<div class="container-fluid feature impact bg-secondary pt-3 landing-page" id="impact">
 
     <div class="row row-cols-1 row-cols-md-3 g-3 py-4">
         <h2 class="fw-medium fs-1 pt-2 text-light w-100">Our Impact</h2>
@@ -74,7 +74,7 @@
 </div>
 
 <!-- Contact Section -->
-<div class="container features py-4" id="contact">
+<div class="container-fluid features py-4 landing-page" id="contact">
     <div class="row">
         <div class="col-md-6">
             <h2 class="fw-medium primary">Contact Us</h2>
@@ -94,7 +94,7 @@
                     <label for="message">Message</label>
                     <textarea class="form-control mb-2" id="message" rows="3" placeholder="Your message"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary primary-btn">Submit</button>
+                <button type="submit" class="btn btn-success btn-bg">Submit</button>
             </form>
         </div>
     </div>

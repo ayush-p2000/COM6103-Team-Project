@@ -55,31 +55,21 @@ a {
 }
 
 /* landing page */
-.container {
-    max-width: 100%;
-}
-#features {
-    margin: 24px 0 0;
+
+.landing-page#features {
     background-color: #2E8B57;
-    max-width: 100%;
-    max-height: fit-content;
-    padding: 0 10px 40px;
 }
-#features .card {
+.landing-page#features .card, .landing-page .btn-bg {
     background-color: #097969;
     color: #f4f4f4;
 }
-.hero {
+.landing-page.hero, .nav-bg {
     background-color: #B2BEB5;
 }
-.hero p {
+.landing-page.hero p {
     color: #71797E;
 }
-.primary-btn {
-    background-color: #097969;
-    color: #f4f4f4;
-}
-.primary {
+.primary{
     color: #097969;
 }
 
