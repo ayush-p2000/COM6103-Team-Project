@@ -2,13 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 body {
-    padding: 50px;
 
     /* Set the font to roboto. */
     font-family: 'Roboto', sans-serif;
 
     /* Set the background color to a light gray. */
-    background-color: #f4f4f4;
+    background-color: lightgrey;
 }
 
 a {
@@ -59,8 +58,6 @@ a {
   max-height: 90%;
 }
 
-<<<<<<< Updated upstream
-=======
 .login-register{
     font-size: .9em;
     color: #162938;
@@ -96,26 +93,13 @@ a {
 .card-footer-sign{
     margin-top: 1rem;
 }
-.my-3{
-    margin-top: 2rem !important;
-    margin-bottom: 3rem !important;
+.my-card{
+    width: 100%;
+    height: 100%;
+    transition: 0.5s;
 }
-.h3{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 3rem;
-    font-size: 35px;
-    font-weight: bold;
-    font-family: "Microsoft JhengHei UI", serif;
-}
-.seperate{
-    display: flex;
-    justify-content: space-between;
-}
+.my-card:hover{
+    transform: rotate(7deg);
+    background-color: #2980b9;
 
-.bi {
-    vertical-align: -0.125em;
-    fill: currentColor;
 }
->>>>>>> Stashed changes
