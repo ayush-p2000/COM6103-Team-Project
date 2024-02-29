@@ -1,8 +1,7 @@
 body {
-
-  /* Set the font to Roboto */
+    /* Set the font to roboto. */
     font-family: 'Roboto', sans-serif;
-    
+
 }
 
 a {
@@ -56,4 +55,24 @@ a {
 .admin-layout a {
     color: #222222;
 }
+
+/* landing page */
+
+.landing-page#features {
+    background-color: #2E8B57;
+}
+.landing-page#features .card, .landing-page .btn-bg {
+    background-color: #097969;
+    color: #f4f4f4;
+}
+.landing-page.hero, .nav-bg {
+    background-color: #B2BEB5;
+}
+.landing-page.hero p {
+    color: #71797E;
+}
+.primary{
+    color: #097969;
+}
+
 

@@ -26,7 +26,7 @@ app.use("/javascripts", express.static(path.join(__dirname, "node_modules/bootst
 app.use("/javascripts", express.static(path.join(__dirname, "node_modules/jquery/dist")))
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 app.use('/staff', staffRouter);
 app.use('/admin', adminRouter);
 
