@@ -1,11 +1,11 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg nav-bg">
     <div class="container">
-        <a class="navbar-brand fs-3 fw-medium" href="#">ePanda</a>
+        <a class="navbar-brand fs-3 fw-bold primary text-decoration-none" href="/">ePanda</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto fw-medium">
                 <% if(auth) { %>
                     <!-- TODO: Change the href to user dashboard once it's done -->
                     <a class="nav-link active me-3" href="/users/dashboard">Dashboard</a>
@@ -16,8 +16,8 @@
                     <a class="nav-link me-3" href="/users/my-profile">Profile</a>
                     <a class="nav-link me-3" href="/">Logout</a>
                 <% } else { %>
-                    <a class="nav-link active me-3" aria-current="page" href="#">Home</a>
-                    <a class="nav-link me-3" href="#">Login/Signup</a>
+                    <a class="nav-link active me-3" aria-current="page" href="/">Home</a>
+                    <a class="nav-link me-3" href="/login">Login/Signup</a>
                 <% } %>
             </div>
         </div>
