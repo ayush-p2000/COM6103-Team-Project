@@ -1,6 +1,4 @@
 body {
-    padding: 50px;
-
     /* Set the font to roboto. */
     font-family: 'Roboto', sans-serif;
 
@@ -55,4 +53,24 @@ a {
   max-width: 90%;
   max-height: 90%;
 }
+
+/* landing page */
+
+.landing-page#features {
+    background-color: #2E8B57;
+}
+.landing-page#features .card, .landing-page .btn-bg {
+    background-color: #097969;
+    color: #f4f4f4;
+}
+.landing-page.hero, .nav-bg {
+    background-color: #B2BEB5;
+}
+.landing-page.hero p {
+    color: #71797E;
+}
+.primary{
+    color: #097969;
+}
+
 
