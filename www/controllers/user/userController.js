@@ -4,12 +4,12 @@
 
 function getUserDashboard(req, res, next) {
     //TODO: Add functionality for the user dashboard
-    res.send('[User Dashboard Here]')
+    res.render("user/dashboard", {user: getMockUserData(), auth: true, role: "user"})
 }
 
 function getUserProfile(req, res, next) {
     const user = getMockUserData()
-    res.render("user/user_profile", {user})
+    res.render("user/user_profile", {user, auth: true, role: "user"})
 }
 
 function getMockUserData() {

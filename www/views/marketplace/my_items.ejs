@@ -2,11 +2,55 @@
 <link rel='stylesheet' href="/stylesheets/style.css">
 
 
-<div class="mx-4 user-dashboard">
-    <!--    TODO change to Navbar component once its finished -->
-    <div class="row mb-3 mx-4">
-        <div class="bg-body-secondary d-flex justify-content-around align-items-center col">
-            <h3 class="text-muted">Navbar Placeholder</h3>
+<div class="mx-4 my_items">
+    <%- include("../components/navbar.ejs") %>
+    <!--Filter and Sorter-->
+    <div class="row mt-4 mt-3">
+        <p class="fw-bold">Classification: </p>
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+            <input type="checkbox" class="btn-check" id="currentClass" autocomplete="off">
+            <label class="btn btn-outline-primary" for="currentClass">Current</label>
+
+            <input type="checkbox" class="btn-check" id="recycleClass" autocomplete="off">
+            <label class="btn btn-outline-primary" for="recycleClass">Recycle</label>
+
+            <input type="checkbox" class="btn-check" id="rareClass" autocomplete="off">
+            <label class="btn btn-outline-primary" for="rareClass">Rare</label>
+
+            <input type="checkbox" class="btn-check" id="UnknownClass" autocomplete="off">
+            <label class="btn btn-outline-primary" for="UnknownClass">Unknown</label>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <p class="fw-bold">Device Type: </p>
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+            <input type="checkbox" class="btn-check" id="phoneCheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="phoneCheck">Phone</label>
+
+            <input type="checkbox" class="btn-check" id="tabletCheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="tabletCheck">Tablet</label>
+
+            <input type="checkbox" class="btn-check" id="laptopCheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="laptopCheck">Laptop</label>
+
+            <input type="checkbox" class="btn-check" id="watchCheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="watchCheck">Watch</label>
+
+            <input type="checkbox" class="btn-check" id="pcCheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="pcCheck">PC</label>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <p class="fw-bold">Pricing: </p>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="priceOrder" id="priceDescending" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="priceDescending">Descending</label>
+
+            <input type="radio" class="btn-check" name="priceOrder" id="priceAscending" autocomplete="off">
+            <label class="btn btn-outline-primary" for="priceAscending">Ascending</label>
+
         </div>
     </div>
 
@@ -29,14 +73,4 @@
             </div>
         </div>
     <% }) %>
-
-
-
-    <!--    TODO change to Footer component once its finished -->
-    <div class="row mb-3 mx-4 mt-5">
-        <div class="bg-body-secondary d-flex justify-content-around align-items-center col">
-            <h3 class="text-muted">Footer Placeholder</h3>
-        </div>
-    </div>
-
 </div>

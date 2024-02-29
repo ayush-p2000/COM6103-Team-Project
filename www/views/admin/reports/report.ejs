@@ -24,7 +24,7 @@
             <div class="card shadow-sm">
                 <div class="row">
                     <div class="col-md-4 text-left align-content-center my-auto">
-                        <a class="btn btn-primary mx-4" href="/staff/reports">Back</a>
+                        <a class="btn btn-primary mx-4" href="/admin/reports">Back</a>
                     </div>
                     <div class="col-md-4 py-4">
                         <div class="text-center">
@@ -43,9 +43,9 @@
 
                         <%# TODO: Remove this TRUE once other reports exist%>
                         <% if (true) { %>
-                            <%- include("sales", {labels: retrieval.labels, retrieval: retrieval.datasets, table: retrieval.table}) -%>
+                            <%- include("sales", {labels: data.labels, retrieval: data.datasets, table: data.table}) -%>
                         <% } else if (report !== undefined) { %>
-                            <%- include(report, {labels: retrieval.labels, retrieval: retrieval.retrieval}) -%>
+                            <%- include(report, {labels: data.labels, retrieval: data.retrieval}) -%>
                         <% } else { %>
                             <div class="text-center">
                                 <h1>Report not found</h1>

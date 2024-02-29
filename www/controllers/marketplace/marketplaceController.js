@@ -48,7 +48,7 @@ function getMockItems() {
 function getMarketplace(req, res, next) {
     // Dummy Data
     const items = getMockItems()
-    res.render('marketplace/marketplace', {items})
+    res.render('marketplace/marketplace', {items, auth: true, role: "user"})
 }
 
 function getMyItems(req, res, next) {
@@ -92,7 +92,7 @@ function getMyItems(req, res, next) {
             owner: "Terenz"
         },
     ]
-    res.render('marketplace/my_items', {items})
+    res.render('marketplace/my_items', {items, auth: true, role: "user"})
 }
 
 module.exports = {
