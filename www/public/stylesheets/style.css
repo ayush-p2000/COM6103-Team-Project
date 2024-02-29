@@ -126,11 +126,11 @@ a {
 .card-footer-sign{
     margin-top: 1rem;
 }
-.my-3{
+.form-check.my-3{
     margin-top: 2rem !important;
     margin-bottom: 3rem !important;
 }
-.h3{
+.parent-text.h3{
     display: flex;
     align-items: center;
     justify-content: center;
