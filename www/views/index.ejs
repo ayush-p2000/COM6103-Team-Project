@@ -2,7 +2,7 @@
 <%- include("components/navbar.ejs") %>
 <!-- Hero Section-->
 
-<div class="container mt-3 hero mx-0 object-fit-cover" style="background-color: #B2BEB5; max-width: 100%">
+<div class="container mt-3 hero mx-0 object-fit-cover">
     <div class="row flex-lg-row-reverse align-items-center g-3">
         <div class="col-10 mx-auto col-sm-8 col-lg-6  my-4 ">
             <img src="https://assets.ey.com/content/dam/ey-sites/ey-com/en_us/topics/climate-change/ey-waste-bin-full-of-e-waste.jpg" class="d-block mx-lg-auto img-fluid rounded-5 h-50  shadow" alt="" loading="lazy">
@@ -10,7 +10,7 @@
         <div class="col-lg-6">
             <div class="lc-block mb-3">
                 <div>
-                    <h2 class="fw-bold display-5">Recycle Your <span class="hero-text">E-Waste</span></h2>
+                    <h2 class="fw-bold display-5">Recycle Your <span class="primary">E-Waste</span></h2>
                 </div>
             </div>
 
@@ -22,7 +22,7 @@
             </div>
 
             <div class="lc-block d-grid gap-2 d-md-flex justify-content-md-start">
-                <a class="btn px-4 me-md-2 mb-2" href="/login" role="button" style="background-color: #097969;color: #f4f4f4;">Login</a>
+                <a class="btn px-4 me-md-2 mb-2 primary-btn" href="/login" role="button">Login</a>
                 <a class="btn btn-outline-secondary px-4 me-md-2 mb-2" href="/register" role="button">SignUp</a>
             </div>
 
@@ -64,7 +64,7 @@
 </div>
 
 
-<div class="container impact bg-secondary" id="impact" style="max-width: 100%; margin: 16px 0">
+<div class="container feature impact bg-secondary pt-3" id="impact">
 
     <div class="row row-cols-1 row-cols-md-3 g-3 py-4">
         <h2 class="fw-medium fs-1 pt-2 text-light w-100">Our Impact</h2>
@@ -74,10 +74,10 @@
 </div>
 
 <!-- Contact Section -->
-<div class="container py-4" id="contact">
+<div class="container features py-4" id="contact">
     <div class="row">
         <div class="col-md-6">
-            <h2 class="fw-medium" style="color: #097969">Contact Us</h2>
+            <h2 class="fw-medium primary">Contact Us</h2>
             <p>Have any questions? Contact us today!</p>
         </div>
         <div class="col-md-6">
@@ -94,7 +94,7 @@
                     <label for="message">Message</label>
                     <textarea class="form-control mb-2" id="message" rows="3" placeholder="Your message"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary" style="background-color: #097969">Submit</button>
+                <button type="submit" class="btn btn-primary primary-btn">Submit</button>
             </form>
         </div>
     </div>

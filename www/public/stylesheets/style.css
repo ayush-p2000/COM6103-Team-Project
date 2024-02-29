@@ -55,6 +55,9 @@ a {
 }
 
 /* landing page */
+.container {
+    max-width: 100%;
+}
 #features {
     margin: 24px 0 0;
     background-color: #2E8B57;
@@ -66,11 +69,18 @@ a {
     background-color: #097969;
     color: #f4f4f4;
 }
-.hero-text {
-    color: #097969;
+.hero {
+    background-color: #B2BEB5;
 }
 .hero p {
     color: #71797E;
+}
+.primary-btn {
+    background-color: #097969;
+    color: #f4f4f4;
+}
+.primary {
+    color: #097969;
 }
 
 
