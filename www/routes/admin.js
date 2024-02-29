@@ -42,4 +42,13 @@ router.get('/user-details', (req, res, next) => {
     res.render('admin/user_details', { user });
 });
 
+router.get('/user-management',function (req,res,next){
+   const users = [
+       {user:'John',device:'Phone', level:'user'},
+       {user:'Alice',device: 'Laptop', level:'staff'},
+       {user:'Bob',device: 'Tablet',level:'user'},
+   ];
+   res.render('admin/userManagement',{users});
+});
+
 module.exports = router;
