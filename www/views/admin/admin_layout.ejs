@@ -1,50 +1,72 @@
 <link rel='stylesheet' href="/stylesheets/bootstrap.min.css">
 <link rel='stylesheet' href="/stylesheets/style.css">
 
+<div class="container-fluid object-fit-contain">
 
-<div class="container-fluid admin-layout">
-    <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-secondary-subtle">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-primary min-vh-100">
-                <a href="#" class="d-flex align-items-center pb-3 mb-md-0 text-primary text-decoration-none">
-                    <img src="http://via.placeholder.com/160x160" class="user-image rounded-circle me-2" alt="User Image" style="max-width: 50px; max-height: 50px">
-                    <span class="fs-3 fw-bold d-none d-sm-inline">Admin</span>
-                </a>
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start fw-medium" id="menu">
-                    <!-- TODO: If dashboard is considered home need to remove Home -->
+    <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse bg-dark text-light">
+            <div class="position-sticky pt-3">
+                <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 py-3 fs-4 fw-medium" href="#">EPanda</a>
+                <hr>
+                <ul class="nav flex-column">
+
                     <li class="nav-item">
-                        <a href="javascript:void(0)" class="nav-link align-middle px-0 .text-muted fs-5 ">
-                            <span class="ms-1 d-none d-sm-inline">Home</span>
+                        <a class="nav-link active" aria-current="page" href="/admin">
+                            Dashboard
                         </a>
                     </li>
-                    <li>
-                        <a href="/admin/" class="nav-link align-middle px-0 .text-muted fs-5 ">
-                            <span class="ms-1 d-none d-sm-inline">Dashboard</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/accounts">
+                            Manager Users
                         </a>
                     </li>
-                    <!--    TODO: Remove this when manage users page is complete                -->
-                    <li>
-                        <a href="/admin/user-details" class="nav-link px-0 align-middle .text-muted fs-5">
-                            <span class="ms-1 d-none d-sm-inline">User Details</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/reports">
+                            Reports
                         </a>
                     </li>
-                    <!-- TODO: Add the manage users link after the page is developed -->
-                    <li>
-                        <a href="#" class="nav-link px-0 align-middle .text-muted fs-5">
-                            <span class="ms-1 d-none d-sm-inline">Manage Users</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/devices">
+                            Devices
                         </a>
                     </li>
                 </ul>
+
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/types">
+                            Types
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/moderation">
+                            Moderation
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Settings
+                        </a>
+                    </li>
+
+                </ul>
                 <hr>
+                    <a class="nav-link ps-2 py-2" href="#">
+                        My Profile
+                    </a>
+                    <a class="nav-link ps-2 py-2" href="/">
+                        Sign Out
+                    </a>
             </div>
-        </div>
-        <div class="col py-3">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="overflow: hidden">
             <% if(currentRoute === 'dashboard') { %>
                 <%- include('dashboard') %>
-            <!--     TODO: Change this to manage users when that is complete       -->
+                <!--     TODO: Change this to manage users when that is complete       -->
             <%} else if (currentRoute === 'user-details') { %>
                 <%- include('user_details') %>
             <% } %>
-        </div>
+        </main>
     </div>
 </div>
