@@ -47,4 +47,13 @@ router.get('/:contentType?', (req, res, next) => {
 
 
 
+router.get('/user-management',function (req,res,next){
+   const users = [
+       {user:'John',device:'Phone', level:'user'},
+       {user:'Alice',device: 'Laptop', level:'staff'},
+       {user:'Bob',device: 'Tablet',level:'user'},
+   ];
+   res.render('admin/userManagement',{users});
+});
+
 module.exports = router;
