@@ -1,0 +1,72 @@
+<link rel='stylesheet' href="/stylesheets/bootstrap.min.css">
+<link rel='stylesheet' href="/stylesheets/style.css">
+
+<div class="container-fluid object-fit-contain">
+
+    <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse bg-dark text-light">
+            <div class="position-sticky pt-3">
+                <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 py-3 fs-4 fw-medium" href="#">EPanda</a>
+                <hr>
+                <ul class="nav flex-column">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/admin">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/accounts">
+                            Manager Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/reports">
+                            Reports
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/devices">
+                            Devices
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/types">
+                            Types
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/moderation">
+                            Moderation
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Settings
+                        </a>
+                    </li>
+
+                </ul>
+                <hr>
+                    <a class="nav-link ps-2 py-2" href="#">
+                        My Profile
+                    </a>
+                    <a class="nav-link ps-2 py-2" href="/">
+                        Sign Out
+                    </a>
+            </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="overflow: hidden">
+            <% if(currentRoute === 'dashboard') { %>
+                <%- include('dashboard') %>
+                <!--     TODO: Change this to manage users when that is complete       -->
+            <%} else if (currentRoute === 'user-details') { %>
+                <%- include('user_details') %>
+            <% } %>
+        </main>
+    </div>
+</div>
