@@ -6,21 +6,11 @@ a {
     max-width: 450px;
     max-height: 900px;
     height: 690px;
-    padding: 1rem;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     backdrop-filter: blur(20px);
     box-shadow: 0 0 30px rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    font-weight: bold;
-
-    /* Set the font to roboto. */
-    font-family: 'Roboto', sans-serif;
-
 }
 
 
@@ -59,13 +49,11 @@ a {
 
 .login-register p a{
     color: #162938;
-    text-decoration: none;
     font-weight: 600;
 }
 
 .login-register p{
     color: #162938;
-    text-decoration: none;
     font-weight: 500;
 }
 
@@ -91,15 +79,8 @@ a {
     margin-bottom: 3rem !important;
 }
 .parent-text.h3{
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin-bottom: 3rem;
     font-size: 35px;
-    font-weight: bold;
     font-family: "Microsoft JhengHei UI", serif;
 }
-.seperate{
-    display: flex;
-    justify-content: space-between;
-}
+
