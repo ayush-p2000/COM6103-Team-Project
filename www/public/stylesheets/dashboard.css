@@ -7,12 +7,12 @@
     transition: 0.2s ease-in;
 }
 
-.my-card{
+.dashboard-card{
     transition: 0.5s;
     box-shadow: 0 0 40px rgba(0,0,0,0.8);
 }
-.my-card:hover{
-    transform: rotate(7deg);
+.dashboard-card:hover{
+    transform: rotate(3deg);
     background-color: #077969;
     .text-bg{
         color: white;
