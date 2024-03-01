@@ -10,12 +10,12 @@
             <div class="navbar-nav ms-auto fw-medium">
                 <% if(auth) { %>
                     <!-- TODO: Change the href to user dashboard once it's done -->
-                    <a class="nav-link active me-3" href="/users/dashboard">Dashboard</a>
+                    <a class="nav-link active me-3" href="/user/dashboard">Dashboard</a>
                 <% if (role === "user") { %> <!-- TODO: The role needs to be later refactored to ranking system -->
-                    <a class="nav-link me-3" href="/users/marketplace">Marketplace</a>
-                    <a class="nav-link me-3" href="/users/my-items">User Items</a>
+                    <a class="nav-link me-3" href="/user/marketplace">Marketplace</a>
+                    <a class="nav-link me-3" href="/user/my-items">User Items</a>
                 <% } %>
-                    <a class="nav-link me-3" href="/users/my-profile">Profile</a>
+                    <a class="nav-link me-3" href="/user/my-profile">Profile</a>
                     <a class="nav-link me-3" href="/">Logout</a>
                 <% } else { %>
                     <a class="nav-link active me-3" aria-current="page" href="/">Home</a>
