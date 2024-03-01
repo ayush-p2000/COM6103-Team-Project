@@ -1,25 +1,26 @@
 <%- include("../components/header.ejs") %>
+<link rel='stylesheet' href='/stylesheets/login_register.css'/>
 
-<div class="d-flex justify-content-center align-items-center" style="height: 100vh">
+<div class="d-flex justify-content-center h-100 mt-3 align-items-center">
     <main class="form-signin w-100 m-auto">
         <form>
             <h1 class="parent-text h3">Please Register</h1>
 
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingInput" placeholder="Melon Usk">
-                <label for="floatingInput">Name</label>
+                <input type="text" class="form-control" id="formInputName" placeholder="Elon Musk" required>
+                <label for="formInputName">Name</label>
             </div>
             <div class="form-floating">
-                <input type="date" class="form-control" id="floatingInput">
-                <label for="floatingInput">Date of Birth</label>
+                <input type="date" class="form-control" id="formInputDate" required>
+                <label for="formInputDate">Date of Birth</label>
             </div>
             <div class="form-floating">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Email address</label>
+                <input type="email" class="form-control" id="formInputEmail" placeholder="name@example.com" required>
+                <label for="formInputEmail">Email address</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                <label for="floatingPassword">Password</label>
+                <input type="password" class="form-control" id="floatingInputPassword" placeholder="Password" required>
+                <label for="floatingInputPassword">Password</label>
             </div>
 
             <div class="form-check text-start my-3">
@@ -33,7 +34,7 @@
                 <button class="btn btn-primary w-100 py-2" type="submit">Sign up</button>
 
                 <div class="login-register">
-                    <p>Already have an account?<a href="/users/login" class="register-link"> Login</a> </p>
+                    <p>Already have an account?<a href="/user/login" class="register-link"> Login</a> </p>
 
                 </div>
             </div>
