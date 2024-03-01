@@ -3,6 +3,9 @@ body {
     /* Set the font to roboto. */
     font-family: 'Roboto', sans-serif;
 
+    /* Set the background color to a light gray. */
+    background-color: lightgrey;
+
 }
 
 a {

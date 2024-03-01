@@ -1,0 +1,24 @@
+.main{
+    background-color: #2E8B58
+}
+
+.text-bg{
+    color: #097969;
+    transition: 0.2s ease-in;
+}
+
+.my-card{
+    transition: 0.5s;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+}
+.my-card:hover{
+    transform: rotate(7deg);
+    background-color: #077969;
+    .text-bg{
+        color: white;
+    }
+
+}
+.bg{
+    background-color : rgb(178, 190, 181) ;
+}

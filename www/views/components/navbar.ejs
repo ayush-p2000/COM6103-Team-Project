@@ -1,4 +1,6 @@
-<nav class="navbar navbar-expand-lg nav-bg">
+
+<nav class="navbar navbar-expand-lg shadow nav-bg">
+
     <div class="container">
         <a class="navbar-brand fs-3 fw-bold primary text-decoration-none" href="/">ePanda</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -8,12 +10,12 @@
             <div class="navbar-nav ms-auto fw-medium">
                 <% if(auth) { %>
                     <!-- TODO: Change the href to user dashboard once it's done -->
-                    <a class="nav-link active me-3" href="/users/dashboard">Dashboard</a>
+                    <a class="nav-link active me-3" href="/user/dashboard">Dashboard</a>
                 <% if (role === "user") { %> <!-- TODO: The role needs to be later refactored to ranking system -->
-                    <a class="nav-link me-3" href="/users/marketplace">Marketplace</a>
-                    <a class="nav-link me-3" href="/users/my-items">My Items</a>
+                    <a class="nav-link me-3" href="/user/marketplace">Marketplace</a>
+                    <a class="nav-link me-3" href="/user/my-items">User Items</a>
                 <% } %>
-                    <a class="nav-link me-3" href="/users/my-profile">Profile</a>
+                    <a class="nav-link me-3" href="/user/my-profile">Profile</a>
                     <a class="nav-link me-3" href="/">Logout</a>
                 <% } else { %>
                     <a class="nav-link active me-3" aria-current="page" href="/">Home</a>
