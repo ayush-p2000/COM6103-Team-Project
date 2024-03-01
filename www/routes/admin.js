@@ -1,16 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-/* GET home page. */
-router.get("/", (req,res,next) => {
+
+router.get('/:contentType?', (req, res, next) => {
+    const contentRoute = req.params.contentType
     const admin = {
         name: "Chuck",
         lastName: "Norris"
     }
-    res.render("admin/dashboard", {admin, numOfUsers: 11, savedCo2:124.3, numOfFinishedTransactions: 1121})
-})
-router.get('/user-details', (req, res, next) => {
-    // TODO Remove dummy data
+    // TODO: Remove dummy data
     const user = {
         firstName: "Elon",
         lastName: "Musk",
@@ -39,8 +37,15 @@ router.get('/user-details', (req, res, next) => {
             }
         ]
     }
-    res.render('admin/user_details', { user });
-});
+    if (!contentRoute) {
+        res.render('admin/admin_layout', {admin,numOfUsers: 11, savedCo2:124.3, numOfFinishedTransactions: 1121,currentRoute:'dashboard'})
+    } else {
+        res.render('admin/admin_layout', {user, currentRoute: contentRoute})
+    }
+})
+
+
+
 
 router.get('/user-management',function (req,res,next){
    const users = [
