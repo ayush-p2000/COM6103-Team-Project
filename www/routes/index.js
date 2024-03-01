@@ -7,3 +7,4 @@ const {getLandingPage} = require("../controllers/landingController");
 router.get('/', getLandingPage);
 
 module.exports = router;
+
