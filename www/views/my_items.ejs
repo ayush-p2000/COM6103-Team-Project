@@ -1,27 +1,81 @@
 <link rel='stylesheet' href="/stylesheets/bootstrap.min.css">
 <link rel='stylesheet' href="/stylesheets/style.css">
 
-<div class="mx-4 my_items m-4">
+<div class="mx-4 marketplace">
     <%- include("components/navbar.ejs") %>
 
-    <h1 class="m-4 mb-5 border-bottom text-black " style="text-align: center; line-height: 60px; color: white; font-weight: bold;">My Items</h1>
+    <h1 class="m-4 mb-5 border-bottom text-black text-center text-dark fw-bold">My Items</h1>
 
-    <% items.forEach(item => { %>
-        <div class="card mt-4">
-            <div class="card-body row d-flex align-items-center">
-                <div class="col-3 col-md-2 col-lg-2 col-xl-1">
-                    <img src="<%= item.picUrl %>" class="img-fluid item-img">
-                </div>
-                <div class="col-6 col-md-8 col-lg-7 col-xl-8">
-                    <h4 class="d-flex align-items-center"><%= item.name %><span class="badge bg-success ms-2" style="font-size: 0.4em;">Approved</span></h4>
-                    <p class="m-0 p-0 text-muted"><small>Device Type: </small><%= item.deviceType %></p>
-                    <p class="m-0 p-0 text-muted"><small>Classification: </small><%= item.classification %></p>
-                    <p class="m-0 p-0 text-muted"><small>Price: </small>£<%= item.price %></p>
-                </div>
-                <div class="col-3 col-md-2 col-lg-3 col-xl-3 d-flex justify-content-end align-items-center">
-                    <div class="btn btn-primary">View</div>
+    <!--    Search Bar-->
+    <input type="search" class="form-control ds-input mt-3" id="search-input"
+           placeholder="Search items...">
+
+    <!--Filter and Sorter-->
+    <div class="row mt-4 mt-3">
+        <p class="fw-bold">Classification: </p>
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+            <input type="checkbox" class="btn-check" id="currentClass" autocomplete="off">
+            <label class="btn btn-outline-primary" for="currentClass">Current</label>
+
+            <input type="checkbox" class="btn-check" id="recycleClass" autocomplete="off">
+            <label class="btn btn-outline-primary" for="recycleClass">Recycle</label>
+
+            <input type="checkbox" class="btn-check" id="rareClass" autocomplete="off">
+            <label class="btn btn-outline-primary" for="rareClass">Rare</label>
+
+            <input type="checkbox" class="btn-check" id="UnknownClass" autocomplete="off">
+            <label class="btn btn-outline-primary" for="UnknownClass">Unknown</label>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <p class="fw-bold">Device Type: </p>
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+            <input type="checkbox" class="btn-check" id="phoneCheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="phoneCheck">Phone</label>
+
+            <input type="checkbox" class="btn-check" id="tabletCheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="tabletCheck">Tablet</label>
+
+            <input type="checkbox" class="btn-check" id="laptopCheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="laptopCheck">Laptop</label>
+
+            <input type="checkbox" class="btn-check" id="watchCheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="watchCheck">Watch</label>
+
+            <input type="checkbox" class="btn-check" id="pcCheck" autocomplete="off">
+            <label class="btn btn-outline-primary" for="pcCheck">PC</label>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <p class="fw-bold">Pricing: </p>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="priceOrder" id="priceDescending" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="priceDescending">Descending</label>
+
+            <input type="radio" class="btn-check" name="priceOrder" id="priceAscending" autocomplete="off">
+            <label class="btn btn-outline-primary" for="priceAscending">Ascending</label>
+
+        </div>
+    </div>
+
+    <!--items list-->
+    <div class="col-md-5 g-2 mt-2">
+        <% items.forEach(item => { %>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="card h-100">
+                    <img src="<%= item.picUrl %>" class="card-img-top img-fluid item-img" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= item.name %></h5>
+                        <p class="m-0 ">Device Type: <span class="fw-light fst-italic text-muted"><%= item.deviceType %></span></p>
+                        <p class="m-0">Classifications: <span class="fw-light fst-italic text-muted"><%= item.classification %></span></p>
+                        <p class="m-0 mb-3">Reference Price: <span class="fw-light fst-italic text-muted">£<%= item.price %></span></p>
+                        <p >By: <span class="fw-light fst-italic text-muted"><%= item.owner %></span></p>
+                        <div class="btn btn-primary btn-sm mb-1 item-detail-btn"> View </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    <% }) %>
+        <% }) %>
+    </div>
 </div>
