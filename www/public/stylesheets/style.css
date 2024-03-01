@@ -58,11 +58,3 @@ a {
   max-height: 90%;
 }
 
-.my-card{
-    transition: 0.5s;
-}
-.my-card:hover{
-    transform: rotate(7deg);
-    background-color: #2980b9;
-
-}

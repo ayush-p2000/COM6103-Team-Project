@@ -1,0 +1,9 @@
+.my-card{
+    transition: 0.5s;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+}
+.my-card:hover{
+    transform: rotate(7deg);
+    background-color: #2980b9;
+
+}
