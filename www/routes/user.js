@@ -231,11 +231,11 @@ router.get('/item-detail', (req, res, next) => {
 })
 
 router.get("/register", (req,res,next) => {
-    res.render('authentication/signup', {})
+    res.render('authentication/signup', {auth: true, role: 'user'})
 })
 
 router.get("/login", (req,res,next) => {
-    res.render('authentication/login', {})
+    res.render('authentication/login', {auth: true, role: 'user'})
 })
 
 
