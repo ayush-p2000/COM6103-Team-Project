@@ -1,8 +1,8 @@
 body {
+
     /* Set the font to Roboto */
     font-family: 'Roboto', sans-serif;
-    height: 100vh;
-    background-color: antiquewhite;
+
 }
 
 a {
@@ -24,14 +24,10 @@ a {
     align-items: center;
     overflow: hidden;
     font-weight: bold;
-=======
-    padding: 50px;
 
     /* Set the font to roboto. */
     font-family: 'Roboto', sans-serif;
 
-    /* Set the background color to a light gray. */
-    background-color: #f4f4f4;
 }
 
 a {
@@ -82,6 +78,7 @@ a {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
 
 .form-signin p{
     margin-top: 2rem;
@@ -143,3 +140,29 @@ a {
     display: flex;
     justify-content: space-between;
 }
+
+.admin-layout a {
+    color: #222222;
+}
+
+/* landing page */
+
+.landing-page#features {
+    background-color: #2E8B57;
+}
+.landing-page#features .card, .landing-page .btn-bg {
+    background-color: #097969;
+    color: #f4f4f4;
+}
+.landing-page.hero, .nav-bg {
+    background-color: #B2BEB5;
+}
+.landing-page.hero p {
+    color: #71797E;
+}
+.primary{
+    color: #097969;
+}
+
+
+
