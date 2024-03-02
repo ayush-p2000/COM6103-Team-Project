@@ -1,0 +1,63 @@
+<!----------------------------------------------- Stylesheets used ------------------------------------------------>
+
+<link rel='stylesheet' href="/stylesheets/bootstrap.min.css">
+<link rel='stylesheet' href='/stylesheets/style.css'/>
+<link rel='stylesheet' href='/stylesheets/login_register.css'/>
+
+<!----------------------------------------------- Form-card Layout ------------------------------------------------>
+
+<div class="d-flex justify-content-center h-100 mt-3 align-items-center">
+    <main class="form-signin w-100 m-auto p-2 d-flex justify-content-center align-items-center overflow-hidden fw-bold">
+        <form>
+            <h1 class="parent-text d-flex align-items-center justify-content-center fw-bold h3">Please Register</h1>
+
+            <div class="form-floating">
+                <input type="text" class="form-control" id="formInputName" placeholder="Elon Musk" required>
+                <label for="formInputName">Name</label>
+            </div>
+            <div class="form-floating">
+                <input type="date" class="form-control" id="formInputDate" required>
+                <label for="formInputDate">Date of Birth</label>
+            </div>
+            <div class="form-floating">
+                <input type="email" class="form-control" id="formInputEmail" placeholder="name@example.com" required>
+                <label for="formInputEmail">Email address</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="floatingInputPassword" placeholder="Password" required>
+                <label for="floatingInputPassword">Password</label>
+            </div>
+
+            <div class="form-check text-start my-3">
+                <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckBoxItem">
+
+                <label class="form-check-label" for="flexCheckBoxItem">
+                    <a href="#" class="text-decoration-none">
+                        <p>Accept Terms and Conditions</p>
+                    </a>
+                </label>
+
+            </div>
+
+            <div class="card-footer-sign">
+                <button class="btn btn-primary w-100 py-2" type="submit">Sign up</button>
+
+                <div class="login-register text-decoration-none">
+                    <p>Already have an account?<a href="/user/login" class="register-link"> Login</a> </p>
+
+                </div>
+            </div>
+        </form>
+    </main>
+</div>
+
+<!----------------------------------------------- Footer ------------------------------------------------>
+
+<%- include("../footer.ejs") %>
+
+<!----------------------------------------------- Icons source scripts ------------------------------------------------>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<!----------------------------------------------- End Of File ------------------------------------------------>
