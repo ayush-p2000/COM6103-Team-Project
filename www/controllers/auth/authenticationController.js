@@ -4,12 +4,12 @@
 
 function getLoginPage(req, res, next)  {
     //TODO: Add functionality for the login page
-    res.send('[LOGIN PAGE HERE]')
+    res.render("authentication/login", {auth: false})
 }
 
 function getRegisterPage(req, res, next) {
     //TODO: Add functionality for the register page
-    res.send('[REGISTER PAGE HERE]')
+    res.render("authentication/register", {auth: false})
 }
 
 module.exports = {

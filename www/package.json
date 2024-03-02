@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon -e ejs,js,css ./bin/www"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
