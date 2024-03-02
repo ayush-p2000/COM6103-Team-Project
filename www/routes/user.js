@@ -230,6 +230,14 @@ router.get('/item-detail', (req, res, next) => {
     res.render('itemDetails', {item})
 })
 
+router.get("/register", (req,res,next) => {
+    res.render('authentication/signup', {auth: true, role: 'user'})
+})
+
+router.get("/login", (req,res,next) => {
+    res.render('authentication/login', {auth: true, role: 'user'})
+})
+
 
 
 module.exports = router;

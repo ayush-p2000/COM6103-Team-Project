@@ -38,24 +38,6 @@ a {
   max-height: 200px;
   object-fit: contain;
 }
-
-.marketplace .item-detail-btn{
-  position: absolute; bottom: 5px; right: 10px;
-}
-
-
-.user-dashboard .item-img{
-  max-height: 200px;
-  object-fit: contain;
-}
-
-/* item Detail page */
-.item-detail img {
-  margin: 0 10px;
-  max-width: 90%;
-  max-height: 90%;
-}
-
 .admin-layout a {
     color: #222222;
 }
@@ -78,5 +60,6 @@ a {
 .primary{
     color: #097969;
 }
+
 
 
