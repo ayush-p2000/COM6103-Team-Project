@@ -1,114 +1,113 @@
 <%- include("components/header.ejs") %>
-<div class="container">
-    <div class="jumbotron bg-warning-subtle rounded-3 p-1">
-        <h1> <%= title %> </h1>
-        <p> Welcome to <%= title %> </p>
-      <small class="text-danger">If this is red and in a jumbotron, it works!</small>
+
 <%- include("components/navbar.ejs") %>
 <!-- Hero Section-->
 
-<div class="container-fluid mt-3 hero mx-0 object-fit-cover landing-page">
-    <div class="row flex-lg-row-reverse align-items-center g-3">
-        <div class="col-10 mx-auto col-sm-8 col-lg-6  my-4 ">
-            <img src="https://assets.ey.com/content/dam/ey-sites/ey-com/en_us/topics/climate-change/ey-waste-bin-full-of-e-waste.jpg" class="d-block mx-lg-auto img-fluid rounded-5 h-50  shadow" alt="" loading="lazy">
-        </div>
-        <div class="col-lg-6">
-            <div class="lc-block mb-3">
-                <div>
-                    <h2 class="fw-bold display-5">Recycle Your <span class="primary">E-Waste</span></h2>
-                </div>
+<div class="container-fluid p-0">
+    <div class="container-fluid mt-3 hero mx-0 object-fit-cover landing-page px-5">
+        <div class="row flex-lg-row-reverse align-items-center g-3">
+            <div class="col-10 mx-auto col-sm-8 col-lg-6  my-4 ">
+                <img src="https://assets.ey.com/content/dam/ey-sites/ey-com/en_us/topics/climate-change/ey-waste-bin-full-of-e-waste.jpg"
+                     class="d-block mx-lg-auto img-fluid rounded-5 h-50  shadow" alt="" loading="lazy">
             </div>
-
-            <div class="lc-block mb-3 fs-5 fw-medium">
-                <div>
-                    <p>Helping you responsibly dispose of electronic waste for a sustainable future.
-                    </p>
+            <div class="col-lg-6">
+                <div class="lc-block mb-3">
+                    <div>
+                        <h2 class="fw-bold display-5">Recycle Your <span class="e-green">E-Waste</span></h2>
+                    </div>
                 </div>
-            </div>
 
-            <div class="lc-block d-grid gap-2 d-md-flex justify-content-md-start pb-3">
-                <a class="btn btn-success px-4 me-md-2 mb-2 btn-bg" href="user/login" role="button">Login</a>
-                <a class="btn btn-outline-secondary px-4 me-md-2 mb-2" href="user/register" role="button">SignUp</a>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-<!-- Features Section -->
-<div class="container-fluid feature mt-3 landing-page px-3 pb-5" id="features">
-
-    <div class="row row-cols-1 row-cols-md-3 g-3 py-3">
-        <h2 class="fw-medium fs-1 pt-2 text-light w-100">Why Use Our Website?</h2>
-        <div class="col py-1">
-            <div class="card h-100 shadow">
-                <div class="card-body">
-                    <h2 class="card-title">Eco-Friendly Recycling</h2>
-                    <p class="card-text">Our recycling processes adhere to environmentally friendly standards to minimize the impact on the planet.</p>
+                <div class="lc-block mb-3 fs-5 fw-medium">
+                    <div>
+                        <p>Helping you responsibly dispose of electronic waste for a sustainable future.
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col py-1">
-            <div class="card h-100 shadow">
-                <div class="card-body">
-                    <h2 class="card-title">Data Security</h2>
-                    <p class="card-text">Your data is safe with us. We guarantee the secure destruction of data-containing devices.</p>
+
+                <div class="lc-block d-grid gap-2 d-md-flex justify-content-md-start pb-3">
+                    <a class="btn btn-success px-4 me-md-2 mb-2 btn-bg" href="/login" role="button">Login</a>
+                    <a class="btn btn-outline-secondary px-4 me-md-2 mb-2" href="/register" role="button">Sign Up</a>
                 </div>
-            </div>
-        </div>
-        <div class="col py-1">
-            <div class="card h-100 shadow">
-                <div class="card-body">
-                    <h2 class="card-title">Placeholder Feature</h2>
-                    <p class="card-text">We offer convenient pickup services for your electronic waste, ensuring a hassle-free recycling process.</p>
-                </div>
+
             </div>
         </div>
     </div>
-</div>
 
 
-<div class="container-fluid feature impact bg-secondary pt-3 landing-page" id="impact">
+    <!-- Features Section -->
+    <div class="container-fluid feature mt-3 landing-page px-5 pb-5" id="features">
 
-    <div class="row row-cols-1 row-cols-md-3 g-3 py-4">
-        <h2 class="fw-medium fs-1 pt-2 text-light w-100">Our Impact</h2>
-        <p class="text-light fw-medium py-4 w-100">We have saved at least 350 million tonnes of e-waste present in our planet. And we aim to consistently
-        growing with your support.</p>
-    </div>
-</div>
-
-<!-- Contact Section -->
-<div class="container-fluid features py-4 landing-page" id="contact">
-    <div class="row">
-        <div class="col-md-6">
-            <h2 class="fw-medium primary">Contact Us</h2>
-            <p>Have any questions? Contact us today!</p>
+        <div class="row row-cols-1 row-cols-md-3 g-3 py-3">
+            <h2 class="fw-medium fs-1 pt-2 text-light w-100">Why Use Our Website?</h2>
+            <div class="col py-1">
+                <div class="card h-100 shadow">
+                    <div class="card-body">
+                        <h2 class="card-title">Eco-Friendly Recycling</h2>
+                        <p class="card-text">Our recycling processes adhere to environmentally friendly standards to
+                            minimize the impact on the planet.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col py-1">
+                <div class="card h-100 shadow">
+                    <div class="card-body">
+                        <h2 class="card-title">Data Security</h2>
+                        <p class="card-text">Your data is safe with us. We guarantee the secure destruction of
+                            data-containing devices.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col py-1">
+                <div class="card h-100 shadow">
+                    <div class="card-body">
+                        <h2 class="card-title">Placeholder Feature</h2>
+                        <p class="card-text">We offer convenient pickup services for your electronic waste, ensuring a
+                            hassle-free recycling process.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            <form class="contact-form p-4 border-2 rounded-2 shadow-sm">
-                <div class="form-group">
-                    <label for="name">Your Name</label>
-                    <input type="text" class="form-control mb-2" id="name" placeholder="Enter your name">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" class="form-control mb-2" id="email" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea class="form-control mb-2" id="message" rows="3" placeholder="Your message"></textarea>
-                </div>
-                <button type="submit" class="btn btn-success btn-bg">Submit</button>
-            </form>
+    </div>
+
+
+    <div class="container-fluid feature impact bg-secondary pt-3 landing-page px-5" id="impact">
+
+        <div class="row row-cols-1 row-cols-md-3 g-3 py-4">
+            <h2 class="fw-medium fs-1 pt-2 text-light w-100">Our Impact</h2>
+            <p class="text-light fw-medium py-4 w-100">We have saved at least 350 million tonnes of e-waste present in
+                our planet. And we aim to consistently
+                growing with your support.</p>
         </div>
 
     </div>
 
+    <!-- Contact Section -->
+    <div class="container-fluid features py-4 mb-5 landing-page px-5" id="contact">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="fw-medium e-green">Contact Us</h2>
+                <p>Have any questions? Contact us today!</p>
+            </div>
+            <div class="col-md-6">
+                <form class="contact-form p-4 border-2 rounded-2 shadow-sm">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" class="form-control mb-2" id="name" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" class="form-control mb-2" id="email" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea class="form-control mb-2" id="message" rows="3" placeholder="Your message"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-bg">Submit</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
 </div>
 
-</body>
-
-<script src="/javascripts/jquery-1.11.1.min.js"></script>
-<script src="/javascripts/bootstrap.min.js"></script>
-</html>
+<%- include("components/footer.ejs") %>

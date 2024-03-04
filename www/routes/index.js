@@ -1,11 +1,10 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+
+const {getLandingPage} = require("../controllers/landingController");
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  //TODO: auth and role variables used to change the navbar links.
-  res.render('index', { title: 'Express', auth:false, role:'user'});
-});
+router.get('/', getLandingPage);
 
 module.exports = router;
 
