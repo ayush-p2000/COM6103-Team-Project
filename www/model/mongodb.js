@@ -31,7 +31,7 @@ mongoose.connect(connectionString);
 
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
-db.once('open', () => {
+db.once('open', async () => {
     console.log(`Connected to ${MONGO_CONNNAME}`);
     connected = true;
 });
@@ -46,3 +46,37 @@ const providerModel = mongoose.model('Provider', providerSchema);
 const quoteModel = mongoose.model('Quote', quoteSchema);
 const retrievalModel = mongoose.model('Retrieval', retrievalSchema);
 const historyModel = mongoose.model('History', historySchema);
+
+/* Functions */
+async function getAllUsers() {
+    return await userModel.find();
+}
+
+async function getUserById(id) {
+    return await userModel.find({_id: id});
+}
+
+async function searchUser(filter) {
+    return await userModel.find(filter);
+}
+
+async function searchUserAndPopulate(filter) {
+    return await userModel.find(filter).populate('listed_devices');
+}
+
+async function createUser(user) {
+    return await userModel.create(user);
+}
+
+async function updateUser(id, user) {
+    return await userModel.updateOne({_id: id}, user);
+}
+
+module.exports = {
+    getAllUsers,
+    getUserById,
+    searchUser,
+    searchUserAndPopulate,
+    createUser,
+    updateUser,
+}
