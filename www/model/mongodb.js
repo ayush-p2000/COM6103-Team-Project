@@ -11,6 +11,7 @@ const {modelSchema} = require("./schema/model");
 const {providerSchema} = require("./schema/provider");
 const {quoteSchema} = require("./schema/quote");
 const {retrievalSchema} = require("./schema/retrieval");
+const {historySchema} = require("./schema/history");
 
 
 /* Connection Properties */
@@ -44,3 +45,4 @@ const deviceModel = mongoose.model('Device', deviceSchema);
 const providerModel = mongoose.model('Provider', providerSchema);
 const quoteModel = mongoose.model('Quote', quoteSchema);
 const retrievalModel = mongoose.model('Retrieval', retrievalSchema);
+const historyModel = mongoose.model('History', historySchema);
