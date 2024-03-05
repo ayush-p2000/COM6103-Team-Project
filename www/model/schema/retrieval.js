@@ -22,7 +22,7 @@ const retrievalSchema = new mongoose.Schema({
             }
         }
     ],
-    state: {
+    retrieval_state: {
         type: Number,
         required: true
     },
@@ -39,9 +39,14 @@ const retrievalSchema = new mongoose.Schema({
         required: true
     },
     transaction: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Transaction',
-        required: true
+        value: {
+            type: Number,
+            required: true
+        },
+        transaction_state: {
+            type: Number,
+            required: true
+        },
     }
 });
 

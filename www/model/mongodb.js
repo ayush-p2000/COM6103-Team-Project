@@ -10,7 +10,6 @@ const {brandSchema} = require("./schema/brand");
 const {modelSchema} = require("./schema/model");
 const {providerSchema} = require("./schema/provider");
 const {quoteSchema} = require("./schema/quote");
-const {transactionSchema} = require("./schema/transaction");
 const {retrievalSchema} = require("./schema/retrieval");
 
 
@@ -45,4 +44,3 @@ const deviceModel = mongoose.model('Device', deviceSchema);
 const providerModel = mongoose.model('Provider', providerSchema);
 const quoteModel = mongoose.model('Quote', quoteSchema);
 const retrievalModel = mongoose.model('Retrieval', retrievalSchema);
-const transactionModel = mongoose.model('Transaction', transactionSchema);
