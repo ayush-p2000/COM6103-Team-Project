@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg nav-bg shadow sticky-top">
+<nav class="navbar navbar-expand-lg nav-bg shadow sticky-top bg-white">
     <div class="container-fluid px-5">
         <a class="navbar-brand fs-3 fw-bold primary text-decoration-none" href="/">ePanda</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
@@ -9,7 +9,7 @@
             <div class="navbar-nav ms-auto fw-medium">
                 <% if(auth) { %>
                     <!-- TODO: Change the href to user dashboard once it's done -->
-                    <a class="nav-link active me-3" href="/dashboard">Dashboard</a>
+                    <a class="nav-link active me-3"  href="/dashboard">Dashboard</a>
                     <% if (role === "user") { %> <!-- TODO: The role needs to be later refactored to ranking system -->
                     <a class="nav-link me-3" href="/marketplace">Marketplace</a>
                     <a class="nav-link me-3" href="/my-items">My Items</a>

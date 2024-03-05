@@ -6,7 +6,7 @@ const {getMockUser} = require("../../util/mock/mockData");
 
 function getUserDashboard(req, res, next) {
     //TODO: Add functionality for the user dashboard
-    res.render("user/dashboard_2", {user: getMockUser(), auth: true, role: "user"})
+    res.render("user/dashboard", {user: getMockUser(), auth: true, role: "user"})
 }
 
 function getUserProfile(req, res, next) {

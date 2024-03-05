@@ -2,10 +2,6 @@ body {
 
     /* Set the font to roboto. */
     font-family: 'Roboto', sans-serif;
-
-    /* Set the background color to a light gray. */
-    background-color: lightgrey;
-
 }
 
 a {
@@ -72,10 +68,6 @@ a {
 .landing-page#features .card, .landing-page .btn-bg {
     background-color: #097969;
     color: #f4f4f4;
-}
-
-.landing-page.hero, .nav-bg {
-    background-color: #B2BEB5;
 }
 
 .landing-page.hero p {
