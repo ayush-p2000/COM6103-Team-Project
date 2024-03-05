@@ -50,7 +50,7 @@ const deviceSchema = new mongoose.Schema({
         required: true
     },
     listing_user: {
-        type: Mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },

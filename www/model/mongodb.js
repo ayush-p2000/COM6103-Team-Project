@@ -27,7 +27,7 @@ const connectionString = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST
 /* Variables */
 let connected = false;
 
-mongoose.connect(connectionString, {useNewUrlParser: true});
+mongoose.connect(connectionString);
 
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
