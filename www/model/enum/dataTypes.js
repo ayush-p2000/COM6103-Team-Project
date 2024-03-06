@@ -6,6 +6,8 @@ const ENUM = 4;
 const OBJECT = 5;
 const ARRAY = 6;
 const DATE = 7;
+const IMAGE = 8;
+const FILE = 9;
 
 const dataTypes = {
     STRING,
@@ -15,7 +17,9 @@ const dataTypes = {
     ENUM,
     OBJECT,
     ARRAY,
-    DATE
+    DATE,
+    IMAGE,
+    FILE
 };
 
 module.exports = dataTypes;
