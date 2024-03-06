@@ -4,14 +4,24 @@
  * Module dependencies.
  */
 
-require('dotenv').config()
-var app = require('../app');
+const dotenv = require('dotenv')
+const parse = require('dotenv-parse-variables')
+
 var debug = require('debug')('www:server');
 var http = require('http');
 
 /**
  * Get port from environment and store in Express.
  */
+
+let env = dotenv.config({path: './.env'})
+if(env.error) {
+  throw env.error
+}
+env = parse(env, {assignToProcessEnv: true, overrideProcessEnv: true})
+
+var app = require('../app');
+
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
