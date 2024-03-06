@@ -13,3 +13,5 @@ const historyType = {
     ITEM_UNHIDDEN,
     ITEM_APPROVED
 };
+
+module.exports = historyType;
