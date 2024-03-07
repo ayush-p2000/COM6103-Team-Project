@@ -18,7 +18,10 @@ const marketplaceRouter = require('./routes/marketplace');
 const userRouter = require('./routes/user');
 
 const debugRouter = require('./routes/debug');
-const {passportStrategy, passportSerializeUser, passportDeserializeUser} = require("./controllers/auth/authenticationController");
+const {
+    passportStrategy,
+    passportSerializeUser,
+    passportDeserializeUser} = require("./auth/passportAuth");
 
 const app = express();
 
