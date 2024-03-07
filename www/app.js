@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const passport = require("passport")
+const session = require("express-session")
 
 const mongo = require('./model/mongodb')
 
@@ -16,6 +18,7 @@ const marketplaceRouter = require('./routes/marketplace');
 const userRouter = require('./routes/user');
 
 const debugRouter = require('./routes/debug');
+const {passportStrategy, passportSerializeUser, passportDeserializeUser} = require("./controllers/auth/authenticationController");
 
 const app = express();
 
@@ -29,6 +32,30 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/* Session Auth Setup */
+app.use(session({
+    secret: process.env.SESSION_SECRET || "secret",
+    resave: false,
+    saveUninitialized: false,
+    store: mongo.store,
+    name: "sessionId"
+}));
+
+/* Session Error Handler */
+app.use(function (req, res, next) {
+    const msgs = req.session.messages || [];
+    res.locals.messages = msgs;
+    res.locals.hasMessages = !!msgs.length;
+    req.session.messages = [];
+    next();
+});
+
+/* Passport setup */
+passport.use(passportStrategy)
+passport.serializeUser(passportSerializeUser)
+passport.deserializeUser(passportDeserializeUser)
+
+/* Static files */
 app.use("/stylesheets", express.static(path.join(__dirname, "node_modules/bootstrap/dist/css")))
 app.use("/javascripts", express.static(path.join(__dirname, "node_modules/bootstrap/dist/js")))
 app.use("/javascripts", express.static(path.join(__dirname, "node_modules/jquery/dist")))
