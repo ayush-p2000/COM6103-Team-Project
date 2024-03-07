@@ -21,7 +21,8 @@ const debugRouter = require('./routes/debug');
 const {
     passportStrategy,
     passportSerializeUser,
-    passportDeserializeUser} = require("./auth/passportAuth");
+    passportDeserializeUser, passportSessionErrorHandler, sessionErrorHandler, sessionSetup
+} = require("./auth/passportAuth");
 
 const app = express();
 
@@ -36,22 +37,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 /* Session Auth Setup */
-app.use(session({
-    secret: process.env.SESSION_SECRET || "secret",
-    resave: false,
-    saveUninitialized: false,
-    store: mongo.store,
-    name: "sessionId"
-}));
+app.use(sessionSetup);
 
 /* Session Error Handler */
-app.use(function (req, res, next) {
-    const msgs = req.session.messages || [];
-    res.locals.messages = msgs;
-    res.locals.hasMessages = !!msgs.length;
-    req.session.messages = [];
-    next();
-});
+app.use(sessionErrorHandler);
 
 /* Passport setup */
 passport.use(passportStrategy)
