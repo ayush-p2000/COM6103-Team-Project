@@ -1,18 +1,70 @@
+<link rel='stylesheet' href='/stylesheets/dashboard.css'/>
+
 <%- include("../components/header") %>
 
 <%- include("../components/navbar") %>
 
-<div class="container-fluid vh-100">
-    <div class="mx-4 user-dashboard h-100">
-        <div class="row my-3">
-            <div class="btn btn-primary d-flex justify-content-center align-items-center col-12"><a
-                        href="/list-item" style="    color: inherit;
-    text-decoration: none;"> Add new item</a></div>
-        </div>
+<div class="main">
+    <div class="container py-4 ">
+        <h1 class="d-flex m-4 border-bottom justify-content-center text-light fw-bold mb-5 ">Dashboard</h1>
 
-        <div class="row mb-3 mx-4 h-100">
-            <div class="bg-body-secondary d-flex justify-content-around align-items-center col">
-                <h3 class="text-muted">Dashboard Placeholder</h3>
+
+        <div class="row align-items-md-stretch justify-content-center">
+            <div class="col-md-5 pb-3">
+                <a href="/my-items" class="text-decoration-none">
+                    <div class="dashboard-card h-100 bg p-5 border rounded-3">
+                        <h2 class="justify-content-between text-bg fw-bold">My Items <span class="icon mx-3">
+                            <ion-icon name="clipboard-outline"></ion-icon>
+                        </span></h2>
+
+                        <br>
+                        <br>
+                        <p class="text-bg">Looking for your items? View a list of all your listed items here</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-5 pb-3">
+                <a href="/list-item" class="text-decoration-none">
+                    <div class="dashboard-card h-100 p-5 bg border rounded-3">
+                        <h2 class="justify-content-center fw-bold text-bg">Sell Item <span class="icon mx-3">
+                            <ion-icon name="bag-add-outline"></ion-icon>                        </span></h2>
+                        <br>
+                        <br>
+                        <p class="text-bg">Want to sell a device? Click here to do so</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="row align-items-md-stretch justify-content-center">
+            <div class="col-md-5 pb-3">
+                <a href="/marketplace" class="text-decoration-none">
+                    <div class="dashboard-card h-100 w-100 p-5 bg border rounded-3">
+                        <h2 class="justify-content-center text-bg fw-bold">Marketplace<span class="icon mx-3">
+                            <ion-icon name="cart-outline"></ion-icon>
+                        </span></h2>
+                        <br>
+                        <br>
+                        <p class="text-bg">Want to buy a device? There are a variety of products waiting for you to check out here!</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-5 pb-3">
+                <a href="/profile" class="text-decoration-none">
+                    <div class="dashboard-card h-100 w-100 p-5 bg border rounded-3">
+                        <h2 class="justify-content-center text-bg fw-bold">T & C<span class="icon mx-3">
+                            <ion-icon name="document-outline"></ion-icon>
+                        </span></h2>
+                        <br>
+                        <br>
+                        <p class="text-bg">Looking for policy documents? Reassure the Terms & Conditions? Click here </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="row py-3">
+            <div class="img-fluid justify-content-center text-center">
+                <img src="/assets/banner.png" alt="PageBanner" class="shadow-sm"/>
             </div>
         </div>
     </div>
