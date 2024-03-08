@@ -77,6 +77,66 @@ const getMockItems = () => {
             price: 169,
             owner: "Terenz"
         },
+        {
+            id: 5,
+            name: "Apple Watch(SE)-2022",
+            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
+                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            classification: "Recycle",
+            deviceType: "Watch",
+            price: 169,
+            owner: "Terenz"
+        },
+        {
+            id: 6,
+            name: "Apple Watch(SE)-2022",
+            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
+                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            classification: "Recycle",
+            deviceType: "Watch",
+            price: 169,
+            owner: "Terenz"
+        },
+        {
+            id: 7,
+            name: "Apple Watch(SE)-2022",
+            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
+                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            classification: "Recycle",
+            deviceType: "Watch",
+            price: 169,
+            owner: "Terenz"
+        },
+        {
+            id: 8,
+            name: "Apple Watch(SE)-2022",
+            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
+                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            classification: "Recycle",
+            deviceType: "Watch",
+            price: 169,
+            owner: "Terenz"
+        },
+        {
+            id: 9,
+            name: "Apple Watch(SE)-2022",
+            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
+                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            classification: "Recycle",
+            deviceType: "Watch",
+            price: 169,
+            owner: "Terenz"
+        },
+        {
+            id: 10,
+            name: "Apple Watch(SE)-2022",
+            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
+                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            classification: "Recycle",
+            deviceType: "Watch",
+            price: 169,
+            owner: "Terenz"
+        },
     ];
 }
 

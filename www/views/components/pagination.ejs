@@ -1,0 +1,21 @@
+<nav class="mt-5 mb-5 me-auto ms-auto">
+    <ul class="pagination d-flex justify-content-center align-items-center">
+        <% if (currentPage !== 1) { %>
+        <li class="page-item">
+            <a class="page-link" href="/marketplace/<%= currentPage - 1 %>">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <% } %>
+        <% for(let i = start; i <= end; i++) { %>
+            <li class="page-item <%= currentPage === i ? "active" : ""; %>">
+                <a class="page-link" href="/marketplace/<%= i %>"><%= i %></a>
+            </li>
+        <% } %>
+        <li class="page-item">
+            <a class="page-link" href="/marketplace/<%= currentPage + 1 %>">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
