@@ -43,7 +43,7 @@ if(connected){
     // Use Session schema from connect-mongo which aligns with express-session setup.
     store = new MongoStore.create({
         client: db,
-        dbName: "test",
+        dbName: process.env.MONGO_DBNAME,
         collection: 'sessions',
         expires: 1000 * 60 * 60 * 48,
         crypto: {
