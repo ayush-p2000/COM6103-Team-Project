@@ -1,8 +1,8 @@
 /*
- * This controller should handle any operations related to authentication such as login, logout, and registration
+ * This controller should handle any operations related to auth such as login, logout, and registration
  */
 
-function getLoginPage(req, res, next)  {
+function getLoginPage(req, res, next) {
     //TODO: Add functionality for the login page
     res.render("authentication/login", {auth: false})
 }
@@ -14,5 +14,5 @@ function getRegisterPage(req, res, next) {
 
 module.exports = {
     getLoginPage,
-    getRegisterPage
+    getRegisterPage,
 }

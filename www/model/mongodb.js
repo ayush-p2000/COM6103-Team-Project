@@ -1,6 +1,7 @@
 /* Imports */
 const mongoose = require('mongoose');
 const regexEscape = require('regex-escape');
+const MongoStore = require('connect-mongo')
 
 /* Schemas */
 const {userSchema} = require("./schema/user");
@@ -36,6 +37,21 @@ db.once('open', async () => {
     connected = true;
 });
 
+/* Session Storage */
+let store;
+if(connected){
+    // Use Session schema from connect-mongo which aligns with express-session setup.
+    store = new MongoStore.create({
+        client: db,
+        dbName: process.env.MONGO_DBNAME,
+        collection: 'sessions',
+        expires: 1000 * 60 * 60 * 48,
+        crypto: {
+            secret: process.env.STORE_SECRET || "secret",
+        }
+    });
+}
+
 /* Models */
 const modelModel = mongoose.model('Model', modelSchema);
 const brandModel = mongoose.model('Brand', brandSchema);
@@ -53,11 +69,11 @@ async function getAllUsers() {
 }
 
 async function getUserById(id) {
-    return await userModel.find({_id: id});
+    return await userModel.findOne({_id: id});
 }
 
 async function searchUser(filter) {
-    return await userModel.find(filter);
+    return await userModel.findOne(filter);
 }
 
 async function searchUserAndPopulate(filter) {
@@ -79,4 +95,5 @@ module.exports = {
     searchUserAndPopulate,
     createUser,
     updateUser,
+    store
 }

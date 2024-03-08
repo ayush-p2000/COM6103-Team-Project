@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const passport = require("passport")
+const session = require("express-session")
 
 const mongo = require('./model/mongodb')
 
@@ -16,6 +18,11 @@ const marketplaceRouter = require('./routes/marketplace');
 const userRouter = require('./routes/user');
 
 const debugRouter = require('./routes/debug');
+const {
+    passportStrategy,
+    passportSerializeUser,
+    passportDeserializeUser, passportSessionErrorHandler, sessionErrorHandler, sessionSetup
+} = require("./auth/passportAuth");
 
 const app = express();
 
@@ -29,6 +36,18 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/* Session Auth Setup */
+app.use(sessionSetup);
+
+/* Session Error Handler */
+app.use(sessionErrorHandler);
+
+/* Passport setup */
+passport.use(passportStrategy)
+passport.serializeUser(passportSerializeUser)
+passport.deserializeUser(passportDeserializeUser)
+
+/* Static files */
 app.use("/stylesheets", express.static(path.join(__dirname, "node_modules/bootstrap/dist/css")))
 app.use("/javascripts", express.static(path.join(__dirname, "node_modules/bootstrap/dist/js")))
 app.use("/javascripts", express.static(path.join(__dirname, "node_modules/jquery/dist")))

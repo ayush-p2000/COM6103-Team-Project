@@ -58,6 +58,12 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true
         },
+        salt: {
+            type: String,
+            required: true,
+            minLength: 16,
+            maxLength: 24
+        },
         listed_devices:
             [
                 {
