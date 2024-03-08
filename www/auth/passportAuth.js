@@ -10,23 +10,25 @@ const {searchUser} = require("../model/mongodb")
 
 // Creates a passport local strategy which determines how user authentication is performed.
  // The verify callback is executed after user submits login form.
-const passportStrategy = new LocalStrategy(async function verify(username, password, cb) {
+const passportStrategy = new LocalStrategy(async function verify(username, password, callback) {
         try {
             const user = await searchUser({username: username});
             if (!user || user.username !== username) {
                 // Passes error to the session error handler
-                return cb(null, false, {message: 'Incorrect username or password.'})
+                return callback(null, false, {message: 'Incorrect username or password.'})
             }
+            // Encrypt password from the form, with user's salt.
             crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function (err, hashedPassword) {
                 if (err) throw err;
+                // Check if hashes match -> check if provided passwords is the same as user's password.
                 if (!crypto.timingSafeEqual(user.password, hashedPassword)) {
                     // Passes error to the session error handler
-                    return cb(null, false, {message: 'Incorrect username or password.'});
+                    return callback(null, false, {message: 'Incorrect username or password.'});
                 }
-                return cb(null, user);
+                return callback(null, user);
             });
         } catch (err) {
-            return cb(err);
+            return callback(err);
         }
     }
 )
@@ -41,18 +43,18 @@ const passportStrategy = new LocalStrategy(async function verify(username, passw
  })
 
  // Determines what data is stored in session after the user is authenticated (after login form is submitted).
-const passportSerializeUser = (user, cb) => {
+const passportSerializeUser = (user, callback) => {
     process.nextTick(function () {
         // Null is passed to the callback if no errors occurred
-        cb(null, {user: {id: user.id, username: user.username, role: user.role}});
+        callback(null, {user: {id: user.id, username: user.username, role: user.role}});
     });
 }
 
 // Clears out the user's data from the session after logging out (when logout button is pressed).
-const passportDeserializeUser = (user, cb) => {
+const passportDeserializeUser = (user, callback) => {
     process.nextTick(function () {
         // Null is passed to the callback if no errors occurred
-        return cb(null, user);
+        return callback(null, user);
     });
 }
 

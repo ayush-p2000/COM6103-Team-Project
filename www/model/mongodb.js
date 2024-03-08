@@ -40,6 +40,7 @@ db.once('open', async () => {
 /* Session Storage */
 let store;
 if(connected){
+    // Use Session schema from connect-mongo which aligns with express-session setup.
     store = new MongoStore.create({
         client: db,
         dbName: "test",
