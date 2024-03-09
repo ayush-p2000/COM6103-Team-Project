@@ -1,21 +1,29 @@
 <nav class="mt-5 mb-5 me-auto ms-auto">
+    <% if(pagination.emptyPage) { %>
+        <div>
+            <h3 class="text-center mb-5">No items found</h3>
+        </div>
+    <% } %>
     <ul class="pagination d-flex justify-content-center align-items-center">
-        <% if (currentPage !== 1) { %>
-        <li class="page-item">
-            <a class="page-link" href="/marketplace/<%= currentPage - 1 %>">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
+
+        <% if (pagination.currentPage !== 1 && !pagination.emptyPage) { %>
+            <li class="page-item">
+                <a class="page-link" href="/marketplace/<%= pagination.currentPage - 1 %>">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
         <% } %>
-        <% for(let i = start; i <= end; i++) { %>
-            <li class="page-item <%= currentPage === i ? "active" : ""; %>">
+        <% for(let i = pagination.start; i <= pagination.end; i++) { %>
+            <li class="page-item <%= pagination.currentPage === i ? "active" : ""; %>">
                 <a class="page-link" href="/marketplace/<%= i %>"><%= i %></a>
             </li>
         <% } %>
-        <li class="page-item">
-            <a class="page-link" href="/marketplace/<%= currentPage + 1 %>">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
+        <% if(!pagination.lastPage && !pagination.emptyPage) { %>
+            <li class="page-item">
+                <a class="page-link" href="/marketplace/<%= pagination.currentPage + 1 %>">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        <% } %>
     </ul>
 </nav>

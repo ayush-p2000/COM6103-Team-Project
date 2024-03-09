@@ -77,7 +77,7 @@ async function updateUser(id, user) {
 }
 
 const getAllDevices = async () => {
-    return deviceModel.find({});
+    return Device.find({});
 }
 
 
@@ -91,5 +91,4 @@ module.exports = {
     updateUser,
     getAllDevices,
     store,
-    deviceModel
 }
