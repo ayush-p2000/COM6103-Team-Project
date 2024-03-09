@@ -5,7 +5,7 @@
 const {User} = require("../../model/schema/user")
 const {randomBytes, pbkdf2} = require("node:crypto")
 const {promisify} = require('node:util')
-
+const { validationResult } = require("express-validator")
 const pbkdf2Promise = promisify(pbkdf2)
 
 const registerUser = async (req, res, next) => {
@@ -34,6 +34,10 @@ const registerUser = async (req, res, next) => {
             salt,
             address
         });
+
+        if(req.session.messages.length > 0){
+            res.redirect("/register")
+        }
 
         await user.save()
 
