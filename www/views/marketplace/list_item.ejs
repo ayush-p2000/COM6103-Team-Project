@@ -19,21 +19,19 @@
                         <p class="fw-bold fs-5">Device information</p>
 
                         <div class="mb-3 row">
-                            <label for="deviceType" class="col-sm-3 col-lg-2 col-form-label">Device Type</label>
+                            <label for="deviceType" class="col-sm-3 col-lg-2 col-form-label fw-bold">Device Type</label>
                             <div class="col-sm-5">
                                 <select class="form-select" id="deviceType">
-                                    <option selected>Smartphone</option>
-                                    <option value="tablet">Tablet</option>
-                                    <option value="pc">PC</option>
-                                    <option value="watch">Watch</option>
-                                    <option value="other">Other devices</option>
+                                    <% deviceType.forEach(function(device) { %>
+                                        <option value="<%= device.id %>"><%= device.name %></option>
+                                    <% }); %>
                                 </select>
                             </div>
                         </div>
 
 <!--                        Brand -->
                         <div class="mb-3 row">
-                            <label for="deviceBrand" class="col-sm-3 col-lg-2 col-form-label">Brand</label>
+                            <label for="deviceBrand" class="col-sm-3 col-lg-2 col-form-label fw-bold">Brand</label>
                             <div class="col-sm-5">
                                 <select class="form-select" id="deviceBrand">
                                     <option selected>Apple</option>
@@ -50,7 +48,7 @@
 
 <!--                        Model-->
                         <div class="mb-3 row">
-                            <label for="deviceModel" class="col-sm-3 col-lg-2 col-form-label">Model</label>
+                            <label for="deviceModel" class="col-sm-3 col-lg-2 col-form-label fw-bold">Model</label>
                             <div class="col-sm-5">
                                 <select class="form-select" id="deviceModel">
                                     <option value="Model 1" selected>Model 1</option>
@@ -63,21 +61,10 @@
                         </div>
                     </div>
 
-                    <div class="mb-3 row">
-                        <label for="deviceCapacity" class="col-sm-3 col-lg-2 col-form-label">Capacity</label>
-                        <div class="col-sm-5">
-                            <select class="form-select" id="deviceCapacity">
-                                <option selected>128GB</option>
-                                <option value="1">128GB</option>
-                                <option value="2">128GB</option>
-                                <option value="3">Other</option>
-                            </select>
-                        </div>
-                    </div>
 <!--                    Device Demage-->
                     <div class="my-3">
                         <p class="fw-bold fs-5">Device Condition</p>
-                        <label for="deviceCondition" class="col-sm-4 col-form-label ">Is your device in good condition?</label>
+                        <label for="deviceCondition" class="col-sm-4 col-form-label fw-bold ">Is your device in good condition?</label>
                         <div class="btn-group btn-group-sm" role="group" aria-label="Device Condition Choose">
                             <input type="radio" class="btn-check" name="conditionRadio" id="conditionYes" autocomplete="off" checked>
                             <label class="btn btn-outline-primary" for="conditionYes">Yes</label>
@@ -89,17 +76,102 @@
                             <li>It turns on and functions normally</li>
                             <li>All the buttons work</li>
                             <li>The cameras work and all lenses are free of damage</li>
-                            <li>The battery holds a charge</li>
+                            <li>The battery is able to remain charged and provide continuous use time</li>
                             <li>The body is free of dents and scratches</li>
                             <li>The touchscreen and back glass are undamaged</li>
                             <li>The display is free of distortion, lines and black or white spots</li>
                         </ul>
                     </div>
+
+                    <div id="detail-condition" class="d-none">
+                        <div>
+                            <label for="deviceFunctionality" class="col-sm-6 col-form-label fw-bold">1. Does your device turn on and work properly?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityYes" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="functionalityYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityNo" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="functionalityNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="btnCondition" class="col-sm-6 col-form-label fw-bold">2. All the buttons are working probably?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnYes" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="btnYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnNo" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="btnNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="cameraCondition" class="col-sm-6 col-form-label fw-bold">3. The cameras work and all lenses are free of damage?</label>
+                            <div class="btn-group btn-group-sm" role="group" >
+                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraYes" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="cameraYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraNo" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="cameraNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="batteryCondition" class="col-sm-6 col-form-label fw-bold">4. The battery is able to remain charged and provide continuous use time?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryYes" autocomplete="off" >
+                                <label class="btn btn-outline-primary" for="batteryYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryNo" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="batteryNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="bodyCondition" class="col-sm-6 col-form-label fw-bold">5. The body is free of dents and scratches?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyYes" autocomplete="off" >
+                                <label class="btn btn-outline-primary" for="bodyYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyNo" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="bodyNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="touchscreenCondition" class="col-sm-6 col-form-label fw-bold">6. The touchscreen and back glass are undamaged?</label>
+                            <div class="btn-group btn-group-sm" role="group" >
+                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenYes" autocomplete="off" >
+                                <label class="btn btn-outline-primary" for="touchscreenYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenNo" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="touchscreenNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="displayCondition" class="col-sm-6 col-form-label fw-bold ">7. The display is free of distortion, lines and black or white spots?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="displayRadio" id="displayYes" autocomplete="off" >
+                                <label class="btn btn-outline-primary" for="displayYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="displayRadio" id="displayNo" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="displayNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
 <!--                    Service add-on-->
                     <div class="my-3">
                         <p class="fw-bold fs-5">Service add-on</p>
                         <div>
-                            <label for="dataService" class="col-sm-2 col-form-label">Data Service</label>
+                            <label for="dataService" class="col-sm-2 col-form-label fw-bold">Data Service</label>
                             <div class="btn-group btn-group-sm" role="group" aria-label="Data Service Choose">
                                 <input type="radio" class="btn-check" name="dataRadio" id="dataRetrieval" autocomplete="off" checked>
                                 <label class="btn btn-outline-primary" for="dataRetrieval">Data retrieval (+ £8.99)</label>
@@ -134,4 +206,5 @@
     </div>
 </div>
 
+<script src="/javascripts/marketplace/list_item.js"></script>
 <%- include('../components/footer') %>
