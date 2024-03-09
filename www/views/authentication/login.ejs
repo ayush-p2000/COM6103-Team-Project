@@ -13,21 +13,29 @@
         <div class="col-md-5">
             <div class=" justify-content-center align-items-center h-100 mt-3 ">
                 <main class="form-signin w-100 m-auto p-2 d-flex justify-content-center align-items-center overflow-hidden fw-bold card shadow-lg rounded-3 bg-transparent">
-                    <form class="w-75 py-5">
+                    <form class="w-75 py-5" method="POST" action="/login">
+                        <% if (hasMessages) { %>
+                            <section class="messages">
+                                <% messages.forEach(function(message) { %>
+                                    <p><%= message %></p>
+                                <% }); %>
+                            </section>
+                        <% } %>
+
                         <h1 class="parent-text text-center align-items-center justify-content-center fw-bold fw-bolder pb-4 my-2">
                             Sign in
                         </h1>
 
                         <div class="pb-2">
                             <div class="form-floating mt-1 mx-1">
-                                <input type="email" class="form-control" id="floatingInputEmail"
+                                <input type="email" class="form-control" id="email" name="email"
                                        placeholder="name@example.com" required>
-                                <label for="floatingInputEmail">Email address</label>
+                                <label for="email">Email address</label>
                             </div>
                             <div class="form-floating mb-1 mx-1">
-                                <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Password"
                                        required>
-                                <label for="floatingPassword">Password</label>
+                                <label for="password">Password</label>
                             </div>
                         </div>
 
@@ -45,7 +53,7 @@
                         </div>
 
                         <div class="card-footer-login my-3">
-                            <button class="btn btn-primary w-100 py-2" type="button">Sign in</button>
+                            <button class="btn btn-primary w-100 py-2">Sign in</button>
 
                             <div class="text-center align-content-center fw-bolder mt-3 ">
                                 <p>Don't have an account? <a href="/register"
