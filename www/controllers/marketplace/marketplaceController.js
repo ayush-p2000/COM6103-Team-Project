@@ -13,7 +13,7 @@ async function getMarketplace(req, res, next) {
 
 function getMyItems(req, res, next) {
     const items = mockData.getMockItems()
-    res.render('marketplace/my_items', {items, auth: true, role: "user"})
+    res.render('marketplace/my_items', {items, auth: req.isLoggedIn, role: "user"})
 }
 
 module.exports = {
