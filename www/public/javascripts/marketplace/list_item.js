@@ -1,12 +1,11 @@
-// 获取radio按钮元素
+
 const conditionYes = document.getElementById('conditionYes');
 const conditionNo = document.getElementById('conditionNo');
-// 获取ul元素
 const conditionList = document.getElementById('detail-condition');
 
-// 给radio按钮添加事件监听器
+// Add Listener
 conditionYes.addEventListener('change', function() {
-    // 如果选择了Yes，则显示ul元素
+    // Show further condition term if yes
     if (this.checked) {
         conditionList.classList.remove("d-block");
         conditionList.classList.add("d-none");
@@ -14,7 +13,7 @@ conditionYes.addEventListener('change', function() {
 });
 
 conditionNo.addEventListener('change', function() {
-    // 如果选择了No，则隐藏ul元素
+    // hide further condition term if no
     if (this.checked) {
         conditionList.classList.remove("d-none");
         conditionList.classList.add("d-block");
@@ -22,20 +21,32 @@ conditionNo.addEventListener('change', function() {
 });
 
 document.getElementById("deviceType").addEventListener("change", function() {
-    // 获取选中的设备类型
+    // get selected type
     var selectedDeviceType = this.value;
     console.log(selectedDeviceType)
 
-    // // 发送 AJAX 请求到后台，传递选中的设备类型
-    // var xhr = new XMLHttpRequest();
-    // xhr.open("GET", "/getBrandAndModel?deviceType=" + selectedDeviceType);
-    // xhr.onreadystatechange = function() {
-    //     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-    //         // 如果请求成功，更新品牌和型号选择框的内容
-    //         var responseData = JSON.parse(xhr.responseText);
-    //         updateBrandSelect(responseData.brand);
-    //         updateModelSelect(responseData.model);
-    //     }
-    // };
-    // xhr.send();
+    // TODO: get request to get Brand
+
+});
+
+document.getElementById('itemImage').addEventListener('change', function(event) {
+    const files = event.target.files; // get selected files
+    const previewContainer = document.getElementById('imagePreview'); // 获取用于预览的容器元素
+
+    // clear review
+    previewContainer.innerHTML = '';
+
+    // append image file to review container
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        // call back to append img
+        reader.onload = function() {
+            var templateString = `<img src="${reader.result}" class="img-thumbnail col-2">`
+            previewContainer.innerHTML += templateString;
+        }
+
+        // read file as url
+        reader.readAsDataURL(file);
+    }
 });
