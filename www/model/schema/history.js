@@ -38,5 +38,5 @@ const historySchema = new mongoose.Schema({
 );
 
 module.exports = {
-    historySchema
+    History: mongoose.model('History', historySchema)
 }

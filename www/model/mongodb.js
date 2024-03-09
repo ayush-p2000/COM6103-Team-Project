@@ -4,15 +4,15 @@ const regexEscape = require('regex-escape');
 const MongoStore = require('connect-mongo')
 
 /* Schemas */
-const {userSchema} = require("./schema/user");
-const {deviceSchema} = require("./schema/device");
-const {deviceTypeSchema} = require("./schema/deviceType");
-const {brandSchema} = require("./schema/brand");
-const {modelSchema} = require("./schema/model");
-const {providerSchema} = require("./schema/provider");
-const {quoteSchema} = require("./schema/quote");
-const {retrievalSchema} = require("./schema/retrieval");
-const {historySchema} = require("./schema/history");
+const {User} = require("./schema/user");
+const {Device} = require("./schema/device");
+const {DeviceType} = require("./schema/deviceType");
+const {Brand} = require("./schema/brand");
+const {Model} = require("./schema/model");
+const {Provider} = require("./schema/provider");
+const {Quote} = require("./schema/quote");
+const {Retrieval} = require("./schema/retrieval");
+const {History} = require("./schema/history");
 
 
 /* Connection Properties */
@@ -51,41 +51,29 @@ if(connected){
         }
     });
 }
-
-/* Models */
-const modelModel = mongoose.model('Model', modelSchema);
-const brandModel = mongoose.model('Brand', brandSchema);
-const deviceTypeModel = mongoose.model('DeviceType', deviceTypeSchema);
-const userModel = mongoose.model('User', userSchema);
-const deviceModel = mongoose.model('Device', deviceSchema);
-const providerModel = mongoose.model('Provider', providerSchema);
-const quoteModel = mongoose.model('Quote', quoteSchema);
-const retrievalModel = mongoose.model('Retrieval', retrievalSchema);
-const historyModel = mongoose.model('History', historySchema);
-
 /* Functions */
 async function getAllUsers() {
-    return await userModel.find();
+    return await User.find();
 }
 
 async function getUserById(id) {
-    return await userModel.findOne({_id: id});
+    return await User.findOne({_id: id});
 }
 
 async function searchUser(filter) {
-    return await userModel.findOne(filter);
+    return await User.findOne(filter);
 }
 
 async function searchUserAndPopulate(filter) {
-    return await userModel.find(filter).populate('listed_devices');
+    return await User.find(filter).populate('listed_devices');
 }
 
 async function createUser(user) {
-    return await userModel.create(user);
+    return await User.create(user);
 }
 
 async function updateUser(id, user) {
-    return await userModel.updateOne({_id: id}, user);
+    return await User.updateOne({_id: id}, user);
 }
 
 module.exports = {
