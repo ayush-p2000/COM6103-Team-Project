@@ -4,8 +4,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require("passport")
-const session = require("express-session")
-
 const mongo = require('./model/mongodb')
 
 //Load routers
@@ -23,6 +21,7 @@ const {
     passportSerializeUser,
     passportDeserializeUser, passportSessionErrorHandler, sessionErrorHandler, sessionSetup
 } = require("./auth/passportAuth");
+const { isAuthenticated } = require("./middlewares/auth")
 
 const app = express();
 
@@ -38,7 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* Session Auth Setup */
 app.use(sessionSetup);
-
+app.use(passport.authenticate('session'))
 /* Session Error Handler */
 app.use(sessionErrorHandler);
 
@@ -57,9 +56,9 @@ app.use('/', indexRouter);
 app.use('/admin', adminRouter);
 app.use('/', authRouter);
 app.use('/', dataRouter);
-app.use('/', paymentRouter);
-app.use('/', marketplaceRouter);
-app.use('/', userRouter);
+app.use('/', isAuthenticated, paymentRouter);
+app.use('/', isAuthenticated, marketplaceRouter);
+app.use('/', isAuthenticated, userRouter);
 
 if (process.env.ENVIRONMENT === undefined || process.env.ENVIRONMENT !== "prod") {
     app.use('/debug', debugRouter);

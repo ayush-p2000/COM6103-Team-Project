@@ -21,3 +21,9 @@ const isSuperAdmin = (req,res,next) => {
     }
     next();
 }
+
+module.exports = {
+    isAuthenticated,
+    isStaff,
+    isSuperAdmin
+}
