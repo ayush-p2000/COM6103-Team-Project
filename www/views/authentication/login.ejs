@@ -14,18 +14,18 @@
             <div class=" justify-content-center align-items-center h-100 mt-3 ">
                 <main class="form-signin w-100 m-auto p-2 d-flex justify-content-center align-items-center overflow-hidden fw-bold card shadow-lg rounded-3 bg-transparent">
                     <form class="w-75 py-5" method="POST" action="/login">
-                        <% if (hasMessages) { %>
-                            <section class="messages">
-                                <% messages.forEach(function(message) { %>
-                                    <p><%= message %></p>
-                                <% }); %>
-                            </section>
-                        <% } %>
+
 
                         <h1 class="parent-text text-center align-items-center justify-content-center fw-bold fw-bolder pb-4 my-2">
                             Sign in
                         </h1>
-
+                        <% if (hasMessages) { %>
+                            <section class="border border-danger border-1 bg-danger-subtle w-100 pt-2 pb-2 mb-3 rounded-1">
+                                <% messages.forEach(function(message) { %>
+                                    <p class="m-0 text-center"><%= message %></p>
+                                <% }); %>
+                            </section>
+                        <% } %>
                         <div class="pb-2">
                             <div class="form-floating mt-1 mx-1">
                                 <input type="email" class="form-control" id="email" name="email"
@@ -33,7 +33,8 @@
                                 <label for="email">Email address</label>
                             </div>
                             <div class="form-floating mb-1 mx-1">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+                                <input type="password" class="form-control" id="password" name="password"
+                                       placeholder="Password"
                                        required>
                                 <label for="password">Password</label>
                             </div>
