@@ -47,5 +47,5 @@ const retrievalSchema = new mongoose.Schema({
 );
 
 module.exports = {
-    retrievalSchema
+    Retrieval: mongoose.model('Retrieval', retrievalSchema)
 }

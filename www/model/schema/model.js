@@ -38,5 +38,5 @@ const modelSchema = new mongoose.Schema({
 );
 
 module.exports = {
-    modelSchema
+    Model: mongoose.model('Model', modelSchema)
 }

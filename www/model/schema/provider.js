@@ -20,5 +20,5 @@ const providerSchema = new mongoose.Schema({
 );
 
 module.exports = {
-    providerSchema
+    Provider: mongoose.model('Provider', providerSchema)
 }
