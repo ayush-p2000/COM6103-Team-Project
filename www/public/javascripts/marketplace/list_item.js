@@ -66,15 +66,18 @@ document.addEventListener("DOMContentLoaded", function() {
     function updateModelPreview(){
         var selectedIndex = deviceModelElement.selectedIndex;
         var template = `
-            <div class="card">
+            <div class="card p-3 ">
                 <div class="row g-0" id="selected-model-content">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <img src="${models[0].properties[0].value}" class="img-fluid rounded-start" >
                     </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
+                    <div class="col-md-9">
+                        <div class="card-body p-0">
                             <h5 class="card-title">${models[selectedIndex].name}</h5>
-                            <p class="card-text text-truncate">${models[selectedIndex].properties[1].value}</p>
+                            <p class="card-text m-0"><small>Device Type:</small> ${deviceTypeElement.options[deviceTypeElement.selectedIndex].innerText}</p>
+                            <p class="card-text m-0"><small>Brand:</small> ${deviceBrandElement.options[deviceTypeElement.selectedIndex].innerText}</p>
+<!--                            <p class="card-text text-truncate m-0"> <small>Specification:</small></p>-->
+<!--                            <p class="card-text text-truncate m-0"> ${models[selectedIndex].properties[1].value}</p>-->
                             <p class="card-text"><small class="text-muted">Release at ${models[selectedIndex].properties[2].value}</small></p>
                         </div>
                     </div>

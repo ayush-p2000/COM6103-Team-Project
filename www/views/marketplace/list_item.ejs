@@ -22,9 +22,9 @@
                         <p class="fw-bold fs-5">Device information</p>
 
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-12 col-md-6">
                                 <div class="mb-3 row">
-                                    <label for="deviceType" class="col-sm-6 col-lg-2 col-form-label fw-bold">Device Type</label>
+                                    <label for="deviceType" class="col-sm-6 col-lg-4 col-form-label fw-bold">Device Type</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceType">
                                             <% deviceTypes.forEach(function(device) { %>
@@ -36,7 +36,7 @@
 
                                 <!--                        Brand -->
                                 <div class="mb-3 row">
-                                    <label for="deviceBrand" class="col-sm-6 col-lg-2 col-form-label fw-bold">Brand</label>
+                                    <label for="deviceBrand" class="col-sm-6 col-lg-4 col-form-label fw-bold">Brand</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceBrand">
                                             <% brands.forEach(function(brand) { %>
@@ -48,7 +48,7 @@
 
                                 <!--                        Model-->
                                 <div class="mb-3 row">
-                                    <label for="deviceModel" class="col-sm-6 col-lg-2 col-form-label fw-bold">Model</label>
+                                    <label for="deviceModel" class="col-sm-6 col-lg-4 col-form-label fw-bold">Model</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceModel">
 
@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-6" id="selected-model-content">
+                            <div class="col-12 col-md-6 col-xl-4" id="selected-model-content">
 
                             </div>
                         </div>
