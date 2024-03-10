@@ -36,7 +36,7 @@ const registerUser = async (req, res, next) => {
         });
 
         if(req.session.messages.length > 0){
-            res.redirect("/register")
+            return res.redirect("/register")
         }
 
         await user.save()
