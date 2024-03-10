@@ -28,6 +28,9 @@ exports.getPaginatedResults = async (model, page, filters={}, sorting={},pageLim
     let start = current > 1 ? current - 1 : current;
     let end = current > 1 ? current + 1 : current + 2;
 
+    // Each page pulls page limit number of items + 1 to determine if this is the last page or not.
+    // If there are fewer items than page limit + 1 it means that the next page will be empty.
+    // If the page is last, the next button is not visible for the user.
     const data = await model.find(filters).sort(sorting).skip(pageLimit * (current - 1)).limit(pageLimit + 1);
 
     // If data is empty set the flag
