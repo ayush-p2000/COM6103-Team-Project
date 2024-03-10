@@ -91,6 +91,25 @@ async function getModels(brandId,deviceTypeId){
         deviceType: new mongoose.Types.ObjectId(deviceTypeId)})
 }
 
+async function listDevice(deviceData) {
+    const newDevice = new Device({
+        device_type: deviceData.device_type,
+        brand: deviceData.brand,
+        model: deviceData.model,
+        details: deviceData.details,
+        category: deviceData.category,
+        good_condition: deviceData.good_condition,
+        state: deviceData.state,
+        data_service: deviceData.data_service,
+        additional_details: deviceData.additional_details,
+        listing_user: deviceData.listing_user,
+        photos: deviceData.photos,
+        visible: deviceData.visible
+    });
+    const savedDevice = await newDevice.save();
+    return savedDevice._id;
+}
+
 module.exports = {
     getAllUsers,
     getUserById,
@@ -101,5 +120,6 @@ module.exports = {
     store,
     getAllDeviceType,
     getAllBrand,
-    getModels
+    getModels,
+    listDevice
 }

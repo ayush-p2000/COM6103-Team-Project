@@ -12,7 +12,7 @@
                     <div class="mb-3">
                         <label for="itemImage" class="form-label">Pick images of the device</label>
                         <div id="imagePreview" class="row p-1"></div>
-                        <input class="form-control" type="file" id="itemImage" name="itemImage" multiple>
+                        <input class="form-control" type="file" id="itemImage" name="itemImage" accept="image/*"  multiple>
                     </div>
 
 
@@ -198,7 +198,7 @@
 <!--                    Submit Button-->
                     <div class="row justify-content-center">
                         <div class="col-sm-6">
-                            <a href="/dashboard" class="btn btn-primary mb-3 d-block mx-auto">Submit for Approval</a>
+                            <p class="btn btn-primary mb-3 d-block mx-auto" id="submitBtn">Submit for Approval</p>
                         </div>
                     </div>
                 </div>

@@ -10,14 +10,42 @@ document.addEventListener("DOMContentLoaded", function() {
     const conditionList = document.getElementById('detail-condition');
     const itemImage = document.getElementById('itemImage')
     const imagePreview = document.getElementById('imagePreview')
+    const submitBtn = document.getElementById('submitBtn')
 
     requestModels()
 
-    /**
-     * Handling Preview images for user input
-     */
-    itemImage.addEventListener('change', function (event) {
-        const files = event.target.files; // get selected files
+    /* Handling Preview images for user input */
+    itemImage.addEventListener('change', ()=> {
+        updateImageReview()
+    });
+
+    /* Handling Device type Brand and Model update when changed */
+    deviceTypeElement.addEventListener("change", ()=> {requestModels()});
+    deviceBrandElement.addEventListener("change", ()=> {requestModels()});
+    deviceModelElement.addEventListener("change", ()=> {updateModelPreview()});
+
+    /* Handling show/hide further condition */
+    conditionYes.addEventListener('change', ()=> {
+        // Show further condition term if yes
+        if (this.checked) {
+            conditionList.classList.remove("d-block");
+            conditionList.classList.add("d-none");
+        }
+    });
+    conditionNo.addEventListener('change', ()=> {
+        // hide further condition term if no
+        if (this.checked) {
+            conditionList.classList.remove("d-none");
+            conditionList.classList.add("d-block");
+        }
+    });
+
+    /* Handling submit action */
+    submitBtn.addEventListener('click', ()=> {postDataToServer()})
+
+
+    function updateImageReview(event){
+        const files = itemImage.files; // get selected files
 
         // clear review
         imagePreview.innerHTML = '';
@@ -33,32 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             reader.readAsDataURL(file); // read file as url
         }
-    });
-
-    /**
-     * Handling Device type Brand and Model update when changed
-     */
-    deviceTypeElement.addEventListener("change", function () {requestModels()});
-    deviceBrandElement.addEventListener("change", function () {requestModels()});
-    deviceModelElement.addEventListener("change", function () {updateModelPreview()});
-
-    /**
-     * Handling show/hide further condition
-     */
-    conditionYes.addEventListener('change', function () {
-        // Show further condition term if yes
-        if (this.checked) {
-            conditionList.classList.remove("d-block");
-            conditionList.classList.add("d-none");
-        }
-    });
-    conditionNo.addEventListener('change', function () {
-        // hide further condition term if no
-        if (this.checked) {
-            conditionList.classList.remove("d-none");
-            conditionList.classList.add("d-block");
-        }
-    });
+    }
 
     /**
      *  Update Model Preview when change selected model
@@ -123,4 +126,46 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
+    /**
+     * Handling Post device to Server
+     */
+    function postDataToServer() {
+        var selectedModelId = deviceModelElement.value
+        var selectedModel = models.find(model => model._id === selectedModelId);
+        // const files = itemImage.files;
+
+
+        const requestData = {
+            device_type: selectedModel.deviceType,
+            brand: selectedModel.brand,
+            model: selectedModel._id,
+            details: [], //TODO: get details
+            category: selectedModel.category,
+            good_condition: true, //TODO: get condition
+            state: 1, // default to review when posted
+            data_service: 1, //TODO: get data service
+            additional_details: 'Some additional details', //TODO: get Addition Detail
+            listing_user: '65eac7a0f2954ef5775b1837', //TODO: get Current User
+            photos: [], //TODO: get photos
+            visible: false // default to false when posted
+        };
+
+        fetch('/list-item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            window.location.href = '/dashboard';
+            return response.text();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
 });

@@ -2,10 +2,21 @@
  * This controller should handle any operations related to specific items in the marketplace (e.g. adding, removing, updating, etc.)
  */
 
-var {getAllDeviceType, getAllBrand, getModels} = require('../../model/mongodb');
+var {getAllDeviceType, getAllBrand, getModels, listDevice} = require('../../model/mongodb');
 const {getMockItem} = require("../../util/mock/mockData");
 
-async function getListItem(req, res, next) {
+async function postListItem(req, res) {
+    try {
+        const requestData = req.body;
+        const deviceId = await listDevice(requestData);
+        res.status(200).send(deviceId);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Internal server error');
+    }
+}
+
+async function getListItem(req, res) {
     try {
         let deviceTypes = await getAllDeviceType();
         let brands = await getAllBrand();
@@ -44,6 +55,7 @@ function getItemQrCode(req, res, next) {
 }
 
 module.exports = {
+    postListItem,
     getListItem,
     getModelByBrandAndType,
     getItemDetails,
