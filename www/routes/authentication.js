@@ -17,7 +17,6 @@ router.post("/login", validateCaptcha, validateLogin, passportAuthenticate)
 router.post("/logout", isAuthenticated, logoutUser)
 
 router.get('/register', getRegisterPage);
-const sanitizer = body('firstName').notEmpty().trim().escape()
 router.post('/register', validateCaptcha, validateRegistration, registerUser)
 
 module.exports = router;

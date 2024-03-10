@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 exports.validateCaptcha = async (req, res, next) => {
-    const secret_key = process.env.CAPTCHA_SECRET;
+    const secret_key = process.env.CAPTCHA_SECRET = "x";
     const token = req.body.token;
     const captchaApi = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${token}`;
 

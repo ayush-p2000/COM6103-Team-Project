@@ -58,7 +58,7 @@
                             <button class="btn btn-primary w-100 py-2"
                                     id="submit-btn"
                                     <%= failedCaptcha ? "disabled": ""%>
-                                    data-sitekey="6LcF35MpAAAAAEiG9CRDbcZ0EX2xyvOAoUA9sg7Z"
+                                    data-sitekey="<%= process.env.CAPTCHA_PUBLIC %>>"
                                     data-callback='onSubmit'
                                     data-action='submit'>Sign in
                             </button>
@@ -76,14 +76,8 @@
     </div>
 </div>
 <script src="https://www.google.com/recaptcha/api.js?render=6LcF35MpAAAAAEiG9CRDbcZ0EX2xyvOAoUA9sg7Z"></script>
-<script>
-    grecaptcha.ready(function() {
-        grecaptcha.execute('6LcF35MpAAAAAEiG9CRDbcZ0EX2xyvOAoUA9sg7Z', {action: 'login'})
-            .then(function(token) {
-                document.getElementById("submit-btn").addEventListener('click', () => {
-                    document.getElementById("token").value = token
-                })
-            });
-    });
+<script src="/public/javascripts/captcha/captcha.js">
+    executeCaptcha(process.env.CAPTCHA_PUBLIC, "login")
 </script>
+
 <%- include("../components/footer") %>
