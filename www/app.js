@@ -21,7 +21,7 @@ const {
     passportSerializeUser,
     passportDeserializeUser, passportSessionErrorHandler, sessionErrorHandler, sessionSetup
 } = require("./auth/passportAuth");
-const { isAuthenticated, authInfo} = require("./middlewares/auth")
+const { isAuthenticated, authInfo, isStaff} = require("./middlewares/auth")
 
 const app = express();
 
@@ -53,7 +53,7 @@ app.use("/javascripts", express.static(path.join(__dirname, "node_modules/jquery
 
 // Most routes start with / rather than /<name of file> as the files are being used as descriptive groups of routes
 app.use('/', authInfo, indexRouter);
-app.use('/admin', adminRouter);
+app.use('/admin', isAuthenticated, isStaff, adminRouter);
 app.use('/', authRouter);
 app.use('/', dataRouter);
 app.use('/', isAuthenticated, paymentRouter);
