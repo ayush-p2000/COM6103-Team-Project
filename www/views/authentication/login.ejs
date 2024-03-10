@@ -19,10 +19,12 @@
                             Sign in
                         </h1>
                         <% if (hasMessages) { %>
-                            <section class="border border-danger border-1 bg-danger-subtle w-100 pt-2 pb-2 mb-3 rounded-1">
-                                <% messages.forEach(function(message) { %>
-                                    <p class="m-0 text-center"><%= message %></p>
-                                <% }); %>
+                            <section >
+                                <ol class="mb-0 list-group list-group-numbered m-1">
+                                    <% messages.forEach(function(message) { %>
+                                        <li class="border border-danger border-1 bg-danger-subtle pt-2 pb-2 rounded-1 mb-1 list-group-item"><%= message %></li>
+                                    <% }); %>
+                                </ol>
                             </section>
                         <% } %>
                         <div class="pb-2">
@@ -53,8 +55,14 @@
                         </div>
 
                         <div class="card-footer-login my-3">
-                            <button class="btn btn-primary w-100 py-2">Sign in</button>
-
+                            <button class="btn btn-primary w-100 py-2"
+                                    id="submit-btn"
+                                    <%= failedCaptcha ? "disabled": ""%>
+                                    data-sitekey="6LcF35MpAAAAAEiG9CRDbcZ0EX2xyvOAoUA9sg7Z"
+                                    data-callback='onSubmit'
+                                    data-action='submit'>Sign in
+                            </button>
+                            <input type="hidden" id="token" name="token">
                             <div class="text-center align-content-center fw-bolder mt-3 ">
                                 <p>Don't have an account? <a href="/register"
                                                              class="hover-link text-decoration-none">Register</a></p>
@@ -67,5 +75,15 @@
         </div>
     </div>
 </div>
-
+<script src="https://www.google.com/recaptcha/api.js?render=6LcF35MpAAAAAEiG9CRDbcZ0EX2xyvOAoUA9sg7Z"></script>
+<script>
+    grecaptcha.ready(function() {
+        grecaptcha.execute('6LcF35MpAAAAAEiG9CRDbcZ0EX2xyvOAoUA9sg7Z', {action: 'login'})
+            .then(function(token) {
+                document.getElementById("submit-btn").addEventListener('click', () => {
+                    document.getElementById("token").value = token
+                })
+            });
+    });
+</script>
 <%- include("../components/footer") %>

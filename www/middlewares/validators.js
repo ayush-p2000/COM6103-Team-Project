@@ -2,8 +2,7 @@ const {body,check, validationResult} = require("express-validator")
 
 const errorsToSession = (req, res, next) => {
     const {errors} = validationResult(req)
-    console.log(errors)
-    req.session.messages = errors.map(error => error.msg)
+    req.session.messages = [...errors.map(error => error.msg)]
     next()
 }
 
