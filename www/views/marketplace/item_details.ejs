@@ -4,24 +4,39 @@
 
 <div class="container-fluid item-detail mt-5">
     <div class="row bg-light p-4">
-        <div class="col-md-6 mb-4">
-            <img src="https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D640/https://d2e6ccujb3mkqf.cloudfront.net/af874b95-0a58-4efa-b0f4-cd020fed146b-1_6ae90150-3ee4-4659-8fc3-19d483bfed00.jpg" class="img-fluid rounded-3" alt="Item Image">
+        <div id="carouselExample" class="carousel slide col-md-6 mb-4 bg-light">
+            <div class="carousel-inner ">
+                <% item.photos.forEach(  (photo, index) => {%>
+                    <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                        <img src="<%= photo %>" class="d-block img-fluid mx-auto detail-img" alt="...">
+                    </div>
+                <% }) %>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
+
         <div class="col-md-6">
-            <h3 class="display-4 fw-bold mb-3"><%= item.name %></h3>
-            <p class="lead text-muted"><%= item.classification %></p>
+            <h3 class="display-4 fw-bold mb-3"><%= item.model.name %></h3>
+            <p class="lead text-muted"><%= ['Current','Rare','Recycle','Unknown'][item.category] %></p>
             <hr class="my-4">
             <h5 class="fw-bold mb-4">Specification: </h5>
             <div class="row" id="item-info">
                 <div class="col-6">
-                    <p><span class="fw-bold">Purchased Year:</span> <%= item.purchaseYear %></p>
-                    <p><span class="fw-bold">Capacity:</span> <%= item.capacity %> GB</p>
-                    <p><span class="fw-bold">Colour:</span> <span class="fw-bold" style="color: red;"><%= item.colour %></span></p>
+                    <p><span class="fw-bold">Purchased Year:</span> <%= item.details.find(detail => detail.name === 'purchaseYear')?.value %></p>
+                    <p><span class="fw-bold">Capacity:</span> <%= item.details.find(detail => detail.name === 'capacity')?.value %></p>
+                    <p><span class="fw-bold">Colour:</span> <span class="fw-bold" style="color: red;"><%= item.details.find(detail => detail.name === 'colour')?.value %></span></p>
                 </div>
                 <div class="col-6">
-                    <p><span class="fw-bold">Operating System:</span> <%= item.os %></p>
-                    <p><span class="fw-bold">Device Type:</span> <%= item.deviceType %></p>
-                    <p><span class="fw-bold">Device Condition:</span> <%= item.condition %></p>
+                    <p><span class="fw-bold">Operating System:</span> <%= item.details.find(detail => detail.name === 'os')?.value %></p>
+                    <p><span class="fw-bold">Device Type:</span> <%= item.device_type.name %></p>
+                    <p><span class="fw-bold">Device Condition:</span> <%= item.good_condition ? 'Good': 'Poor'%></p>
                 </div>
             </div>
         </div>
@@ -30,7 +45,7 @@
     <div class="row bg-light text-dark p-4 mt-4">
         <div class="col-md-12">
             <h5 class="fw-bold">Description: </h5>
-            <p class="lead">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...</p>
+            <p class="lead"><%= item.additional_details%></p>
             <h5 class="fw-bold mt-4">Quotes</h5>
             <div class="card border-primary mt-3">
                 <div class="row g-0">

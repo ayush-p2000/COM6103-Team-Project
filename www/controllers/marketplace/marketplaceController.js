@@ -3,6 +3,7 @@
  */
 
 const mockData = require('../../util/mock/mockData')
+const {getUserItems} = require('../../model/mongodb')
 
 function getMarketplace(req, res, next) {
     // Dummy Data
@@ -10,8 +11,9 @@ function getMarketplace(req, res, next) {
     res.render('marketplace/marketplace', {items, auth: true, role: "user"})
 }
 
-function getMyItems(req, res, next) {
-    const items = mockData.getMockItems()
+async function getMyItems(req, res, next) {
+    // TODO: change the id once the session is completed
+    const items = await getUserItems(mockData.getMockUserId())
     res.render('marketplace/my_items', {items, auth: true, role: "user"})
 }
 

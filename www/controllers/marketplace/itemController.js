@@ -3,14 +3,14 @@
  */
 
 const {getMockItem} = require("../../util/mock/mockData");
+const {getItemDetail} = require('../../model/mongodb')
 
 function getListItem(req, res, next) {
     res.render('marketplace/list_item', {auth: true, role: 'user'})
 }
 
-function getItemDetails(req, res, next) {
-    const item = getMockItem()
-
+async function getItemDetails(req, res, next) {
+    const item = await getItemDetail(req.params.id)
     res.render('marketplace/item_details', {item, auth: true, role: 'user'})
 }
 

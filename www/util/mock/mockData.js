@@ -205,6 +205,11 @@ function getMockItem() {
     };
 }
 
+
+function getMockUserId() {
+    return '65eca151f41e7de44c5ffa13'
+}
+
 module.exports = {
     getMockAccountsList,
     getMockItems,
@@ -212,5 +217,6 @@ module.exports = {
     getMockPurchaseData,
     getMockGraphData,
     getMockSalesData,
-    getMockItem
+    getMockItem,
+    getMockUserId
 }
