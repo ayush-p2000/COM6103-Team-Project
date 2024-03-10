@@ -1,21 +1,50 @@
 /*
  * This controller should handle any operations related to specific items in the marketplace (e.g. adding, removing, updating, etc.)
  */
+const mongoose = require('mongoose');
+var {Brand} = require('../../model/schema/brand');
+var {DeviceType} = require('../../model/schema/deviceType');
+var {Model} = require('../../model/schema/model');
 
 const {getMockItem} = require("../../util/mock/mockData");
 
-function getListItem(req, res, next) {
+async function getListItem(req, res, next) {
     try {
-        let deviceTypes = getDeviceTypes(req, res).data
-        res.render('marketplace/list_item', {auth: true, role: 'user', deviceType: deviceTypes})
-    } catch (error) {
-        next(error); // 将错误传递给 Express 错误处理中间件
+        let deviceTypes = await DeviceType.find();
+        let brands = await Brand.find();
+        res.render('marketplace/list_item', {auth: true, role: 'user',
+            deviceTypes: deviceTypes, brands: brands});
+    } catch (err) {
+        console.log(err)
     }
 }
 
-function getDeviceTypes(req, res, next) {
-    // TODO: Query db to get deviceTypes
-    return { status: 200, data: [{id:1,name:"Phone"},{id:2,name:"Tablet"},{id:3,name:"Watch"}]};
+/**
+ * get specific Model By querying Brand And DeviceType
+ * @param req
+ * @param res
+ * @returns list of Model
+ * @example http://localhost:3000/getModelByBrandAndType?brand=65eac79df2954ef5775b17f8&deviceType=65eac7dcd328192d95701b5a
+ */
+async function getModelByBrandAndType(req, res) {
+    try {
+        const brandId = new mongoose.Types.ObjectId(req.query.brand);
+        const deviceTypeId = new mongoose.Types.ObjectId(req.query.deviceType);
+        let model = await Model.find({ brand: brandId, deviceType: deviceTypeId });
+        res.send(model);
+    } catch (err) {
+        res.send(err)
+    }
+}
+
+async function getModelDetailById(req, res) {
+    try {
+        const modelId = new mongoose.Types.ObjectId(req.query.id);
+        let model = await Model.find({ _id: modelId});
+        res.send(model);
+    } catch (err) {
+        res.send(err)
+    }
 }
 
 function getItemDetails(req, res, next) {
@@ -30,6 +59,7 @@ function getItemQrCode(req, res, next) {
 
 module.exports = {
     getListItem,
+    getModelByBrandAndType,
     getItemDetails,
     getItemQrCode
 }

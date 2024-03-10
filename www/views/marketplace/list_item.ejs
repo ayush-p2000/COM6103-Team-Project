@@ -1,5 +1,4 @@
 <%- include('../components/header') %>
-
 <%- include('../components/navbar') %>
 
 <div class="m-5">
@@ -22,45 +21,43 @@
                     <div class="my-3">
                         <p class="fw-bold fs-5">Device information</p>
 
-                        <div class="mb-3 row">
-                            <label for="deviceType" class="col-sm-3 col-lg-2 col-form-label fw-bold">Device Type</label>
-                            <div class="col-sm-5">
-                                <select class="form-select" id="deviceType">
-                                    <% deviceType.forEach(function(device) { %>
-                                        <option value="<%= device.id %>"><%= device.name %></option>
-                                    <% }); %>
-                                </select>
-                            </div>
-                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="mb-3 row">
+                                    <label for="deviceType" class="col-sm-6 col-lg-2 col-form-label fw-bold">Device Type</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-select" id="deviceType">
+                                            <% deviceTypes.forEach(function(device) { %>
+                                                <option value="<%= device.id %>"><%= device.name %></option>
+                                            <% }); %>
+                                        </select>
+                                    </div>
+                                </div>
 
-<!--                        Brand -->
-                        <div class="mb-3 row">
-                            <label for="deviceBrand" class="col-sm-3 col-lg-2 col-form-label fw-bold">Brand</label>
-                            <div class="col-sm-5">
-                                <select class="form-select" id="deviceBrand">
-                                    <option selected>Apple</option>
-                                    <option value="BlackBerry">BlackBerry</option>
-                                    <option value="Google">Google</option>
-                                    <option value="HTC">HTC</option>
-                                    <option value="Huawei">Huawei</option>
-                                    <option value="Microsoft">Microsoft</option>
-                                    <option value="Samsung">Samsung</option>
-                                    <option value="Other">Other brand</option>
-                                </select>
-                            </div>
-                        </div>
+                                <!--                        Brand -->
+                                <div class="mb-3 row">
+                                    <label for="deviceBrand" class="col-sm-6 col-lg-2 col-form-label fw-bold">Brand</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-select" id="deviceBrand">
+                                            <% brands.forEach(function(brand) { %>
+                                                <option value="<%= brand.id %>"><%= brand.name %></option>
+                                            <% }); %>
+                                        </select>
+                                    </div>
+                                </div>
 
-<!--                        Model-->
-                        <div class="mb-3 row">
-                            <label for="deviceModel" class="col-sm-3 col-lg-2 col-form-label fw-bold">Model</label>
-                            <div class="col-sm-5">
-                                <select class="form-select" id="deviceModel">
-                                    <option value="Model 1" selected>Model 1</option>
-                                    <option value="Model 2">Model 2</option>
-                                    <option value="Model 3">Model 3</option>
-                                    <option value="Model 4">Model 4</option>
-                                    <option value="Other">Other model</option>
-                                </select>
+                                <!--                        Model-->
+                                <div class="mb-3 row">
+                                    <label for="deviceModel" class="col-sm-6 col-lg-2 col-form-label fw-bold">Model</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-select" id="deviceModel">
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6" id="selected-model-content">
+
                             </div>
                         </div>
                     </div>

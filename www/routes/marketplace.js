@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {getListItem, getItemDetails, getItemQrCode} = require("../controllers/marketplace/itemController");
+const {getListItem,getModelByBrandAndType, getItemDetails, getItemQrCode} = require("../controllers/marketplace/itemController");
 const {getMarketplace, getMyItems} = require("../controllers/marketplace/marketplaceController");
 
 router.get('/marketplace', getMarketplace);
@@ -11,6 +11,8 @@ router.get('/item/:id', getItemDetails);
 router.get('/item/:id/qr', getItemQrCode);
 
 router.get('/list-item/:id?', getListItem);
+router.get('/getModelByBrandAndType', getModelByBrandAndType);
+
 
 router.get('/my-items', getMyItems);
 
