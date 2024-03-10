@@ -98,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function() {
         params.append('deviceType', selectedDeviceType);
         const url = '/getModelByBrandAndType?' + params.toString();
 
-
         // Axios to get model base on selected properties
         fetch(url)
             .then(response => {

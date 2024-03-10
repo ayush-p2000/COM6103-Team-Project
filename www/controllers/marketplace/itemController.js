@@ -1,17 +1,14 @@
 /*
  * This controller should handle any operations related to specific items in the marketplace (e.g. adding, removing, updating, etc.)
  */
-const mongoose = require('mongoose');
-var {Brand} = require('../../model/schema/brand');
-var {DeviceType} = require('../../model/schema/deviceType');
-var {Model} = require('../../model/schema/model');
 
+var {getAllDeviceType, getAllBrand, getModels} = require('../../model/mongodb');
 const {getMockItem} = require("../../util/mock/mockData");
 
 async function getListItem(req, res, next) {
     try {
-        let deviceTypes = await DeviceType.find();
-        let brands = await Brand.find();
+        let deviceTypes = await getAllDeviceType();
+        let brands = await getAllBrand();
         res.render('marketplace/list_item', {auth: true, role: 'user',
             deviceTypes: deviceTypes, brands: brands});
     } catch (err) {
@@ -28,24 +25,13 @@ async function getListItem(req, res, next) {
  */
 async function getModelByBrandAndType(req, res) {
     try {
-        const brandId = new mongoose.Types.ObjectId(req.query.brand);
-        const deviceTypeId = new mongoose.Types.ObjectId(req.query.deviceType);
-        let model = await Model.find({ brand: brandId, deviceType: deviceTypeId });
-        res.send(model);
+        let models = await getModels(req.query.brand,req.query.deviceType);
+        res.send(models);
     } catch (err) {
         res.send(err)
     }
 }
 
-async function getModelDetailById(req, res) {
-    try {
-        const modelId = new mongoose.Types.ObjectId(req.query.id);
-        let model = await Model.find({ _id: modelId});
-        res.send(model);
-    } catch (err) {
-        res.send(err)
-    }
-}
 
 function getItemDetails(req, res, next) {
     const item = getMockItem()

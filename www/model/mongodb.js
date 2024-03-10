@@ -76,6 +76,21 @@ async function updateUser(id, user) {
     return await User.updateOne({_id: id}, user);
 }
 
+
+async function getAllDeviceType(){
+    return await DeviceType.find();
+
+}
+
+async function getAllBrand(){
+    return await Brand.find();
+}
+
+async function getModels(brandId,deviceTypeId){
+    return await Model.find({brand: new mongoose.Types.ObjectId(brandId),
+        deviceType: new mongoose.Types.ObjectId(deviceTypeId)})
+}
+
 module.exports = {
     getAllUsers,
     getUserById,
@@ -83,5 +98,8 @@ module.exports = {
     searchUserAndPopulate,
     createUser,
     updateUser,
-    store
+    store,
+    getAllDeviceType,
+    getAllBrand,
+    getModels
 }
