@@ -11,6 +11,18 @@ document.addEventListener("DOMContentLoaded", function() {
     const itemImage = document.getElementById('itemImage')
     const imagePreview = document.getElementById('imagePreview')
     const submitBtn = document.getElementById('submitBtn')
+    const additionalInfo = document.getElementById('additionalInfo')
+    const dataRadios = document.querySelectorAll('input[name="dataRadio"]');
+
+
+
+    const displayYes = document.getElementById('displayYes')
+    const touchscreenYes = document.getElementById('touchscreenYes')
+    const bodyYes = document.getElementById('bodyYes')
+    const batteryYes = document.getElementById('batteryYes')
+    const cameraYes = document.getElementById('cameraYes')
+    const btnYes = document.getElementById('btnYes')
+    const functionalityYes = document.getElementById('functionalityYes')
 
     requestModels()
 
@@ -27,14 +39,21 @@ document.addEventListener("DOMContentLoaded", function() {
     /* Handling show/hide further condition */
     conditionYes.addEventListener('change', ()=> {
         // Show further condition term if yes
-        if (this.checked) {
+        if (conditionYes.checked) {
+            displayYes.checked = true;
+            touchscreenYes.checked = true;
+            bodyYes.checked = true;
+            batteryYes.checked = true;
+            displayYes.checked = true;
+            cameraYes.checked = true;
+            btnYes.checked = true;
             conditionList.classList.remove("d-block");
-            conditionList.classList.add("d-none");
+            conditionList.classList.add("d-none")
         }
     });
     conditionNo.addEventListener('change', ()=> {
         // hide further condition term if no
-        if (this.checked) {
+        if (conditionNo.checked) {
             conditionList.classList.remove("d-none");
             conditionList.classList.add("d-block");
         }
@@ -133,18 +152,34 @@ document.addEventListener("DOMContentLoaded", function() {
         var selectedModelId = deviceModelElement.value
         var selectedModel = models.find(model => model._id === selectedModelId);
         // const files = itemImage.files;
+        dataService = 0
+        dataRadios.forEach(function(radio, index) {
+            if (radio.checked) {
+                dataService = index;
+                return;
+            }
+        });
 
+        var details = [
+            { name: "functionnality", value: functionalityYes.checked? "Good" : "Bad" },
+            { name: "button", value: btnYes.checked? "Good" : "Bad" },
+            { name: "camera", value: cameraYes.checked? "Good" : "Bad" },
+            { name: "battery", value: batteryYes.checked? "Good" : "Bad" },
+            { name: "body", value: bodyYes.checked? "Good" : "Bad" },
+            { name: "touchscreen", value: touchscreenYes.checked? "Good" : "Bad" },
+            { name: "display", value: displayYes.checked? "Good" : "Bad" }
+        ];
 
         const requestData = {
             device_type: selectedModel.deviceType,
             brand: selectedModel.brand,
             model: selectedModel._id,
-            details: [], //TODO: get details
+            details: details,
             category: selectedModel.category,
-            good_condition: true, //TODO: get condition
+            good_condition: conditionYes.checked,
             state: 1, // default to review when posted
-            data_service: 1, //TODO: get data service
-            additional_details: 'Some additional details', //TODO: get Addition Detail
+            data_service: dataService,
+            additional_details: additionalInfo.value,
             listing_user: '65eac7a0f2954ef5775b1837', //TODO: get Current User
             photos: [], //TODO: get photos
             visible: false // default to false when posted
