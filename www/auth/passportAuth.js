@@ -75,6 +75,7 @@ const passportDeserializeUser = (user, callback) => {
 const sessionErrorHandler = (req, res, next) => {
     const msgs = req.session.messages || [];
     res.locals.messages = msgs;
+    res.locals.failedCaptcha = !!msgs.includes("Google ReCaptchaV3 Check Failed!");
     res.locals.hasMessages = !!msgs.length;
     req.session.messages = [];
     next();

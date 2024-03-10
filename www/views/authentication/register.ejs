@@ -72,7 +72,14 @@
                         </div>
 
                         <div class="card-footer-sign mt-2">
-                            <button class="btn btn-primary w-100 py-2">Sign up</button>
+                            <input type="hidden" id="token" name="token">
+                            <button class="btn btn-primary w-100 py-2"
+                                    id="submit-btn"
+                                    <%= failedCaptcha ? "disabled": ""%>
+                                    data-sitekey="6LcF35MpAAAAAEiG9CRDbcZ0EX2xyvOAoUA9sg7Z"
+                                    data-callback='onSubmit'
+                                    data-action='submit'>Sign up
+                            </button>
 
                             <div class="text-center align-content-center fw-bolder mt-3">
                                 <p>Already have an account? <a href="/login" class="hover-link text-decoration-none">Login</a></p>
@@ -85,6 +92,17 @@
         </div>
     </div>
 </div>
+<script src="https://www.google.com/recaptcha/api.js?render=6LcF35MpAAAAAEiG9CRDbcZ0EX2xyvOAoUA9sg7Z"></script>
+<script>
+    grecaptcha.ready(function() {
+        grecaptcha.execute('6LcF35MpAAAAAEiG9CRDbcZ0EX2xyvOAoUA9sg7Z', {action: 'register'})
+            .then(function(token) {
+                document.getElementById("submit-btn").addEventListener('click', () => {
+                    document.getElementById("token").value = token
+                })
+            });
+    });
+</script>
 
 <!----------------------------------------------- Footer ------------------------------------------------>
 
