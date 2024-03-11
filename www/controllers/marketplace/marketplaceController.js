@@ -3,11 +3,12 @@
  */
 
 const mockData = require('../../util/mock/mockData')
+const { getPaginatedResults } = require("../../model/utils/utils")
+const { Device} = require("../../model/schema/device")
+async function getMarketplace(req, res, next) {
+    const {items, pagination} = await getPaginatedResults(Device, req.params.page, {},{}, 3);
 
-function getMarketplace(req, res, next) {
-    // Dummy Data
-    const items = mockData.getMockItems()
-    res.render('marketplace/marketplace', {items, auth: true, role: "user"})
+    res.render('marketplace/marketplace', {items, auth: true, role: "user", pagination})
 }
 
 function getMyItems(req, res, next) {
