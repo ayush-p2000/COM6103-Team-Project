@@ -7,7 +7,7 @@
     async function getMarketplace(req, res, next) {
         const {items, pagination} = await getPaginatedResults(Device, req.params.page, {},{}, 3);
 
-        res.render('marketplace/marketplace', {items, auth: true, role: "user", pagination})
+        res.render('marketplace/marketplace', {items, user: req.user , auth: req.isLoggedIn, pagination})
     }
 
    * Then in the view file pagination.ejs component should be included *

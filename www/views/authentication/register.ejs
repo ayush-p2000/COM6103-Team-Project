@@ -60,13 +60,10 @@
                             </div>
                         </div>
 
-                        <div class="form-check form-switch text-center m-1">
-                            <input class="form-check-input" type="checkbox" value="remember-me" id="remember-me" name="remember-me">
-
-                            <label class="form-check-label" for="tcCheck">
-                                <p>
-                                    Agree to the <a href="#" class="hover-link text-decoration-none">Terms and Conditions</a>
-                                </p>
+                        <div class="form-check form-switch text-center m-1 d-flex mb-4">
+                            <input class="form-check-input" type="checkbox" id="tcCheck" name="tcCheck" required>
+                            <label class="form-check-label ms-3" for="tcCheck">
+                                Agree to the <a href="#" class="hover-link text-decoration-none">Terms and Conditions</a>
                             </label>
 
                         </div>
@@ -92,9 +89,10 @@
         </div>
     </div>
 </div>
-<script src="https://www.google.com/recaptcha/api.js?render=6LcF35MpAAAAAEiG9CRDbcZ0EX2xyvOAoUA9sg7Z"></script>
-<script src="/public/javascripts/captcha/captcha.js">
-    executeCaptcha(process.env.CAPTCHA_PUBLIC, "login")
+<script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.CAPTCHA_PUBLIC %>"></script>
+<script src="/javascripts/captcha/captcha.js"></script>
+<script>
+    executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "register")
 </script>
 
 <!----------------------------------------------- Footer ------------------------------------------------>

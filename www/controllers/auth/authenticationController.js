@@ -38,7 +38,6 @@ const registerUser = async (req, res, next) => {
             salt,
             address
         });
-
         if(req.session.messages.length > 0){
             return res.redirect("/register")
         }
@@ -62,12 +61,10 @@ const logoutUser = (req,res,next) => {
     })
 }
 function getLoginPage(req, res, next) {
-    //TODO: Add functionality for the login page
     res.render("authentication/login", {auth: req.isLoggedIn, user:req.user})
 }
 
 function getRegisterPage(req, res, next) {
-    //TODO: Add functionality for the register page
     res.render("authentication/register", {auth: req.isLoggedIn, user:req.user})
 }
 

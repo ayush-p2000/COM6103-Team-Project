@@ -43,9 +43,9 @@
 
                         <div class="px-3">
                             <div class="form-check form-switch justify-content-center mx-auto m-1">
-                                <input class="form-check-input" type="checkbox" value="remember-me"
-                                       id="rememberMeCheck">
-                                <label class="form-check-label" for="rememberMeCheck">Remember me</label>
+                                <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe">
+
+                                <label class="form-check-label" for="rememberMe">Remember me</label>
                             </div>
                         </div>
 
@@ -75,9 +75,10 @@
         </div>
     </div>
 </div>
-<script src="https://www.google.com/recaptcha/api.js?render=6LcF35MpAAAAAEiG9CRDbcZ0EX2xyvOAoUA9sg7Z"></script>
-<script src="/public/javascripts/captcha/captcha.js">
-    executeCaptcha(process.env.CAPTCHA_PUBLIC, "login")
+<script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.CAPTCHA_PUBLIC %>"></script>
+<script src="/javascripts/captcha/captcha.js"></script>
+<script>
+    executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "login")
 </script>
 
 <%- include("../components/footer") %>
