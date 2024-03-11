@@ -59,7 +59,7 @@ const sessionSetup = session({
 const passportSerializeUser = (user, callback) => {
     process.nextTick(function () {
         // Null is passed to the callback if no errors occurred
-        callback(null, {user: {id: user.id, username: user.username, role: user.role, email: user.email}});
+        callback(null, {id: user.id, username: user.username, role: user.role, email: user.email});
     });
 }
 

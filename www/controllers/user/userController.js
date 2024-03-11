@@ -9,6 +9,7 @@ function getUserDashboard(req, res, next) {
 }
 
 function getUserProfile(req, res, next) {
+    // TODO Fetch Full data of the user from the database
     res.render("user/user_profile", {user: req.user , auth: req.isLoggedIn})
 }
 
