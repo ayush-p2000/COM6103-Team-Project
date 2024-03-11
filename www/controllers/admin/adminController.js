@@ -12,7 +12,7 @@ function getAdminDashboard(req, res, next) {
         lastName: "Norris"
     }
 
-    renderAdminLayout(res, "dashboard",{admin, numOfUsers: 11, savedCo2:124.3, numOfFinishedTransactions: 1121})
+    renderAdminLayout(req, res, "dashboard",{admin, numOfUsers: 11, savedCo2:124.3, numOfFinishedTransactions: 1121})
 }
 
 module.exports = {

@@ -7,13 +7,13 @@ const {renderAdminLayout, renderAdminLayoutPlaceholder} = require("../../util/la
 
 function getAccountsPage(req, res, next) {
     const users = getMockAccountsList();
-    renderAdminLayout(res, "user_management", {users});
+    renderAdminLayout(req, res, "user_management", {users});
 }
 
 function getAccountDetailsPage(req, res, next) {
 // TODO Remove dummy retrieval
     const user = getMockUser()
-    renderAdminLayout(res, "user_details", {user});
+    renderAdminLayout(req, res, "user_details", {user});
 }
 
 function getEditAccountPage(req, res, next) {

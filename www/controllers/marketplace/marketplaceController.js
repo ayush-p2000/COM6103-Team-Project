@@ -9,7 +9,7 @@ const { Device} = require("../../model/schema/device")
 const getMarketplace = async (req, res, next) => {
     const {items, pagination} = await getPaginatedResults(Device, req.params.page, {},{}, 3);
 
-    res.render('marketplace/marketplace', {items, auth: req.isLoggedIn, user:req.user})
+    res.render('marketplace/marketplace', {items, auth: req.isLoggedIn, user:req.user, pagination})
 }
 
 function getMyItems(req, res, next) {
