@@ -29,14 +29,16 @@
             <h5 class="fw-bold mb-4">Specification: </h5>
             <div class="row" id="item-info">
                 <div class="col-6">
-                    <p><span class="fw-bold">Purchased Year:</span> <%= item.details.find(detail => detail.name === 'purchaseYear')?.value %></p>
-                    <p><span class="fw-bold">Capacity:</span> <%= item.details.find(detail => detail.name === 'capacity')?.value %></p>
-                    <p><span class="fw-bold">Colour:</span> <span class="fw-bold" style="color: red;"><%= item.details.find(detail => detail.name === 'colour')?.value %></span></p>
+                    <% item.details.slice(0, Math.ceil(item.details.length / 2)).forEach(detail => { %>
+                        <p><span class="fw-bold"><%= detail.name%>:</span> <%= detail.value %></p>
+                    <% }) %>
+                        <p><span class="fw-bold">Device Type:</span> <%= item.device_type.name %></p>
                 </div>
                 <div class="col-6">
-                    <p><span class="fw-bold">Operating System:</span> <%= item.details.find(detail => detail.name === 'os')?.value %></p>
-                    <p><span class="fw-bold">Device Type:</span> <%= item.device_type.name %></p>
-                    <p><span class="fw-bold">Device Condition:</span> <%= item.good_condition ? 'Good': 'Poor'%></p>
+                    <% item.details.slice(Math.ceil(item.details.length / 2)).forEach(detail => { %>
+                        <p><span class="fw-bold"><%= detail.name%>:</span> <%= detail.value %></p>
+                    <% }) %>
+                        <p><span class="fw-bold">Device Condition:</span> <%= item.good_condition ? 'Good': 'Poor'%></p>
                 </div>
             </div>
         </div>
