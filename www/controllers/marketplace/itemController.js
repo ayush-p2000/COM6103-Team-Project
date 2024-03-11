@@ -5,16 +5,24 @@
 var {getAllDeviceType, getAllBrand, getModels, listDevice} = require('../../model/mongodb');
 const {getMockItem} = require("../../util/mock/mockData");
 
-async function postListItem(req, res) {
+
+const postListItem = async (req, res) => {
     try {
-        const requestData = req.body;
-        const deviceId = await listDevice(requestData);
+        // req.body.append("photos",req.files)
+        const files = req.files; // 获取上传的文件数组
+        const filePaths = [];
+        for (let i = 0; i < files.length; i++) {
+            const filePath = files[i].path;
+            filePaths.push(filePath);
+        }
+
+        const deviceId = await listDevice(req.body,filePaths);
         res.status(200).send(deviceId);
     } catch (err) {
         console.log(err);
         res.status(500).send('Internal server error');
     }
-}
+};
 
 async function getListItem(req, res) {
     try {
