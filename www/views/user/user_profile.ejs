@@ -4,7 +4,7 @@
 
 <div class="d-flex justify-content-center align-items-center">
     <div class="w-50 d-flex justify-content-start align-items-start flex-column p-5">
-        <form method="POST" name="editUserDetails" class="w-100">
+        <form method="POST" name="editUserDetails" action="/registration" class="w-100">
             <h2>
                 Your Profile
             </h2>
@@ -37,7 +37,7 @@
             <div class="d-flex w-100 shadow-lg flex-column ps-4 pe-4 pt-3 pb-1">
                 <div>
                     <label for="email" class="d-inline-block w-25">Email: </label>
-                    <input name="email" id="email" class="d-inline-block w-50 form-control" value="<%= user.email %>"/>
+                    <input name="emailid" id="email" class="d-inline-block w-50 form-control" value="<%= user.email %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div>
@@ -77,6 +77,12 @@
                     <label for="country" class="d-inline-block w-25">Country: </label>
                     <input name="country" id="country" class="d-inline-block w-50 form-control"
                            value="<%= user.country %>"/>
+                </div>
+                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
+                <div>
+                    <label for="password" class="d-inline-block w-25">Password: </label>
+                    <input name="password" id="password" class="d-inline-block w-50 form-control"
+                           value="<%= user.password %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3"/>
             </div>
