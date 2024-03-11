@@ -4,6 +4,7 @@ const router = express.Router();
 const {postListItem,getListItem,getModelByBrandAndType, getItemDetails, getItemQrCode} = require("../controllers/marketplace/itemController");
 const {getMarketplace, getMyItems} = require("../controllers/marketplace/marketplaceController");
 
+
 const multer = require('multer');
 
 
@@ -21,7 +22,10 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-router.get('/marketplace', getMarketplace);
+
+
+router.get('/marketplace/:page?', getMarketplace);
+
 
 router.get('/item/:id', getItemDetails);
 

@@ -78,5 +78,9 @@ a {
     color: #097969;
 }
 
+.active > .page-link {
+    background-color: var(--bs-success);
+    border-color: var(--bs-success)
+}
 
 

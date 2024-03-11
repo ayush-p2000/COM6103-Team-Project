@@ -110,6 +110,12 @@ async function listDevice(deviceData, photos) {
     return savedDevice._id;
 }
 
+const getAllDevices = async () => {
+    return Device.find({});
+}
+
+
+
 module.exports = {
     getAllUsers,
     getUserById,
@@ -121,5 +127,6 @@ module.exports = {
     getAllDeviceType,
     getAllBrand,
     getModels,
-    listDevice
+    listDevice,
+    getAllDevices
 }
