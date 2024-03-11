@@ -60,6 +60,7 @@ const logoutUser = (req,res,next) => {
         res.redirect("/login")
     })
 }
+
 function getLoginPage(req, res, next) {
     res.render("authentication/login", {auth: req.isLoggedIn, user:req.user})
 }

@@ -75,10 +75,11 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.CAPTCHA_PUBLIC %>"></script>
 <script src="/javascripts/captcha/captcha.js"></script>
 <script>
-    executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "login")
+    executeCaptcha(process.env.CAPTCHA_PUBLIC, "login")
 </script>
 
 <%- include("../components/footer") %>
