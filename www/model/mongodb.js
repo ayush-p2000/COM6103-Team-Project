@@ -76,6 +76,12 @@ async function updateUser(id, user) {
     return await User.updateOne({_id: id}, user);
 }
 
+const getAllDevices = async () => {
+    return Device.find({});
+}
+
+
+
 module.exports = {
     getAllUsers,
     getUserById,
@@ -83,5 +89,6 @@ module.exports = {
     searchUserAndPopulate,
     createUser,
     updateUser,
-    store
+    getAllDevices,
+    store,
 }
