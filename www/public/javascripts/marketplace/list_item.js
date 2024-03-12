@@ -91,13 +91,13 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="card p-3 ">
                 <div class="row" id="selected-model-content">
                     <div class="col-3">
-                        <img src="${models[0].properties[0].value}" class="img-fluid rounded-start" >
+                        <img src="${models[selectedIndex].properties[0].value}" class="img-fluid rounded-start" >
                     </div>
                     <div class="col-9">
                         <div class="card-body p-0">
                             <h5 class="card-title">${models[selectedIndex].name}</h5>
                             <p class="card-text m-0"><small>Device Type:</small> ${deviceTypeElement.options[deviceTypeElement.selectedIndex].innerText}</p>
-                            <p class="card-text m-0"><small>Brand:</small> ${deviceBrandElement.options[deviceTypeElement.selectedIndex].innerText}</p>
+                            <p class="card-text m-0"><small>Brand:</small> ${deviceBrandElement.options[deviceBrandElement.selectedIndex].innerText}</p>
                             <p class="card-text"><small class="text-muted">Release at ${models[selectedIndex].properties[2].value}</small></p>
                         </div>
                     </div>
@@ -178,7 +178,6 @@ document.addEventListener("DOMContentLoaded", function() {
         formData.append('state', 1); // default to review when posted
         formData.append('data_service', dataService);
         formData.append('additional_details', additionalInfo.value !== "" ? additionalInfo.value : "Not Provided");
-        formData.append('listing_user', '65eac7a0f2954ef5775b1837'); //TODO: get Current User
         formData.append('visible', false); // default to false when posted
 
 

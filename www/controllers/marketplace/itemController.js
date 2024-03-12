@@ -5,18 +5,19 @@
 var {getAllDeviceType, getAllBrand, getModels, listDevice} = require('../../model/mongodb');
 const {getMockItem} = require("../../util/mock/mockData");
 
-
+/**
+ * Handling Request to post item base on the info in request body
+ * @author Zhicong Jiang
+ */
 const postListItem = async (req, res) => {
     try {
-        // req.body.append("photos",req.files)
-        const files = req.files; // 获取上传的文件数组
+        const files = req.files;
         const filePaths = [];
         for (let i = 0; i < files.length; i++) {
             const filePath = files[i].path;
             filePaths.push(filePath);
         }
-
-        const deviceId = await listDevice(req.body,filePaths);
+        const deviceId = await listDevice(req.body,filePaths,req.user);
         res.status(200).send(deviceId);
     } catch (err) {
         console.log(err);
@@ -24,6 +25,10 @@ const postListItem = async (req, res) => {
     }
 };
 
+/**
+ * Respond form view for user to post item
+ * @author Zhicong Jiang
+ */
 async function getListItem(req, res) {
     try {
         let deviceTypes = await getAllDeviceType();
@@ -39,10 +44,7 @@ async function getListItem(req, res) {
 
 /**
  * get specific Model By querying Brand And DeviceType
- * @param req
- * @param res
- * @returns list of Model
- * @example http://localhost:3000/getModelByBrandAndType?brand=65eac79df2954ef5775b17f8&deviceType=65eac7dcd328192d95701b5a
+ * @author Zhicong Jiang
  */
 async function getModelByBrandAndType(req, res) {
     try {

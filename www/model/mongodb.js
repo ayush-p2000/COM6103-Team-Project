@@ -91,7 +91,8 @@ async function getModels(brandId,deviceTypeId){
         deviceType: new mongoose.Types.ObjectId(deviceTypeId)})
 }
 
-async function listDevice(deviceData, photos) {
+async function listDevice(deviceData, photos, user) {
+    console.log(user)
     const newDevice = new Device({
         device_type: deviceData.device_type,
         brand: deviceData.brand,
@@ -102,7 +103,7 @@ async function listDevice(deviceData, photos) {
         state: deviceData.state,
         data_service: deviceData.data_service,
         additional_details: deviceData.additional_details,
-        listing_user: deviceData.listing_user,
+        listing_user: user.id,
         photos: photos,
         visible: deviceData.visible
     });
