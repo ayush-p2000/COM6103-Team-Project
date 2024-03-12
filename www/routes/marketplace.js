@@ -36,6 +36,4 @@ router.post('/list-item/:id?',upload.array('photos', 6), postListItem);
 router.get('/getModelByBrandAndType', getModelByBrandAndType);
 
 
-router.get('/my-items', getMyItems);
-
 module.exports = router;

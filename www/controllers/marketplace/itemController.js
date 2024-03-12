@@ -28,8 +28,10 @@ async function getListItem(req, res) {
     try {
         let deviceTypes = await getAllDeviceType();
         let brands = await getAllBrand();
-        res.render('marketplace/list_item', {auth: true, role: 'user',
-            deviceTypes: deviceTypes, brands: brands});
+        res.render('marketplace/list_item', {
+            auth: req.isLoggedIn,user:req.user, role: 'user',
+            deviceTypes: deviceTypes, brands: brands
+        });
     } catch (err) {
         console.log(err)
     }
@@ -54,7 +56,7 @@ async function getModelByBrandAndType(req, res) {
 
 function getItemDetails(req, res, next) {
     const item = getMockItem()
-    res.render('marketplace/item_details', {item, auth: true, role: 'user'})
+    res.render('marketplace/item_details', {item, auth: req.isLoggedIn, user:req.user})
 }
 
 function getItemQrCode(req, res, next) {
