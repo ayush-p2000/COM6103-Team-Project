@@ -10,15 +10,18 @@
                 <% if(auth) { %>
                     <!-- TODO: Change the href to user dashboard once it's done -->
                     <a class="nav-link active me-3"  href="/dashboard">Dashboard</a>
-                    <% if (role === "user") { %> <!-- TODO: The role needs to be later refactored to ranking system -->
+                    <% if (user.role === "user") { %> <!-- TODO: The role needs to be later refactored to ranking system -->
                     <a class="nav-link me-3" href="/marketplace">Marketplace</a>
                     <a class="nav-link me-3" href="/my-items">My Items</a>
                     <% } %>
                     <a class="nav-link me-3" href="/profile">Profile</a>
-                    <a class="nav-link me-3" href="/">Logout</a>
+                    <form action="/logout" method="POST" class="m-0">
+                        <button class="nav-link me-3" type="submit">Logout</button>
+                    </form>
                 <% } else { %>
                     <a class="nav-link active me-3" aria-current="page" href="/">Home</a>
-                    <a class="nav-link me-3" href="user/login">Login/Signup</a>
+                    <a class="nav-link me-3" href="/login">Login</a>
+                    <a class="nav-link me-3" href="/register">Register</a>
                 <% } %>
             </div>
         </div>

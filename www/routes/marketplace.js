@@ -12,6 +12,4 @@ router.get('/item/:id/qr', getItemQrCode);
 
 router.get('/list-item/:id?', getListItem);
 
-router.get('/my-items', getMyItems);
-
 module.exports = router;

@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true
         },
+        date_of_birth: {
+            type: Date,
+            required: true
+        },
         email: {
             type: String,
             required: true
@@ -55,14 +59,12 @@ const userSchema = new mongoose.Schema({
             },
         },
         password: {
-            type: String,
+            type: Buffer,
             required: true
         },
         salt: {
-            type: String,
+            type: Buffer,
             required: true,
-            minLength: 16,
-            maxLength: 24
         },
         listed_devices:
             [
