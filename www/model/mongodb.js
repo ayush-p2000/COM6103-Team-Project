@@ -53,7 +53,7 @@ if(connected){
 }
 /* Functions */
 async function getAllUsers() {
-    return await User.find();
+    return User.find();
 }
 
 async function getUserById(id) {
@@ -65,7 +65,7 @@ async function searchUser(filter) {
 }
 
 async function searchUserAndPopulate(filter) {
-    return await User.find(filter).populate('listed_devices');
+    return User.find(filter).populate('listed_devices').populate('listed_devices.model').populate('listed_devices.brand').populate('listed_devices.device_type');
 }
 
 async function createUser(user) {
