@@ -5,6 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require("passport")
 const session = require("express-session")
+const bodyParser = require('body-parser');
+
+
 
 const mongo = require('./model/mongodb')
 
@@ -35,6 +38,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 /* Session Auth Setup */
 app.use(sessionSetup);

@@ -80,6 +80,57 @@ const getAllDevices = async () => {
     return Device.find({});
 }
 
+async function getItemDetail(id) {
+    return await Device.findOne({_id: id}).populate({
+        path: 'device_type brand model',
+        options: {strictPopulate: false}
+    });
+}
+async function getAllDeviceTypes() {
+    return await DeviceType.find();
+}
+
+async function getAllBrands() {
+    return await Brand.find();
+}
+
+async function getAllModels() {
+    return await Model.find();
+}
+
+async function getModel(name) {
+    return await Model.findOne({name:name})
+}
+
+async function getBrand(name) {
+    return await Brand.findOne({name: name});
+}
+async function getDeviceType(name) {
+    return await DeviceType.findOne({name:name})
+}
+
+async function updateDeviceDetails(id, deviceDetails) {
+    const device =
+        {
+            device_type: deviceDetails.device_type,
+            brand: deviceDetails.brand,
+            model: deviceDetails.model,
+            details: [{
+                name:'capacity',
+                value:deviceDetails.capacity.toString()
+            }],
+            category: deviceDetails.category,
+            good_condition: deviceDetails.good_condition,
+            data_service: deviceDetails.data_service
+        }
+    const status = await Device.findByIdAndUpdate(id, device)
+    if(status) {
+        return "OK"
+    } else {
+        return "404"
+    }
+}
+
 
 
 module.exports = {
@@ -90,5 +141,13 @@ module.exports = {
     createUser,
     updateUser,
     getAllDevices,
-    store,
+    getItemDetail,
+    getAllDeviceTypes,
+    getAllBrands,
+    getAllModels,
+    updateDeviceDetails,
+    getBrand,
+    getModel,
+    getDeviceType,
+    store
 }
