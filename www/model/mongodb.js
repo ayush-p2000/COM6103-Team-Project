@@ -111,6 +111,22 @@ async function listDevice(deviceData, photos, user) {
     return savedDevice._id;
 }
 
+async function updateDevice(id, deviceData, photos) {
+    const filter = { _id: id }
+    const update = {
+        $set: {
+            details: JSON.parse(deviceData.details),
+            good_condition: deviceData.good_condition,
+            state: 1,
+            data_service: deviceData.data_service,
+            additional_details: deviceData.additional_details,
+            photos: photos,
+        }
+    };
+    const updatedDevice = await Device.updateOne(filter,update);
+    return updatedDevice._id;
+}
+
 const getDevice = async (id) => {
     return Device.find({_id:id}).populate('brand').populate('device_type').populate('model');
 
@@ -135,5 +151,6 @@ module.exports = {
     getModels,
     listDevice,
     getAllDevices,
-    getDevice
+    getDevice,
+    updateDevice
 }

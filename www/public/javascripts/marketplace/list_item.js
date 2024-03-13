@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
     conditionYes.addEventListener('change', ()=> {
         // Show further condition term if yes
         if (conditionYes.checked) {
+            functionalityYes.checked = true;
             displayYes.checked = true;
             touchscreenYes.checked = true;
             bodyYes.checked = true;
@@ -159,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         var details = [
-            { name: "functionnality", value: functionalityYes.checked? "Good" : "Bad" },
+            { name: "functionality", value: functionalityYes.checked? "Good" : "Bad" },
             { name: "button", value: btnYes.checked? "Good" : "Bad" },
             { name: "camera", value: cameraYes.checked? "Good" : "Bad" },
             { name: "battery", value: batteryYes.checked? "Good" : "Bad" },

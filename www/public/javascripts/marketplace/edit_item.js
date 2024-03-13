@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
     conditionYes.addEventListener('change', ()=> {
         // Show further condition term if yes
         if (conditionYes.checked) {
+            functionalityYes.checked = true;
             displayYes.checked = true;
             touchscreenYes.checked = true;
             bodyYes.checked = true;
@@ -57,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     /* Handling submit action */
-    submitBtn.addEventListener('click', ()=> {postDataToServer()})
+    submitBtn.addEventListener('click', ()=> {postUpdateDataToServer()})
 
 
     function updateImageReview(event){
@@ -84,9 +85,7 @@ document.addEventListener("DOMContentLoaded", function() {
     /**
      * Handling Post device to Server
      */
-    function postDataToServer() {
-        var selectedModelId = deviceModelElement.value
-        var selectedModel = models.find(model => model._id === selectedModelId);
+    function postUpdateDataToServer() {
 
         var dataService = 0;
         dataRadios.forEach(function(radio, index) {
@@ -97,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         var details = [
-            { name: "functionnality", value: functionalityYes.checked? "Good" : "Bad" },
+            { name: "functionality", value: functionalityYes.checked? "Good" : "Bad" },
             { name: "button", value: btnYes.checked? "Good" : "Bad" },
             { name: "camera", value: cameraYes.checked? "Good" : "Bad" },
             { name: "battery", value: batteryYes.checked? "Good" : "Bad" },
@@ -107,24 +106,21 @@ document.addEventListener("DOMContentLoaded", function() {
         ];
 
         var formData = new FormData();
-        formData.append('device_type', selectedModel.deviceType);
-        formData.append('brand', selectedModel.brand);
-        formData.append('model', selectedModel._id);
         formData.append('details', JSON.stringify(details));
-        formData.append('category', selectedModel.category);
         formData.append('good_condition', conditionYes.checked);
-        formData.append('state', 1); // default to review when posted
         formData.append('data_service', dataService);
         formData.append('additional_details', additionalInfo.value !== "" ? additionalInfo.value : "Not Provided");
-        formData.append('visible', false); // default to false when posted
 
 
         for (var i = 0; i < itemImage.files.length; i++) {
             formData.append('photos', itemImage.files[i]);
         }
 
+        var url = window.location.href;
+        var parts = url.split("/");
+        var id = parts[parts.length - 1];
 
-        fetch('/list-item', {
+        fetch(`/list-item/${id}`, {
             method: 'POST',
             body: formData,
 

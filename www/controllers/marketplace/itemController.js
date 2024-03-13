@@ -2,7 +2,7 @@
  * This controller should handle any operations related to specific items in the marketplace (e.g. adding, removing, updating, etc.)
  */
 
-var {getAllDeviceType, getAllBrand, getModels, listDevice, getDevice} = require('../../model/mongodb');
+var {getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice} = require('../../model/mongodb');
 const {getMockItem} = require("../../util/mock/mockData");
 
 /**
@@ -10,6 +10,7 @@ const {getMockItem} = require("../../util/mock/mockData");
  * @author Zhicong Jiang
  */
 const postListItem = async (req, res) => {
+    var id = req.params.id;
     try {
         const files = req.files;
         const filePaths = [];
@@ -17,8 +18,16 @@ const postListItem = async (req, res) => {
             const filePath = files[i].path;
             filePaths.push(filePath);
         }
-        const deviceId = await listDevice(req.body,filePaths,req.user);
-        res.status(200).send(deviceId);
+
+        if (typeof id === 'undefined'){
+            console.log("Adding")
+            const deviceId = await listDevice(req.body, filePaths, req.user);
+            res.status(200).send(deviceId);
+        }else{
+            console.log("Updating")
+            const deviceId = await updateDevice(id, req.body, filePaths);
+            res.status(200).send(deviceId);
+        }
     } catch (err) {
         console.log(err);
         res.status(500).send('Internal server error');
@@ -43,9 +52,8 @@ async function getListItem(req, res) {
             console.log(err)
         }
     }else{
-        let fakeId = "65f22cad3182eff411981168"
         try{
-            let device = await getDevice(fakeId);
+            let device = await getDevice(id);
             res.render('marketplace/edit_item', {
                 auth: req.isLoggedIn,user:req.user, role: 'user', device: device[0]
             });
