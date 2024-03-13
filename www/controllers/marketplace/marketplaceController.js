@@ -3,12 +3,14 @@
  */
 
 const mockData = require('../../util/mock/mockData')
+const { getPaginatedResults } = require("../../model/utils/utils")
+const { Device} = require("../../model/schema/device")
 const {getUserItems} = require('../../model/mongodb')
 
-function getMarketplace(req, res, next) {
-    // Dummy Data
-    const items = mockData.getMockItems()
-    res.render('marketplace/marketplace', {items, auth: true, role: "user"})
+const getMarketplace = async (req, res, next) => {
+    const {items, pagination} = await getPaginatedResults(Device, req.params.page, {},{}, 3);
+
+    res.render('marketplace/marketplace', {items, auth: req.isLoggedIn, user:req.user, pagination})
 }
 
 /**
@@ -18,7 +20,7 @@ function getMarketplace(req, res, next) {
 async function getMyItems(req, res, next) {
     // TODO: change the id once the session is completed
     const items = await getUserItems(mockData.getMockUserId())
-    res.render('marketplace/my_items', {items, auth: true, role: "user"})
+    res.render('marketplace/my_items', {items, auth: req.isLoggedIn, user:req.user})
 }
 
 module.exports = {

@@ -6,7 +6,7 @@ const {renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
 
 function getModerationDashboard(req, res, next) {
     //TODO: Add functionality for the moderation dashboard (out of scope)
-    renderAdminLayoutPlaceholder(res, "moderation", {}, "Moderation Dashboard (out of scope)");
+    renderAdminLayoutPlaceholder(req, res, "moderation", {}, "Moderation Dashboard (out of scope)");
 }
 
 module.exports = {
