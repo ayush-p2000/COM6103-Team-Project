@@ -76,6 +76,41 @@ async function updateUser(id, user) {
     return await User.updateOne({_id: id}, user);
 }
 
+
+async function getAllDeviceType(){
+    return await DeviceType.find();
+
+}
+
+async function getAllBrand(){
+    return await Brand.find();
+}
+
+async function getModels(brandId,deviceTypeId){
+    return await Model.find({brand: new mongoose.Types.ObjectId(brandId),
+        deviceType: new mongoose.Types.ObjectId(deviceTypeId)})
+}
+
+async function listDevice(deviceData, photos, user) {
+    console.log(user)
+    const newDevice = new Device({
+        device_type: deviceData.device_type,
+        brand: deviceData.brand,
+        model: deviceData.model,
+        details: JSON.parse(deviceData.details),
+        category: deviceData.category,
+        good_condition: deviceData.good_condition,
+        state: deviceData.state,
+        data_service: deviceData.data_service,
+        additional_details: deviceData.additional_details,
+        listing_user: user.id,
+        photos: photos,
+        visible: deviceData.visible
+    });
+    const savedDevice = await newDevice.save();
+    return savedDevice._id;
+}
+
 const getAllDevices = async () => {
     return Device.find({});
 }
@@ -89,6 +124,10 @@ module.exports = {
     searchUserAndPopulate,
     createUser,
     updateUser,
-    getAllDevices,
     store,
+    getAllDeviceType,
+    getAllBrand,
+    getModels,
+    listDevice,
+    getAllDevices
 }
