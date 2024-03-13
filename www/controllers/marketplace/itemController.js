@@ -9,9 +9,14 @@ function getListItem(req, res, next) {
     res.render('marketplace/list_item', {auth: true, role: 'user'})
 }
 
+/**
+ * Get item details to display it in the User's item detail page, where it shows the device specifications
+ * @author Vinroy Miltan DSouza
+ */
 async function getItemDetails(req, res, next) {
     const item = await getItemDetail(req.params.id)
-    res.render('marketplace/item_details', {item, auth: true, role: 'user'})
+    const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
+    res.render('marketplace/item_details', {item, specs, auth: true, role: 'user'})
 }
 
 function getItemQrCode(req, res, next) {

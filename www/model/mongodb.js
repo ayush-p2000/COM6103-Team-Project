@@ -76,6 +76,11 @@ async function updateUser(id, user) {
     return await User.updateOne({_id: id}, user);
 }
 
+
+/**
+ * Get method to retrieve the user items from mongodb database
+ * @author Vinroy Miltan Dsouza
+ */
 async function getUserItems(id) {
     return Device.find({'listing_user': id}).populate({
         path: 'device_type brand model',
@@ -83,6 +88,10 @@ async function getUserItems(id) {
     });
 }
 
+/**
+ * Get method to retrieve a specific device details of the User from the database
+ * @author Vinroy Miltan Dsouza
+ */
 async function getItemDetail(id) {
     return await Device.findOne({_id: id}).populate({
         path: 'device_type brand model',

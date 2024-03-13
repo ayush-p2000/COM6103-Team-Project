@@ -11,6 +11,10 @@ function getMarketplace(req, res, next) {
     res.render('marketplace/marketplace', {items, auth: true, role: "user"})
 }
 
+/**
+ * Get User's items to display it in the my-items page, so that the user can see what items they have listed in the application
+ * @author Vinroy Miltan Dsouza
+ */
 async function getMyItems(req, res, next) {
     // TODO: change the id once the session is completed
     const items = await getUserItems(mockData.getMockUserId())

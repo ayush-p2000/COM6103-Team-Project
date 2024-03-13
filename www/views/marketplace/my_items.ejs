@@ -62,8 +62,8 @@
                         <img src="<%= item.photos[0] %>" class="img-fluid item-img" alt="...">
                     </div>
                     <div class="col-6 col-md-8 col-lg-7 col-xl-8">
-                        <h4 class="d-flex align-items-center"><%= item.model.name %><span class="badge bg-success ms-2"
-                                                                                    style="font-size: 0.4em;">Approved</span>
+                        <h4 class="d-flex align-items-center"><%= item.model.name %><span class="badge <%= item.visible ? 'bg-success': 'bg-warning'%> ms-2"
+                                                                                          style="font-size: 0.3em;"><%= item.visible ? 'Approved':'In Review'%></span>
                         </h4>
                         <p class="m-0 p-0 text-muted"><small>Device Type: </small><%= item.device_type.name %></p>
                         <p class="m-0 p-0 text-muted"><small>Classification: </small><%= ['Current','Rare','Recycle','Unknown'][item.category] %></p>
