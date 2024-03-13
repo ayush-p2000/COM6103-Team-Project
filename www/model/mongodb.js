@@ -111,6 +111,11 @@ async function listDevice(deviceData, photos, user) {
     return savedDevice._id;
 }
 
+const getDevice = async (id) => {
+    return Device.find({_id:id}).populate('brand').populate('device_type').populate('model');
+
+}
+
 const getAllDevices = async () => {
     return Device.find({});
 }
@@ -129,5 +134,6 @@ module.exports = {
     getAllBrand,
     getModels,
     listDevice,
-    getAllDevices
+    getAllDevices,
+    getDevice
 }

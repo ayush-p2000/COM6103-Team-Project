@@ -2,7 +2,7 @@
  * This controller should handle any operations related to specific items in the marketplace (e.g. adding, removing, updating, etc.)
  */
 
-var {getAllDeviceType, getAllBrand, getModels, listDevice} = require('../../model/mongodb');
+var {getAllDeviceType, getAllBrand, getModels, listDevice, getDevice} = require('../../model/mongodb');
 const {getMockItem} = require("../../util/mock/mockData");
 
 /**
@@ -30,15 +30,29 @@ const postListItem = async (req, res) => {
  * @author Zhicong Jiang
  */
 async function getListItem(req, res) {
-    try {
-        let deviceTypes = await getAllDeviceType();
-        let brands = await getAllBrand();
-        res.render('marketplace/list_item', {
-            auth: req.isLoggedIn,user:req.user, role: 'user',
-            deviceTypes: deviceTypes, brands: brands
-        });
-    } catch (err) {
-        console.log(err)
+    var id = req.params.id;
+    if (typeof id === 'undefined') {
+        try {
+            let deviceTypes = await getAllDeviceType();
+            let brands = await getAllBrand();
+            res.render('marketplace/list_item', {
+                auth: req.isLoggedIn,user:req.user, role: 'user',
+                deviceTypes: deviceTypes, brands: brands
+            });
+        } catch (err) {
+            console.log(err)
+        }
+    }else{
+        let fakeId = "65f22cad3182eff411981168"
+        try{
+            let device = await getDevice(fakeId);
+            res.render('marketplace/edit_item', {
+                auth: req.isLoggedIn,user:req.user, role: 'user', device: device[0]
+            });
+            // res.send(device)
+        }catch (err){
+            console.log(err)
+        }
     }
 }
 
