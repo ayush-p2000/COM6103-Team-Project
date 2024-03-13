@@ -13,7 +13,7 @@
                         <label for="itemImage" class="form-label">Pick images of the device</label>
                         <div id="imagePreview" class="row p-1">
                             <% device.photos.forEach(function(photo) { %>
-                                <img src="<%= photo %>" class="img-thumbnail col-2">
+                                <img src="<%= photo.replace('public', '') %>" class="img-thumbnail col-2">
                             <% }); %>
                         </div>
                         <input class="form-control" type="file" id="itemImage" name="itemImage" accept="image/*"  multiple>
