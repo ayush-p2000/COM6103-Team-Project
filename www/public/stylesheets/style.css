@@ -59,6 +59,11 @@ a {
     color: #222222;
 }
 
+.item-detail .detail-img {
+    object-fit: contain;
+    height: 500px;
+}
+
 /* landing page */
 
 .landing-page#features {

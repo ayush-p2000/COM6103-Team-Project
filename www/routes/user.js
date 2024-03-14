@@ -9,6 +9,6 @@ router.get('/profile', getUserProfile)
 
 router.get('/dashboard', getUserDashboard);
 
-router.get('/my-items', getMyItems);
+router.get('/my-items/:page?', getMyItems);
 
 module.exports = router;
