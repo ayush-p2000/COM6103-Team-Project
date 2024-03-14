@@ -21,14 +21,7 @@ const getMarketplace = async (req, res, next) => {
  * @author Vinroy Miltan Dsouza
  */
 async function getMyItems(req, res, next) {
-    // TODO: change the id once the session is completed
-    console.log(req.user)
     const items = await getUserItems(req.user.id)
-    items.forEach(item => {
-        item.photos[0] = item.photos[0].replace('public', '')
-        console.log(item.photos[0])
-    })
-
     res.render('marketplace/my_items', {items, deviceState, deviceCategory, auth: req.isLoggedIn, user:req.user, role:'user'})
 }
 

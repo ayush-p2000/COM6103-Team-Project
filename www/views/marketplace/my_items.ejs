@@ -59,7 +59,7 @@
             <div class="card mt-4">
                 <div class="card-body row d-flex align-items-center">
                     <div class="col-3 col-md-2 col-lg-2 col-xl-1">
-                        <img src="<%= item.photos[0] %>" class="img-fluid item-img" alt="...">
+                        <img src="<%= item.photos[0].replace('public', '') %>" class="img-fluid item-img" alt="...">
                     </div>
                     <div class="col-6 col-md-8 col-lg-7 col-xl-8">
                         <h4 class="d-flex align-items-center"><%= item.model.name %><span class="badge <%= Object.keys(deviceState).find(key => deviceState[key] === item.state) === 'LISTED' ? 'bg-success': 'bg-warning'%> ms-2"
