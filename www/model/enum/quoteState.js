@@ -14,4 +14,53 @@ const quoteState = {
     EXPIRED
 };
 
-module.exports = quoteState;
+function stateToString(state) {
+    switch (state) {
+        case NEW:
+            return "New";
+        case SAVED:
+            return "Saved";
+        case REJECTED:
+            return "Rejected";
+        case ACCEPTED:
+            return "Accepted";
+        case CONVERTED:
+            return "Converted";
+        case EXPIRED:
+            return "Expired";
+        default:
+            return "Invalid state";
+    }
+}
+
+function stateToColour(state) {
+    switch (state) {
+        case NEW:
+            return "primary";
+        case SAVED:
+            return "info";
+        case REJECTED:
+            return "danger";
+        case ACCEPTED:
+            return "warning";
+        case CONVERTED:
+            return "success";
+        case EXPIRED:
+            return "secondary";
+        default:
+            return "light";
+    }
+}
+
+module.exports = {
+    quoteState,
+    stateToString,
+    stateToColour,
+    NEW,
+    SAVED,
+    REJECTED,
+    ACCEPTED,
+    CONVERTED,
+    EXPIRED
+
+}

@@ -23,6 +23,24 @@ const quoteSchema = new mongoose.Schema({
             type: Date,
             required: true
         },
+        confirmation_details: {
+            final_price: {
+                type: Number,
+                required: true
+            },
+            receipt_id: {
+                type: String,
+                required: true
+            },
+            receipt_date: {
+                type: Date,
+                required: true
+            },
+            receipt_image: {
+                type: String,
+                required: true
+            }
+        }
     },
     {
         timestamps: true

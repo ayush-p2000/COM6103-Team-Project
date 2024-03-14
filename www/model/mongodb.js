@@ -80,6 +80,10 @@ const getAllDevices = async () => {
     return Device.find({});
 }
 
+const updateQuote = async (id, updatedProps) => {
+    return Quote.updateOne({_id: id}, updatedProps);
+}
+
 
 
 module.exports = {
@@ -90,5 +94,6 @@ module.exports = {
     createUser,
     updateUser,
     getAllDevices,
+    updateQuote,
     store,
 }

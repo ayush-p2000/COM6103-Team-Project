@@ -13,6 +13,7 @@ const authRouter = require('./routes/authentication');
 const dataRouter = require('./routes/data');
 const paymentRouter = require('./routes/payment');
 const marketplaceRouter = require('./routes/marketplace');
+const qrRouter = require('./routes/qr');
 const userRouter = require('./routes/user');
 
 const debugRouter = require('./routes/debug');
@@ -53,6 +54,7 @@ app.use("/javascripts", express.static(path.join(__dirname, "node_modules/jquery
 
 // Most routes start with / rather than /<name of file> as the files are being used as descriptive groups of routes
 app.use('/', authInfo, indexRouter);
+app.use('/qr', authInfo, qrRouter)
 app.use('/admin', isAuthenticated, adminRouter);
 app.use('/', authRouter);
 app.use('/', dataRouter);

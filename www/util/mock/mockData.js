@@ -1,3 +1,8 @@
+const {CURRENT} = require("../../model/enum/deviceCategory");
+const {HAS_QUOTE} = require("../../model/enum/deviceState");
+const {DATA_WIPING} = require("../../model/enum/dataService");
+const {ACCEPTED} = require("../../model/enum/quoteState");
+
 const getMockUser = () => {
     return {
         firstName: "Elon",
@@ -265,6 +270,101 @@ function getMockItem() {
     };
 }
 
+const getMockQuote = () => {
+    return {
+        _id: "123",
+        device: {
+            device_type: {
+                _id: "123",
+                name: "Phone",
+                description: "A mobile phone"
+            },
+            brand: {
+                _id: "123",
+                name: "Apple",
+                models: []
+            },
+            model: {
+                _id: "123",
+                name: "iPhone 12",
+                category: CURRENT,
+                properties: [
+                    {
+                        name: "Colour",
+                        value: "Red"
+                    },
+                    {
+                        name: "OS",
+                        value: "IOS"
+                    },
+                    {
+                        name: "Capacity",
+                        value: "128GB"
+                    }
+                ],
+                device_type: {
+                    _id: "123",
+                    name: "Phone",
+                    description: "A mobile phone"
+                },
+                brand: {
+                    _id: "123",
+                    name: "Apple",
+                    models: []
+                }
+            },
+            details: [
+                {
+                    name: "Colour",
+                    value: "Red"
+                },
+                {
+                    name: "OS",
+                    value: "IOS"
+                },
+                {
+                    name: "Capacity",
+                    value: "128GB"
+                }
+            ],
+            category: CURRENT,
+            good_condition: true,
+            state: HAS_QUOTE,
+            data_service: DATA_WIPING,
+            additionalDetails : "This is a test quote, but pretend there is information about the specific device here.",
+            listing_user: {
+                _id: "123",
+                first_name: "John",
+                last_name: "Doe",
+                email: "JDoe@email.com",
+                phone: "1234567890",
+                address: {
+                    address_1: "1 Main St.",
+                    address_2: "Apt. 123",
+                    city: "Anytown",
+                    country: "United Kingdom",
+                    post_code: "AB1 2CD"
+                }
+            },
+            photos: [],
+            visible: true,
+        },
+        provider: {
+            name: "CEX",
+            logo: "https://uk.webuy.com/img/logos/CeX_Logo_Rich_black_CMYK-01.png",
+            does_wiping: true,
+        },
+        value: 39934,
+        state: ACCEPTED,
+        //Today + 2 days
+        expiry: (new Date()).setTime((new Date()).getTime() + (2 * 24 * 60 * 60 * 1000)),
+        //Today - 2 days
+        createdAt: (new Date()).setTime((new Date()).getTime() - (2 * 24 * 60 * 60 * 1000)),
+        //Today - 2h
+        updatedAt: (new Date()).setTime((new Date()).getTime() - (2 * 60 * 60 * 1000)),
+    }
+}
+
 module.exports = {
     getMockAccountsList,
     getMockItems,
@@ -272,5 +372,6 @@ module.exports = {
     getMockPurchaseData,
     getMockGraphData,
     getMockSalesData,
-    getMockItem
+    getMockItem,
+    getMockQuote
 }
