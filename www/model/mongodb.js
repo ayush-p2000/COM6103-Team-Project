@@ -143,9 +143,12 @@ async function updateDevice(id, deviceData, photos) {
             state: 1,
             data_service: deviceData.data_service,
             additional_details: deviceData.additional_details,
-            photos: photos,
         }
     };
+
+    if (photos.length > 0) {
+        update.$set.photos = photos;
+    }
     const updatedDevice = await Device.updateOne(filter,update);
     return updatedDevice._id;
 }
