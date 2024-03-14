@@ -9,6 +9,7 @@ const fixedToCurrency = require("../../util/currency/fixedToCurrency");
 const {ACCEPTED, REJECTED, CONVERTED, EXPIRED, stateToString, stateToColour} = require("../../model/enum/quoteState");
 const {updateQuote, getQuoteById} = require("../../model/mongodb");
 const mongoose = require("mongoose");
+const QRCode = require('qrcode');
 
 function getListItem(req, res, next) {
     res.render('marketplace/list_item', {auth: req.isLoggedIn, user: req.user})
@@ -134,10 +135,25 @@ function rejectQuote(req, res, next) {
     }
 }
 
+async function generateQRCode(req, res, next) {
+    //Get the quote id from the request
+    const {id} = req.params;
+
+    const url = `${process.env.BASE_URL}:${process.env.PORT}/qr/${id}`;
+
+    const qr = await QRCode.toDataURL(url, {
+        errorCorrectionLevel: 'H',
+        type: 'image/png',
+        quality: 1,
+        margin: 1
+    });
+}
+
 module.exports = {
     getListItem,
     getItemDetails,
     getItemQrCodeView,
     confirmQuote,
-    rejectQuote
+    rejectQuote,
+    generateQRCode
 }
