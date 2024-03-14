@@ -12,7 +12,7 @@ checkboxes.forEach(checkbox => {
 
 function filterItems() {
     // Get the checked checkboxes
-    const checkedCheckboxes = document.querySelectorAll('.btn-check:checked');
+    const checkedCheckboxes = document.querySelectorAll('.category-filter:checked');
 
     // Get all items
     const items = document.querySelectorAll('.card');
