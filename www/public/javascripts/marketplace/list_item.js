@@ -180,10 +180,16 @@ document.addEventListener("DOMContentLoaded", function() {
         formData.append('additional_details', additionalInfo.value !== "" ? additionalInfo.value : "Not Provided");
         formData.append('visible', false); // default to false when posted
 
-
-        for (var i = 0; i < itemImage.files.length; i++) {
-            formData.append('photos', itemImage.files[i]);
+        if (itemImage.files.length === 0) {
+            return alert('Please Upload At Least One Photos Of Your Device!');
+        }else{
+            for (var i = 0; i < itemImage.files.length; i++) {
+                formData.append('photos', itemImage.files[i]);
+            }
         }
+
+
+
 
 
         fetch('/list-item', {
