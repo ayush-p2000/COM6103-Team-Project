@@ -70,7 +70,8 @@ const userSchema = new mongoose.Schema({
             [
                 {
                     type: mongoose.Schema.Types.ObjectId,
-                    ref: 'Device'
+                    ref: 'Device',
+                    autopopulate: true
                 }
             ],
     },
@@ -78,6 +79,8 @@ const userSchema = new mongoose.Schema({
         timestamps: true
     }
 );
+
+userSchema.plugin(require('mongoose-autopopulate'));
 
 module.exports = {
     User: mongoose.model('User', userSchema)

@@ -5,16 +5,19 @@ const deviceSchema = new mongoose.Schema({
         device_type: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'DeviceType',
-            required: true
+            required: true,
+            autopopulate: true
         },
         brand: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Brand',
-            required: true
+            required: true,
+            autopopulate: true
         },
         model: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Model',
+            required: true,
         },
         details: [
             {
@@ -52,7 +55,8 @@ const deviceSchema = new mongoose.Schema({
         listing_user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            required: true
+            required: true,
+            autopopulate: true
         },
         photos: [
             {
@@ -70,6 +74,8 @@ const deviceSchema = new mongoose.Schema({
         timestamps: true
     }
 );
+
+deviceSchema.plugin(require('mongoose-autopopulate'));
 
 module.exports = {
     Device: mongoose.model('Device', deviceSchema)

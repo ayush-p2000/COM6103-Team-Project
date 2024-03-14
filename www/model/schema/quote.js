@@ -4,12 +4,14 @@ const quoteSchema = new mongoose.Schema({
         device: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Device',
-            required: true
+            required: true,
+            autopopulate: true
         },
         provider: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Provider',
-            required: true
+            required: true,
+            autopopulate: true
         },
         value: {
             type: Number,
@@ -37,8 +39,14 @@ const quoteSchema = new mongoose.Schema({
                 required: true
             },
             receipt_image: {
-                type: String,
-                required: true
+                img_type: {
+                    type: String,
+                    required: true
+                },
+                img_data: {
+                    type: Buffer,
+                    required: true
+                }
             }
         }
     },
@@ -46,6 +54,8 @@ const quoteSchema = new mongoose.Schema({
         timestamps: true
     }
 );
+
+quoteSchema.plugin(require('mongoose-autopopulate'));
 
 module.exports = {
     Quote: mongoose.model('Quote', quoteSchema)
