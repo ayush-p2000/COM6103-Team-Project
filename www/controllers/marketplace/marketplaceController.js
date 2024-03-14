@@ -6,6 +6,9 @@ const mockData = require('../../util/mock/mockData')
 const { getPaginatedResults } = require("../../model/utils/utils")
 const { Device} = require("../../model/schema/device")
 const {getUserItems} = require('../../model/mongodb')
+const {join} = require("path");
+const deviceState =require("../../model/enum/deviceState")
+const deviceCategory = require("../../model/enum/deviceCategory")
 
 const getMarketplace = async (req, res, next) => {
     const {items, pagination} = await getPaginatedResults(Device, req.params.page, {},{}, 3);
@@ -19,8 +22,14 @@ const getMarketplace = async (req, res, next) => {
  */
 async function getMyItems(req, res, next) {
     // TODO: change the id once the session is completed
-    const items = await getUserItems(mockData.getMockUserId())
-    res.render('marketplace/my_items', {items, auth: req.isLoggedIn, user:req.user})
+    console.log(req.user)
+    const items = await getUserItems(req.user.id)
+    items.forEach(item => {
+        item.photos[0] = item.photos[0].slice(7)
+        console.log(item.photos[0])
+    })
+
+    res.render('marketplace/my_items', {items, deviceState, deviceCategory, auth: req.isLoggedIn, user:req.user, role:'user'})
 }
 
 module.exports = {

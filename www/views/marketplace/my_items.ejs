@@ -63,10 +63,10 @@
                     </div>
                     <div class="col-6 col-md-8 col-lg-7 col-xl-8">
                         <h4 class="d-flex align-items-center"><%= item.model.name %><span class="badge <%= item.visible ? 'bg-success': 'bg-warning'%> ms-2"
-                                                                                          style="font-size: 0.3em;"><%= item.visible ? 'Approved':'In Review'%></span>
+                                                                                          style="font-size: 0.3em;"><%= Object.keys(deviceState).find(key => deviceState[key] === item.state) %></span>
                         </h4>
                         <p class="m-0 p-0 text-muted"><small>Device Type: </small><%= item.device_type.name %></p>
-                        <p class="m-0 p-0 text-muted"><small>Classification: </small><%= ['Current','Rare','Recycle','Unknown'][item.category] %></p>
+                        <p class="m-0 p-0 text-muted"><small>Classification: </small><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) %></p>
                         <!--   TODO: once quotation is done, add the price here        -->
                         <p class="m-0 p-0 text-muted"><small>Price: </small>£<%= item.price %></p>
                     </div>

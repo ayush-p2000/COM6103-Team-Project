@@ -6,9 +6,9 @@
     <div class="row bg-light p-4">
         <div id="carouselExample" class="carousel slide col-md-6 mb-4 bg-light">
             <div class="carousel-inner ">
-                <% item.photos.forEach(  (photo, index) => {%>
+                <% item.photos.forEach((photo, index) => {%>
                     <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                        <img src="<%= photo %>" class="d-block img-fluid mx-auto detail-img" alt="...">
+                        <img src="/upload/<%= photo.slice(14) %>" class="d-block img-fluid mx-auto detail-img" alt="...">
                     </div>
                 <% }) %>
             </div>
@@ -24,12 +24,12 @@
 
         <div class="col-md-6">
             <h3 class="display-4 fw-bold mb-3"><%= item.model.name %><span class="badge <%= item.visible ? 'bg-success': 'bg-warning'%> ms-2"
-                                                                           style="font-size: 0.3em;"><%= item.visible ? 'Approved':'In Review'%></span></h3>
+                                                                           style="font-size: 0.3em;"><%= Object.keys(deviceState).find(key => deviceState[key] === item.state) %></span></h3>
 
-            <p class="lead text-muted"><%= ['Current','Rare','Recycle','Unknown'][item.category] %></p>
+            <p class="lead text-muted"><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) %></p>
 
             <% if(!item.visible) {%>
-                <a href="/list_item/<%= item._id %>" class="btn btn-primary" <%= !item.visible ? 'disabled':'' %> >Edit Details</a>
+                <a href="/list_item/<%= item._id %>" class="btn btn-primary" >Edit Details</a>
             <% } %>
 
             <hr class="my-4">
@@ -63,7 +63,7 @@
 
     <div class="row bg-light text-dark p-4 mt-4">
         <div class="col-md-12">
-            <h5 class="fw-bold">Description: </h5>
+            <h5 class="fw-bold">Additional Details: </h5>
             <p class="lead"><%= item.additional_details%></p>
             <h5 class="fw-bold mt-4">Quotes</h5>
             <div class="card border-primary mt-3">
