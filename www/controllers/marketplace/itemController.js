@@ -2,8 +2,10 @@
  * This controller should handle any operations related to specific items in the marketplace (e.g. adding, removing, updating, etc.)
  */
 
-var {getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice} = require('../../model/mongodb');
+var {getItemDetail, getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice} = require('../../model/mongodb');
 const {getMockItem} = require("../../util/mock/mockData");
+const deviceState = require("../../model/enum/deviceState")
+const deviceCategory = require("../../model/enum/deviceCategory")
 
 /**
  * Handling Request to post item base on the info in request body
@@ -78,9 +80,17 @@ async function getModelByBrandAndType(req, res) {
 }
 
 
-function getItemDetails(req, res, next) {
-    const item = getMockItem()
-    res.render('marketplace/item_details', {item, auth: req.isLoggedIn, user:req.user})
+/**
+ * Get item details to display it in the User's item detail page, where it shows the device specifications
+ * @author Vinroy Miltan DSouza
+ */
+async function getItemDetails(req, res, next) {
+    const item = await getItemDetail(req.params.id)
+    const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
+    // item.photos.forEach((photo, index) => {
+    //     item.photos[index] = photo.slice(7)
+    // })
+    res.render('marketplace/item_details', {item, specs, deviceCategory, deviceState, auth: req.isLoggedIn, user:req.user, role: 'user'})
 }
 
 function getItemQrCode(req, res, next) {
