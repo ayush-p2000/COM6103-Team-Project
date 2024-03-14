@@ -16,13 +16,14 @@
                 <div class="col-md-8">
                     <div class="card m-2">
                         <div class="card-body">
-                            <% if (quoteActive || true) { %>
-                            <div class="alert alert-<%= stateColourFunc(quote.state)%>">
-                                <div class="d-inline-flex w-100">
-                                    <i class="fa-solid fa-circle-info fa-2x my-auto"></i>
-                                    <p class="text-center m-0 my-auto p-0 w-100">This quotation is <%= stateStringFunc(quote.state).toLowerCase() %></p>
+                            <% if (!quoteActive) { %>
+                                <div class="alert alert-<%= stateColourFunc(quote.state) %>">
+                                    <div class="d-inline-flex w-100">
+                                        <i class="fa-solid fa-circle-info fa-2x my-auto"></i>
+                                        <p class="text-center m-0 my-auto p-0 w-100">This quotation has
+                                            been <%= stateStringFunc(quote.state).toLowerCase() %></p>
+                                    </div>
                                 </div>
-                            </div>
                             <% } %>
                             <div class="d-flex justify-content-between w-100">
                                 <img class="img-thumbnail h-100 my-auto" src="<%= quote.provider.logo %>" width="50"/>
@@ -168,7 +169,7 @@
                                     <% }) %>
 
                                     <tr>
-                                        <td class="w-25">Condition</td>
+                                        <td class="w-25">Good Condition</td>
                                         <td class="text-center w-75">
                                             <div class="alert alert-<%= (quote.device.good_condition ? "success" : "secondary") %> p-0 m-0">
                                                 <%= (quote.device.good_condition ? "Yes" : "No") %>
@@ -182,7 +183,7 @@
                             <div class="border border-1 border-light-subtle rounded-3 p-2">
                                 <p>From the seller:</p>
                                 <p class="blockquote fs-6 fst-italic text-light-emphasis text-center">
-                                    "<%= quote.device.additionalDetails %>"</p>
+                                    "<%= quote.device.additional_details %>"</p>
                             </div>
                         </div>
                     </div>
@@ -203,6 +204,48 @@
                                     </p>
                                 </div>
                             </div>
+
+                            <!-- If the transaction inactive and has confirmation, show the confirmation details -->
+                            <% if (!quoteActive) { %>
+
+                                <hr>
+
+                                <div class="row px-2">
+                                    <div class="col-md-12">
+                                        <p>
+                                            <span class="fw-semibold">Final Sale Price:</span>
+                                            £<%= quote.confirmation_details?.final_price %>
+                                        </p>
+                                        <p>
+                                            <span class="fw-semibold">Receipt ID:</span> <span
+                                                    class="alert alert-secondary p-0 px-2 m-0"><%= quote.confirmation_details?.receipt_id %></span>
+                                        </p>
+                                        <p>
+                                            <span class="fw-semibold">Receipt Date:</span>
+                                            <span class="alert alert-secondary p-0 px-2 m-0">
+                                            <%= new Intl.DateTimeFormat("en-GB", {
+                                                year: "numeric",
+                                                month: '2-digit',
+                                                day: '2-digit',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                second: '2-digit',
+                                                hour12: false,
+                                                timeZone: "Europe/London"
+                                            }).format(quote.confirmation_details?.receipt_date) %>
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span class="fw-semibold">Receipt Image:</span>
+                                        </p>
+                                        <img src="data:<%= quote.confirmation_details?.receipt_image.img_type %>;base64,<%- Buffer.from(quote.confirmation_details?.receipt_image.img_data).toString('base64') %>"
+                                             class="img-thumbnail" height="200"
+                                             alt="Receipt Image"/>
+
+                                    </div>
+                                </div>
+
+                            <% } %>
                         </div>
                     </div>
 
@@ -210,7 +253,8 @@
                         <div class="card-body">
                             <h2 class="fs-4 text-center">Actions</h2>
                             <% if (!quoteActive) { %>
-                                <p class="text-center fst-italic fs-6">No action can be taken on this quotation at this time.</p>
+                                <p class="text-center fst-italic fs-6">No action can be taken on this quotation at this
+                                    time.</p>
                             <% } else { %>
                                 <p class="text-center fst-italic fs-6">If you have completed the transaction with the
                                     seller, please
@@ -219,7 +263,9 @@
                                     <button class="btn btn-outline-success m-1 w-100" data-bs-toggle="modal"
                                             data-bs-target="#completedModal">Completed
                                     </button>
-                                    <button class="btn btn-outline-danger m-1 w-100">Rejected</button>
+                                    <button class="btn btn-outline-danger m-1 w-100" data-bs-toggle="modal"
+                                            data-bs-target="#rejectedModal">Rejected
+                                    </button>
                                 </div>
                             <% } %>
                         </div>
@@ -243,6 +289,13 @@
                     </div>
 
                     <hr>
+
+                    <div class="alert alert-danger d-none" id="confirmErrorAlert">
+                        <div class="d-inline-flex justify-content-between">
+                            <i class="fa-solid fa-exclamation-circle fa-2x my-auto"></i>
+                            <p class="text-center m-0 p-0">Unable to complete confirmation. Please try again later</p>
+                        </div>
+                    </div>
 
                     <div class="alert alert-success">
                         <div class="d-inline-flex justify-content-between">
@@ -295,7 +348,7 @@
 
                                     <div class="mb-3">
                                         <label for="receiptImage mb-1">Receipt Image</label>
-                                        <input type="file" class="form-control" id="receiptImage"
+                                        <input type="file" class="form-control" id="receiptImage" name="receiptImage"
                                                placeholder="Receipt Image" accept="image/*" required>
                                         <div class="invalid-feedback">
                                             Please provide a picture of the receipt for the transaction. The full
@@ -310,6 +363,46 @@
                     </div>
 
                     <button class="btn btn-success w-100 mt-2" onclick="confirmTransaction('<%= quote._id %>')">Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rejected Modal -->
+    <div class="modal fade" id="rejectedModal" tabindex="-1" aria-labelledby="rejectedModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between align-content-center">
+                        <h5 class="modal-title" id="rejectedModalLabel">Mark as Rejected</h5>
+                        <button type="button" class="btn-close my-auto" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+
+                    <hr>
+
+                    <div class="alert alert-danger d-none" id="rejectErrorAlert">
+                        <div class="d-inline-flex justify-content-between">
+                            <i class="fa-solid fa-exclamation-circle fa-2x my-auto"></i>
+                            <p class="text-center m-0 p-0">Unable to reject confirmation. Please try again later</p>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-danger">
+                        <div class="d-inline-flex justify-content-between">
+                            <i class="fa-solid fa-heart-crack fa-2x my-auto"></i>
+                            <p class="text-center m-0 p-0">We're sorry to hear that you've been unable to go through with
+                                this quote. If you have any feedback, please let us know.
+
+                                <br>
+
+                                We hope you find a better deal soon!
+                            </p>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-success w-100 mt-2" onclick="rejectTransaction('<%= quote._id %>')">Confirm
                     </button>
                 </div>
             </div>

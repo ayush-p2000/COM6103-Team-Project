@@ -80,6 +80,10 @@ const getAllDevices = async () => {
     return Device.find({});
 }
 
+const getQuoteById = async (id) => {
+    return Quote.findOne({_id: id});//.populate('device').populate('provider').populate('device.listing_user').populate('device.model').populate('device.brand').populate('device.device_type');
+}
+
 const updateQuote = async (id, updatedProps) => {
     return Quote.updateOne({_id: id}, updatedProps);
 }
@@ -94,6 +98,7 @@ module.exports = {
     createUser,
     updateUser,
     getAllDevices,
+    getQuoteById,
     updateQuote,
     store,
 }
