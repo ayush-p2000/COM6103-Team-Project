@@ -68,7 +68,6 @@ async function getItemDetails(req, res, next) {
     // item.photos.forEach((photo, index) => {
     //     item.photos[index] = photo.slice(7)
     // })
-
     res.render('marketplace/item_details', {item, specs, deviceCategory, deviceState, auth: req.isLoggedIn, user:req.user, role: 'user'})
 }
 

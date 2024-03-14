@@ -8,7 +8,7 @@
             <div class="carousel-inner ">
                 <% item.photos.forEach((photo, index) => {%>
                     <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                        <img src="/upload/<%= photo.slice(14) %>" class="d-block img-fluid mx-auto detail-img" alt="...">
+                        <img src="<%= photo.replace('public', '') %>" class="d-block img-fluid mx-auto detail-img" alt="...">
                     </div>
                 <% }) %>
             </div>
@@ -23,13 +23,13 @@
         </div>
 
         <div class="col-md-6">
-            <h3 class="display-4 fw-bold mb-3"><%= item.model.name %><span class="badge <%= item.visible ? 'bg-success': 'bg-warning'%> ms-2"
+            <h3 class="display-4 fw-bold mb-3"><%= item.model.name %><span class="badge <%= Object.keys(deviceState).find(key => deviceState[key] === item.state) === 'LISTED' ? 'bg-success': 'bg-warning'%> ms-2"
                                                                            style="font-size: 0.3em;"><%= Object.keys(deviceState).find(key => deviceState[key] === item.state) %></span></h3>
 
             <p class="lead text-muted"><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) %></p>
 
-            <% if(!item.visible) {%>
-                <a href="/list_item/<%= item._id %>" class="btn btn-primary" >Edit Details</a>
+            <% if(Object.keys(deviceState).find(key => deviceState[key] === item.state) !== 'LISTED' && item.listing_user.toString() === user.id) {%>
+                <a href="/list-item/<%= item._id %>" class="btn btn-primary" >Edit Details</a>
             <% } %>
 
             <hr class="my-4">

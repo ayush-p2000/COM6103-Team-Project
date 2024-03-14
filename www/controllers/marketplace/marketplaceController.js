@@ -25,7 +25,7 @@ async function getMyItems(req, res, next) {
     console.log(req.user)
     const items = await getUserItems(req.user.id)
     items.forEach(item => {
-        item.photos[0] = item.photos[0].slice(7)
+        item.photos[0] = item.photos[0].replace('public', '')
         console.log(item.photos[0])
     })
 
