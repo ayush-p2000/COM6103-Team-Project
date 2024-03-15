@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     var models = [] // current models collection
 
+
     // Get dom
     const deviceTypeElement = document.getElementById('deviceType');
     const deviceBrandElement = document.getElementById('deviceBrand');
@@ -13,6 +14,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const submitBtn = document.getElementById('submitBtn')
     const additionalInfo = document.getElementById('additionalInfo')
     const dataRadios = document.querySelectorAll('input[name="dataRadio"]');
+
+    const model = document.getElementById('model')
+    const customModel = document.getElementById('custom-model')
+    const customBrand = document.getElementById('custom-brand')
+    const customDeviceType = document.getElementById('custom-device-type')
+    const customSubmit = document.getElementById('custom-submit')
 
 
 
@@ -35,6 +42,17 @@ document.addEventListener("DOMContentLoaded", function() {
     deviceTypeElement.addEventListener("change", ()=> {requestModels()});
     deviceBrandElement.addEventListener("change", ()=> {requestModels()});
     deviceModelElement.addEventListener("change", ()=> {updateModelPreview()});
+
+    customSubmit.addEventListener('click',()=>{
+        if (customDeviceType.value === "" || customBrand.value === "" || customModel.value === ""){
+            alert("Please Fill in All Fields Before Submitting")
+        }else{
+            deviceTypeElement.innerHTML = `<option value="-1">${customDeviceType.value}</option>`
+            deviceBrandElement.innerHTML = `<option value="-1">${customBrand.value}</option>`
+            deviceModelElement.innerHTML = `<option value="-1">${customModel.value}</option>`
+        }
+
+    })
 
     /* Handling show/hide further condition */
     conditionYes.addEventListener('change', ()=> {
@@ -187,10 +205,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 formData.append('photos', itemImage.files[i]);
             }
         }
-
-
-
-
 
         fetch('/list-item', {
             method: 'POST',
