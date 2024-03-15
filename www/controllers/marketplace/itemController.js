@@ -13,6 +13,7 @@ const deviceCategory = require("../../model/enum/deviceCategory")
  */
 const postListItem = async (req, res) => {
     try {
+        console.log(req.body)
         const files = req.files;
         const filePaths = [];
         for (let i = 0; i < files.length; i++) {

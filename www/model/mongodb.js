@@ -115,11 +115,10 @@ async function getModels(brandId,deviceTypeId){
 }
 
 async function listDevice(deviceData, photos, user) {
-    console.log(user)
     const newDevice = new Device({
-        device_type: deviceData.device_type,
-        brand: deviceData.brand,
-        model: deviceData.model,
+        device_type: mongoose.Types.ObjectId.isValid(deviceData.device_type)? deviceData.device_type : new mongoose.Types.ObjectId(),
+        brand: mongoose.Types.ObjectId.isValid(deviceData.brand)? deviceData.brand : new mongoose.Types.ObjectId(),
+        model: mongoose.Types.ObjectId.isValid(deviceData.model)? deviceData.model : new mongoose.Types.ObjectId(),
         details: JSON.parse(deviceData.details),
         category: deviceData.category,
         good_condition: deviceData.good_condition,
@@ -131,13 +130,32 @@ async function listDevice(deviceData, photos, user) {
         visible: deviceData.visible
     });
     const savedDevice = await newDevice.save();
+
+    if (!mongoose.Types.ObjectId.isValid(deviceData.model)){
+        const data = [
+            { name: 'device_type', value: deviceData.device_type, data_type: 0 },
+            { name: 'brand', value: deviceData.brand, data_type: 0 },
+            { name: 'model', value: deviceData.model, data_type: 0 }
+        ];
+        const newHistory = new History({
+            device: savedDevice,
+            history_type: 0,
+            data: data.map(item => ({
+                name: item.name,
+                value: item.value,
+                data_type: item.data_type
+            })),
+            actioned_by: user.id
+        })
+        const savedHistory = await newHistory.save();
+    }
+
     return savedDevice._id;
 }
 
 const getAllDevices = async () => {
     return Device.find({});
 }
-
 
 
 module.exports = {

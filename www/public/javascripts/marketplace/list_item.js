@@ -166,7 +166,25 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     function postDataToServer() {
         var selectedModelId = deviceModelElement.value
-        var selectedModel = models.find(model => model._id === selectedModelId);
+        var selectedModel = ""
+        var selectedBrand = ""
+        var selectedType = ""
+        var category= ""
+
+
+        if (selectedModelId === "-1"){
+            selectedModel = customModel.value
+            selectedBrand = customBrand.value
+            selectedType = customDeviceType.value
+            category = 3
+        }else{
+            const selectedModelObj = models.find(model => model._id === selectedModelId);
+            selectedModel = selectedModelObj._id
+            selectedBrand = selectedModelObj.brand
+            selectedType = selectedModelObj.deviceType
+            category = selectedModelObj.category
+        }
+
 
         var dataService = 0;
         dataRadios.forEach(function(radio, index) {
@@ -187,11 +205,11 @@ document.addEventListener("DOMContentLoaded", function() {
         ];
 
         var formData = new FormData();
-        formData.append('device_type', selectedModel.deviceType);
-        formData.append('brand', selectedModel.brand);
-        formData.append('model', selectedModel._id);
+        formData.append('device_type', selectedType);
+        formData.append('brand', selectedBrand);
+        formData.append('model', selectedModel);
         formData.append('details', JSON.stringify(details));
-        formData.append('category', selectedModel.category);
+        formData.append('category', category);
         formData.append('good_condition', conditionYes.checked);
         formData.append('state', 1); // default to review when posted
         formData.append('data_service', dataService);
