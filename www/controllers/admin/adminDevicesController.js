@@ -2,17 +2,26 @@
  * This controller should handle any operations related to device management or device type management
  */
 
-const {renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
+const {renderAdminLayoutPlaceholder, renderAdminLayout} = require("../../util/layout/layoutUtils");
+const {getAllUnknownDevices} = require("../../model/mongodb");
 
 function getDevicesPage(req, res, next) {
     //TODO: Add functionality for the devices page
     renderAdminLayoutPlaceholder(req, res, "devices", {}, "Devices Page Here")
 }
 
-function getFlaggedDevicesPage(req, res, next) {
-    //TODO: Add functionality for the flagged devices page
-    renderAdminLayoutPlaceholder(req, res, "flagged_devices", {}, "Flagged Devices Page Here")
-
+/**
+ * Get Flagged Devices and Display for the Staff
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+async function getFlaggedDevicesPage(req, res, next) {
+    try {
+        const devices = await getAllUnknownDevices()
+        console.log(devices)
+        renderAdminLayout(req, res, "unknown_devices", {devices});
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 function getDeviceTypePage(req, res, next) {

@@ -4,6 +4,7 @@ const REVIEW_REJECTED = 2;
 const ITEM_HIDDEN = 3;
 const ITEM_UNHIDDEN = 4;
 const ITEM_APPROVED = 5;
+const UNKNOWN_DEVICE = 6;
 
 const historyType = {
     REVIEW_REQUESTED,
@@ -11,7 +12,8 @@ const historyType = {
     REVIEW_REJECTED,
     ITEM_HIDDEN,
     ITEM_UNHIDDEN,
-    ITEM_APPROVED
+    ITEM_APPROVED,
+    UNKNOWN_DEVICE
 };
 
 module.exports = historyType;

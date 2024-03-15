@@ -153,6 +153,14 @@ async function listDevice(deviceData, photos, user) {
     return savedDevice._id;
 }
 
+/**
+ * Get History Data for UnknownDevice(history_type: 6)
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getAllUnknownDevices = async () => {
+    return History.find({history_type: 6});
+}
+
 const getAllDevices = async () => {
     return Device.find({});
 }
@@ -172,5 +180,6 @@ module.exports = {
     getAllBrand,
     getModels,
     listDevice,
-    getAllDevices
+    getAllDevices,
+    getAllUnknownDevices
 }
