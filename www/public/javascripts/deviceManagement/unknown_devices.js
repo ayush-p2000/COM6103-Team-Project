@@ -1,4 +1,7 @@
-
+/**
+ * Javascript to Handle action in Unknown_device page
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -16,7 +19,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const modelName = document.getElementById('model-name');
 
 
-
+    /**
+     * Post Request To Request Update DeviceType When Summit the Form
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     deviceTypeSubmit.addEventListener("click", () =>{
 
         if (deviceTypeName.value === ""|| deviceTypeDescription.value===""){
@@ -45,10 +51,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.error('Error:', error);
                 });
         }
-
-
     })
 
+    /**
+     * Post Request To Request Update Brand When Summit the Form
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     brandSubmit.addEventListener("click", () =>{
         if (brandName.value === ""){
             alert("Please Fill in All Fields!")
@@ -77,6 +85,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     })
 
+    /**
+     * Post Request To Request Model Data from GSMARENA and Update Model When Summit the Form
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     modelSubmit.addEventListener("click", () =>{
         if (modelName.value === ""){
             alert("Please Fill in All Fields!")

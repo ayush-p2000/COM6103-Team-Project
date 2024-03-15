@@ -28,6 +28,10 @@ async function getFlaggedDevicesPage(req, res, next) {
     }
 }
 
+/**
+ * Get Data From Request and Pass it To Add DeviceType to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 async function postNewDeviceType(req, res, next) {
     try {
         console.log(req.body)
@@ -37,6 +41,11 @@ async function postNewDeviceType(req, res, next) {
         console.log(e)
     }
 }
+
+/**
+ * Get Data From Request and Pass it To Add Brand to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 async function postNewBrand(req, res, next) {
     try {
         const brand = await addBrand(req.body.name)
@@ -46,7 +55,10 @@ async function postNewBrand(req, res, next) {
     }
 }
 
-
+/**
+ * Get Data From Request and Pass it To Add Model to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 async function postNewModel(req, res, next) {
     try {
 
