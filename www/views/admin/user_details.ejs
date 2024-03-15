@@ -5,10 +5,10 @@
             <div class="col-md-12">
                 <h2>
                     User Details
-                    <small class="text-muted">ID: <%= user.id %></small>
+                    <small class="text-muted">ID: <%= user._id %></small>
                 </h2>
                 <div class="mt-3 me-auto ms-auto">
-                    <img src="<%= user.avatar %>>" class="me-auto ms-auto d-block rounded-circle" alt="Avatar"
+                    <img src="https://ui-avatars.com/api/?name=<%= user.first_name + " " + user.last_name %>" class="me-auto ms-auto d-block rounded-circle" alt="Avatar"
                          style="max-width: 150px;">
                 </div>
             </div>
@@ -22,13 +22,13 @@
                 <div class="row">
                     <label for="firstName" class="d-inline-block w-25">First Name: </label>
                     <input name="firstName" id="firstName" class="d-inline-block w-50 form-control"
-                           value="<%= user.firstName %>"/>
+                           value="<%= user.first_name %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div class="row">
                     <label for="lastName" class="d-inline-block w-25">Last Name: </label>
                     <input name="lastName" id="lastName" class="d-inline-block w-50 form-control"
-                           value="<%= user.lastName %>"/>
+                           value="<%= user.last_name %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div class="row">
@@ -49,41 +49,41 @@
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div class="row">
                     <label for="phone" class="d-inline-block w-25">Telephone: </label>
-                    <input name="phone" id="phone" class="d-inline-block w-50 form-control" value="<%= user.phone %>"/>
+                    <input name="phone" id="phone" class="d-inline-block w-50 form-control" value="<%= user.phone_number %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div class="row">
                     <label for="addressFirst" class="d-inline-block w-25">Address Line 1: </label>
                     <input name="addressFirst" id="addressFirst" class="d-inline-block w-50 form-control"
-                           value="<%= user.addressFirst %>"/>
+                           value="<%= user.address?.address_1 %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div class="row">
                     <label for="addressSecond" class="d-inline-block w-25">Address Line 2: </label>
                     <input name="addressSecond" id="addressSecond" class="d-inline-block w-50 form-control"
-                           value="<%= user.addressSecond %>"/>
+                           value="<%= user.address?.address_2 %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div class="row">
                     <label for="postCode" class="d-inline-block w-25">Post Code: </label>
                     <input name="postCode" id="postCode" class="d-inline-block w-50 form-control"
-                           value="<%= user.postCode %>"/>
+                           value="<%= user.address?.postcode %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div class="row">
                     <label for="city" class="d-inline-block w-25">City: </label>
-                    <input name="city" id="city" class="d-inline-block w-50 form-control" value="<%= user.city %>"/>
+                    <input name="city" id="city" class="d-inline-block w-50 form-control" value="<%= user.address?.city %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div class="row">
                     <label for="country" class="d-inline-block w-25">Country: </label>
                     <input name="country" id="country" class="d-inline-block w-50 form-control"
-                           value="<%= user.country %>"/>
+                           value="<%= user.address?.country %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3"/>
             </div>
@@ -109,15 +109,15 @@
                         <div class="col-sm fw-bold ">Status</div>
                     </div>
                     <hr class="w-100"/>
-                    <% user.items.forEach( item => {
-                        const statusStyle = item.status === "Approved" ? "btn-success" : "btn-warning";
+                    <% user.listed_devices?.forEach( item => {
+                        const statusStyle = item.state === "Approved" ? "btn-success" : "btn-warning";
                     %>
                     <div class="row mb-3">
-                        <div class="col-sm"><%= item.id %></div>
-                        <div class="col"><%= item.name %></div>
-                        <div class="col-sm"><a class="btn btn-primary w-100" href="<%= item.details %>">Details</a></div>
+                        <div class="col-sm"><%= item._id %></div>
+                        <div class="col"><%= item.brand?.name + " " + item.model?.name %></div>
+                        <div class="col-sm"><a class="btn btn-primary w-100" href="<%= item._id %>">Details</a></div>
                         <div class="col-sm">
-                            <div class="btn <%= statusStyle %> w-100"><%= item.status %></div>
+                            <div class="btn <%= statusStyle %> w-100"><%= item.state %></div>
                         </div>
                     </div>
                     <% }) %>

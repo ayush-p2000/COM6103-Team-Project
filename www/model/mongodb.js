@@ -53,7 +53,7 @@ if(connected){
 }
 /* Functions */
 async function getAllUsers() {
-    return await User.find();
+    return User.find();
 }
 
 async function getUserById(id) {
@@ -65,7 +65,7 @@ async function searchUser(filter) {
 }
 
 async function searchUserAndPopulate(filter) {
-    return await User.find(filter).populate('listed_devices');
+    return User.find(filter).populate('listed_devices').populate('listed_devices.model').populate('listed_devices.brand').populate('listed_devices.device_type');
 }
 
 async function createUser(user) {
@@ -74,6 +74,64 @@ async function createUser(user) {
 
 async function updateUser(id, user) {
     return await User.updateOne({_id: id}, user);
+}
+
+
+/**
+ * Get method to retrieve the user items from mongodb database
+ * @author Vinroy Miltan Dsouza
+ */
+async function getUserItems(id) {
+    return Device.find({'listing_user': id}).populate({
+        path: 'device_type brand model',
+        options: {strictPopulate: false}
+    });
+}
+
+/**
+ * Get method to retrieve a specific device details of the User from the database
+ * @author Vinroy Miltan Dsouza
+ */
+async function getItemDetail(id) {
+    return await Device.findOne({_id: id}).populate({
+        path: 'device_type brand model',
+        options: {strictPopulate: false}
+    });
+}
+
+
+async function getAllDeviceType(){
+    return await DeviceType.find();
+
+}
+
+async function getAllBrand(){
+    return await Brand.find();
+}
+
+async function getModels(brandId,deviceTypeId){
+    return await Model.find({brand: new mongoose.Types.ObjectId(brandId),
+        deviceType: new mongoose.Types.ObjectId(deviceTypeId)})
+}
+
+async function listDevice(deviceData, photos, user) {
+    console.log(user)
+    const newDevice = new Device({
+        device_type: deviceData.device_type,
+        brand: deviceData.brand,
+        model: deviceData.model,
+        details: JSON.parse(deviceData.details),
+        category: deviceData.category,
+        good_condition: deviceData.good_condition,
+        state: deviceData.state,
+        data_service: deviceData.data_service,
+        additional_details: deviceData.additional_details,
+        listing_user: user.id,
+        photos: photos,
+        visible: deviceData.visible
+    });
+    const savedDevice = await newDevice.save();
+    return savedDevice._id;
 }
 
 const getAllDevices = async () => {
@@ -89,6 +147,12 @@ module.exports = {
     searchUserAndPopulate,
     createUser,
     updateUser,
-    getAllDevices,
+    getUserItems,
+    getItemDetail,
     store,
+    getAllDeviceType,
+    getAllBrand,
+    getModels,
+    listDevice,
+    getAllDevices
 }
