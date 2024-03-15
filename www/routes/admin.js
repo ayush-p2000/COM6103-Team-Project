@@ -29,8 +29,8 @@ router.get('/devices', getDevicesPage);
 
 router.get('/devices/flagged', getFlaggedDevicesPage);
 router.post('/devices/postNewDeviceType',upload.none(), postNewDeviceType);
-router.post('/devices/postNewBrand', postNewBrand);
-router.post('/devices/postNewModel', postNewModel);
+router.post('/devices/postNewBrand',upload.none(), postNewBrand);
+router.post('/devices/postNewModel',upload.none(), postNewModel);
 
 router.get('/moderation', getModerationDashboard);
 
