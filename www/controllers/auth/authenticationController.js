@@ -7,37 +7,45 @@ const {randomBytes, pbkdf2} = require("node:crypto")
 const {promisify} = require('node:util')
 const { validationResult } = require("express-validator")
 const pbkdf2Promise = promisify(pbkdf2)
+let user = ""
 
 const registerUser = async (req, res, next) => {
     try {
-        const {firstName, lastName, dateOfBirth, email, password, confirmPassword} = req.body
+        const {firstName, lastName, dateOfBirth, email, password, phone, address_1, address_2, postcode, city, county, country} = req.body
 
         // These fields should be included in the form and validated appropriately
         // Refer to the bug - TSP-94
-        const phone_number = "123123123";
+        const phone_number = phone;
 
         const address = {
-            address_1: "123 Main St",
-            address_2: "Apt 101",
-            city: "New York",
-            county: "Manhattan",
-            country: "USA",
-            postcode: "10001"
+            address_1: address_1,
+            address_2: address_2,
+            city: city,
+            county: county,
+            country: country,
+            postcode: postcode
         }
 
 
         const salt = randomBytes(16)
         const hashedPassword = await pbkdf2Promise(password, salt, 310000, 32, 'sha256')
-        const user = new User({
-            first_name: firstName,
-            last_name: lastName,
-            date_of_birth: dateOfBirth,
-            phone_number,
-            email,
-            password: hashedPassword,
-            salt,
-            address
-        });
+        const emailCheck = await User.findOne({ email });
+        if(emailCheck) {
+            return res.send('email already exists') // needs refined alert
+        }
+        else
+        {
+            user = new User({
+                first_name: firstName,
+                last_name: lastName,
+                date_of_birth: dateOfBirth,
+                phone_number,
+                email,
+                password: hashedPassword,
+                salt,
+                address
+            });
+        }
         if(req.session.messages.length > 0){
             return res.redirect("/register")
         }
