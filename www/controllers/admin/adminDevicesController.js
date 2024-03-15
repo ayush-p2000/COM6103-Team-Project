@@ -4,11 +4,11 @@
 
 const {renderAdminLayout,renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
 
-const {getItemDetail, getAllDeviceTypes, getAllBrands, getAllModels, updateDeviceDetails,
-getModel, getDeviceType, getBrand, getModels} = require("../../model/mongodb")
+const {getItemDetail, getAllDeviceTypes, getAllBrands, updateDeviceDetails, getModels} = require("../../model/mongodb")
 
 const dataService = require("../../model/enum/dataService")
 const deviceCategory = require("../../model/enum/deviceCategory")
+const deviceState = require("../../model/enum/deviceState")
 
 const {Device} = require("../../model/schema/device")
 function getDevicesPage(req, res, next) {
@@ -32,47 +32,46 @@ function getDeviceTypeDetailsPage(req, res, next) {
     renderAdminLayoutPlaceholder(req,res, "device_type_details", {}, "Device Type Details Page Here")
 }
 
+/**
+ * Get method to retrieve the details of the device from the staff side, which is then used to update the details of the device
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function getUserDeviceDetailsPage(req, res, next) {
     const item = await getItemDetail(req.params.id)
     const deviceType = await getAllDeviceTypes()
     const brands = await getAllBrands()
     const models = await getModels(item.brand._id, item.device_type._id)
     const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
-    renderAdminLayout(req, res, "edit_details", {item, deviceType, brands, models, specs, dataService, deviceCategory}, "User Device Details page")
+    renderAdminLayout(req, res, "edit_details", {item, deviceType, brands, models, specs, dataService, deviceCategory, deviceState}, "User Device Details page")
 }
 
-async function updateUserDeviceDetailsPage(req, res, next) {
-    const item = req.body;
-    const item_id = req.params.id
-    const dataService = ['NO_DATA_SERVICE',
-        'DATA_WIPING',
-        'DATA_RECOVERY']
-    const deviceCategory = [
-        'CURRENT',
-        'RARE',
-        'RECYCLE',
-        'UNKNOWN'
-    ]
-    const device_type = await getDeviceType(item.deviceType)
-    const brand = await getBrand(item.deviceBrand)
-    const model = await getModel(item.deviceModel)
-    const device = {
-        device_type: device_type._id,
-        brand: brand._id,
-        model: model._id,
-        category: deviceCategory.indexOf(item.deviceCategory),
-        capacity: item.deviceCapacity,
-        good_condition: item.conditionRadio === 'Yes'? true: false,
-        data_service: dataService.indexOf(item.dataRadio)
+async function getModelsFromTypeAndBrand(req, res) {
+    const {deviceType, deviceBrand} = req.body
+    console.log(deviceType)
+    console.log(deviceBrand)
+    try {
+        const models = await getModels(deviceType, deviceBrand)
+        res.json({models})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({error: "internal server error"})
     }
-    console.log(device)
-    const updatedItem = await updateDeviceDetails(item_id, device)
-    if (updatedItem === 'OK') {
-        res.redirect("/admin/devices")
-    } else {
-        console.log(updatedItem)
-    }
+}
 
+/**
+ * Update method to update the details of the device from the staff side, which is used when staff wants to change the device visibility, state etc.
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+
+const updateUserDeviceDetailsPage = async (req, res) => {
+    try{
+        const item_id = req.params.id;
+        console.log(req.body)
+        const updatedItem = await updateDeviceDetails(item_id, req.body)
+        res.status(200).send(updatedItem._id)
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 module.exports = {
@@ -81,5 +80,6 @@ module.exports = {
     getDeviceTypePage,
     getDeviceTypeDetailsPage,
     getUserDeviceDetailsPage,
-    updateUserDeviceDetailsPage
+    updateUserDeviceDetailsPage,
+    getModelsFromTypeAndBrand
 }

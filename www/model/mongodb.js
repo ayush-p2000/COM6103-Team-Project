@@ -94,7 +94,7 @@ async function getUserItems(id) {
  */
 async function getItemDetail(id) {
     return await Device.findOne({_id: id}).populate({
-        path: 'device_type brand model',
+        path: 'device_type brand model listing_user',
         options: {strictPopulate: false}
     });
 }
@@ -138,48 +138,50 @@ const getAllDevices = async () => {
     return Device.find({});
 }
 
+/**
+ * Get method to retrieve all the device types
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function getAllDeviceTypes() {
     return await DeviceType.find();
 }
 
+/**
+ * Get method to retrieve all the brands
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function getAllBrands() {
     return await Brand.find();
 }
 
-async function getAllModels() {
-    return await Model.find();
-}
-
-async function getModel(name) {
-    return await Model.findOne({name:name})
-}
-
-async function getBrand(name) {
-    return await Brand.findOne({name: name});
-}
-async function getDeviceType(name) {
-    return await DeviceType.findOne({name:name})
-}
-
+/**
+ * Update method to update the details of the device from the staff side to the mongodb database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function updateDeviceDetails(id, deviceDetails) {
-    const device =
-        {
-            device_type: deviceDetails.device_type,
-            brand: deviceDetails.brand,
-            model: deviceDetails.model,
-            details: [{
-                name:'capacity',
-                value:deviceDetails.capacity.toString()
-            }],
-            category: deviceDetails.category,
-            good_condition: deviceDetails.good_condition,
-            data_service: deviceDetails.data_service
+    try {
+        console.log(deviceDetails);
+        const filter = {_id: id}
+        const device = {
+        $set: {
+            model : deviceDetails.model,
+            details : JSON.parse(deviceDetails.details),
+            category : deviceDetails.category,
+            good_condition : deviceDetails.good_condition,
+            state : deviceDetails.state,
+            additional_details : deviceDetails.additional_details,
+            visible : deviceDetails.visible
         }
-    const status = await Device.findByIdAndUpdate(id, device)
-    if(status) {
-        return "OK"
-    } else {
-        return "404"
+        }
+        const updatedDevice = await Device.updateOne(filter, device)
+
+        if (!updatedDevice) {
+            alert("Device not found")
+        }
+        return updatedDevice;
+    } catch (error) {
+        console.error('Error updating device:', error);
+        throw error; // Rethrow the error to propagate it to the caller
     }
 }
 
@@ -202,9 +204,5 @@ module.exports = {
     getAllDevices,
     getAllDeviceTypes,
     getAllBrands,
-    getAllModels,
-    updateDeviceDetails,
-    getBrand,
-    getModel,
-    getDeviceType,
+    updateDeviceDetails
 }

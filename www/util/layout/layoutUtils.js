@@ -1,5 +1,6 @@
 function renderAdminLayout(req, res, page, data) {
-    res.render('admin/admin_layout', {currentRoute: page, ...data, placeholder: null, auth: true, user:'admin', role:'admin'}); //TODO:Change once the admin page is done
+    //TODO:Change auth, user, role once the admin login is done
+    res.render('admin/admin_layout', {currentRoute: page, ...data, placeholder: null, auth: true, user:'admin', role:'admin'});
 }
 
 function renderAdminLayoutPlaceholder(req, res, page, data, placeholder) {

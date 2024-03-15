@@ -14,7 +14,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const additionalInfo = document.getElementById('additionalInfo')
     const dataRadios = document.querySelectorAll('input[name="dataRadio"]');
 
-
+    const saveBtn = document.getElementById('saveBtn')
+    const deviceCategory = document.getElementById('deviceCategory')
+    const deviceState = document.getElementById('deviceState')
+    const deviceVisibleYes = document.getElementById('visibleYes')
 
     const displayYes = document.getElementById('displayYes')
     const touchscreenYes = document.getElementById('touchscreenYes')
