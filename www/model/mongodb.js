@@ -138,12 +138,6 @@ const getAllDevices = async () => {
     return Device.find({});
 }
 
-async function getItemDetail(id) {
-    return await Device.findOne({_id: id}).populate({
-        path: 'device_type brand model',
-        options: {strictPopulate: false}
-    });
-}
 async function getAllDeviceTypes() {
     return await DeviceType.find();
 }
@@ -205,9 +199,7 @@ module.exports = {
     getAllBrand,
     getModels,
     listDevice,
-    getAllDevices
     getAllDevices,
-    getItemDetail,
     getAllDeviceTypes,
     getAllBrands,
     getAllModels,
@@ -215,5 +207,4 @@ module.exports = {
     getBrand,
     getModel,
     getDeviceType,
-    store
 }

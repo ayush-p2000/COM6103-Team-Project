@@ -60,7 +60,7 @@ app.use("/javascripts", express.static(path.join(__dirname, "node_modules/jquery
 
 // Most routes start with / rather than /<name of file> as the files are being used as descriptive groups of routes
 app.use('/', authInfo, indexRouter);
-app.use('/admin', isAuthenticated, adminRouter);
+app.use('/admin', adminRouter); // TODO: Add isAuthenticated once admin login is completed
 app.use('/', authRouter);
 app.use('/', dataRouter);
 app.use('/', isAuthenticated, paymentRouter);
