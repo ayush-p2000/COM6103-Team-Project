@@ -11,6 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const brandName = document.getElementById('brand-name');
 
+    const DeviceTypeForModel = document.getElementById('device-type-for-model');
+    const BrandForModel = document.getElementById('device-brand-for-model');
+    const modelName = document.getElementById('model-name');
+
+
+
     deviceTypeSubmit.addEventListener("click", () =>{
 
         if (deviceTypeName.value === ""|| deviceTypeDescription.value===""){
@@ -72,6 +78,32 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 
     modelSubmit.addEventListener("click", () =>{
+        if (modelName.value === ""){
+            alert("Please Fill in All Fields!")
+        }else{
+            var formData = new FormData();
+            formData.append('name', modelName.value);
+            formData.append('brand', BrandForModel.value);
+            formData.append('device_type', DeviceTypeForModel.value);
 
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+
+            fetch('/admin/devices/postNewModel', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    window.location.href = '/admin/devices/flagged';
+                    return response.text();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
     })
 })

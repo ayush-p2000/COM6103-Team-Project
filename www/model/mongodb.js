@@ -189,13 +189,13 @@ const addBrand = async (name) => {
  * Add a New Model to db
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
-const addModel = async (modelData) => {
+const addModel = async (modelData,properties,category) => {
     const newModel = new Model({
-        name: name,
+        name: modelData.name,
         brand: modelData.brand,
-        device_type: modelData.device_type,
-        properties: modelData.properties,
-        category: modelData.category,
+        deviceType: modelData.device_type,
+        properties: properties,
+        category: category,
     });
     return await newModel.save()
 }

@@ -2,9 +2,10 @@
  * This controller should handle any operations related to device management or device type management
  */
 
-
+const gsmarena = require('gsmarena-api');
 const {renderAdminLayoutPlaceholder, renderAdminLayout} = require("../../util/layout/layoutUtils");
 const {getAllUnknownDevices, getAllDeviceType, getAllBrand, getModels, addDeviceType, addBrand, addModel} = require("../../model/mongodb");
+const {get} = require("axios");
 
 function getDevicesPage(req, res, next) {
     //TODO: Add functionality for the devices page
@@ -36,7 +37,6 @@ async function postNewDeviceType(req, res, next) {
         console.log(e)
     }
 }
-
 async function postNewBrand(req, res, next) {
     try {
         const brand = await addBrand(req.body.name)
@@ -46,9 +46,36 @@ async function postNewBrand(req, res, next) {
     }
 }
 
+
 async function postNewModel(req, res, next) {
     try {
-        const model = await addModel(req.body.modelData)
+
+        var properties = []
+        var category = 3
+
+        const devices = await gsmarena.search.search(req.body.name);
+        if (devices[0]) {
+            let slug = devices[0].id
+            const devicesDetail = await get(`https://phone-specs-clzpu7gyh-azharimm.vercel.app/${slug}`)
+            if (devicesDetail.data){
+                var released = parseInt(devicesDetail.data.data.release_date.match(/\b\d+\b/)[0])
+                properties.push({ name: 'picture', value: devicesDetail.data.data.thumbnail })
+                properties.push({name:"specifications", value: JSON.stringify(devicesDetail.data.data.specifications)})
+                properties.push({name:"released", value: released})
+                //Greater than 10 is 2，5-10 is 1, 0-5 is 0
+                const currentDate = new Date();
+                const currentYear = currentDate.getFullYear()
+                if ((currentYear - released) <=5){
+                    category = 0
+                }else if ((currentYear - released) >5 && (currentYear - released) <=10){
+                    category = 1
+                }else{
+                    category = 2
+                }
+            }
+        }
+
+        const model = await addModel(req.body,properties,category)
         res.status(200).send("successfully")
     } catch (e) {
         console.log(e)
