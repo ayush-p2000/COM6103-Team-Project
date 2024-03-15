@@ -131,7 +131,7 @@
                         <div>
                             <label for="deviceFunctionality" class="col-sm-8 col-form-label fw-bold">1. Does your device turn on and work properly?</label>
                             <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityYes" autocomplete="off" <%= item.details.find(item => item.name === 'functionnality')?.value === 'Good' ? 'checked' : '' %>>
+                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityYes" autocomplete="off" <%= item.details.find(item => item.name === 'functionality')?.value === 'Good' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="functionalityYes">Yes</label>
 
                                 <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityNo" autocomplete="off" <%= item.details.find(item => item.name === 'functionality')?.value === 'Bad' ? 'checked' : ''%>>

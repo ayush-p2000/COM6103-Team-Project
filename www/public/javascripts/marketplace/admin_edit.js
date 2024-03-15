@@ -45,13 +45,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    saveBtn.addEventListener('click', () => {postDataToServer()})
+    saveBtn.addEventListener('click', () => {postUpdatedDataToServer()})
 
+    /**
+     * Function to post the updated data to the mongodb database when the save button in triggered.
+     * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+     */
 
-    function postDataToServer() {
+    function postUpdatedDataToServer() {
 
         const details = [
-            { name: "functionnality", value: functionalityYes.checked? "Good" : "Bad" },
+            { name: "functionality", value: functionalityYes.checked? "Good" : "Bad" },
             { name: "button", value: btnYes.checked? "Good" : "Bad" },
             { name: "camera", value: cameraYes.checked? "Good" : "Bad" },
             { name: "battery", value: batteryYes.checked? "Good" : "Bad" },
