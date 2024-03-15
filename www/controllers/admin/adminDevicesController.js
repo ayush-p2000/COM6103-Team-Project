@@ -9,7 +9,7 @@ const {get} = require("axios");
 
 function getDevicesPage(req, res, next) {
     //TODO: Add functionality for the devices page
-    renderAdminLayoutPlaceholder(req, res, "devices", {}, "Devices Page Here")
+    renderAdminLayout(req, res, "devices", {})
 }
 
 /**
