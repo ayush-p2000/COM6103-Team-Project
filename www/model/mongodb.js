@@ -100,20 +100,36 @@ async function getItemDetail(id) {
 }
 
 
+/**
+ * Get a List of All DeviceType
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 async function getAllDeviceType(){
     return await DeviceType.find();
 
 }
 
+/**
+ * Get a List of All Brands
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 async function getAllBrand(){
     return await Brand.find();
 }
 
+/**
+ * Get a List of Models Base on Specific Brand and Type
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 async function getModels(brandId,deviceTypeId){
     return await Model.find({brand: new mongoose.Types.ObjectId(brandId),
         deviceType: new mongoose.Types.ObjectId(deviceTypeId)})
 }
 
+/**
+ * Add a New Device Base On the Device's Data
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 async function listDevice(deviceData, photos, user) {
     console.log(user)
     const newDevice = new Device({
@@ -134,6 +150,10 @@ async function listDevice(deviceData, photos, user) {
     return savedDevice._id;
 }
 
+/**
+ * Updating Specific Field for The Specific Device
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 async function updateDevice(id, deviceData, photos) {
     const filter = { _id: id }
     const update = {
@@ -153,9 +173,12 @@ async function updateDevice(id, deviceData, photos) {
     return updatedDevice._id;
 }
 
+/**
+ * Getting Device's Detail by Device's id
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 const getDevice = async (id) => {
     return Device.find({_id:id}).populate('brand').populate('device_type').populate('model');
-
 }
 
 const getAllDevices = async () => {

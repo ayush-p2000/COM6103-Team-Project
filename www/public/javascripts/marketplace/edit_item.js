@@ -1,10 +1,12 @@
+/**
+ * JavaScript file to handling edit item
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+
+
 document.addEventListener("DOMContentLoaded", function() {
-    var models = [] // current models collection
 
     // Get dom
-    const deviceTypeElement = document.getElementById('deviceType');
-    const deviceBrandElement = document.getElementById('deviceBrand');
-    const deviceModelElement = document.getElementById('deviceModel');
     const conditionYes = document.getElementById('conditionYes');
     const conditionNo = document.getElementById('conditionNo');
     const conditionList = document.getElementById('detail-condition');
@@ -25,15 +27,19 @@ document.addEventListener("DOMContentLoaded", function() {
     const functionalityYes = document.getElementById('functionalityYes')
 
 
-
-    /* Handling Preview images for user input */
+    /**
+     * Handling Preview images for user input
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     itemImage.addEventListener('change', ()=> {
         updateImageReview()
     });
 
 
-
-    /* Handling show/hide further condition */
+    /**
+     * Handling show/hide further condition
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     conditionYes.addEventListener('change', ()=> {
         // Show further condition term if yes
         if (conditionYes.checked) {
@@ -57,10 +63,17 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    /* Handling submit action */
+    /**
+     * Handling submit action
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     submitBtn.addEventListener('click', ()=> {postUpdateDataToServer()})
 
 
+    /**
+     * Update Image Preview when User Upload files
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     function updateImageReview(event){
         const files = itemImage.files; // get selected files
 
@@ -83,7 +96,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     /**
-     * Handling Post device to Server
+     * Post Request to Update device Data
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
     function postUpdateDataToServer() {
 
@@ -129,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                window.location.href = '/dashboard';
+                window.location.href = `/item/${id}`;
                 return response.text();
             })
             .catch(error => {
