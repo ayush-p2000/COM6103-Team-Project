@@ -9,6 +9,8 @@ const { validationResult } = require("express-validator")
 const pbkdf2Promise = promisify(pbkdf2)
 let user = ""
 
+//------------------------------------------------- User Registration Data feeding and Authenticating -------------------------------------------//
+
 const registerUser = async (req, res, next) => {
     try {
         const {firstName, lastName, dateOfBirth, email, password, phone, address_1, address_2, postcode, city, county, country} = req.body
@@ -62,6 +64,8 @@ const registerUser = async (req, res, next) => {
     }
 }
 
+//----------------------------------------------------- Logging Out User -------------------------------------------------------------------------------//
+
 const logoutUser = (req,res,next) => {
     req.logout(err => {
         if(err) return next(err)
@@ -69,9 +73,14 @@ const logoutUser = (req,res,next) => {
     })
 }
 
+//---------------------------------------------------- Rendering Login Page ----------------------------------------------------------------------------//
+
 function getLoginPage(req, res, next) {
     res.render("authentication/login", {auth: req.isLoggedIn, user:req.user})
 }
+
+//---------------------------------------------------- Rendering Register Page ----------------------------------------------------------------------------//
+
 
 function getRegisterPage(req, res, next) {
     res.render("authentication/register", {auth: req.isLoggedIn, user:req.user})
@@ -83,3 +92,5 @@ module.exports = {
     registerUser,
     logoutUser
 }
+
+//---------------------------------------------------- End of File ----------------------------------------------------------------------------//
