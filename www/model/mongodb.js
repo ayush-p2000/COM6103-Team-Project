@@ -181,7 +181,7 @@ async function updateDeviceDetails(id, deviceDetails) {
         return updatedDevice;
     } catch (error) {
         console.error('Error updating device:', error);
-        throw error; // Rethrow the error to propagate it to the caller
+        throw error;
     }
 }
 

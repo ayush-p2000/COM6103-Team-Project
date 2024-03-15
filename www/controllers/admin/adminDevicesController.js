@@ -37,18 +37,26 @@ function getDeviceTypeDetailsPage(req, res, next) {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getUserDeviceDetailsPage(req, res, next) {
-    const item = await getItemDetail(req.params.id)
-    const deviceType = await getAllDeviceTypes()
-    const brands = await getAllBrands()
-    const models = await getModels(item.brand._id, item.device_type._id)
-    const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
-    renderAdminLayout(req, res, "edit_details", {item, deviceType, brands, models, specs, dataService, deviceCategory, deviceState}, "User Device Details page")
+    try {
+        const item = await getItemDetail(req.params.id)
+        const deviceType = await getAllDeviceTypes()
+        const brands = await getAllBrands()
+        const models = await getModels(item.brand._id, item.device_type._id)
+        const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
+        renderAdminLayout(req, res, "edit_details", {item, deviceType, brands, models, specs, dataService, deviceCategory, deviceState}, "User Device Details page")
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({error: 'internal server error'})
+    }
+
 }
 
+/**
+ * Get method to retrieve the details of the device from the staff side, which is then used to update the details of the device
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function getModelsFromTypeAndBrand(req, res) {
     const {deviceType, deviceBrand} = req.body
-    console.log(deviceType)
-    console.log(deviceBrand)
     try {
         const models = await getModels(deviceType, deviceBrand)
         res.json({models})
