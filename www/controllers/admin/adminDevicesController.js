@@ -3,7 +3,7 @@
  */
 
 const {renderAdminLayoutPlaceholder, renderAdminLayout} = require("../../util/layout/layoutUtils");
-const {getAllUnknownDevices} = require("../../model/mongodb");
+const {getAllUnknownDevices, getAllDeviceType, getAllBrand, getModels} = require("../../model/mongodb");
 
 function getDevicesPage(req, res, next) {
     //TODO: Add functionality for the devices page
@@ -17,8 +17,11 @@ function getDevicesPage(req, res, next) {
 async function getFlaggedDevicesPage(req, res, next) {
     try {
         const devices = await getAllUnknownDevices()
+        const deviceTypes = await getAllDeviceType()
+        const brands = await getAllBrand()
+
         console.log(devices)
-        renderAdminLayout(req, res, "unknown_devices", {devices});
+        renderAdminLayout(req, res, "unknown_devices", {devices,deviceTypes,brands});
     } catch (e) {
         console.log(e)
     }

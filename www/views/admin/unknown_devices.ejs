@@ -21,18 +21,17 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Recipient:</label>
-                            <input type="text" class="form-control" id="recipient-name">
+                            <label for="device-type-name" class="col-form-label">Device Type Name:</label>
+                            <input type="text" class="form-control" id="device-type-name">
                         </div>
                         <div class="mb-3">
-                            <label for="message-text" class="col-form-label">Message:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
+                            <label for="device-description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="device-description"></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Register</button>
                 </div>
             </div>
         </div>
@@ -49,18 +48,21 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Recipient:</label>
-                            <input type="text" class="form-control" id="recipient-name">
+                            <label for="device-type-for-brand" class="col-form-label">DeviceType</label>
+                            <select class="form-select" id="device-type-for-brand">
+                                <% deviceTypes.forEach(function(device) { %>
+                                    <option value="<%= device.id %>"><%= device.name %></option>
+                                <% }); %>
+                            </select>
                         </div>
                         <div class="mb-3">
-                            <label for="message-text" class="col-form-label">Message:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
+                            <label for="brand-name" class="col-form-label">Brand Name:</label>
+                            <input type="text" class="form-control" id="brand-name">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Register</button>
                 </div>
             </div>
         </div>
@@ -76,18 +78,29 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Recipient:</label>
-                            <input type="text" class="form-control" id="recipient-name">
+                            <label for="device-type-for-model" class="col-form-label">DeviceType</label>
+                            <select class="form-select" id="device-type-for-model">
+                                <% deviceTypes.forEach(function(device) { %>
+                                    <option value="<%= device.id %>"><%= device.name %></option>
+                                <% }); %>
+                            </select>
                         </div>
                         <div class="mb-3">
-                            <label for="message-text" class="col-form-label">Message:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
+                            <label for="device-brand-for-model" class="col-form-label">Model:</label>
+                            <select class="form-select" id="device-brand-for-model">
+                                <% brands.forEach(function(brand) { %>
+                                    <option value="<%= brand.id %>"><%= brand.name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="model-name" class="col-form-label">Model Name:</label>
+                            <textarea class="form-control" id="model-name"></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Register</button>
                 </div>
             </div>
         </div>
