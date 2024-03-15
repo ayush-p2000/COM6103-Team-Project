@@ -25,13 +25,13 @@
                             <input type="text" class="form-control" id="device-type-name">
                         </div>
                         <div class="mb-3">
-                            <label for="device-description" class="col-form-label">Description:</label>
-                            <textarea class="form-control" id="device-description"></textarea>
+                            <label for="device-type-description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="device-type-description"></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Register</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="deviceType-submit">Register</button>
                 </div>
             </div>
         </div>
@@ -48,21 +48,13 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="device-type-for-brand" class="col-form-label">DeviceType</label>
-                            <select class="form-select" id="device-type-for-brand">
-                                <% deviceTypes.forEach(function(device) { %>
-                                    <option value="<%= device.id %>"><%= device.name %></option>
-                                <% }); %>
-                            </select>
-                        </div>
-                        <div class="mb-3">
                             <label for="brand-name" class="col-form-label">Brand Name:</label>
                             <input type="text" class="form-control" id="brand-name">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Register</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="brand-submit">Register</button>
                 </div>
             </div>
         </div>
@@ -95,12 +87,12 @@
                         </div>
                         <div class="mb-3">
                             <label for="model-name" class="col-form-label">Model Name:</label>
-                            <textarea class="form-control" id="model-name"></textarea>
+                            <input type="text" class="form-control" id="model-name">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Register</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="model-submit">Register</button>
                 </div>
             </div>
         </div>
@@ -145,4 +137,5 @@
     </div>
 </div>
 
+<script src="/javascripts/deviceManagement/unknown_devices.js"></script>
 <script src="/javascripts/userManagement/userManagement.js"></script>

@@ -161,6 +161,45 @@ const getAllUnknownDevices = async () => {
     return History.find({history_type: 6});
 }
 
+/**
+ * Add a New DeviceType to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const addDeviceType = async (name, description) => {
+    const newDeviceType = new DeviceType({
+        name: name,
+        description: description
+    });
+    return await newDeviceType.save()
+}
+
+/**
+ * Add a New Brand to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const addBrand = async (name) => {
+    const newBrand = new Brand({
+        name: name,
+        models: []
+    });
+    return await newBrand.save()
+}
+
+/**
+ * Add a New Model to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const addModel = async (modelData) => {
+    const newModel = new Model({
+        name: name,
+        brand: modelData.brand,
+        device_type: modelData.device_type,
+        properties: modelData.properties,
+        category: modelData.category,
+    });
+    return await newModel.save()
+}
+
 const getAllDevices = async () => {
     return Device.find({});
 }
@@ -181,5 +220,8 @@ module.exports = {
     getModels,
     listDevice,
     getAllDevices,
-    getAllUnknownDevices
+    getAllUnknownDevices,
+    addDeviceType,
+    addBrand,
+    addModel
 }

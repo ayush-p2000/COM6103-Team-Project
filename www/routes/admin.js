@@ -8,10 +8,13 @@ const {
 
 const {getReportsPage, getReportPage} = require("../controllers/admin/adminReportsController");
 const {
-    getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage
+    getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage,postNewDeviceType,
+    postNewBrand, postNewModel
 } = require("../controllers/admin/adminDevicesController");
 
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
+
+const {upload} = require("../middlewares/multer")
 
 /* GET home page. */
 router.get("/", getAdminDashboard)
@@ -25,6 +28,9 @@ router.get('/accounts/:id/edit', getEditAccountPage);
 router.get('/devices', getDevicesPage);
 
 router.get('/devices/flagged', getFlaggedDevicesPage);
+router.post('/devices/postNewDeviceType',upload.none(), postNewDeviceType);
+router.post('/devices/postNewBrand', postNewBrand);
+router.post('/devices/postNewModel', postNewModel);
 
 router.get('/moderation', getModerationDashboard);
 

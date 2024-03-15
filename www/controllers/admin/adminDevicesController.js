@@ -2,8 +2,9 @@
  * This controller should handle any operations related to device management or device type management
  */
 
+
 const {renderAdminLayoutPlaceholder, renderAdminLayout} = require("../../util/layout/layoutUtils");
-const {getAllUnknownDevices, getAllDeviceType, getAllBrand, getModels} = require("../../model/mongodb");
+const {getAllUnknownDevices, getAllDeviceType, getAllBrand, getModels, addDeviceType, addBrand, addModel} = require("../../model/mongodb");
 
 function getDevicesPage(req, res, next) {
     //TODO: Add functionality for the devices page
@@ -20,8 +21,35 @@ async function getFlaggedDevicesPage(req, res, next) {
         const deviceTypes = await getAllDeviceType()
         const brands = await getAllBrand()
 
-        console.log(devices)
         renderAdminLayout(req, res, "unknown_devices", {devices,deviceTypes,brands});
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function postNewDeviceType(req, res, next) {
+    try {
+        console.log(req.body)
+        const deviceType = await addDeviceType(req.body.name,req.body.description)
+        res.status(200).send("successfully")
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function postNewBrand(req, res, next) {
+    try {
+        const brand = await addBrand(req.body.name)
+        res.status(200).send("successfully")
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function postNewModel(req, res, next) {
+    try {
+        const model = await addModel(req.body.modelData)
+        res.status(200).send("successfully")
     } catch (e) {
         console.log(e)
     }
@@ -41,5 +69,8 @@ module.exports = {
     getDevicesPage,
     getFlaggedDevicesPage,
     getDeviceTypePage,
-    getDeviceTypeDetailsPage
+    getDeviceTypeDetailsPage,
+    postNewDeviceType,
+    postNewBrand,
+    postNewModel
 }
