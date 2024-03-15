@@ -213,6 +213,10 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
+        for (const [key, value] of formData.entries()) {
+            console.log(key + ': ' + value);
+        }
+
         fetch('/list-item', {
             method: 'POST',
             body: formData,

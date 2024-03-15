@@ -12,6 +12,7 @@ const deviceCategory = require("../../model/enum/deviceCategory")
  * @author Zhicong Jiang
  */
 const postListItem = async (req, res) => {
+    console.log("PostingItem")
     var id = req.params.id;
     try {
         const files = req.files;
