@@ -4,7 +4,7 @@
 
 <div class="d-flex justify-content-center align-items-center">
     <div class="w-50 d-flex justify-content-start align-items-start flex-column p-5">
-        <form method="POST" name="editUserDetails" class="w-100">
+        <form method="POST" action="/profile" name="editUserDetails" class="w-100">
             <h2>
                 Your Profile
             </h2>
@@ -18,13 +18,13 @@
                 <div>
                     <label for="firstName" class="d-inline-block w-25">First Name: </label>
                     <input name="firstName" id="firstName" class="d-inline-block w-50 form-control"
-                           value="<%= user.firstName %>"/>
+                           value="<%= user.first_name %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div>
                     <label for="lastName" class="d-inline-block w-25">Last Name: </label>
                     <input name="lastName" id="lastName" class="d-inline-block w-50 form-control"
-                           value="<%= user.lastName %>"/>
+                           value="<%= user.last_name %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div>
@@ -42,41 +42,41 @@
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div>
                     <label for="phone" class="d-inline-block w-25">Telephone: </label>
-                    <input name="phone" id="phone" class="d-inline-block w-50 form-control" value="<%= user.phone %>"/>
+                    <input name="phone" id="phone" class="d-inline-block w-50 form-control" value="<%= user.phone_number %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div>
                     <label for="addressFirst" class="d-inline-block w-25">Address Line 1: </label>
                     <input name="addressFirst" id="addressFirst" class="d-inline-block w-50 form-control"
-                           value="<%= user.addressFirst %>"/>
+                           value="<%= user.address.address_1%>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div>
                     <label for="addressSecond" class="d-inline-block w-25">Address Line 2: </label>
                     <input name="addressSecond" id="addressSecond" class="d-inline-block w-50 form-control"
-                           value="<%= user.addressSecond %>"/>
+                           value="<%= user.address.address_1 %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div>
                     <label for="postCode" class="d-inline-block w-25">Post Code: </label>
                     <input name="postCode" id="postCode" class="d-inline-block w-50 form-control"
-                           value="<%= user.postCode %>"/>
+                           value="<%= user.address.postcode %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div>
                     <label for="city" class="d-inline-block w-25">City: </label>
-                    <input name="city" id="city" class="d-inline-block w-50 form-control" value="<%= user.city %>"/>
+                    <input name="city" id="city" class="d-inline-block w-50 form-control" value="<%= user.address.city%>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div>
                     <label for="country" class="d-inline-block w-25">Country: </label>
                     <input name="country" id="country" class="d-inline-block w-50 form-control"
-                           value="<%= user.country %>"/>
+                           value="<%= user.address.country %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3"/>
             </div>
