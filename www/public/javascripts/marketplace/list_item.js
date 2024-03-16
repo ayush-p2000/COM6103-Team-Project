@@ -1,3 +1,8 @@
+/**
+ * JavaScript file to handling post item
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+
 document.addEventListener("DOMContentLoaded", function() {
     var models = [] // current models collection
 
@@ -33,15 +38,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
     requestModels()
 
-    /* Handling Preview images for user input */
+    /**
+     * Handling Preview images for user input
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     itemImage.addEventListener('change', ()=> {
         updateImageReview()
     });
 
-    /* Handling Device type Brand and Model update when changed */
+    /**
+     * Handling Device type Brand and Model update when changed
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     deviceTypeElement.addEventListener("change", ()=> {requestModels()});
     deviceBrandElement.addEventListener("change", ()=> {requestModels()});
     deviceModelElement.addEventListener("change", ()=> {updateModelPreview()});
+
 
     customSubmit.addEventListener('click',()=>{
         if (customDeviceType.value === "" || customBrand.value === "" || customModel.value === ""){
@@ -51,13 +63,18 @@ document.addEventListener("DOMContentLoaded", function() {
             deviceBrandElement.innerHTML = `<option value="-1">${customBrand.value}</option>`
             deviceModelElement.innerHTML = `<option value="-1">${customModel.value}</option>`
         }
-
+        hideModelPreview()
     })
 
-    /* Handling show/hide further condition */
+
+    /**
+     * Handling show/hide further condition
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     conditionYes.addEventListener('change', ()=> {
         // Show further condition term if yes
         if (conditionYes.checked) {
+            functionalityYes.checked = true;
             displayYes.checked = true;
             touchscreenYes.checked = true;
             bodyYes.checked = true;
@@ -77,10 +94,24 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    /* Handling submit action */
+    /**
+     * Handling submit action
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     submitBtn.addEventListener('click', ()=> {postDataToServer()})
 
+    function hideModelPreview(){
+        document.getElementById('selected-model-content').style.display = "none"
+    }
 
+    function showModelPreview(){
+        document.getElementById('selected-model-content').style.display = "block"
+    }
+
+    /**
+     * Update Image Preview when User Upload files
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     function updateImageReview(event){
         const files = itemImage.files; // get selected files
 
@@ -102,8 +133,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /**
      *  Update Model Preview when change selected model
+     *  @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
     function updateModelPreview(){
+        showModelPreview()
         var selectedIndex = deviceModelElement.selectedIndex;
         var template = `
             <div class="card p-3 ">
@@ -126,6 +159,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /**
      * get Models from server when Type or Brand change
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
     function requestModels() {
         var selectedDeviceType = deviceTypeElement.value
@@ -157,12 +191,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 updateModelPreview()
             })
             .catch(error => {
+                hideModelPreview()
                 console.error(error);
             });
     }
 
     /**
-     * Handling Post device to Server
+     * Post Request to Add Device Item to Server
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
     function postDataToServer() {
         var selectedModelId = deviceModelElement.value
@@ -195,7 +231,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         var details = [
-            { name: "functionnality", value: functionalityYes.checked? "Good" : "Bad" },
+            { name: "functionality", value: functionalityYes.checked? "Good" : "Bad" },
             { name: "button", value: btnYes.checked? "Good" : "Bad" },
             { name: "camera", value: cameraYes.checked? "Good" : "Bad" },
             { name: "battery", value: batteryYes.checked? "Good" : "Bad" },
@@ -222,6 +258,11 @@ document.addEventListener("DOMContentLoaded", function() {
             for (var i = 0; i < itemImage.files.length; i++) {
                 formData.append('photos', itemImage.files[i]);
             }
+        }
+
+
+        for (const [key, value] of formData.entries()) {
+            console.log(key + ': ' + value);
         }
 
         fetch('/list-item', {

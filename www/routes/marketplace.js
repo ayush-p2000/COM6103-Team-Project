@@ -7,10 +7,6 @@ const {getMarketplace, getMyItems} = require("../controllers/marketplace/marketp
 const {upload} = require("../middlewares/multer")
 
 
-
-
-
-
 router.get('/marketplace/:page?', getMarketplace);
 
 
