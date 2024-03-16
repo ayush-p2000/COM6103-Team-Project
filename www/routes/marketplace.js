@@ -4,9 +4,11 @@ const router = express.Router();
 const {postListItem,getListItem,getModelByBrandAndType, getItemDetails, getItemQrCode} = require("../controllers/marketplace/itemController");
 const {getMarketplace, getMyItems} = require("../controllers/marketplace/marketplaceController");
 
-
+/**
+ * Set Up multer Middle Ware To Handle Photos Storage
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 const multer = require('multer');
-
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
