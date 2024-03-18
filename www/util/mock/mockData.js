@@ -25,7 +25,8 @@ const getMockUser = () => {
                 details: "https://www.philips.co.uk/c-m-ho/kettles/kettle/latest#availability=instock&filters=KETTLES_SU",
                 status: "In process",
             }
-        ]
+        ],
+        savedCo2: 11245
     };
 }
 

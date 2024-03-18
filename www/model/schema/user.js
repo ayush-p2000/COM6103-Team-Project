@@ -66,6 +66,12 @@ const userSchema = new mongoose.Schema({
             type: Buffer,
             required: true,
         },
+        savedCo2: {
+            type: Number,
+            required: true,
+            default: 0,
+            min: 0
+        },
         listed_devices:
             [
                 {
