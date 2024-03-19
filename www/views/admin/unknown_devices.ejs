@@ -78,7 +78,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="device-brand-for-model" class="col-form-label">Model:</label>
+                            <label for="device-brand-for-model" class="col-form-label">Brand:</label>
                             <select class="form-select" id="device-brand-for-model">
                                 <% brands.forEach(function(brand) { %>
                                     <option value="<%= brand.id %>"><%= brand.name %></option>
@@ -126,7 +126,7 @@
                             <% device.data.forEach(info => { %>
                                 <td><%= info.value %></td>
                             <% }) %>
-                            <td><a href='/item/<%= device.device %>'>view</a></td>
+                            <td><a href='/admin/devices/<%= device.device %>'>view</a></td>
                         </tr>
                     <% }) %>
 
