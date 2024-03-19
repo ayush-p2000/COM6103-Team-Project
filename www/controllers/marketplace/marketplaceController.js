@@ -5,15 +5,15 @@
 const mockData = require('../../util/mock/mockData')
 const { getPaginatedResults } = require("../../model/utils/utils")
 const { Device} = require("../../model/schema/device")
-const {getUserItems} = require('../../model/mongodb')
+const {getUserItems,getAllDevices} = require('../../model/mongodb')
 const {join} = require("path");
 const deviceState =require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
 
 const getMarketplace = async (req, res, next) => {
     const {items, pagination} = await getPaginatedResults(Device, req.params.page, {},{}, 3);
-
-    res.render('marketplace/marketplace', {items, auth: req.isLoggedIn, user:req.user, pagination})
+    var devices = await getAllDevices()
+    res.render('marketplace/marketplace', {devices, items,deviceCategory, auth: req.isLoggedIn, user:req.user, pagination})
 }
 
 /**

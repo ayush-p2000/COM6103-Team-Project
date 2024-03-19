@@ -25,7 +25,9 @@
     "multer": "^1.4.5-lts.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "regex-escape": "^3.4.10"
+    "paypal-rest-sdk": "^1.8.1",
+    "regex-escape": "^3.4.10",
+    "stripe": "^14.21.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
