@@ -279,5 +279,6 @@ module.exports = {
     listDevice,
     getAllDevices,
     getDevice,
-    updateDevice
+    updateDevice,
+    updateDeviceDetails
 }

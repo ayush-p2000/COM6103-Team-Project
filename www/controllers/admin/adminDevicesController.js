@@ -4,7 +4,7 @@
 
 const {renderAdminLayout,renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
 
-const {getItemDetail, getAllDeviceTypes, getAllBrands, updateDeviceDetails, getModels} = require("../../model/mongodb")
+const {getItemDetail, getAllDeviceType, getAllBrand, updateDeviceDetails, getModels} = require("../../model/mongodb")
 
 const dataService = require("../../model/enum/dataService")
 const deviceCategory = require("../../model/enum/deviceCategory")
@@ -39,8 +39,8 @@ function getDeviceTypeDetailsPage(req, res, next) {
 async function getUserDeviceDetailsPage(req, res, next) {
     try {
         const item = await getItemDetail(req.params.id)
-        const deviceType = await getAllDeviceTypes()
-        const brands = await getAllBrands()
+        const deviceType = await getAllDeviceType()
+        const brands = await getAllBrand()
         const models = await getModels(item.brand._id, item.device_type._id)
         const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
         renderAdminLayout(req, res, "edit_details", {item, deviceType, brands, models, specs, dataService, deviceCategory, deviceState}, "User Device Details page")
