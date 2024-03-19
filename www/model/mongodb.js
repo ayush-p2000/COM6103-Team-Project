@@ -94,7 +94,7 @@ async function getUserItems(id) {
  */
 async function getItemDetail(id) {
     return await Device.findOne({_id: id}).populate({
-        path: 'device_type brand model',
+        path: 'device_type brand model listing_user',
         options: {strictPopulate: false}
     });
 }
@@ -264,6 +264,53 @@ const getAllDevices = async () => {
     return Device.find({});
 }
 
+/**
+ * Get method to retrieve all the device types
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getAllDeviceTypes() {
+    return await DeviceType.find();
+}
+
+/**
+ * Get method to retrieve all the brands
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getAllBrands() {
+    return await Brand.find();
+}
+
+/**
+ * Update method to update the details of the device from the staff side to the mongodb database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateDeviceDetails(id, deviceDetails) {
+    try {
+        console.log(deviceDetails);
+        const filter = {_id: id}
+        const device = {
+        $set: {
+            model : deviceDetails.model,
+            details : JSON.parse(deviceDetails.details),
+            category : deviceDetails.category,
+            good_condition : deviceDetails.good_condition,
+            state : deviceDetails.state,
+            additional_details : deviceDetails.additional_details,
+            visible : deviceDetails.visible
+        }
+        }
+        const updatedDevice = await Device.updateOne(filter, device)
+
+        if (!updatedDevice) {
+            alert("Device not found")
+        }
+        return updatedDevice;
+    } catch (error) {
+        console.error('Error updating device:', error);
+        throw error;
+    }
+}
+
 
 
 module.exports = {
@@ -282,9 +329,10 @@ module.exports = {
     listDevice,
     getAllDevices,
     getDevice,
-    updateDevice,
     getQuotes,
     getProviders,
     addQuotes,
-    saveQrState
+    saveQrState,
+    updateDevice,
+    updateDeviceDetails
 }
