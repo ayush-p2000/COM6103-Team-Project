@@ -62,7 +62,7 @@
 
         <!--items list-->
         <div class="row g-2 mt-2">
-            <% devices.forEach(device => { %>
+            <% devices.forEach(device => { if(device.visible){%>
                 <div class="col-6 col-md-4 col-xl-2">
                     <div class="card h-100">
                         <img src="<%= device.photos[0].replace('public', '') %>" class="card-img-top img-fluid item-img" alt="...">
@@ -70,14 +70,13 @@
                             <h5 class="card-title"><%= device.model.name %></h5>
                             <p class="m-0 ">Device Type: <span
                                         class="fw-light fst-italic text-muted"><%= device.device_type.name %></span></p>
-                            <p class="m-0 p-0 text-muted category"><small>Classification: </small><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) %></p>
-
+                            <p>Classification: <span class="fw-light fst-italic text-muted"><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) %></span></p>
                             <p>By: <span class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span></p>
                             <a class="btn btn-primary btn-sm mb-1 item-detail-btn" href="/item/<%= device._id %>"> View</a>
                         </div>
                     </div>
                 </div>
-            <% }) %>
+            <% }}) %>
             <%- include("../components/pagination") %>
         </div>
     </div>
