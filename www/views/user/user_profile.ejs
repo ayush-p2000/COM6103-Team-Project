@@ -5,6 +5,21 @@
 <div class="d-flex justify-content-center align-items-center">
     <div class="w-50 d-flex justify-content-start align-items-start flex-column p-5">
         <form method="POST" action="/profile" name="editUserDetails" class="w-100">
+            <br>
+            <div>
+                <% if (hasMessages) { %>
+                    <section >
+                        <ol class="mb-0 list-group list-group-numbered m-1">
+                            <% messages.forEach(function(message) { %>
+                                <li class="border border-success border-1 d-flex justify-content-center bg-success-subtle pt-2 pb-2 rounded-1 mb-1"><%= message %></li>
+                            <% }); %>
+                        </ol>
+
+                    </section>
+                <% } %>
+            </div>
+            <br>
+            <br>
             <h2>
                 Your Profile
             </h2>
@@ -30,7 +45,7 @@
                 <div>
                     <label for="email" class="d-inline-block w-25">Date of Birth: </label>
                     <%
-                    const dob = user.date_of_birth instanceof Date ? user.date_of_birth.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : user.date_of_birth;
+                    const dob = user.date_of_birth instanceof Date ? user.date_of_birth.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : user.date_of_birth;
                     %>
                     <label for="date_of_birth"></label><input name="date_of_birth" id="date_of_birth" class="d-inline-block w-50 form-control bg-dark-subtle" value="<%= dob %>" readonly/>
                 </div>

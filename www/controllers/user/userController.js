@@ -32,8 +32,9 @@ async function getUserProfile(req, res, next) {
 
 
 async function updateUserDetails(req, res, next){
+    let messages;
     try {
-        const { firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country } = req.body; // Assuming these fields can be updated
+        const {firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country} = req.body; // Assuming these fields can be updated
 
         // Construct an object with the fields that need to be updated
         const updateFields = {};
@@ -80,18 +81,24 @@ async function updateUserDetails(req, res, next){
             updateFields.address.country = country;
         }
 
-
+        // message being displayed after the successful profile update
+        messages = ['Profile Successfully Updated']
 
         // Find the user by ID and update the specified fields
-        const updatedUser = await User.findByIdAndUpdate(req.user.id, updateFields, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(req.user.id, updateFields, {new: true});
 
         if (!updatedUser) {
-            return res.status(404).send('User not found');
+            return res.status(404).send('Server Error'); // Any possible error comes out e.g. Database connection, User unidentified, etc...
         }
 
-        res.render("user/user_profile", { user: updatedUser, auth: req.isLoggedIn });
+        res.render("user/user_profile", {
+            messages: messages,
+            hasMessages: messages.length > 0,
+            user: updatedUser,
+            auth: req.isLoggedIn
+        });
     }
-    // catching error
+        // catching error
     catch (err) {
         console.error(err);
         res.status(500).send('Server error');
