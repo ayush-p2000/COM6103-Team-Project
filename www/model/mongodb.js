@@ -100,38 +100,114 @@ async function getItemDetail(id) {
 }
 
 
-async function getAllDeviceType(){
-    return await DeviceType.find();
-
+/**
+ * Get a List of All DeviceType
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getAllDeviceType = async () => {
+    try {
+        return await DeviceType.find();
+    }catch (error) {
+        console.error("An error occurred while get All DeviceType:", error);
+        throw error;
+    }
 }
 
-async function getAllBrand(){
-    return await Brand.find();
+/**
+ * Get a List of All Brands
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getAllBrand = async () => {
+    try {
+        return await Brand.find();
+    }catch (error) {
+        console.error("An error occurred while get All Brand:", error);
+        throw error;
+    }
 }
 
-async function getModels(brandId,deviceTypeId){
-    return await Model.find({brand: new mongoose.Types.ObjectId(brandId),
-        deviceType: new mongoose.Types.ObjectId(deviceTypeId)})
+
+/**
+ * Get a List of Models Base on Specific Brand and Type
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getModels = async (brandId,deviceTypeId) => {
+    try {
+        return await Model.find({brand: new mongoose.Types.ObjectId(brandId),
+            deviceType: new mongoose.Types.ObjectId(deviceTypeId)})
+    }catch (error) {
+        console.error("An error occurred while get Models:", error);
+        throw error;
+    }
 }
 
-async function listDevice(deviceData, photos, user) {
-    console.log(user)
-    const newDevice = new Device({
-        device_type: deviceData.device_type,
-        brand: deviceData.brand,
-        model: deviceData.model,
-        details: JSON.parse(deviceData.details),
-        category: deviceData.category,
-        good_condition: deviceData.good_condition,
-        state: deviceData.state,
-        data_service: deviceData.data_service,
-        additional_details: deviceData.additional_details,
-        listing_user: user.id,
-        photos: photos,
-        visible: deviceData.visible
-    });
-    const savedDevice = await newDevice.save();
-    return savedDevice._id;
+/**
+ * Add a New Device Base On the Device's Data
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const listDevice = async (deviceData, photos, user) => {
+    try {
+        const newDevice = new Device({
+            device_type: deviceData.device_type,
+            brand: deviceData.brand,
+            model: deviceData.model,
+            details: JSON.parse(deviceData.details),
+            category: deviceData.category,
+            good_condition: deviceData.good_condition,
+            state: deviceData.state,
+            data_service: deviceData.data_service,
+            additional_details: deviceData.additional_details,
+            listing_user: user.id,
+            photos: photos,
+            visible: deviceData.visible
+        });
+        const savedDevice = await newDevice.save();
+        return savedDevice._id;
+    } catch (error) {
+        console.error("An error occurred while listing the device:", error);
+        throw error;
+    }
+}
+
+/**
+ * Updating Specific Field for The Specific Device
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const updateDevice = async (id, deviceData, photos) => {
+    try {
+        const filter = {_id: id}
+        const update = {
+            $set: {
+                details: JSON.parse(deviceData.details),
+                good_condition: deviceData.good_condition,
+                state: 1,
+                data_service: deviceData.data_service,
+                additional_details: deviceData.additional_details,
+            }
+        };
+
+        if (photos.length > 0) {
+            update.$set.photos = photos;
+        }
+        const updatedDevice = await Device.updateOne(filter, update);
+        return updatedDevice._id;
+    }catch (error) {
+        console.error("An error occurred while update Device:", error);
+        throw error;
+    }
+}
+
+/**
+ * Getting Device's Detail by Device's id
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getDevice = async (id) => {
+    try {
+        return Device.find({_id:id}).populate('brand').populate('device_type').populate('model');
+    }catch (error) {
+        console.error("An error occurred while get Device:", error);
+        throw error;
+    }
 }
 
 const getAllDevices = async () => {
@@ -202,7 +278,6 @@ module.exports = {
     getModels,
     listDevice,
     getAllDevices,
-    getAllDeviceTypes,
-    getAllBrands,
-    updateDeviceDetails
+    getDevice,
+    updateDevice
 }
