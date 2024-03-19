@@ -62,7 +62,16 @@
                         <p class="m-0 p-0 text-muted"><small>Device Type: </small><%= item.device_type.name %></p>
                         <p class="m-0 p-0 text-muted category"><small>Classification: </small><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) %></p>
                         <!--   TODO: once quotation is done, add the price here        -->
-                        <p class="m-0 p-0 text-muted"><small>Price: </small>£<%= item.price %></p>
+                        <% quotations.forEach(quoteArray => { %>
+                            <% if (quoteArray.length > 0) { %>
+                                <% const firstQuote = quoteArray[0]; %>
+                                <% console.log(firstQuote.device) %>
+                                <% console.log(item._id) %>
+                                <% if(firstQuote.device.equals(item._id)) { %>
+                                    <p class="m-0 p-0 text-muted"><small>Price: </small>£<%= firstQuote.value %></p>
+                                <% } %>
+                            <% } %>
+                        <% }) %>
                     </div>
                     <div class="col-3 col-md-2 col-lg-3 col-xl-3 d-flex justify-content-end align-items-center">
                         <a href="/item/<%= item._id%>" class="btn btn-primary">View</a>

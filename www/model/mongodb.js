@@ -101,6 +101,44 @@ async function getItemDetail(id) {
 
 
 /**
+ * Get method to retrieve a quotation details of the device from the database
+ * @author Vinroy Miltan Dsouza
+ */
+async function getQuotes(id) {
+    return await Quote.find({device: id}).populate('provider')
+}
+
+async function getProviders() {
+    return await Provider.find()
+}
+
+async function addQuotes(quoteDetails){
+    try {
+        const quote = new Quote({
+            device: quoteDetails.device,
+            provider: quoteDetails.provider,
+            value: quoteDetails.value,
+            state: quoteDetails.state,
+            expiry: quoteDetails.expiry
+        })
+        const savedQuote = await quote.save()
+        return savedQuote
+    } catch (err) {
+        console.error("An error occurred while adding the quotes:", err);
+        throw err;
+    }
+}
+
+async function saveQrState(id) {
+    try {
+        return await Quote.updateOne({device: id}, {state: 1})
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+/**
  * Get a List of All DeviceType
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
@@ -232,5 +270,9 @@ module.exports = {
     listDevice,
     getAllDevices,
     getDevice,
-    updateDevice
+    updateDevice,
+    getQuotes,
+    getProviders,
+    addQuotes,
+    saveQrState
 }

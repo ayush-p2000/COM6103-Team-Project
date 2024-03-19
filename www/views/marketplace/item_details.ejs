@@ -65,23 +65,61 @@
         <div class="col-md-12">
             <h5 class="fw-bold">Additional Details: </h5>
             <p class="lead"><%= item.additional_details%></p>
+            <% if(Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) === "CURRENT") { %>
             <h5 class="fw-bold mt-4">Quotes</h5>
+            <% quotes.forEach( quote => {  %>
             <div class="card border-primary mt-3">
                 <div class="row g-0">
                     <div class="col-md-2 mt-2 align-middle">
-                        <img src="/assets/cex-logo.png" class="img-fluid rounded-start" alt="CEX Logo">
+                        <img src="<%= quote.provider.logo %>" class="img-fluid rounded-start" alt="logo">
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="card-body">
-                            <h5 class="card-title">Price: £350</h5>
-                            <p class="card-text">Quotation from CEX for the same product or similar products.</p>
-                            <p class="card-text"><small>Fetched from CEX site</small></p>
+                            <h5 class="card-title">Price: £<%= quote.value %></h5>
+                            <p class="card-text">Quotation from <%= quote.provider.name %> for the same product or similar products.</p>
+                            <p class="card-text"><small>Fetched from <%= quote.provider.name %> site</small></p>
+                        </div>
+                    </div>
+
+                    <div class="row1">
+                        <div class="col-md-1 mt-2 mx-auto">
+                            <% if (quote.provider.name === 'ebay') { %>
+                                    <a href="https://www.ebay.co.uk/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw=<%= item.model.name.replace(' ','+') %>" target="_blank" class="btn btn-primary">Visit <%= quote.provider.name.toUpperCase() %></a>
+                            <% } else { %>
+                                    <a href="https://uk.webuy.com/sell/search/?stext=<%= item.model.name.replace(' ','+') %>" target="_blank" class="btn btn-primary">Visit <%= quote.provider.name.toUpperCase() %></a>
+                                <% } %>
+                        </div>
+                        <div class="col-md-1 mt-2 mx-auto">
+                            <a href="" class="btn btn-primary qrBtn">Get QR code</a>
                         </div>
                     </div>
                 </div>
             </div>
+            <% })%>
+            <% } %>
+            <% if(Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) === "RECYCLE") { %>
+                <h5 class="fw-bold mt-4">Do you want to Recycle your device?</h5>
+                <div class="btn-group btn-group-sm" role="group">
+                    <input type="radio" class="btn-check" name="stateRadio" id="stateYes" autocomplete="off" <%= item.category === 2 ? 'checked' : ''%>>
+                    <label class="btn btn-outline-primary" for="stateYes">Yes</label>
+
+                    <input type="radio" class="btn-check" name="stateRadio" id="stateNo" autocomplete="off" <%= item.category !== 2 ? 'checked' : ''%>>
+                    <label class="btn btn-outline-primary" for="stateNo">No</label>
+                </div>
+                <h5 class="fw-bold mt-4">Do you want to data retrieval? It'll cost you an extra £8.99 for the service</h5>
+                <div class="btn-group btn-group-sm" role="group">
+                    <input type="radio" class="btn-check" name="serviceRadio" id="serviceYes" autocomplete="off" <%= item.data_service === 2 ? 'checked' : ''%>>
+                    <label class="btn btn-outline-primary" for="serviceYes">Yes</label>
+
+                    <input type="radio" class="btn-check" name="serviceRadio" id="serviceNo" autocomplete="off" <%= item.data_service !== 2 ? 'checked' : ''%>>
+                    <label class="btn btn-outline-primary" for="serviceNo">No</label>
+                </div>
+                <a href="/checkout" class="btn btn-success">Checkout</a>
+            <% } %>
         </div>
     </div>
 </div>
 
+
 <%- include('../components/footer.ejs') %>
+
