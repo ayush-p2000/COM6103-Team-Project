@@ -1,0 +1,13 @@
+<h3>Welcome to Payment Gateway</h3>
+<form action="/checkout/stripe/pay" method="POST">
+    <script
+            src="//checkout.stripe.com/v2/checkout.js"
+            class="stripe-button"
+            data-key="<%= key %>"
+            data-amount="7000"
+            data-currency="gbp"
+            data-name="Anonymous"
+            data-description="Buy me"
+            data-locale="auto">
+    </script>
+</form>
