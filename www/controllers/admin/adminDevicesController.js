@@ -2,9 +2,12 @@
  * This controller should handle any operations related to device management or device type management
  */
 
+const gsmarena = require('gsmarena-api');
+const {get} = require("axios");
 const {renderAdminLayout,renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
-
-const {getItemDetail, getAllDeviceType, getAllBrand, updateDeviceDetails, getModels} = require("../../model/mongodb")
+const {getItemDetail, getAllDeviceType, getAllBrand, updateDeviceDetails, getModels,getAllUnknownDevices, addDeviceType, addBrand, addModel,
+    getHistoryByDevice
+} = require("../../model/mongodb")
 
 const dataService = require("../../model/enum/dataService")
 const deviceCategory = require("../../model/enum/deviceCategory")
@@ -13,13 +16,89 @@ const deviceState = require("../../model/enum/deviceState")
 const {Device} = require("../../model/schema/device")
 function getDevicesPage(req, res, next) {
     //TODO: Add functionality for the devices page
-    renderAdminLayoutPlaceholder(req, res, "devices", {}, "Devices Page Here")
+    renderAdminLayout(req, res, "devices", {})
 }
 
-function getFlaggedDevicesPage(req, res, next) {
-    //TODO: Add functionality for the flagged devices page
-    renderAdminLayoutPlaceholder(req, res, "flagged_devices", {}, "Flagged Devices Page Here")
+/**
+ * Get Flagged Devices and Display for the Staff
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+async function getFlaggedDevicesPage(req, res, next) {
+    try {
+        const devices = await getAllUnknownDevices()
+        const deviceTypes = await getAllDeviceType()
+        const brands = await getAllBrand()
 
+        renderAdminLayout(req, res, "unknown_devices", {devices,deviceTypes,brands});
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+/**
+ * Get Data From Request and Pass it To Add DeviceType to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+async function postNewDeviceType(req, res, next) {
+    try {
+        console.log(req.body)
+        const deviceType = await addDeviceType(req.body.name,req.body.description)
+        res.status(200).send("successfully")
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+/**
+ * Get Data From Request and Pass it To Add Brand to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+async function postNewBrand(req, res, next) {
+    try {
+        const brand = await addBrand(req.body.name)
+        res.status(200).send("successfully")
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+/**
+ * Get Data From Request and Pass it To Add Model to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+async function postNewModel(req, res, next) {
+    try {
+
+        var properties = []
+        var category = 3
+
+        const devices = await gsmarena.search.search(req.body.name);
+        if (devices[0]) {
+            let slug = devices[0].id
+            const devicesDetail = await get(`https://phone-specs-clzpu7gyh-azharimm.vercel.app/${slug}`)
+            if (devicesDetail.data){
+                var released = parseInt(devicesDetail.data.data.release_date.match(/\b\d+\b/)[0])
+                properties.push({ name: 'picture', value: devicesDetail.data.data.thumbnail })
+                properties.push({name:"specifications", value: JSON.stringify(devicesDetail.data.data.specifications)})
+                properties.push({name:"released", value: released})
+                //Greater than 10 is 2，5-10 is 1, 0-5 is 0
+                const currentDate = new Date();
+                const currentYear = currentDate.getFullYear()
+                if ((currentYear - released) <=5){
+                    category = 0
+                }else if ((currentYear - released) >5 && (currentYear - released) <=10){
+                    category = 1
+                }else{
+                    category = 2
+                }
+            }
+        }
+
+        const model = await addModel(req.body,properties,category)
+        res.status(200).send("successfully")
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 function getDeviceTypePage(req, res, next) {
@@ -41,9 +120,35 @@ async function getUserDeviceDetailsPage(req, res, next) {
         const item = await getItemDetail(req.params.id)
         const deviceType = await getAllDeviceType()
         const brands = await getAllBrand()
-        const models = await getModels(item.brand._id, item.device_type._id)
-        const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
+        var models = []
+        var specs = []
+
+        if (item.model != null) {
+            models = await getModels(item.brand._id, item.device_type._id)
+            const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
+        }
+        else{
+            var type = ""
+            var brand = ""
+            var model = ""
+            const customModel = await getHistoryByDevice(item._id)
+            customModel[0].data.forEach(data => {
+                if (data.name === "device_type"){
+                    type = data.value
+                }else if(data.name === "brand"){
+                    brand = data.value
+                }else if(data.name === "model"){
+                    model = data.value
+                }
+            });
+            models = []
+            item.device_type = {name: deviceType}
+            item.brand = {name: brand}
+            item.model = {name: model}
+        }
+
         renderAdminLayout(req, res, "edit_details", {item, deviceType, brands, models, specs, dataService, deviceCategory, deviceState}, "User Device Details page")
+
     } catch (err) {
         console.log(err)
         res.status(500).json({error: 'internal server error'})
@@ -87,7 +192,10 @@ module.exports = {
     getFlaggedDevicesPage,
     getDeviceTypePage,
     getDeviceTypeDetailsPage,
+    postNewDeviceType,
+    postNewBrand,
+    postNewModel,
     getUserDeviceDetailsPage,
     updateUserDeviceDetailsPage,
-    getModelsFromTypeAndBrand
+    getModelsFromTypeAndBrand,
 }
