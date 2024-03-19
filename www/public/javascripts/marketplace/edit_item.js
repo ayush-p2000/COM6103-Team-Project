@@ -1,15 +1,12 @@
 /**
- * JavaScript file to handling post item
+ * JavaScript file to handling edit item
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 
+
 document.addEventListener("DOMContentLoaded", function() {
-    var models = [] // current models collection
 
     // Get dom
-    const deviceTypeElement = document.getElementById('deviceType');
-    const deviceBrandElement = document.getElementById('deviceBrand');
-    const deviceModelElement = document.getElementById('deviceModel');
     const conditionYes = document.getElementById('conditionYes');
     const conditionNo = document.getElementById('conditionNo');
     const conditionList = document.getElementById('detail-condition');
@@ -29,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnYes = document.getElementById('btnYes')
     const functionalityYes = document.getElementById('functionalityYes')
 
-    requestModels()
 
     /**
      * Handling Preview images for user input
@@ -39,13 +35,6 @@ document.addEventListener("DOMContentLoaded", function() {
         updateImageReview()
     });
 
-    /**
-     * Handling Device type Brand and Model update when changed
-     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
-     */
-    deviceTypeElement.addEventListener("change", ()=> {requestModels()});
-    deviceBrandElement.addEventListener("change", ()=> {requestModels()});
-    deviceModelElement.addEventListener("change", ()=> {updateModelPreview()});
 
     /**
      * Handling show/hide further condition
@@ -78,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
      * Handling submit action
      * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
-    submitBtn.addEventListener('click', ()=> {postDataToServer()})
+    submitBtn.addEventListener('click', ()=> {postUpdateDataToServer()})
 
 
     /**
@@ -104,76 +93,13 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    /**
-     *  Update Model Preview when change selected model
-     *  @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
-     */
-    function updateModelPreview(){
-        var selectedIndex = deviceModelElement.selectedIndex;
-        var template = `
-            <div class="card p-3 ">
-                <div class="row" id="selected-model-content">
-                    <div class="col-3">
-                        <img src="${models[selectedIndex].properties[0].value}" class="img-fluid rounded-start" >
-                    </div>
-                    <div class="col-9">
-                        <div class="card-body p-0">
-                            <h5 class="card-title">${models[selectedIndex].name}</h5>
-                            <p class="card-text m-0"><small>Device Type:</small> ${deviceTypeElement.options[deviceTypeElement.selectedIndex].innerText}</p>
-                            <p class="card-text m-0"><small>Brand:</small> ${deviceBrandElement.options[deviceBrandElement.selectedIndex].innerText}</p>
-                            <p class="card-text"><small class="text-muted">Release at ${models[selectedIndex].properties[2].value}</small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>`
-        document.getElementById('selected-model-content').innerHTML = template;
-    }
+
 
     /**
-     * get Models from server when Type or Brand change
+     * Post Request to Update device Data
      * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
-    function requestModels() {
-        var selectedDeviceType = deviceTypeElement.value
-        var selectedDeviceBrand = deviceBrandElement.value;
-
-        const params = new URLSearchParams();
-        params.append('brand', selectedDeviceBrand);
-        params.append('deviceType', selectedDeviceType);
-        const url = '/getModelByBrandAndType?' + params.toString();
-
-        // Axios to get model base on selected properties
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                models = data
-                const deviceModelElement = document.getElementById('deviceModel'); // 获取用于预览的容器元素
-                // clear model data
-                deviceModelElement.innerHTML = '';
-
-                data.forEach(model => {
-                    var templateString = `<option value="${model._id}">${model.name}</option>`;
-                    deviceModelElement.innerHTML += templateString;
-                });
-                updateModelPreview()
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
-
-    /**
-     * Post Request to Add Device Item to Server
-     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
-     */
-    function postDataToServer() {
-        var selectedModelId = deviceModelElement.value
-        var selectedModel = models.find(model => model._id === selectedModelId);
+    function postUpdateDataToServer() {
 
         var dataService = 0;
         dataRadios.forEach(function(radio, index) {
@@ -194,30 +120,21 @@ document.addEventListener("DOMContentLoaded", function() {
         ];
 
         var formData = new FormData();
-        formData.append('device_type', selectedModel.deviceType);
-        formData.append('brand', selectedModel.brand);
-        formData.append('model', selectedModel._id);
         formData.append('details', JSON.stringify(details));
-        formData.append('category', selectedModel.category);
         formData.append('good_condition', conditionYes.checked);
-        formData.append('state', 1); // default to review when posted
         formData.append('data_service', dataService);
         formData.append('additional_details', additionalInfo.value !== "" ? additionalInfo.value : "Not Provided");
-        formData.append('visible', false); // default to false when posted
 
-        if (itemImage.files.length === 0) {
-            return alert('Please Upload At Least One Photos Of Your Device!');
-        }else{
-            for (var i = 0; i < itemImage.files.length; i++) {
-                formData.append('photos', itemImage.files[i]);
-            }
+
+        for (var i = 0; i < itemImage.files.length; i++) {
+            formData.append('photos', itemImage.files[i]);
         }
 
-        for (const [key, value] of formData.entries()) {
-            console.log(key + ': ' + value);
-        }
+        var url = window.location.href;
+        var parts = url.split("/");
+        var id = parts[parts.length - 1];
 
-        fetch('/list-item', {
+        fetch(`/list-item/${id}`, {
             method: 'POST',
             body: formData,
 
@@ -226,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                window.location.href = '/dashboard';
+                window.location.href = `/item/${id}`;
                 return response.text();
             })
             .catch(error => {
