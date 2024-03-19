@@ -10,7 +10,7 @@ const {ACCEPTED, REJECTED, CONVERTED, EXPIRED, stateToString, stateToColour} = r
 const {updateQuote, getQuoteById} = require("../../model/mongodb");
 const mongoose = require("mongoose");
 const QRCode = require('qrcode');
-var {getItemDetail, getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice} = require('../../model/mongodb');
+const {getItemDetail, getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice, getHistoryByDevice} = require('../../model/mongodb');
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
 
@@ -90,15 +90,36 @@ async function getModelByBrandAndType(req, res) {
 
 /**
  * Get item details to display it in the User's item detail page, where it shows the device specifications
- * @author Vinroy Miltan DSouza
+ * @author Vinroy Miltan DSouza & Zhicong Jiang
  */
 async function getItemDetails(req, res, next) {
-    const item = await getItemDetail(req.params.id)
-    const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
-    // item.photos.forEach((photo, index) => {
-    //     item.photos[index] = photo.slice(7)
-    // })
-    res.render('marketplace/item_details', {item, specs, deviceCategory, deviceState, auth: req.isLoggedIn, user:req.user, role: 'user'})
+    try{
+        const item = await getItemDetail(req.params.id)
+        var specs = []
+        if (item.model != null) {
+            specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
+        }else{
+            var deviceType = ""
+            var brand = ""
+            var model = ""
+            const customModel = await getHistoryByDevice(item._id)
+            customModel[0].data.forEach(data => {
+                if (data.name === "device_type"){
+                    deviceType = data.value
+                }else if(data.name === "brand"){
+                    brand = data.value
+                }else if(data.name === "model"){
+                    model = data.value
+                }
+            });
+            item.device_type = {name: deviceType}
+            item.brand = {name: brand}
+            item.model = {name: model}
+        }
+        res.render('marketplace/item_details', {item, specs, deviceCategory, deviceState, auth: req.isLoggedIn, user:req.user, role: 'user'})
+    }catch (e){
+        console.log(e)
+    }
 }
 
 /*

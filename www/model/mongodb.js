@@ -142,29 +142,104 @@ const getModels = async (brandId,deviceTypeId) => {
 }
 
 /**
- * Add a New Device Base On the Device's Data
+ * Adding a Device to the Database
+ * If User Input Custom Model,Create a History Link To The Device
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 const listDevice = async (deviceData, photos, user) => {
+    const newDevice = new Device({
+        device_type: mongoose.Types.ObjectId.isValid(deviceData.device_type)? deviceData.device_type : new mongoose.Types.ObjectId(),
+        brand: mongoose.Types.ObjectId.isValid(deviceData.brand)? deviceData.brand : new mongoose.Types.ObjectId(),
+        model: mongoose.Types.ObjectId.isValid(deviceData.model)? deviceData.model : new mongoose.Types.ObjectId(),
+        details: JSON.parse(deviceData.details),
+        category: deviceData.category,
+        good_condition: deviceData.good_condition,
+        state: deviceData.state,
+        data_service: deviceData.data_service,
+        additional_details: deviceData.additional_details,
+        listing_user: user.id,
+        photos: photos,
+        visible: deviceData.visible
+    });
+    const savedDevice = await newDevice.save();
+
+    if (!mongoose.Types.ObjectId.isValid(deviceData.model)){
+        const data = [
+            { name: 'device_type', value: deviceData.device_type, data_type: 0 },
+            { name: 'brand', value: deviceData.brand, data_type: 0 },
+            { name: 'model', value: deviceData.model, data_type: 0 }
+        ];
+        const newHistory = new History({
+            device: savedDevice,
+            history_type: 6,
+            data: data.map(item => ({
+                name: item.name,
+                value: item.value,
+                data_type: item.data_type
+            })),
+            actioned_by: user.id
+        })
+        const savedHistory = await newHistory.save();
+    }
+    return savedDevice._id;
+}
+
+/**
+ * Get History Data for UnknownDevice(history_type: 6)
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getAllUnknownDevices = async () => {
+    return History.find({history_type: 6});
+}
+
+/**
+ * Add a New DeviceType to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const addDeviceType = async (name, description) => {
+    const newDeviceType = new DeviceType({
+        name: name,
+        description: description
+    });
+    return await newDeviceType.save()
+}
+
+/**
+ * Add a New Brand to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const addBrand = async (name) => {
+    const newBrand = new Brand({
+        name: name,
+        models: []
+    });
+    return await newBrand.save()
+}
+
+/**
+ * Add a New Model to db
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const addModel = async (modelData,properties,category) => {
+    const newModel = new Model({
+        name: modelData.name,
+        brand: modelData.brand,
+        deviceType: modelData.device_type,
+        properties: properties,
+        category: category,
+    });
+    return await newModel.save()
+}
+
+/**
+ * Getting Device's Detail by Device's id
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getDevice = async (id) => {
     try {
-        const newDevice = new Device({
-            device_type: deviceData.device_type,
-            brand: deviceData.brand,
-            model: deviceData.model,
-            details: JSON.parse(deviceData.details),
-            category: deviceData.category,
-            good_condition: deviceData.good_condition,
-            state: deviceData.state,
-            data_service: deviceData.data_service,
-            additional_details: deviceData.additional_details,
-            listing_user: user.id,
-            photos: photos,
-            visible: deviceData.visible
-        });
-        const savedDevice = await newDevice.save();
-        return savedDevice._id;
-    } catch (error) {
-        console.error("An error occurred while listing the device:", error);
+        return Device.find({_id:id}).populate('brand').populate('device_type').populate('model');
+    }catch (error) {
+        console.error("An error occurred while get Device:", error);
         throw error;
     }
 }
@@ -201,14 +276,15 @@ const updateDevice = async (id, deviceData, photos) => {
  * Getting Device's Detail by Device's id
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
-const getDevice = async (id) => {
+const getHistoryByDevice = async (id) => {
     try {
-        return Device.find({_id:id}).populate('brand').populate('device_type').populate('model');
+        return History.find({device:id});
     }catch (error) {
-        console.error("An error occurred while get Device:", error);
+        console.error("An error occurred while get History By Device:", error);
         throw error;
     }
 }
+
 
 const getAllDevices = async () => {
     return Device.find({});
@@ -270,7 +346,6 @@ const updateQuote = async (id, updatedProps) => {
 }
 
 
-
 module.exports = {
     getAllUsers,
     getUserById,
@@ -288,7 +363,12 @@ module.exports = {
     getModels,
     listDevice,
     getAllDevices,
+    getAllUnknownDevices,
+    addDeviceType,
+    addBrand,
+    addModel,
     getDevice,
     updateDevice,
+    getHistoryByDevice,
     updateDeviceDetails
 }

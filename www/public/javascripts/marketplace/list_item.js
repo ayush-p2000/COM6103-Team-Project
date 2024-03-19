@@ -6,6 +6,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     var models = [] // current models collection
 
+
     // Get dom
     const deviceTypeElement = document.getElementById('deviceType');
     const deviceBrandElement = document.getElementById('deviceBrand');
@@ -18,6 +19,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const submitBtn = document.getElementById('submitBtn')
     const additionalInfo = document.getElementById('additionalInfo')
     const dataRadios = document.querySelectorAll('input[name="dataRadio"]');
+
+
+    const model = document.getElementById('model')
+    const customModel = document.getElementById('custom-model')
+    const customBrand = document.getElementById('custom-brand')
+    const customDeviceType = document.getElementById('custom-device-type')
+    const customSubmit = document.getElementById('custom-submit')
+
 
     const saveBtn = document.getElementById('saveBtn')
     const deviceCategory = document.getElementById('deviceCategory')
@@ -49,6 +58,19 @@ document.addEventListener("DOMContentLoaded", function() {
     deviceTypeElement.addEventListener("change", ()=> {requestModels()});
     deviceBrandElement.addEventListener("change", ()=> {requestModels()});
     deviceModelElement.addEventListener("change", ()=> {updateModelPreview()});
+
+
+    customSubmit.addEventListener('click',()=>{
+        if (customDeviceType.value === "" || customBrand.value === "" || customModel.value === ""){
+            alert("Please Fill in All Fields Before Submitting")
+        }else{
+            deviceTypeElement.innerHTML = `<option value="-1">${customDeviceType.value}</option>`
+            deviceBrandElement.innerHTML = `<option value="-1">${customBrand.value}</option>`
+            deviceModelElement.innerHTML = `<option value="-1">${customModel.value}</option>`
+        }
+        hideModelPreview()
+    })
+
 
     /**
      * Handling show/hide further condition
@@ -83,6 +105,13 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     submitBtn.addEventListener('click', ()=> {postDataToServer()})
 
+    function hideModelPreview(){
+        document.getElementById('selected-model-content').style.display = "none"
+    }
+
+    function showModelPreview(){
+        document.getElementById('selected-model-content').style.display = "block"
+    }
 
     /**
      * Update Image Preview when User Upload files
@@ -112,6 +141,7 @@ document.addEventListener("DOMContentLoaded", function() {
      *  @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
     function updateModelPreview(){
+        showModelPreview()
         var selectedIndex = deviceModelElement.selectedIndex;
         var template = `
             <div class="card p-3 ">
@@ -166,6 +196,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 updateModelPreview()
             })
             .catch(error => {
+                hideModelPreview()
                 console.error(error);
             });
     }
@@ -176,7 +207,25 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     function postDataToServer() {
         var selectedModelId = deviceModelElement.value
-        var selectedModel = models.find(model => model._id === selectedModelId);
+        var selectedModel = ""
+        var selectedBrand = ""
+        var selectedType = ""
+        var category= ""
+
+
+        if (selectedModelId === "-1"){
+            selectedModel = customModel.value
+            selectedBrand = customBrand.value
+            selectedType = customDeviceType.value
+            category = 3
+        }else{
+            const selectedModelObj = models.find(model => model._id === selectedModelId);
+            selectedModel = selectedModelObj._id
+            selectedBrand = selectedModelObj.brand
+            selectedType = selectedModelObj.deviceType
+            category = selectedModelObj.category
+        }
+
 
         var dataService = 0;
         dataRadios.forEach(function(radio, index) {
@@ -197,11 +246,11 @@ document.addEventListener("DOMContentLoaded", function() {
         ];
 
         var formData = new FormData();
-        formData.append('device_type', selectedModel.deviceType);
-        formData.append('brand', selectedModel.brand);
-        formData.append('model', selectedModel._id);
+        formData.append('device_type', selectedType);
+        formData.append('brand', selectedBrand);
+        formData.append('model', selectedModel);
         formData.append('details', JSON.stringify(details));
-        formData.append('category', selectedModel.category);
+        formData.append('category', category);
         formData.append('good_condition', conditionYes.checked);
         formData.append('state', 1); // default to review when posted
         formData.append('data_service', dataService);
@@ -215,6 +264,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 formData.append('photos', itemImage.files[i]);
             }
         }
+
 
         for (const [key, value] of formData.entries()) {
             console.log(key + ': ' + value);
