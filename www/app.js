@@ -6,6 +6,7 @@ const logger = require('morgan');
 const passport = require("passport")
 const session = require("express-session")
 const bodyParser = require('body-parser');
+const fs = require('fs');
 
 
 
@@ -73,8 +74,6 @@ if (process.env.ENVIRONMENT === undefined || process.env.ENVIRONMENT !== "prod")
     app.use('/debug', debugRouter);
 }
 
-
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));
@@ -88,7 +87,14 @@ app.use(function (err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+
+    //Check if the error page exists in 'views/error' and render it, otherwise render the default error page
+    //Check if file exists
+    if (fs.existsSync(path.join(__dirname, 'views', 'error', `${err.status || 500}.ejs`)) === true) {
+        res.render(`error/${err.status || 500}`, {auth: req.isLoggedIn, user: req.user, message: err?.message});
+    } else {
+        res.render('error', {auth: req.isLoggedIn, user: req.user, message: err?.message});
+    }
 });
 
 module.exports = app;

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require("multer");
 
-const {getItemQrCodeView, confirmQuote, rejectQuote} = require("../controllers/marketplace/itemController");
+const {getItemQrCodeView, confirmQuote, rejectQuote, generateQRCode} = require("../controllers/marketplace/itemController");
 
 router.get('/:id', getItemQrCodeView);
 

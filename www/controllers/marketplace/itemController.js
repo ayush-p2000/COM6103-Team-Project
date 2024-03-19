@@ -10,9 +10,19 @@ const {ACCEPTED, REJECTED, CONVERTED, EXPIRED, stateToString, stateToColour} = r
 const {updateQuote, getQuoteById} = require("../../model/mongodb");
 const mongoose = require("mongoose");
 const QRCode = require('qrcode');
-const {getItemDetail, getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice, getHistoryByDevice} = require('../../model/mongodb');
+const {
+    getItemDetail,
+    getAllDeviceType,
+    getAllBrand,
+    getModels,
+    listDevice,
+    getDevice,
+    updateDevice,
+    getHistoryByDevice
+} = require('../../model/mongodb');
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
+const {generateQR} = require("../../util/qr/qrcodeGenerator");
 
 /**
  * Handling Request to post item base on the info in request body
@@ -29,11 +39,11 @@ const postListItem = async (req, res) => {
             filePaths.push(filePath);
         }
 
-        if (typeof id === 'undefined'){
+        if (typeof id === 'undefined') {
             console.log("Adding")
             const deviceId = await listDevice(req.body, filePaths, req.user);
             res.status(200).send(deviceId);
-        }else{
+        } else {
             console.log("Updating")
             const deviceId = await updateDevice(id, req.body, filePaths);
             res.status(200).send(deviceId);
@@ -55,20 +65,20 @@ async function getListItem(req, res) {
             let deviceTypes = await getAllDeviceType();
             let brands = await getAllBrand();
             res.render('marketplace/list_item', {
-                auth: req.isLoggedIn,user:req.user, role: 'user',
+                auth: req.isLoggedIn, user: req.user, role: 'user',
                 deviceTypes: deviceTypes, brands: brands
             });
         } catch (err) {
             console.log(err)
         }
-    }else{
-        try{
+    } else {
+        try {
             let device = await getDevice(id);
             res.render('marketplace/edit_item', {
-                auth: req.isLoggedIn,user:req.user, role: 'user', device: device[0]
+                auth: req.isLoggedIn, user: req.user, role: 'user', device: device[0]
             });
             // res.send(device)
-        }catch (err){
+        } catch (err) {
             console.log(err)
         }
     }
@@ -80,7 +90,7 @@ async function getListItem(req, res) {
  */
 async function getModelByBrandAndType(req, res) {
     try {
-        let models = await getModels(req.query.brand,req.query.deviceType);
+        let models = await getModels(req.query.brand, req.query.deviceType);
         res.send(models);
     } catch (err) {
         res.send(err)
@@ -93,22 +103,27 @@ async function getModelByBrandAndType(req, res) {
  * @author Vinroy Miltan DSouza & Zhicong Jiang
  */
 async function getItemDetails(req, res, next) {
-    try{
+    try {
         const item = await getItemDetail(req.params.id)
         var specs = []
         if (item.model != null) {
-            specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
-        }else{
+            const specProp = item.model.properties.find(property => property.name === 'specifications')?.value;
+            if (specProp != null) {
+                specs = JSON.parse(specProp)
+            } else {
+                specs = []
+            }
+        } else {
             var deviceType = ""
             var brand = ""
             var model = ""
             const customModel = await getHistoryByDevice(item._id)
             customModel[0].data.forEach(data => {
-                if (data.name === "device_type"){
+                if (data.name === "device_type") {
                     deviceType = data.value
-                }else if(data.name === "brand"){
+                } else if (data.name === "brand") {
                     brand = data.value
-                }else if(data.name === "model"){
+                } else if (data.name === "model") {
                     model = data.value
                 }
             });
@@ -116,9 +131,19 @@ async function getItemDetails(req, res, next) {
             item.brand = {name: brand}
             item.model = {name: model}
         }
-        res.render('marketplace/item_details', {item, specs, deviceCategory, deviceState, auth: req.isLoggedIn, user:req.user, role: 'user'})
-    }catch (e){
+        res.render('marketplace/item_details', {
+            item,
+            specs,
+            deviceCategory,
+            deviceState,
+            auth: req.isLoggedIn,
+            user: req.user,
+            role: 'user'
+        })
+    } catch (e) {
         console.log(e)
+        res.status(500);
+        next({message: "Internal server error"});
     }
 }
 
@@ -144,8 +169,12 @@ async function getItemQrCodeView(req, res, next) {
     //If the quote has been converted, rejected, or expired, then it should no longer be accessible on this page if it is not the listing_user
     //This is to prevent any QR codes displaying sensitive information about the transaction
     if (!quoteActive) {
-        if (typeof(req.user) === "undefined" || !quote.device.listing_user._id.equals(new mongoose.Types.ObjectId(req.user?.id))) {
-            res.render('error/403unauthorised', {auth: req.isLoggedIn, user: req.user, message: "This quote is no longer active or you are not the listing user. Please contact the listing user for more information."});
+        if (typeof (req.user) === "undefined" || !quote.device.listing_user._id.equals(new mongoose.Types.ObjectId(req.user?.id))) {
+            res.render('error/403unauthorised', {
+                auth: req.isLoggedIn,
+                user: req.user,
+                message: "This quote is no longer active or you are not the listing user. Please contact the listing user for more information."
+            });
             return;
         }
     }
@@ -240,14 +269,9 @@ async function generateQRCode(req, res, next) {
     //Get the quote id from the request
     const {id} = req.params;
 
-    const url = `${process.env.BASE_URL}:${process.env.PORT}/qr/${id}`;
+    const qr = await generateQR(id);
 
-    const qr = await QRCode.toDataURL(url, {
-        errorCorrectionLevel: 'H',
-        type: 'image/png',
-        quality: 1,
-        margin: 1
-    });
+    res.send(qr);
 }
 
 module.exports = {
