@@ -4,7 +4,7 @@
 
 
 function getLandingPage(req, res, next) {
-    res.render('index', { title: 'Express', auth:req.isLoggedIn});
+    res.render('index', { title: 'Express', auth:req.isLoggedIn, user:req.user});
 }
 
 module.exports = {

@@ -14,6 +14,8 @@ const {Quote} = require("./schema/quote");
 const {Retrieval} = require("./schema/retrieval");
 const {History} = require("./schema/history");
 
+const {UNKNOWN_DEVICE} = require("./enum/historyType");
+
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -189,7 +191,7 @@ const listDevice = async (deviceData, photos, user) => {
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 const getAllUnknownDevices = async () => {
-    return History.find({history_type: 6});
+    return History.find({history_type: UNKNOWN_DEVICE});
 }
 
 /**
