@@ -19,7 +19,8 @@ const getMarketplace = async (req, res, next) => {
 
 /**
  * Get User's items to display it in the my-items page, so that the user can see what items they have listed in the application
- * @author Vinroy Miltan Dsouza
+ * Here the function also checks if there is quotation details in the database for the item, if not then it'll fetch the details from getDeviceQuotation method
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getMyItems(req, res, next) {
     const items = await getUserItems(req.user.id)
@@ -37,6 +38,11 @@ async function getMyItems(req, res, next) {
     res.render('marketplace/my_items', {items, quotations, deviceState, deviceCategory, auth: req.isLoggedIn, user:req.user, role:'user'})
 }
 
+/**
+ * Get method to fetch the quotation details from third-party providers like ebay etc.
+ * Here we are using web scraper to fetch the price details from providers and saving it in the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 const getDeviceQuotation = async (item, providers) => {
     const url = 'https://www.ebay.co.uk/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw='
     const searchItem = item.model.name.replace(' '+ '+')
@@ -74,8 +80,7 @@ const getDeviceQuotation = async (item, providers) => {
                     state: false,
                     expiry: expiryDate
                 }
-                const savedQuote = await addQuotes(quoteDetails)
-                return savedQuote
+                return await addQuotes(quoteDetails)
             })
 
     } catch (err){

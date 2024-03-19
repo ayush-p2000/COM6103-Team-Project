@@ -65,6 +65,7 @@
         <div class="col-md-12">
             <h5 class="fw-bold">Additional Details: </h5>
             <p class="lead"><%= item.additional_details%></p>
+            <!--     Show device if the category is current       -->
             <% if(Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) === "CURRENT") { %>
             <h5 class="fw-bold mt-4">Quotes</h5>
             <% quotes.forEach( quote => {  %>
@@ -97,6 +98,7 @@
             </div>
             <% })%>
             <% } %>
+            <!--     Show device if the category is recycle       -->
             <% if(Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) === "RECYCLE") { %>
                 <h5 class="fw-bold mt-4">Do you want to Recycle your device?</h5>
                 <div class="btn-group btn-group-sm" role="group">
@@ -106,7 +108,7 @@
                     <input type="radio" class="btn-check" name="stateRadio" id="stateNo" autocomplete="off" <%= item.category !== 2 ? 'checked' : ''%>>
                     <label class="btn btn-outline-primary" for="stateNo">No</label>
                 </div>
-                <h5 class="fw-bold mt-4">Do you want to data retrieval? It'll cost you an extra £8.99 for the service</h5>
+                <h5 class="fw-bold mt-4">Do you want to do data retrieval? It'll cost you an extra £8.99 for the service</h5>
                 <div class="btn-group btn-group-sm" role="group">
                     <input type="radio" class="btn-check" name="serviceRadio" id="serviceYes" autocomplete="off" <%= item.data_service === 2 ? 'checked' : ''%>>
                     <label class="btn btn-outline-primary" for="serviceYes">Yes</label>
@@ -115,6 +117,11 @@
                     <label class="btn btn-outline-primary" for="serviceNo">No</label>
                 </div>
                 <a href="/checkout" class="btn btn-success">Checkout</a>
+            <% } %>
+            <!--     Show device if the category is rare    -->
+            <% if(Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) === "RARE") { %>
+                <h5 class="fw-bold mt-4">Since the device is rare to find, you can auction the device on eBay</h5>
+                <a href="https://www.ebay.co.uk/sl/prelist/suggest" target="_blank" class="btn btn-primary"> Click here to go to eBay auction site</a>
             <% } %>
         </div>
     </div>

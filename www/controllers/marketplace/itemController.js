@@ -86,7 +86,8 @@ async function getModelByBrandAndType(req, res) {
 
 /**
  * Get item details to display it in the User's item detail page, where it shows the device specifications
- * @author Vinroy Miltan DSouza
+ * Here also the device price quotes are retrieved from the database to display in the item page
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getItemDetails(req, res, next) {
     const item = await getItemDetail(req.params.id)

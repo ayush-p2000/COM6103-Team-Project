@@ -79,7 +79,7 @@ async function updateUser(id, user) {
 
 /**
  * Get method to retrieve the user items from mongodb database
- * @author Vinroy Miltan Dsouza
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getUserItems(id) {
     return Device.find({'listing_user': id}).populate({
@@ -90,7 +90,7 @@ async function getUserItems(id) {
 
 /**
  * Get method to retrieve a specific device details of the User from the database
- * @author Vinroy Miltan Dsouza
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getItemDetail(id) {
     return await Device.findOne({_id: id}).populate({
@@ -102,16 +102,29 @@ async function getItemDetail(id) {
 
 /**
  * Get method to retrieve a quotation details of the device from the database
- * @author Vinroy Miltan Dsouza
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getQuotes(id) {
-    return await Quote.find({device: id}).populate('provider')
+    try {
+        return await Quote.find({device: id}).populate('provider')
+    } catch (err) {
+        console.log(err)
+    }
+
 }
 
+/**
+ * Get method to retrieve providers detail  from the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function getProviders() {
     return await Provider.find()
 }
 
+/**
+ * Add method to save the details of a new Quote to the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function addQuotes(quoteDetails){
     try {
         const quote = new Quote({
@@ -121,8 +134,7 @@ async function addQuotes(quoteDetails){
             state: quoteDetails.state,
             expiry: quoteDetails.expiry
         })
-        const savedQuote = await quote.save()
-        return savedQuote
+        return await quote.save()
     } catch (err) {
         console.error("An error occurred while adding the quotes:", err);
         throw err;
