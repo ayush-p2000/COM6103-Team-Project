@@ -10,15 +10,95 @@ const {ACCEPTED, REJECTED, CONVERTED, EXPIRED, stateToString, stateToColour} = r
 const {updateQuote, getQuoteById} = require("../../model/mongodb");
 const mongoose = require("mongoose");
 const QRCode = require('qrcode');
+var {getItemDetail, getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice} = require('../../model/mongodb');
+const deviceState = require("../../model/enum/deviceState")
+const deviceCategory = require("../../model/enum/deviceCategory")
 
-function getListItem(req, res, next) {
-    res.render('marketplace/list_item', {auth: req.isLoggedIn, user: req.user})
+/**
+ * Handling Request to post item base on the info in request body
+ * @author Zhicong Jiang
+ */
+const postListItem = async (req, res) => {
+    console.log("PostingItem")
+    var id = req.params.id;
+    try {
+        const files = req.files;
+        const filePaths = [];
+        for (let i = 0; i < files.length; i++) {
+            const filePath = files[i].path;
+            filePaths.push(filePath);
+        }
+
+        if (typeof id === 'undefined'){
+            console.log("Adding")
+            const deviceId = await listDevice(req.body, filePaths, req.user);
+            res.status(200).send(deviceId);
+        }else{
+            console.log("Updating")
+            const deviceId = await updateDevice(id, req.body, filePaths);
+            res.status(200).send(deviceId);
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Internal server error');
+    }
+};
+
+/**
+ * Respond form view for user to post item
+ * @author Zhicong Jiang
+ */
+async function getListItem(req, res) {
+    var id = req.params.id;
+    if (typeof id === 'undefined') {
+        try {
+            let deviceTypes = await getAllDeviceType();
+            let brands = await getAllBrand();
+            res.render('marketplace/list_item', {
+                auth: req.isLoggedIn,user:req.user, role: 'user',
+                deviceTypes: deviceTypes, brands: brands
+            });
+        } catch (err) {
+            console.log(err)
+        }
+    }else{
+        try{
+            let device = await getDevice(id);
+            res.render('marketplace/edit_item', {
+                auth: req.isLoggedIn,user:req.user, role: 'user', device: device[0]
+            });
+            // res.send(device)
+        }catch (err){
+            console.log(err)
+        }
+    }
 }
 
-function getItemDetails(req, res, next) {
-    const item = getMockItem()
+/**
+ * get specific Model By querying Brand And DeviceType
+ * @author Zhicong Jiang
+ */
+async function getModelByBrandAndType(req, res) {
+    try {
+        let models = await getModels(req.query.brand,req.query.deviceType);
+        res.send(models);
+    } catch (err) {
+        res.send(err)
+    }
+}
 
-    res.render('marketplace/item_details', {item, auth: req.isLoggedIn, user: req.user})
+
+/**
+ * Get item details to display it in the User's item detail page, where it shows the device specifications
+ * @author Vinroy Miltan DSouza
+ */
+async function getItemDetails(req, res, next) {
+    const item = await getItemDetail(req.params.id)
+    const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
+    // item.photos.forEach((photo, index) => {
+    //     item.photos[index] = photo.slice(7)
+    // })
+    res.render('marketplace/item_details', {item, specs, deviceCategory, deviceState, auth: req.isLoggedIn, user:req.user, role: 'user'})
 }
 
 /*
@@ -150,7 +230,9 @@ async function generateQRCode(req, res, next) {
 }
 
 module.exports = {
+    postListItem,
     getListItem,
+    getModelByBrandAndType,
     getItemDetails,
     getItemQrCodeView,
     confirmQuote,

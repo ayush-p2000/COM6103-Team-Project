@@ -1,0 +1,258 @@
+<div class="m-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card rounded shadow">
+                <div class="card-body p-4">
+                    <h1 class="fw-bold text-center">Listing an Item</h1>
+                    <!--                    Image of item-->
+                    <div class="mb-3">
+                        <div id="carouselExample" class="carousel slide col-md-6 mb-4 bg-light">
+                            <div class="carousel-inner ">
+                                <% item.photos.forEach(  (photo, index) => {%>
+                                    <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                        <img src="<%= photo.replace('public','') %>" class="d-block img-fluid mx-auto detail-img" alt="...">
+                                    </div>
+                                <% }) %>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">User information</p>
+                        <div class="mb-3 row">
+                            <label for="user" class="col-sm-3 col-lg-2 col-form-label">Listed User: </label>
+                            <div class="col-sm-5">
+                                <p id="user" ><%= item.listing_user.first_name +" "+ item.listing_user.last_name %></p>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="userEmail" class="col-sm-3 col-lg-2 col-form-label">Listed User Email: </label>
+                            <div class="col-sm-5">
+                                <p id="userEmail"><%= item.listing_user.email %></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--                    Device information-->
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">Device information</p>
+
+                        <div class="mb-3 row">
+                            <label for="deviceType" class="col-sm-3 col-lg-2 col-form-label">Device Type</label>
+                            <div class="col-sm-5">
+                                <select class="form-select" id="deviceType" name="deviceType" disabled>
+                                    <% deviceType.forEach(device => {%>
+                                        <option <%= item.device_type && item.device_type.name === device.name ? 'selected' : '' %> value="<%=device._id %>"><%= device.name %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!--                        Brand -->
+                        <div class="mb-3 row">
+                            <label for="deviceBrand" class="col-sm-3 col-lg-2 col-form-label">Brand</label>
+                            <div class="col-sm-5">
+                                <select class="form-select" id="deviceBrand" name="deviceBrand" disabled>
+                                    <% brands.forEach(brand => { %>
+                                        <option <%= item.brand.name === brand.name ? 'selected':'' %> value="<%= brand._id%>"><%= brand.name %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!--                        Model-->
+                        <div class="mb-3 row">
+                            <label for="deviceModel" class="col-sm-3 col-lg-2 col-form-label">Model</label>
+                            <div class="col-sm-5">
+                                <select class="form-select" id="deviceModel" name="deviceModel" <%= role === 'admin'? '' : 'disabled' %>>
+
+                                    <% models.forEach(model => {%>
+                                        <option value="<%= model._id %>"  <%= item.model.name === model.name ? 'selected':'' %>  ><%= model.name %></option>
+                                    <% })  %>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="deviceCategory" class="col-sm-3 col-lg-2 col-form-label">Classification</label>
+                        <div class="col-sm-5">
+
+                            <select class="form-select" id="deviceCategory" name="deviceCategory">
+                                <% Object.keys(deviceCategory).forEach(key => { %>
+                                    <option <%= deviceCategory[key] === item.category ? 'selected':'' %> value="<%= deviceCategory[key] %>"><%= key %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <h5 class="fw-bold mb-4">Specification: </h5>
+                        <div class="col">
+                            <% Object.keys(specs).forEach(spec => { %>
+                                <% if (['Announced','Status','Dimensions','Size','OS','USB'].includes(spec)) {%>
+                                    <p><span class="fw-bold"><%= spec %>:</span> <%= specs[spec] %></p>
+                            <% }}) %>
+                        </div>
+                    </div>
+                    <!--                    Device Damage-->
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">Device Condition</p>
+                        <label for="deviceCondition" class="col-sm-4 col-form-label ">Is the device in good condition?</label>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Device Condition Choose">
+                            <% const condition = item.good_condition  %>
+                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionYes" autocomplete="off" <%= condition ? 'checked':'' %> value="Yes">
+                            <label class="btn btn-outline-primary" for="conditionYes">Yes</label>
+
+                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionNo" autocomplete="off" <%= !condition ? 'checked':'' %> value="No">
+                            <label class="btn btn-outline-primary" for="conditionNo">No</label>
+                        </div>
+                        <ul class="text-muted">
+                            <li>It turns on and functions normally</li>
+                            <li>All the buttons work</li>
+                            <li>The cameras work and all lenses are free of damage</li>
+                            <li>The battery holds a charge</li>
+                            <li>The body is free of dents and scratches</li>
+                            <li>The touchscreen and back glass are undamaged</li>
+                            <li>The display is free of distortion, lines and black or white spots</li>
+                        </ul>
+                    </div>
+
+                    <div id="detail-condition" class="<%= condition ? 'd-none':'d-block' %>">
+                        <div>
+                            <label for="deviceFunctionality" class="col-sm-8 col-form-label fw-bold">1. Does your device turn on and work properly?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityYes" autocomplete="off" <%= item.details.find(item => item.name === 'functionality')?.value === 'Good' ? 'checked' : '' %>>
+                                <label class="btn btn-outline-primary" for="functionalityYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityNo" autocomplete="off" <%= item.details.find(item => item.name === 'functionality')?.value === 'Bad' ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="functionalityNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="btnCondition" class="col-sm-8 col-form-label fw-bold">2. All the buttons are working probably?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnYes" autocomplete="off" <%= item.details.find(item => item.name === 'button')?.value === 'Good' ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="btnYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnNo" autocomplete="off" <%= item.details.find(item => item.name === 'button')?.value === 'Bad' ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="btnNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="cameraCondition" class="col-sm-8 col-form-label fw-bold">3. The cameras work and all lenses are free of damage?</label>
+                            <div class="btn-group btn-group-sm" role="group" >
+                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraYes" autocomplete="off" <%= item.details.find(item => item.name === 'camera')?.value === 'Good' ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="cameraYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraNo" autocomplete="off" <%= item.details.find(item => item.name === 'camera')?.value === 'Bad' ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="cameraNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="batteryCondition" class="col-sm-8 col-form-label fw-bold">4. The battery is able to remain charged and provide continuous use time?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryYes" autocomplete="off" <%= item.details.find(item => item.name === 'battery')?.value === 'Good' ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="batteryYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryNo" autocomplete="off" <%= item.details.find(item => item.name === 'battery')?.value === 'Bad' ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="batteryNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="bodyCondition" class="col-sm-8 col-form-label fw-bold">5. The body is free of dents and scratches?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyYes" autocomplete="off" <%= item.details.find(item => item.name === 'body')?.value === 'Good' ? 'checked' : '' %>>
+                                <label class="btn btn-outline-primary" for="bodyYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyNo" autocomplete="off" <%= item.details.find(item => item.name === 'body')?.value === 'Bad' ? 'checked' : '' %>>
+                                <label class="btn btn-outline-primary" for="bodyNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="touchscreenCondition" class="col-sm-8 col-form-label fw-bold">6. The touchscreen and back glass are undamaged?</label>
+                            <div class="btn-group btn-group-sm" role="group" >
+                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenYes" autocomplete="off" <%= item.details.find(item => item.name === 'touchscreen')?.value === 'Good' ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="touchscreenYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenNo" autocomplete="off" <%= item.details.find(item => item.name === 'touchscreen')?.value === 'Bad' ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="touchscreenNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="displayCondition" class="col-sm-8 col-form-label fw-bold ">7. The display is free of distortion, lines and black or white spots?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="displayRadio" id="displayYes" autocomplete="off" <%= item.details.find(item => item.name === 'display')?.value === 'Good' ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="displayYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="displayRadio" id="displayNo" autocomplete="off" <%= item.details.find(item => item.name === 'display')?.value === 'Bad' ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="displayNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--                    Additional Information-->
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">Additional Information</p>
+                        <textarea class="form-control" id="additionalInfo" rows="3" placeholder="Please provide any additional details or special requests regarding your device."><%= item.additional_details %></textarea>
+                    </div>
+
+
+                    <div class="my-3">
+
+                    <p class="fw-bold fs-5">Approval Status</p>
+                    <div class="mb-3 row">
+                        <label for="deviceState" class="col-sm-3 col-lg-2 col-form-label">Device State</label>
+                        <div class="col-sm-6">
+                            <select class="form-select" id="deviceState" name="deviceState">
+                                <% Object.keys(deviceState).forEach(key => { %>
+                                    <option value="<%= deviceState[key] %>" <%= item.state === deviceState[key] ? 'selected':'' %> ><%= key %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+
+                        <div class="mb-3 row">
+                            <div class="col-sm-6">
+                                <label for="deviceVisible" class="col-sm-8 col-lg-2 col-form-label">Make it visible to users</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <input type="radio" class="btn-check" name="deviceVisible" id="visibleYes" autocomplete="off" <%= item.visible === true ? 'checked' : ''%>>
+                                    <label class="btn btn-outline-primary" for="visibleYes">Yes</label>
+
+                                    <input type="radio" class="btn-check" name="deviceVisible" id="visibleNo" autocomplete="off" <%= item.visible === false ? 'checked' : ''%>>
+                                    <label class="btn btn-outline-primary" for="visibleNo">No</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--                    Submit Button-->
+                    <div class="row justify-content-center">
+                        <div class="col-sm-6">
+                            <p class="btn btn-primary mb-3 d-block mx-auto" id="saveBtn">Save Details</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/javascripts/marketplace/admin_edit.js"></script>

@@ -4,6 +4,11 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require("passport")
+const session = require("express-session")
+const bodyParser = require('body-parser');
+
+
+
 const mongo = require('./model/mongodb')
 
 //Load routers
@@ -35,6 +40,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 /* Session Auth Setup */
 app.use(sessionSetup);
@@ -55,7 +62,7 @@ app.use("/javascripts", express.static(path.join(__dirname, "node_modules/jquery
 // Most routes start with / rather than /<name of file> as the files are being used as descriptive groups of routes
 app.use('/', authInfo, indexRouter);
 app.use('/qr', authInfo, qrRouter)
-app.use('/admin', isAuthenticated, adminRouter);
+app.use('/admin', adminRouter); // TODO: Add isAuthenticated once admin login is completed
 app.use('/', authRouter);
 app.use('/', dataRouter);
 app.use('/', isAuthenticated, paymentRouter);

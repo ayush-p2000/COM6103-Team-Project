@@ -53,7 +53,7 @@ if(connected){
 }
 /* Functions */
 async function getAllUsers() {
-    return await User.find();
+    return User.find();
 }
 
 async function getUserById(id) {
@@ -65,7 +65,7 @@ async function searchUser(filter) {
 }
 
 async function searchUserAndPopulate(filter) {
-    return await User.find(filter).populate('listed_devices');
+    return User.find(filter).populate('listed_devices').populate('listed_devices.model').populate('listed_devices.brand').populate('listed_devices.device_type');
 }
 
 async function createUser(user) {
@@ -76,8 +76,189 @@ async function updateUser(id, user) {
     return await User.updateOne({_id: id}, user);
 }
 
+
+/**
+ * Get method to retrieve the user items from mongodb database
+ * @author Vinroy Miltan Dsouza
+ */
+async function getUserItems(id) {
+    return Device.find({'listing_user': id}).populate({
+        path: 'device_type brand model',
+        options: {strictPopulate: false}
+    });
+}
+
+/**
+ * Get method to retrieve a specific device details of the User from the database
+ * @author Vinroy Miltan Dsouza
+ */
+async function getItemDetail(id) {
+    return await Device.findOne({_id: id}).populate({
+        path: 'device_type brand model listing_user',
+        options: {strictPopulate: false}
+    });
+}
+
+
+/**
+ * Get a List of All DeviceType
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getAllDeviceType = async () => {
+    try {
+        return await DeviceType.find();
+    }catch (error) {
+        console.error("An error occurred while get All DeviceType:", error);
+        throw error;
+    }
+}
+
+/**
+ * Get a List of All Brands
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getAllBrand = async () => {
+    try {
+        return await Brand.find();
+    }catch (error) {
+        console.error("An error occurred while get All Brand:", error);
+        throw error;
+    }
+}
+
+
+/**
+ * Get a List of Models Base on Specific Brand and Type
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getModels = async (brandId,deviceTypeId) => {
+    try {
+        return await Model.find({brand: new mongoose.Types.ObjectId(brandId),
+            deviceType: new mongoose.Types.ObjectId(deviceTypeId)})
+    }catch (error) {
+        console.error("An error occurred while get Models:", error);
+        throw error;
+    }
+}
+
+/**
+ * Add a New Device Base On the Device's Data
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const listDevice = async (deviceData, photos, user) => {
+    try {
+        const newDevice = new Device({
+            device_type: deviceData.device_type,
+            brand: deviceData.brand,
+            model: deviceData.model,
+            details: JSON.parse(deviceData.details),
+            category: deviceData.category,
+            good_condition: deviceData.good_condition,
+            state: deviceData.state,
+            data_service: deviceData.data_service,
+            additional_details: deviceData.additional_details,
+            listing_user: user.id,
+            photos: photos,
+            visible: deviceData.visible
+        });
+        const savedDevice = await newDevice.save();
+        return savedDevice._id;
+    } catch (error) {
+        console.error("An error occurred while listing the device:", error);
+        throw error;
+    }
+}
+
+/**
+ * Updating Specific Field for The Specific Device
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const updateDevice = async (id, deviceData, photos) => {
+    try {
+        const filter = {_id: id}
+        const update = {
+            $set: {
+                details: JSON.parse(deviceData.details),
+                good_condition: deviceData.good_condition,
+                state: 1,
+                data_service: deviceData.data_service,
+                additional_details: deviceData.additional_details,
+            }
+        };
+
+        if (photos.length > 0) {
+            update.$set.photos = photos;
+        }
+        const updatedDevice = await Device.updateOne(filter, update);
+        return updatedDevice._id;
+    }catch (error) {
+        console.error("An error occurred while update Device:", error);
+        throw error;
+    }
+}
+
+/**
+ * Getting Device's Detail by Device's id
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getDevice = async (id) => {
+    try {
+        return Device.find({_id:id}).populate('brand').populate('device_type').populate('model');
+    }catch (error) {
+        console.error("An error occurred while get Device:", error);
+        throw error;
+    }
+}
+
 const getAllDevices = async () => {
     return Device.find({});
+}
+
+/**
+ * Get method to retrieve all the device types
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getAllDeviceTypes() {
+    return await DeviceType.find();
+}
+
+/**
+ * Get method to retrieve all the brands
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getAllBrands() {
+    return await Brand.find();
+}
+
+/**
+ * Update method to update the details of the device from the staff side to the mongodb database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateDeviceDetails(id, deviceDetails) {
+    try {
+        console.log(deviceDetails);
+        const filter = {_id: id}
+        const device = {
+        $set: {
+            model : deviceDetails.model,
+            details : JSON.parse(deviceDetails.details),
+            category : deviceDetails.category,
+            good_condition : deviceDetails.good_condition,
+            state : deviceDetails.state,
+            additional_details : deviceDetails.additional_details,
+            visible : deviceDetails.visible
+        }
+        }
+        const updatedDevice = await Device.updateOne(filter, device)
+
+        if (!updatedDevice) {
+            alert("Device not found")
+        }
+        return updatedDevice;
+    } catch (error) {
+        console.error('Error updating device:', error);
+        throw error;
+    }
 }
 
 const getQuoteById = async (id) => {
@@ -97,8 +278,17 @@ module.exports = {
     searchUserAndPopulate,
     createUser,
     updateUser,
-    getAllDevices,
+    getUserItems,
+    getItemDetail,
     getQuoteById,
     updateQuote,
     store,
+    getAllDeviceType,
+    getAllBrand,
+    getModels,
+    listDevice,
+    getAllDevices,
+    getDevice,
+    updateDevice,
+    updateDeviceDetails
 }

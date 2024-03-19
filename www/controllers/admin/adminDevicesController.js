@@ -2,8 +2,15 @@
  * This controller should handle any operations related to device management or device type management
  */
 
-const {renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
+const {renderAdminLayout,renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
 
+const {getItemDetail, getAllDeviceType, getAllBrand, updateDeviceDetails, getModels} = require("../../model/mongodb")
+
+const dataService = require("../../model/enum/dataService")
+const deviceCategory = require("../../model/enum/deviceCategory")
+const deviceState = require("../../model/enum/deviceState")
+
+const {Device} = require("../../model/schema/device")
 function getDevicesPage(req, res, next) {
     //TODO: Add functionality for the devices page
     renderAdminLayoutPlaceholder(req, res, "devices", {}, "Devices Page Here")
@@ -25,9 +32,62 @@ function getDeviceTypeDetailsPage(req, res, next) {
     renderAdminLayoutPlaceholder(req,res, "device_type_details", {}, "Device Type Details Page Here")
 }
 
+/**
+ * Get method to retrieve the details of the device from the staff side, which is then used to update the details of the device
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getUserDeviceDetailsPage(req, res, next) {
+    try {
+        const item = await getItemDetail(req.params.id)
+        const deviceType = await getAllDeviceType()
+        const brands = await getAllBrand()
+        const models = await getModels(item.brand._id, item.device_type._id)
+        const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
+        renderAdminLayout(req, res, "edit_details", {item, deviceType, brands, models, specs, dataService, deviceCategory, deviceState}, "User Device Details page")
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({error: 'internal server error'})
+    }
+
+}
+
+/**
+ * Get method to retrieve the details of the device from the staff side, which is then used to update the details of the device
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getModelsFromTypeAndBrand(req, res) {
+    const {deviceType, deviceBrand} = req.body
+    try {
+        const models = await getModels(deviceType, deviceBrand)
+        res.json({models})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({error: "internal server error"})
+    }
+}
+
+/**
+ * Update method to update the details of the device from the staff side, which is used when staff wants to change the device visibility, state etc.
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+
+const updateUserDeviceDetailsPage = async (req, res) => {
+    try{
+        const item_id = req.params.id;
+        console.log(req.body)
+        const updatedItem = await updateDeviceDetails(item_id, req.body)
+        res.status(200).send(updatedItem._id)
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 module.exports = {
     getDevicesPage,
     getFlaggedDevicesPage,
     getDeviceTypePage,
-    getDeviceTypeDetailsPage
+    getDeviceTypeDetailsPage,
+    getUserDeviceDetailsPage,
+    updateUserDeviceDetailsPage,
+    getModelsFromTypeAndBrand
 }
