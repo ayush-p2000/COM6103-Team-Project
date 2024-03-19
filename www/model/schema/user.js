@@ -32,6 +32,9 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true
         },
+        avatar: {
+          type: String,
+        },
         address: {
             address_1: {
                 type: String,
@@ -66,6 +69,12 @@ const userSchema = new mongoose.Schema({
             type: Buffer,
             required: true,
         },
+        savedCo2: {
+            type: Number,
+            required: true,
+            default: 0,
+            min: 0
+        },
         listed_devices:
             [
                 {
@@ -78,6 +87,12 @@ const userSchema = new mongoose.Schema({
         timestamps: true
     }
 );
+
+// Define a pre-save hook to generate the avatar URL based on first name and last name
+userSchema.pre('save', function(next) {
+    this.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.first_name)}+${encodeURIComponent(this.last_name)}`;
+    next();
+});
 
 module.exports = {
     User: mongoose.model('User', userSchema)
