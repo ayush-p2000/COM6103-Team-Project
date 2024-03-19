@@ -3,6 +3,11 @@ const {HAS_QUOTE} = require("../../model/enum/deviceState");
 const {DATA_WIPING} = require("../../model/enum/dataService");
 const {ACCEPTED} = require("../../model/enum/quoteState");
 
+/*
+ * This file is used to provide mock data for the application.
+ * This is used to provide data for testing purposes when real data is not available yet.
+ */
+
 const getMockUser = () => {
     return {
         firstName: "Elon",

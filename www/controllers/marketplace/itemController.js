@@ -148,9 +148,14 @@ async function getItemDetails(req, res, next) {
 }
 
 /*
- * ###################################################################
- * ## This function is called by the QR router, not the marketplace ##
- * ###################################################################
+ * ######################################################################
+ * ## These functions are called by the QR router, not the marketplace ##
+ * ######################################################################
+ */
+
+/**
+ * Render the QR code quote page for the given quote ID
+ * @author Benjamin Lister
  */
 async function getItemQrCodeView(req, res, next) {
     //Get the quote id from the request
@@ -164,6 +169,9 @@ async function getItemQrCodeView(req, res, next) {
         return;
     }
 
+    //A quote is deeemed active if it is not converted, rejected, or expired as these are end states
+    //This flag is used to block access to the quote if it is not active as it may contain sensitive information and
+    // this endpoint is publicly facing so that the QR code can be scanned by the buyer
     const quoteActive = quote.state !== CONVERTED && quote.state !== REJECTED && quote.state !== EXPIRED;
 
     //If the quote has been converted, rejected, or expired, then it should no longer be accessible on this page if it is not the listing_user
@@ -181,6 +189,8 @@ async function getItemQrCodeView(req, res, next) {
 
 
     //Return the QR code page
+    //Three functions are passed to the view so that the view can use them to display the quote information in
+    // a user-friendly way
     res.render('marketplace/qr_view', {
         quote,
         auth: req.isLoggedIn,
@@ -192,12 +202,23 @@ async function getItemQrCodeView(req, res, next) {
     })
 }
 
+/**
+ * The endpoint to confirm a quote. This is called by the /qr/:id/confirm endpoint and is intentioned to
+ *  be called by either the buyer or the seller after the buyer has paid for the item.
+ *  This action is intended to close the quote and move it into the converted state.
+ *  The actor must provide the final price, receipt ID, receipt date, and receipt image for verification on
+ *  our end.
+ * @author Benjamin Lister
+ */
 async function confirmQuote(req, res, next) {
     //Get the quote id from the request
     const {id} = req.params;
 
+    //TODO: get the quote from the database
     const quote = getMockQuote();
 
+    //If the quote is in a final state, this endpoint should reject the request as
+    // the quote is no longer active and is effectively closed and is therefore read-only
     if (quote.state === CONVERTED || quote.state === REJECTED || quote.state === EXPIRED) {
         res.status(400).send("Quote is not active");
         return;
@@ -242,6 +263,14 @@ async function confirmQuote(req, res, next) {
     }
 }
 
+/**
+ * The endpoint to reject a quote. This is called by the /qr/:id/reject endpoint and is intentioned to
+ * be called by either the buyer or the seller if the transaction cannot be completed.
+ * This could be due to a variety of reasons such as the buyer not paying, the seller not being able to
+ * provide the item as described, or any other reason that would prevent the transaction from being completed.
+ * This action is intended to close the quote and move it into the rejected state.
+ * @author Benjamin Lister
+ */
 function rejectQuote(req, res, next) {
     //Get the quote id from the request
     const {id} = req.params;
@@ -265,12 +294,21 @@ function rejectQuote(req, res, next) {
     }
 }
 
+/**
+ * Generates a QR code that links to the QR quote page for the given quote ID.
+ * The QR code is returned as a data URL so that it can be displayed in the browser.
+ * This endpoint should be used if a QR code is needed at runtime, i.e: when the QR code is displayed
+ *  in a modal
+ * @author Benjamin Lister
+ */
 async function generateQRCode(req, res, next) {
     //Get the quote id from the request
     const {id} = req.params;
 
+    //Generate the QR code
     const qr = await generateQR(id);
 
+    //Return the QR code as a data URL
     res.send(qr);
 }
 
