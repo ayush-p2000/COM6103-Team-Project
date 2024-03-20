@@ -35,7 +35,7 @@ async function getDeviceQuotation(item, providers) {
                         });
                         let quote = quote_data[0].split(' ')[0].replace('$20.00', '').split('£')[1];
                         console.log('ebay',quote)
-                        const quoteDetails = setQuoteDetails(provider, item, quote)
+                        const quoteDetails = setQuoteDetails(provider, item, quote, url+searchItem)
                         // console.log(quoteDetails)
                         await addQuote(quoteDetails);
                         quotation.push(quoteDetails)
@@ -84,7 +84,7 @@ async function getDeviceQuotation(item, providers) {
  * Method to set the quote details of a device
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
-function setQuoteDetails(provider, item, quote) {
+function setQuoteDetails(provider, item, quote, url) {
     const providerId = provider._id
     const today = new Date()
     const expiryDate = new Date(today)
@@ -93,6 +93,7 @@ function setQuoteDetails(provider, item, quote) {
         device: item._id,
         provider: providerId,
         value: parseFloat(quote),
+        url: url,
         state: false,
         expiry: expiryDate
     }

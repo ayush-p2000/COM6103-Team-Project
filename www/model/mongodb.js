@@ -130,6 +130,7 @@ async function addQuote(quoteDetails){
         const quote = new Quote({
             device: quoteDetails.device,
             provider: quoteDetails.provider,
+            url: quoteDetails.url,
             value: quoteDetails.value,
             state: quoteDetails.state,
             expiry: quoteDetails.expiry
@@ -141,6 +142,10 @@ async function addQuote(quoteDetails){
     }
 }
 
+/**
+ * Update method to save the quote state to the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function updateQuoteState(id, state) {
     try {
         return await Quote.updateOne({device: id}, {state: state})
@@ -149,6 +154,10 @@ async function updateQuoteState(id, state) {
     }
 }
 
+/**
+ * Update method to save the device state to the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function updateDeviceState(id, state) {
     try {
         return await Device.updateOne({device:id}, {state: state})
