@@ -2,7 +2,7 @@
  * This controller should handle any operations related to specific items in the marketplace (e.g. adding, removing, updating, etc.)
  */
 
-var {getItemDetail, getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice, getQuote, updateQuoteState, updateDeviceState} = require('../../model/mongodb');
+var {getItemDetail, getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice, getHistoryByDevice, getQuote, updateQuoteState, updateDeviceState} = require('../../model/mongodb');
 const {getMockItem} = require("../../util/mock/mockData");
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
@@ -16,9 +16,9 @@ const axios = require('axios')
  * @author Zhicong Jiang
  */
 const postListItem = async (req, res) => {
-    console.log("PostingItem")
     var id = req.params.id;
     try {
+        console.log(req.body)
         const files = req.files;
         const filePaths = [];
         for (let i = 0; i < files.length; i++) {
@@ -88,13 +88,38 @@ async function getModelByBrandAndType(req, res) {
 /**
  * Get item details to display it in the User's item detail page, where it shows the device specifications
  * Here also the device price quotes are retrieved from the database to display in the item page
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ * @author Vinroy Miltan DSouza & Zhicong Jiang
  */
 async function getItemDetails(req, res, next) {
-    const item = await getItemDetail(req.params.id)
-    const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
-    const quotes = await getQuote(req.params.id)
-    res.render('marketplace/item_details', {item, specs, quotes, deviceCategory, deviceState, auth: req.isLoggedIn, user:req.user, role: 'user'})
+    try{
+        const item = await getItemDetail(req.params.id)
+        var specs = []
+        var quotes
+        if (item.model != null) {
+            specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
+            quotes = await getQuote(req.params.id)
+        }else{
+            var deviceType = ""
+            var brand = ""
+            var model = ""
+            const customModel = await getHistoryByDevice(item._id)
+            customModel[0].data.forEach(data => {
+                if (data.name === "device_type"){
+                    deviceType = data.value
+                }else if(data.name === "brand"){
+                    brand = data.value
+                }else if(data.name === "model"){
+                    model = data.value
+                }
+            });
+            item.device_type = {name: deviceType}
+            item.brand = {name: brand}
+            item.model = {name: model}
+        }
+        res.render('marketplace/item_details', {item, specs, quotes, deviceCategory, deviceState, auth: req.isLoggedIn, user:req.user, role: 'user'})
+    }catch (e){
+        console.log(e)
+    }
 }
 
 async function updateQuote(req, res){
