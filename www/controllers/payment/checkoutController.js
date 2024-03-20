@@ -7,6 +7,7 @@ const {getMockPurchaseData} = require("../../util/mock/mockData");
 const {request} = require("express");
 
 function getCheckout(req, res, next) {
+    console.log(req.query.total)
     res.render('payment/checkout', {})
 }
 

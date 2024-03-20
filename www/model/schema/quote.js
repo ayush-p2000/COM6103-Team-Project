@@ -19,6 +19,9 @@ const quoteSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
+        url: {
+            type: String
+        },
         expiry: {
             type: Date,
             required: true

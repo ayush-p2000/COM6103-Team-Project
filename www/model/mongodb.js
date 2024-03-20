@@ -79,18 +79,18 @@ async function updateUser(id, user) {
 
 /**
  * Get method to retrieve the user items from mongodb database
- * @author Vinroy Miltan Dsouza
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getUserItems(id) {
     return Device.find({'listing_user': id}).populate({
-        path: 'device_type brand model',
+        path: 'device_type brand model listing_user',
         options: {strictPopulate: false}
     });
 }
 
 /**
  * Get method to retrieve a specific device details of the User from the database
- * @author Vinroy Miltan Dsouza
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getItemDetail(id) {
     return await Device.findOne({_id: id}).populate({
@@ -99,6 +99,72 @@ async function getItemDetail(id) {
     });
 }
 
+
+/**
+ * Get method to retrieve a quotation details of the device from the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getQuote(id) {
+    try {
+        return await Quote.find({device: id}).populate('provider')
+    } catch (err) {
+        console.log(err)
+    }
+
+}
+
+/**
+ * Get method to retrieve providers detail  from the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getProviders() {
+    return await Provider.find()
+}
+
+/**
+ * Add method to save the details of a new Quote to the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function addQuote(quoteDetails){
+    try {
+        const quote = new Quote({
+            device: quoteDetails.device,
+            provider: quoteDetails.provider,
+            url: quoteDetails.url,
+            value: quoteDetails.value,
+            state: quoteDetails.state,
+            expiry: quoteDetails.expiry
+        })
+        return await quote.save()
+    } catch (err) {
+        console.error("An error occurred while adding the quotes:", err);
+        throw err;
+    }
+}
+
+/**
+ * Update method to save the quote state to the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateQuoteState(id, state) {
+    try {
+        return await Quote.updateOne({device: id}, {state: state})
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+/**
+ * Update method to save the device state to the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateDeviceState(id, state) {
+    try {
+        return await Device.updateOne({device:id}, {state: state})
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 /**
  * Get a List of All DeviceType
@@ -285,9 +351,12 @@ const getHistoryByDevice = async (id) => {
     }
 }
 
-
+/**
+ * Get All Devices in DB
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 const getAllDevices = async () => {
-    return Device.find({});
+    return Device.find().populate('brand').populate('device_type').populate('model').populate('listing_user');
 }
 
 /**
@@ -338,6 +407,8 @@ async function updateDeviceDetails(id, deviceDetails) {
 }
 
 
+
+
 module.exports = {
     getAllUsers,
     getUserById,
@@ -358,7 +429,12 @@ module.exports = {
     addBrand,
     addModel,
     getDevice,
+    getQuote,
+    getProviders,
+    addQuote,
+    updateQuoteState,
     updateDevice,
+    updateDeviceDetails,
+    updateDeviceState,
     getHistoryByDevice,
-    updateDeviceDetails
 }
