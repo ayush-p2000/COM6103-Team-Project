@@ -4,7 +4,7 @@
 
 const {getMockAccountsList, getMockUser} = require('../../util/mock/mockData')
 const {renderAdminLayout, renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
-const {getAllUsers, getUserById, searchUserAndPopulate, searchUser} = require("../../model/mongodb");
+const {getAllUsers, getUserById, searchUserAndPopulate} = require("../../model/mongodb");
 
 async function getAccountsPage(req, res, next) {
     let users = [];
