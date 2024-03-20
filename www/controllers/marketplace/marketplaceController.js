@@ -5,10 +5,11 @@
 const mockData = require('../../util/mock/mockData')
 const { getPaginatedResults } = require("../../model/utils/utils")
 const { Device} = require("../../model/schema/device")
-const {getUserItems, getQuotes, getProviders, addQuotes} = require('../../model/mongodb')
+const {getUserItems, getQuote, getProviders, addQuote} = require('../../model/mongodb')
 const {join} = require("path");
 const deviceState =require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
+const {getDeviceQuotation} = require("../../util/web-scrape/getDeviceQuotation")
 const cheerio = require("cheerio");
 
 const getMarketplace = async (req, res, next) => {
@@ -23,70 +24,80 @@ const getMarketplace = async (req, res, next) => {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getMyItems(req, res, next) {
-    const items = await getUserItems(req.user.id)
+    const devices = await getUserItems(req.user.id)
     const providers = await getProviders()
     let quotations = []
-    for (const item of items) {
-        let quotes = await getQuotes(item._id)
+    let items = []
+    for (let device of devices) {
+        let quotes = await getQuote(device._id)
         if(quotes.length === 0) {
-            console.log('No quotes available')
-            quotes = await getDeviceQuotation(item, providers)
+            if (Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) !== 'UNKNOWN') {
+                console.log('No quotations available')
+                quotes = await getDeviceQuotation(device, providers)
+            }
+        }
+        if(Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) !== 'UNKNOWN') {
+            items.push(device)
         }
         quotations.push(quotes)
     }
-    console.log(quotations)
-    res.render('marketplace/my_items', {items, quotations, deviceState, deviceCategory, auth: req.isLoggedIn, user:req.user, role:'user'})
+    // console.log(quotations)
+    res.render('marketplace/my_items', {items, quotations, deviceState,  deviceCategory, auth: req.isLoggedIn, user:req.user, role:'user'})
 }
 
-/**
- * Get method to fetch the quotation details from third-party providers like ebay etc.
- * Here we are using web scraper to fetch the price details from providers and saving it in the database
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
- */
-const getDeviceQuotation = async (item, providers) => {
-    const url = 'https://www.ebay.co.uk/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw='
-    const searchItem = item.model.name.replace(' '+ '+')
-    let quote_data = []
-    try {
-        fetch(url+searchItem)
-            .then(response => {
-                if(!response.ok) {
-                    throw new Error("No response from ebay")
-                }
-                return response.text()
-            })
-            .then( async html => {
-                const $ = cheerio.load(html)
-                const data = $('.s-item__wrapper')
-                data.each(() => {
-                    const price = $('.s-item__price').text()
-                    quote_data.push(price)
-                })
-                let quote = quote_data[0].split(' ')[0].replace('$20.00', '').split('£')[1]
-                var providerId
-                providers.forEach(provider => {
-                    if (provider.name === 'ebay') {
-                        providerId = provider._id
-                    }
-                })
 
-                const today = new Date()
-                const expiryDate = new Date(today)
-                expiryDate.setDate(today.getDate() + 3)
-                const quoteDetails = {
-                    device: item._id,
-                    provider: providerId,
-                    value: parseFloat(quote),
-                    state: false,
-                    expiry: expiryDate
-                }
-                return await addQuotes(quoteDetails)
-            })
+// async function getDeviceQuotation(item, provider) {
+//     let url
+//     let searchItem
+//     let quote_data = []
+//     try {
+//         const url = 'https://www.ebay.co.uk/sch/i.html?_nkw=';
+//         const searchItem = item.model.name.replace(' ', '+');
+//
+//         fetch(url + searchItem)
+//             .then(response => {
+//                 if (!response.ok) {
+//                     throw new Error("No response from eBay");
+//                 }
+//                 return response.text();
+//             })
+//             .then(async html => {
+//                 const cheerio = require('cheerio'); // Import cheerio library
+//                 const $ = cheerio.load(html);
+//                 const quote_data = []; // Initialize quote_data array
+//                 const data = $('.s-item__wrapper');
+//                 data.each(() => { // Use parameters index and element in each loop
+//                     const price = $('.s-item__price').text(); // Find price within each element
+//                     quote_data.push(price);
+//                 });
+//                 let quote = quote_data[0].split(' ')[0].replace('$20.00', '').split('£')[1];
+//                 console.log(quote)
+//                 const providerId = provider[1]._id;
+//                 const today = new Date();
+//                 const expiryDate = new Date(today);
+//                 expiryDate.setDate(today.getDate() + 3);
+//                 const quoteDetails = {
+//                     device: item._id,
+//                     provider: providerId,
+//                     value: parseFloat(quote),
+//                     state: false,
+//                     expiry: expiryDate
+//                 };
+//                 // return await addQuote(quoteDetails);
+//             })
+//             .then(result => {
+//                 console.log("Quote added successfully:", result);
+//             })
+//             .catch(error => {
+//                 console.error("Error:", error);
+//             });
+//
+//     } catch (err){
+//         console.log(err)
+//     }
+// }
 
-    } catch (err){
-        console.log(err)
-    }
-}
+
 
 
 module.exports = {

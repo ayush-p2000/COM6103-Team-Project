@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {postListItem,getListItem,getModelByBrandAndType, getItemDetails, getItemQrCode} = require("../controllers/marketplace/itemController");
+const {postListItem,getListItem,getModelByBrandAndType, getItemDetails, getItemQrCode, updateQuote} = require("../controllers/marketplace/itemController");
 const {getMarketplace, getMyItems} = require("../controllers/marketplace/marketplaceController");
 
 /**
@@ -36,6 +36,7 @@ router.get('/item/:id/qr', getItemQrCode);
 router.get('/list-item/:id?', getListItem);
 router.post('/list-item/:id?',upload.array('photos', 6), postListItem);
 router.get('/getModelByBrandAndType', getModelByBrandAndType);
+router.post('/item/:id',upload.none(), updateQuote)
 
 
 module.exports = router;

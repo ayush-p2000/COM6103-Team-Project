@@ -83,7 +83,7 @@ async function updateUser(id, user) {
  */
 async function getUserItems(id) {
     return Device.find({'listing_user': id}).populate({
-        path: 'device_type brand model',
+        path: 'device_type brand model listing_user',
         options: {strictPopulate: false}
     });
 }
@@ -104,7 +104,7 @@ async function getItemDetail(id) {
  * Get method to retrieve a quotation details of the device from the database
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
-async function getQuotes(id) {
+async function getQuote(id) {
     try {
         return await Quote.find({device: id}).populate('provider')
     } catch (err) {
@@ -125,7 +125,7 @@ async function getProviders() {
  * Add method to save the details of a new Quote to the database
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
-async function addQuotes(quoteDetails){
+async function addQuote(quoteDetails){
     try {
         const quote = new Quote({
             device: quoteDetails.device,
@@ -141,14 +141,21 @@ async function addQuotes(quoteDetails){
     }
 }
 
-async function saveQrState(id) {
+async function updateQuoteState(id, state) {
     try {
-        return await Quote.updateOne({device: id}, {state: 1})
+        return await Quote.updateOne({device: id}, {state: state})
     } catch (err) {
         console.log(err)
     }
 }
 
+async function updateDeviceState(id, state) {
+    try {
+        return await Device.updateOne({device:id}, {state: state})
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 /**
  * Get a List of All DeviceType
@@ -313,6 +320,7 @@ async function updateDeviceDetails(id, deviceDetails) {
 
 
 
+
 module.exports = {
     getAllUsers,
     getUserById,
@@ -329,10 +337,11 @@ module.exports = {
     listDevice,
     getAllDevices,
     getDevice,
-    getQuotes,
+    getQuote,
     getProviders,
-    addQuotes,
-    saveQrState,
+    addQuote,
+    updateQuoteState,
     updateDevice,
-    updateDeviceDetails
+    updateDeviceDetails,
+    updateDeviceState
 }

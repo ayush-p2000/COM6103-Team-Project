@@ -2,10 +2,11 @@
  * This controller should handle any operations related to specific items in the marketplace (e.g. adding, removing, updating, etc.)
  */
 
-var {getItemDetail, getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice, getQuotes} = require('../../model/mongodb');
+var {getItemDetail, getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice, getQuote, updateQuoteState, updateDeviceState} = require('../../model/mongodb');
 const {getMockItem} = require("../../util/mock/mockData");
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
+const quoteState = require("../../model/enum/quoteState")
 const cheerio = require('cheerio')
 const axios = require('axios')
 
@@ -92,11 +93,29 @@ async function getModelByBrandAndType(req, res) {
 async function getItemDetails(req, res, next) {
     const item = await getItemDetail(req.params.id)
     const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
-    const quotes = await getQuotes(req.params.id)
+    const quotes = await getQuote(req.params.id)
     res.render('marketplace/item_details', {item, specs, quotes, deviceCategory, deviceState, auth: req.isLoggedIn, user:req.user, role: 'user'})
 }
 
+async function updateQuote(req, res){
+    try {
+        const state = req.body.state
+        console.log(state)
+        console.log(quoteState[state])
+        const value = quoteState[state]
+        const device_state = deviceState['HAS_QUOTE']
+        const updated_quote = await updateQuoteState(req.params.id, value)
+        if (updated_quote) {
+            await updateDeviceState(req.params.id, device_state)
+        }
+    } catch (err ) {
+        console.log(err)
+    }
+}
 
+// function updateDeviceState(req, res) {
+//
+// }
 
 function getItemQrCode(req, res, next) {
     //TODO: Add functionality for generating QR code for item
@@ -108,5 +127,6 @@ module.exports = {
     getListItem,
     getModelByBrandAndType,
     getItemDetails,
-    getItemQrCode
+    getItemQrCode,
+    updateQuote
 }
