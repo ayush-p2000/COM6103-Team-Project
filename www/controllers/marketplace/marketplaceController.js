@@ -83,9 +83,10 @@ async function getMyItems(req, res, next) {
                     quotes = await getDeviceQuotation(device, providers)
                 }
             }
-            if(Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) !== 'UNKNOWN') {
-                items.push(device)
-            }
+            // if(Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) !== 'UNKNOWN') {
+            //     items.push(device)
+            // }
+            items.push(device)
             quotations.push(quotes)
         }
         res.render('marketplace/my_items', {items, quotations, deviceState, deviceCategory, auth: req.isLoggedIn, user:req.user, role:'user'})
