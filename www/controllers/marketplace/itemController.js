@@ -108,39 +108,55 @@ async function getModelByBrandAndType(req, res) {
  */
 async function getItemDetails(req, res, next) {
     try {
-    const item = await getItemDetail(req.params.id)
-    var specs = []
-    if (item.model != null) {
-        const specProp = item.model.properties.find(property => property.name === 'specifications')?.value;
-        if (specProp != null) {
-            specs = JSON.parse(specProp)
-        } else {
-            specs = []
-        }
-    } else {
-        var deviceType = ""
-        var brand = ""
-        var model = ""
-        const customModel = await getHistoryByDevice(item._id)
-        customModel[0].data.forEach(data => {
-            if (data.name === "device_type") {
-                deviceType = data.value
-            } else if (data.name === "brand") {
-                brand = data.value
-            } else if (data.name === "model") {
-                model = data.value
+        const item = await getItemDetail(req.params.id)
+        var specs = []
+        if (item.model != null) {
+            const specProp = item.model.properties.find(property => property.name === 'specifications')?.value;
+            if (specProp != null) {
+                specs = JSON.parse(specProp)
+            } else {
+                specs = []
             }
-        });
-        item.device_type = {name: deviceType}
-        item.brand = {name: brand}
-        item.model = {name: model}
-    }
-    // item.photos.forEach((photo, index) => {
-    //     item.photos[index] = photo.slice(7)
-    // })
-    const quotes = await getQuotes(req.params.id)
-    res.render('marketplace/item_details', {item, specs, deviceCategory, deviceState, quotes, auth: req.isLoggedIn, user:req.user, role: 'user'})
-        } catch (e) {
+        } else {
+            var deviceType = ""
+            var brand = ""
+            var model = ""
+            const customModel = await getHistoryByDevice(item._id)
+            customModel[0].data.forEach(data => {
+                if (data.name === "device_type") {
+                    deviceType = data.value
+                } else if (data.name === "brand") {
+                    brand = data.value
+                } else if (data.name === "model") {
+                    model = data.value
+                }
+            });
+            item.device_type = {name: deviceType}
+            item.brand = {name: brand}
+            item.model = {name: model}
+        }
+        // item.photos.forEach((photo, index) => {
+        //     item.photos[index] = photo.slice(7)
+        // })
+        const quotes = await getQuotes(req.params.id)
+
+        // Add a QR code to each quote
+        for (let quote of quotes) {
+            const qr = await generateQR(quote._id);
+            quote.qr_code = qr;
+        }
+
+        res.render('marketplace/item_details', {
+            item,
+            specs,
+            deviceCategory,
+            deviceState,
+            quotes,
+            auth: req.isLoggedIn,
+            user: req.user,
+            role: 'user',
+        })
+    } catch (e) {
         console.log(e)
         res.status(500);
         next({message: "Internal server error"});
