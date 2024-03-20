@@ -28,7 +28,7 @@
 
             <p class="lead text-muted"><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) %></p>
 
-            <% if(Object.keys(deviceState).find(key => deviceState[key] === item.state) !== 'LISTED' && item.listing_user.toString() === user.id) {%>
+            <% if(Object.keys(deviceState).find(key => deviceState[key] === item.state) !== 'LISTED' && item.listing_user._id.toString() === user.id) {%>
                 <a href="/list-item/<%= item._id %>" class="btn btn-primary" >Edit Details</a>
             <% } %>
 

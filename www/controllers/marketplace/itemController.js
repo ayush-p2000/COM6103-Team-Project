@@ -57,10 +57,22 @@ async function getListItem(req, res) {
     }else{
         try{
             let device = await getDevice(id);
+            console.log(device)
+            if (device[0].model == null){
+                let customModel = await getHistoryByDevice(id)
+                customModel[0].data.forEach(data => {
+                    if (data.name === "device_type") {
+                        device[0].device_type = {name: data.value}
+                    } else if (data.name === "brand") {
+                        device[0].brand = {name: data.value}
+                    } else if (data.name === "model") {
+                        device[0].model = {name: data.value,properties: []}
+                    }
+                });
+            }
             res.render('marketplace/edit_item', {
                 auth: req.isLoggedIn,user:req.user, role: 'user', device: device[0]
             });
-            // res.send(device)
         }catch (err){
             console.log(err)
         }

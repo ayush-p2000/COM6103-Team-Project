@@ -31,7 +31,7 @@
                                     <label for="deviceType" class="col-sm-6 col-lg-4 col-form-label fw-bold">Device Type</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceType">
-                                            <option value="<%= device.device_type._id %>"><%= device.device_type.name %></option>
+                                            <option value="-1"><%= device.device_type.name %></option>
                                         </select>
                                     </div>
                                 </div>
@@ -56,23 +56,25 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-xl-4" id="selected-model-content">
-                                <div class="card p-3 ">
-                                    <div class="row" id="selected-model-content">
-                                        <div class="col-3">
-                                            <img src="<%= device.model.properties[0].value %>" class="img-fluid rounded-start" >
-                                        </div>
-                                        <div class="col-9">
-                                            <div class="card-body p-0">
-                                                <h5 class="card-title"><%= device.model.name %></h5>
-                                                <p class="card-text m-0"><small>Device Type:</small> <%= device.device_type.name %></p>
-                                                <p class="card-text m-0"><small>Brand:</small> <%= device.brand.name %></p>
-                                                <p class="card-text"><small class="text-muted">Release at <%= device.model.properties[2].value %></small></p>
+                            <% if (device.model.properties.length > 0){%>
+                                <div class="col-12 col-md-6 col-xl-4" id="selected-model-content">
+                                    <div class="card p-3 ">
+                                        <div class="row" id="selected-model-content">
+                                            <div class="col-3">
+                                                <img src="<%= device.model.properties[0].value %>" class="img-fluid rounded-start" >
+                                            </div>
+                                            <div class="col-9">
+                                                <div class="card-body p-0">
+                                                    <h5 class="card-title"><%= device.model.name %></h5>
+                                                    <p class="card-text m-0"><small>Device Type:</small> <%= device.device_type.name %></p>
+                                                    <p class="card-text m-0"><small>Brand:</small> <%= device.brand.name %></p>
+                                                    <p class="card-text"><small class="text-muted">Release at <%= device.model.properties[2].value %></small></p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            <%}%>
                         </div>
                     </div>
 
