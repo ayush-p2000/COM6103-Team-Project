@@ -7,6 +7,7 @@ const {getMockItem} = require("../../util/mock/mockData");
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
 const quoteState = require("../../model/enum/quoteState")
+const dataService = require("../../model/enum/dataService")
 const cheerio = require('cheerio')
 const axios = require('axios')
 
@@ -130,17 +131,12 @@ async function updateQuote(req, res){
         const value = quoteState[state]
         const device_state = deviceState['HAS_QUOTE']
         const updated_quote = await updateQuoteState(req.params.id, value)
-        if (updated_quote) {
-            await updateDeviceState(req.params.id, device_state)
-        }
+        await updateDeviceState(req.params.id, device_state)
     } catch (err ) {
         console.log(err)
     }
 }
 
-// function updateDeviceState(req, res) {
-//
-// }
 
 function getItemQrCode(req, res, next) {
     //TODO: Add functionality for generating QR code for item
@@ -153,5 +149,5 @@ module.exports = {
     getModelByBrandAndType,
     getItemDetails,
     getItemQrCode,
-    updateQuote
+    updateQuote,
 }

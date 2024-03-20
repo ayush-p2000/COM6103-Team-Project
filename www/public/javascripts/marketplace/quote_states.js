@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const acceptBtn = document.getElementById('accept-quote')
     const rejectBtn = document.getElementById('reject-quote')
     const starBtn = document.getElementById('star-quote')
+    const quoteState = document.getElementById('quoteState')
 
     const deviceRecycle = document.getElementById('stateYes')
     const dataService = document.getElementById('serviceYes')
@@ -23,18 +24,21 @@ document.addEventListener("DOMContentLoaded", function() {
         form = new FormData()
         form.append('state', 'ACCEPTED')
         updateQuote()
+        quoteState.innerText = 'Accepted'
     })
 
     rejectBtn.addEventListener('click', () => {
         form = new FormData()
         form.append('state', 'REJECTED')
         updateQuote()
+        quoteState.innerText = 'Rejected'
     })
 
     starBtn.addEventListener('click', () => {
         form = new FormData()
         form.append('state', 'SAVED')
         updateQuote()
+        quoteState.innerText = 'Starred'
     })
 
     checkBtn.addEventListener('click', () => {

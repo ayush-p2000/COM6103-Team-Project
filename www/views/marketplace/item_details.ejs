@@ -79,19 +79,22 @@
                             <h5 class="card-title">Price: £<%= quote.value %></h5>
                             <p class="card-text">Quotation from <%= quote.provider.name %> for the same product or similar products.</p>
                             <p class="card-text"><small>Fetched from <%= quote.provider.name %> site</small></p>
+                            <p id="quoteState"></p>
                         </div>
                     </div>
 
                     <div class="row1">
                         <div class="col-md-1 mt-2 mx-auto">
-                            <% if (quote.provider.name === 'ebay') { %>
-                                    <a href="https://www.ebay.co.uk/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw=<%= item.model.name.replace(' ','+') %>" target="_blank" class="btn btn-primary">Visit <%= quote.provider.name.toUpperCase() %></a>
-                            <% } else { %>
-                                    <a href="https://uk.webuy.com/sell/search/?stext=<%= item.model.name.replace(' ','+') %>" target="_blank" class="btn btn-primary">Visit <%= quote.provider.name.toUpperCase() %></a>
-                                <% } %>
-                            <a class="btn btn-warning" id="star-quote">Star Quote</a>
-                            <a class="btn btn-primary" id="accept-quote">Accept Quote</a>
-                            <a class="btn btn-danger" id="reject-quote">Reject Quote</a>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <% if (quote.provider.name === 'ebay') { %>
+                                        <a href="https://www.ebay.co.uk/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw=<%= item.model.name.replace(' ','+') %>" target="_blank" class="btn btn-primary mx-2 my-2">Visit <%= quote.provider.name.toUpperCase() %></a>
+                                <% } else { %>
+                                        <a href="https://uk.webuy.com/sell/search/?stext=<%= item.model.name.replace(' ','+') %>" target="_blank" class="btn btn-primary mx-2 my-2">Visit <%= quote.provider.name.toUpperCase() %></a>
+                                    <% } %>
+                                <a class="btn btn-warning mx-2 my-2" id="star-quote">Star Quote</a>
+                                <a class="btn btn-primary mx-2 my-2" id="accept-quote">Accept Quote</a>
+                                <a class="btn btn-danger mx-2 my-2" id="reject-quote">Reject Quote</a>
+                            </div>
                         </div>
 
                     </div>
