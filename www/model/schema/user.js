@@ -69,6 +69,10 @@ const userSchema = new mongoose.Schema({
             type: Buffer,
             required: true,
         },
+        token: {
+            type: String,
+            default: null
+        },
         savedCo2: {
             type: Number,
             required: true,

@@ -5,7 +5,7 @@ const {
     getLoginPage,
     getRegisterPage,
     registerUser,
-    logoutUser
+    logoutUser, getForgotPassword, getForgotUser, sendResetPasswordEmail, resetPassword, getResetPasswordPage
 } = require("../controllers/auth/authenticationController");
 const {validateRegistration, validateLogin} = require("../middlewares/validators")
 const {isAuthenticated} = require("../middlewares/auth");
@@ -18,5 +18,12 @@ router.post("/logout", isAuthenticated, logoutUser)
 
 router.get('/register', getRegisterPage);
 router.post('/register', validateCaptcha, validateRegistration, registerUser)
+
+router.get('/forgot-password', getForgotPassword);
+router.post('/forgot-password', getForgotUser);
+
+router.get('/reset-password', getResetPasswordPage);
+router.post('/reset-password', resetPassword);
+
 
 module.exports = router;
