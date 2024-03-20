@@ -2,10 +2,15 @@
  * This controller should handle any operations related to specific items in the marketplace (e.g. adding, removing, updating, etc.)
  */
 
-var {getItemDetail, getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice, getHistoryByDevice} = require('../../model/mongodb');
+var {getItemDetail, getAllDeviceType, getAllBrand, getModels, listDevice, getDevice, updateDevice, getHistoryByDevice, getQuote, updateQuoteState, updateDeviceState} = require('../../model/mongodb');
 const {getMockItem} = require("../../util/mock/mockData");
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
+const quoteState = require("../../model/enum/quoteState")
+const dataService = require("../../model/enum/dataService")
+const cheerio = require('cheerio')
+const axios = require('axios')
+
 
 /**
  * Handling Request to post item base on the info in request body
@@ -95,14 +100,17 @@ async function getModelByBrandAndType(req, res) {
 
 /**
  * Get item details to display it in the User's item detail page, where it shows the device specifications
+ * Here also the device price quotes are retrieved from the database to display in the item page
  * @author Vinroy Miltan DSouza & Zhicong Jiang
  */
 async function getItemDetails(req, res, next) {
     try{
         const item = await getItemDetail(req.params.id)
         var specs = []
+        var quotes
         if (item.model != null) {
             specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
+            quotes = await getQuote(req.params.id)
         }else{
             var deviceType = ""
             var brand = ""
@@ -121,11 +129,26 @@ async function getItemDetails(req, res, next) {
             item.brand = {name: brand}
             item.model = {name: model}
         }
-        res.render('marketplace/item_details', {item, specs, deviceCategory, deviceState, auth: req.isLoggedIn, user:req.user, role: 'user'})
+        res.render('marketplace/item_details', {item, specs, quotes, deviceCategory, deviceState, auth: req.isLoggedIn, user:req.user, role: 'user'})
     }catch (e){
         console.log(e)
     }
 }
+
+async function updateQuote(req, res){
+    try {
+        const state = req.body.state
+        console.log(state)
+        console.log(quoteState[state])
+        const value = quoteState[state]
+        const device_state = deviceState['HAS_QUOTE']
+        const updated_quote = await updateQuoteState(req.params.id, value)
+        await updateDeviceState(req.params.id, device_state)
+    } catch (err ) {
+        console.log(err)
+    }
+}
+
 
 function getItemQrCode(req, res, next) {
     //TODO: Add functionality for generating QR code for item
@@ -137,5 +160,6 @@ module.exports = {
     getListItem,
     getModelByBrandAndType,
     getItemDetails,
-    getItemQrCode
+    getItemQrCode,
+    updateQuote,
 }
