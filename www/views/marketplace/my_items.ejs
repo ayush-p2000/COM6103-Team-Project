@@ -73,9 +73,7 @@
                         <!--   TODO: once quotation is done, add the price here        -->
                         <% quotations.forEach(quoteArray => { %>
                             <% if (quoteArray.length > 0) { %>
-                                <% const firstQuote = quoteArray[0]; %>
-                                <% console.log(firstQuote.device) %>
-                                <% console.log(item._id) %>
+                                <% const firstQuote = quoteArray[0] %>
                                 <% if(firstQuote.device.equals(item._id)) { %>
                                     <p class="m-0 p-0 text-muted"><small>Price: </small>£<%= firstQuote.value %></p>
                                 <% } %>

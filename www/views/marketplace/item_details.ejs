@@ -36,15 +36,13 @@
         </div>
 
         <div class="col-md-6">
-            <h3 class="display-4 fw-bold mb-3"><%= item.model.name %><span
-                        class="badge <%= Object.keys(deviceState).find(key => deviceState[key] === item.state) === 'LISTED' ? 'bg-success' : 'bg-warning' %> ms-2"
-                        style="font-size: 0.3em;"><%= Object.keys(deviceState).find(key => deviceState[key] === item.state) %></span>
-            </h3>
+            <h3 class="display-4 fw-bold mb-3" id="modelName"><%= item.model.name %><span class="badge <%= Object.keys(deviceState).find(key => deviceState[key] === item.state) === 'LISTED' ? 'bg-success': 'bg-warning'%> ms-2"
+                                                                           style="font-size: 0.3em;" id="stateBadge"><%= Object.keys(deviceState).find(key => deviceState[key] === item.state) %></span></h3>
 
             <p class="lead text-muted"><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) %></p>
 
-            <% if(Object.keys(deviceState).find(key => deviceState[key] === item.state) !== 'LISTED' && item.listing_user.toString() === user.id) { %>
-                <a href="/list-item/<%= item._id %>" class="btn btn-primary">Edit Details</a>
+            <% if(Object.keys(deviceState).find(key => deviceState[key] === item.state) !== 'LISTED' && item.listing_user._id.toString() === user.id) {%>
+                <a href="/list-item/<%= item._id %>" class="btn btn-primary" >Edit Details</a>
             <% } %>
 
             <hr class="my-4">
@@ -90,122 +88,103 @@
         <div class="col-md-12">
             <!--     Show device if the category is current       -->
             <% if(Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) === "CURRENT") { %>
-                <h5 class="fw-bold mt-4">Quotes</h5>
-                <% quotes.forEach( quote => { %>
+            <h5 class="fw-bold mt-4">Quotes</h5>
+            <% quotes.forEach( quote => {  %>
+            <div class="row">
+                <div class="col-md-12">
+            <div class="card border-primary mt-3">
+                <div class="row g-0 justify-content-between">
+                    <div class="col-md-2 mt-2 align-middle">
+                        <img src="<%= quote.provider.logo %>" class="img-fluid rounded-start" alt="logo">
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card-body">
+                            <div class="row">
+                            <h5 class="card-title">Price: £<%= quote.value %></h5>
+                            <p class="card-text">Quotation from <%= quote.provider.name %> for the same product or similar products.</p>
+                            <p class="card-text"><small>Fetched from <%= quote.provider.name %> site</small></p>
+                            <p id="quoteState"></p>
+                            </div>
+
+
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="card border-primary mt-3">
-                                <div class="row g-0 justify-content-between">
-                                    <div class="col-md-2 mt-2 align-middle">
-                                        <img src="<%= quote.provider.logo %>" class="img-fluid rounded-start"
-                                             alt="logo">
+                        <div class="col-md-12 mt-2 mx-auto">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="<%= quote.url %>" target="_blank" class="btn btn-primary mx-2 my-2">Visit <%= quote.provider.name.toUpperCase() %></a>
+                                <a class="btn btn-warning mx-2 my-2" id="star-quote">Star Quote</a>
+                                <a class="btn btn-primary mx-2 my-2" id="accept-quote">Accept Quote</a>
+                                <a class="btn btn-danger mx-2 my-2" id="reject-quote">Reject Quote</a>
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="row justify-content-center align-items-center">
+                                    <div class="col-12">
+                                        <p class="fs-6 fst-italic text-center">Click the QR code to see a larger
+                                            version</p>
                                     </div>
-                                    <div class="col-md-7">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <h5 class="card-title">Price: £<%= quote.value %></h5>
-                                                <p class="card-text">Quotation from <%= quote.provider.name %> for the
-                                                    same
-                                                    product
-                                                    or similar products.</p>
-                                                <p class="card-text"><small>Fetched from <%= quote.provider.name %>
-                                                        site</small></p>
-                                            </div>
+                                </div>
 
-                                            <div class="row">
-                                                <div class="col-md-12 mt-2 mx-auto">
-                                                    <% if (quote.provider.name === 'ebay') { %>
-                                                        <a href="https://www.ebay.co.uk/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw=<%= item.model.name.replace(' ', '+') %>"
-                                                           target="_blank"
-                                                           class="btn btn-primary">Visit <%= quote.provider.name.toUpperCase() %></a>
-                                                    <% } else { %>
-                                                        <a href="https://uk.webuy.com/sell/search/?stext=<%= item.model.name.replace(' ', '+') %>"
-                                                           target="_blank"
-                                                           class="btn btn-primary">Visit <%= quote.provider.name.toUpperCase() %></a>
-                                                    <% } %>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="row justify-content-between align-items-center">
+                                    <div class="col-10 d-flex justify-content-center">
+                                        <a onclick="showQRModal('<%= quote._id %>')">
+                                            <img class="img-thumbnail h-100 hover-shadow"
+                                                 src="<%= quote.qr_code %>" alt="Quote QR Code">
+                                        </a>
                                     </div>
-
-                                    <div class="col-md-3">
-                                        <div class="card h-100">
-                                            <div class="card-body">
-                                                <div class="row justify-content-center align-items-center">
-                                                    <div class="col-12">
-                                                        <p class="fs-6 fst-italic text-center">Click the QR code to see a larger
-                                                            version</p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row justify-content-between align-items-center">
-                                                    <div class="col-10 d-flex justify-content-center">
-                                                        <a onclick="showQRModal('<%= quote._id %>')">
-                                                            <img class="img-thumbnail h-100 hover-shadow"
-                                                                 src="<%= quote.qr_code %>" alt="Quote QR Code">
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-2 d-flex justify-content-center align-content-center">
-                                                        <a href="/qr/<%= quote._id %>" class="hover-grow">
-                                                            <i class="fa-solid fa-chevron-right fa-5x my-auto"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="col-2 d-flex justify-content-center align-content-center">
+                                        <a href="/qr/<%= quote._id %>" class="hover-grow">
+                                            <i class="fa-solid fa-chevron-right fa-5x my-auto"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                <% }) %>
+                </div>
+            </div>
+                </div>
+            </div>
+            <% })%>
             <% } %>
         </div>
-
-        <!--     Show device if the category is recycle       -->
-        <% if(Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) === "RECYCLE") { %>
-            <div class="row">
-                <div class="col-md-12">
-
-                    <h5 class="fw-bold mt-4">Do you want to Recycle your device?</h5>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <input type="radio" class="btn-check" name="stateRadio" id="stateYes"
-                               autocomplete="off" <%= item.category === 2 ? 'checked' : '' %>>
-                        <label class="btn btn-outline-primary" for="stateYes">Yes</label>
-
-                        <input type="radio" class="btn-check" name="stateRadio" id="stateNo"
-                               autocomplete="off" <%= item.category !== 2 ? 'checked' : '' %>>
-                        <label class="btn btn-outline-primary" for="stateNo">No</label>
-                    </div>
-                    <h5 class="fw-bold mt-4">Do you want to do data retrieval? It'll cost you an extra £8.99 for the
-                        service</h5>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <input type="radio" class="btn-check" name="serviceRadio" id="serviceYes"
-                               autocomplete="off" <%= item.data_service === 2 ? 'checked' : '' %>>
-                        <label class="btn btn-outline-primary" for="serviceYes">Yes</label>
-
-                        <input type="radio" class="btn-check" name="serviceRadio" id="serviceNo"
-                               autocomplete="off" <%= item.data_service !== 2 ? 'checked' : '' %>>
-                        <label class="btn btn-outline-primary" for="serviceNo">No</label>
-                    </div>
-                    <a href="/checkout" class="btn btn-success">Checkout</a>
-                </div>
-            </div>
-        <% } %>
-
         <!--     Show device if the category is rare    -->
         <% if(Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) === "RARE") { %>
-            <div class="row">
-                <div class="col-md-12">
-                    <h5 class="fw-bold mt-4">Since the device is rare to find, you can auction the device on
-                        eBay</h5>
-                    <a href="https://www.ebay.co.uk/sl/prelist/suggest" target="_blank" class="btn btn-primary">
-                        Click
-                        here to
-                        go to eBay auction site</a>
-                </div>
+        <div class="row">
+            <div class="col-md-12">
+            <h5 class="fw-bold mt-4">Due to it's rarity, this device can be auctioned</h5>
+            <a href="https://www.ebay.co.uk/sl/prelist/suggest" target="_blank" class="btn btn-primary"> Click here to go to eBay auction site</a>
             </div>
+        </div>
         <% } %>
+        <!--     Show device if the category is recycle       -->
+        <div class="row">
+            <div class="col-md-12">
+        <h5 class="fw-bold mt-4">Do you want to Recycle your device?</h5>
+        <div class="btn-group btn-group-sm" role="group">
+            <input type="radio" class="btn-check" name="stateRadio" id="stateYes" autocomplete="off" <%= item.category === 2 ? 'checked' : ''%>>
+            <label class="btn btn-outline-primary" for="stateYes">Yes</label>
+
+            <input type="radio" class="btn-check" name="stateRadio" id="stateNo" autocomplete="off" <%= item.category !== 2 ? 'checked' : ''%>>
+            <label class="btn btn-outline-primary" for="stateNo">No</label>
+        </div>
+        <h5 class="fw-bold mt-4">Do you want to do data retrieval? It'll cost you an extra £8.99 for the service</h5>
+        <div class="btn-group btn-group-sm" role="group">
+            <input type="radio" class="btn-check" name="serviceRadio" id="serviceYes" autocomplete="off" <%= item.data_service === 2 ? 'checked' : ''%>>
+            <label class="btn btn-outline-primary" for="serviceYes">Yes</label>
+
+            <input type="radio" class="btn-check" name="serviceRadio" id="serviceNo" autocomplete="off" <%= item.data_service !== 2 ? 'checked' : ''%>>
+            <label class="btn btn-outline-primary" for="serviceNo">No</label>
+        </div>
+        <a class="btn btn-success" id="checkBtn">Checkout</a>
+            </div>
+        </div>
+        </div>
     </div>
 </div>
 
@@ -244,7 +223,7 @@
 </section>
 
 <script src="/javascripts/marketplace/item_details.js"></script>
-
+<script src="/javascripts/marketplace/quote_states.js"></script>
 
 <%- include('../components/footer.ejs') %>
 

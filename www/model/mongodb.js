@@ -85,7 +85,7 @@ async function updateUser(id, user) {
  */
 async function getUserItems(id) {
     return Device.find({'listing_user': id}).populate({
-        path: 'device_type brand model',
+        path: 'device_type brand model listing_user',
         options: {strictPopulate: false}
     });
 }
@@ -106,7 +106,7 @@ async function getItemDetail(id) {
  * Get method to retrieve a quotation details of the device from the database
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
-async function getQuotes(id) {
+async function getQuote(id) {
     try {
         return await Quote.find({device: id}).populate('provider')
     } catch (err) {
@@ -127,11 +127,12 @@ async function getProviders() {
  * Add method to save the details of a new Quote to the database
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
-async function addQuotes(quoteDetails){
+async function addQuote(quoteDetails){
     try {
         const quote = new Quote({
             device: quoteDetails.device,
             provider: quoteDetails.provider,
+            url: quoteDetails.url,
             value: quoteDetails.value,
             state: quoteDetails.state,
             expiry: quoteDetails.expiry
@@ -143,14 +144,29 @@ async function addQuotes(quoteDetails){
     }
 }
 
-async function saveQrState(id) {
+/**
+ * Update method to save the quote state to the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateQuoteState(id, state) {
     try {
-        return await Quote.updateOne({device: id}, {state: 1})
+        return await Quote.updateOne({device: id}, {state: state})
     } catch (err) {
         console.log(err)
     }
 }
 
+/**
+ * Update method to save the device state to the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateDeviceState(id, state) {
+    try {
+        return await Device.updateOne({device:id}, {state: state})
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 /**
  * Get a List of All DeviceType
@@ -344,8 +360,12 @@ const getDevice = async (id) => {
 }
 
 
+/**
+ * Get All Devices in DB
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 const getAllDevices = async () => {
-    return Device.find({});
+    return Device.find().populate('brand').populate('device_type').populate('model').populate('listing_user');
 }
 
 /**
@@ -404,6 +424,8 @@ const updateQuote = async (id, updatedProps) => {
 }
 
 
+
+
 module.exports = {
     getAllUsers,
     getUserById,
@@ -426,11 +448,12 @@ module.exports = {
     addBrand,
     addModel,
     getDevice,
-    updateDevice,
-    getHistoryByDevice,
-    updateDeviceDetails,
-    getQuotes,
+    getQuote,
     getProviders,
-    addQuotes,
-    saveQrState
+    addQuote,
+    updateQuoteState,
+    updateDevice,
+    updateDeviceDetails,
+    updateDeviceState,
+    getHistoryByDevice,
 }

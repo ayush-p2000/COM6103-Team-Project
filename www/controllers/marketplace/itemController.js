@@ -19,10 +19,13 @@ const {
     getDevice,
     updateDevice,
     getHistoryByDevice,
-    getQuotes
+    getQuotes,
+    getQuote, updateQuoteState, updateDeviceState
 } = require('../../model/mongodb');
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
+const quoteState = require("../../model/enum/quoteState")
+const dataService = require("../../model/enum/dataService")
 const {generateQR} = require("../../util/qr/qrcodeGenerator");
 const cheerio = require('cheerio')
 const axios = require('axios')
@@ -77,10 +80,22 @@ async function getListItem(req, res) {
     } else {
         try {
             let device = await getDevice(id);
+            console.log(device)
+            if (device[0].model == null){
+                let customModel = await getHistoryByDevice(id)
+                customModel[0].data.forEach(data => {
+                    if (data.name === "device_type") {
+                        device[0].device_type = {name: data.value}
+                    } else if (data.name === "brand") {
+                        device[0].brand = {name: data.value}
+                    } else if (data.name === "model") {
+                        device[0].model = {name: data.value,properties: []}
+                    }
+                });
+            }
             res.render('marketplace/edit_item', {
                 auth: req.isLoggedIn, user: req.user, role: 'user', device: device[0]
             });
-            // res.send(device)
         } catch (err) {
             console.log(err)
         }
@@ -110,6 +125,7 @@ async function getItemDetails(req, res, next) {
     try {
         const item = await getItemDetail(req.params.id)
         var specs = []
+        var quotes = await getQuote(req.params.id)
         if (item.model != null) {
             const specProp = item.model.properties.find(property => property.name === 'specifications')?.value;
             if (specProp != null) {
@@ -117,7 +133,7 @@ async function getItemDetails(req, res, next) {
             } else {
                 specs = []
             }
-        } else {
+        }else{
             var deviceType = ""
             var brand = ""
             var model = ""
@@ -135,11 +151,6 @@ async function getItemDetails(req, res, next) {
             item.brand = {name: brand}
             item.model = {name: model}
         }
-        // item.photos.forEach((photo, index) => {
-        //     item.photos[index] = photo.slice(7)
-        // })
-        const quotes = await getQuotes(req.params.id)
-
         // Add a QR code to each quote
         for (let quote of quotes) {
             const qr = await generateQR(quote._id);
@@ -156,12 +167,29 @@ async function getItemDetails(req, res, next) {
             user: req.user,
             role: 'user',
         })
-    } catch (e) {
+    }catch (e){
         console.log(e)
         res.status(500);
         next({message: "Internal server error"});
     }
+
 }
+
+async function updateQuote(req, res){
+    try {
+        const state = req.body.state
+        console.log(state)
+        console.log(quoteState[state])
+        const value = quoteState[state]
+        const device_state = deviceState['HAS_QUOTE']
+        const updated_quote = await updateQuoteState(req.params.id, value)
+        await updateDeviceState(req.params.id, device_state)
+    } catch (err ) {
+        console.log(err)
+    }
+}
+
+
 
 /*
  * ######################################################################
@@ -335,6 +363,7 @@ module.exports = {
     getListItem,
     getModelByBrandAndType,
     getItemDetails,
+    updateQuote,
     getItemQrCodeView,
     confirmQuote,
     rejectQuote,
