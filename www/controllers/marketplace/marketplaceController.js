@@ -3,11 +3,18 @@
  */
 
 const mockData = require('../../util/mock/mockData')
-const { getPaginatedResults } = require("../../model/utils/utils")
-const { Device} = require("../../model/schema/device")
-const {getUserItems, getQuotes, addQuotes, getHistoryByDevice, getQuote, getProviders, addQuote,getAllDevices} = require('../../model/mongodb')
+const {getPaginatedResults} = require("../../model/utils/utils")
+const {Device} = require("../../model/schema/device")
+const {
+    getUserItems,
+    getQuotes,
+    getHistoryByDevice,
+    getProviders,
+    addQuote,
+    getAllDevices
+} = require('../../model/mongodb')
 const {join} = require("path");
-const deviceState =require("../../model/enum/deviceState")
+const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
 const {getDeviceQuotation} = require("../../util/web-scrape/getDeviceQuotation")
 const cheerio = require("cheerio");
@@ -17,7 +24,7 @@ const cheerio = require("cheerio");
  * @author Zhicong Jiang
  */
 const getMarketplace = async (req, res, next) => {
-    const {items, pagination} = await getPaginatedResults(Device, req.params.page, {},{}, 3);
+    const {items, pagination} = await getPaginatedResults(Device, req.params.page, {}, {}, 3);
     try {
         var devices = await getAllDevices()
         for (const item of devices) {
@@ -40,10 +47,17 @@ const getMarketplace = async (req, res, next) => {
                 item.model = {name: model}
             }
         }
-    }catch (e){
+    } catch (e) {
         console.log(e)
     }
-    res.render('marketplace/marketplace', {devices, items,deviceCategory, auth: req.isLoggedIn, user:req.user, pagination})
+    res.render('marketplace/marketplace', {
+        devices,
+        items,
+        deviceCategory,
+        auth: req.isLoggedIn,
+        user: req.user,
+        pagination
+    })
 }
 
 /**
@@ -52,7 +66,7 @@ const getMarketplace = async (req, res, next) => {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang
  */
 async function getMyItems(req, res, next) {
-    try{
+    try {
         const items = await getUserItems(req.user.id)
         const providers = await getProviders()
         let quotations = []
@@ -63,84 +77,40 @@ async function getMyItems(req, res, next) {
                 var model = ""
                 const customModel = await getHistoryByDevice(item._id)
                 customModel[0].data.forEach(data => {
-                    if (data.name === "device_type"){
+                    if (data.name === "device_type") {
                         deviceType = data.value
-                    }else if(data.name === "brand"){
+                    } else if (data.name === "brand") {
                         brand = data.value
-                    }else if(data.name === "model"){
+                    } else if (data.name === "model") {
                         model = data.value
                     }
                 });
-                item.device_type = {name:deviceType}
-                item.brand = {name:brand}
-                item.model = {name:model}
+                item.device_type = {name: deviceType}
+                item.brand = {name: brand}
+                item.model = {name: model}
             }
 
             let quotes = await getQuotes(item._id)
-            if(quotes.length === 0) {
+            if (quotes.length === 0) {
                 console.log('No quotes available')
                 quotes = await getDeviceQuotation(item, providers)
             }
             quotations.push(quotes)
         }
         console.log(quotations)
-        res.render('marketplace/my_items', {items, quotations, deviceState, deviceCategory, auth: req.isLoggedIn, user:req.user, role:'user'})
-    }catch (e) {
+        res.render('marketplace/my_items', {
+            items,
+            quotations,
+            deviceState,
+            deviceCategory,
+            auth: req.isLoggedIn,
+            user: req.user,
+            role: 'user'
+        })
+    } catch (e) {
         console.log(e)
     }
 }
-
-
-/**
- * Get User's items to display it in the my-items page, so that the user can see what items they have listed in the application
- * Here the function also checks if there is quotation details in the database for the item, if not then it'll fetch the details from getDeviceQuotation method
- * @author Vinroy Miltan Dsouza & Zhicong Jiang
- */
-const getDeviceQuotation = async (item, providers) => {
-    const url = 'https://www.ebay.co.uk/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw='
-    const searchItem = item.model.name.replace(' '+ '+')
-    let quote_data = []
-    try {
-        fetch(url+searchItem)
-            .then(response => {
-                if(!response.ok) {
-                    throw new Error("No response from ebay")
-                }
-                return response.text()
-            })
-            .then( async html => {
-                const $ = cheerio.load(html)
-                const data = $('.s-item__wrapper')
-                data.each(() => {
-                    const price = $('.s-item__price').text()
-                    quote_data.push(price)
-                })
-                let quote = quote_data[0].split(' ')[0].replace('$20.00', '').split('£')[1]
-                var providerId
-                providers.forEach(provider => {
-                    if (provider.name === 'ebay') {
-                        providerId = provider._id
-                    }
-                })
-
-                const today = new Date()
-                const expiryDate = new Date(today)
-                expiryDate.setDate(today.getDate() + 3)
-                const quoteDetails = {
-                    device: item._id,
-                    provider: providerId,
-                    value: parseFloat(quote),
-                    state: false,
-                    expiry: expiryDate
-                }
-                return await addQuotes(quoteDetails)
-            })
-
-    } catch (err){
-        console.log(err)
-    }
-}
-
 
 // async function getDeviceQuotation(item, provider) {
 //     let url
@@ -192,8 +162,6 @@ const getDeviceQuotation = async (item, providers) => {
 //         console.log(err)
 //     }
 // }
-
-
 
 
 module.exports = {

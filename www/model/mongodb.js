@@ -106,9 +106,9 @@ async function getItemDetail(id) {
  * Get method to retrieve a quotation details of the device from the database
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
-async function getQuote(id) {
+async function getQuotes(deviceId) {
     try {
-        return await Quote.find({device: id}).populate('provider')
+        return await Quote.find({device: deviceId}).populate('provider')
     } catch (err) {
         console.log(err)
     }
@@ -448,7 +448,7 @@ module.exports = {
     addBrand,
     addModel,
     getDevice,
-    getQuote,
+    getQuotes,
     getProviders,
     addQuote,
     updateQuoteState,

@@ -7,7 +7,7 @@
 <link rel='stylesheet' href='/stylesheets/login_register.css'/>
 
 <!----------------------------------------------- Form-card Layout ------------------------------------------------>
-<div class="container-fluid">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-5">
             <div class=" justify-content-center align-items-center h-100 mt-3 ">
@@ -19,7 +19,7 @@
                             Sign in
                         </h1>
                         <% if (hasMessages) { %>
-                            <section >
+                            <section>
                                 <ol class="mb-0 list-group list-group-numbered m-1">
                                     <% messages.forEach(function(message) { %>
                                         <li class="border border-danger border-1 bg-danger-subtle pt-2 pb-2 rounded-1 mb-1 list-group-item"><%= message %></li>
@@ -57,7 +57,7 @@
                         <div class="card-footer-login my-3">
                             <button class="btn btn-primary w-100 py-2"
                                     id="submit-btn"
-                                    <%= failedCaptcha ? "disabled": ""%>
+                                    <%= failedCaptcha ? "disabled" : "" %>
                                     data-sitekey="<%= process.env.CAPTCHA_PUBLIC %>>"
                                     data-callback='onSubmit'
                                     data-action='submit'>Sign in
@@ -75,6 +75,7 @@
         </div>
     </div>
 </div>
+
 <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.CAPTCHA_PUBLIC %>"></script>
 <script src="/javascripts/captcha/captcha.js"></script>
 <script>

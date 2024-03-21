@@ -20,7 +20,8 @@ const {
     updateDevice,
     getHistoryByDevice,
     getQuotes,
-    getQuote, updateQuoteState, updateDeviceState
+    updateQuoteState,
+    updateDeviceState
 } = require('../../model/mongodb');
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
@@ -71,8 +72,7 @@ async function getListItem(req, res) {
             let deviceTypes = await getAllDeviceType();
             let brands = await getAllBrand();
             res.render('marketplace/list_item', {
-                auth: req.isLoggedIn, user: req.user, role: 'user',
-                deviceTypes: deviceTypes, brands: brands
+                auth: req.isLoggedIn, user: req.user, role: 'user', deviceTypes: deviceTypes, brands: brands
             });
         } catch (err) {
             console.log(err)
@@ -81,7 +81,7 @@ async function getListItem(req, res) {
         try {
             let device = await getDevice(id);
             console.log(device)
-            if (device[0].model == null){
+            if (device[0].model == null) {
                 let customModel = await getHistoryByDevice(id)
                 customModel[0].data.forEach(data => {
                     if (data.name === "device_type") {
@@ -89,7 +89,7 @@ async function getListItem(req, res) {
                     } else if (data.name === "brand") {
                         device[0].brand = {name: data.value}
                     } else if (data.name === "model") {
-                        device[0].model = {name: data.value,properties: []}
+                        device[0].model = {name: data.value, properties: []}
                     }
                 });
             }
@@ -125,7 +125,7 @@ async function getItemDetails(req, res, next) {
     try {
         const item = await getItemDetail(req.params.id)
         var specs = []
-        var quotes = await getQuote(req.params.id)
+        var quotes = await getQuotes(req.params.id)
         if (item.model != null) {
             const specProp = item.model.properties.find(property => property.name === 'specifications')?.value;
             if (specProp != null) {
@@ -133,7 +133,7 @@ async function getItemDetails(req, res, next) {
             } else {
                 specs = []
             }
-        }else{
+        } else {
             var deviceType = ""
             var brand = ""
             var model = ""
@@ -158,16 +158,9 @@ async function getItemDetails(req, res, next) {
         }
 
         res.render('marketplace/item_details', {
-            item,
-            specs,
-            deviceCategory,
-            deviceState,
-            quotes,
-            auth: req.isLoggedIn,
-            user: req.user,
-            role: 'user',
+            item, specs, deviceCategory, deviceState, quotes, auth: req.isLoggedIn, user: req.user, role: 'user',
         })
-    }catch (e){
+    } catch (e) {
         console.log(e)
         res.status(500);
         next({message: "Internal server error"});
@@ -175,7 +168,7 @@ async function getItemDetails(req, res, next) {
 
 }
 
-async function updateQuote(req, res){
+async function postUpdateQuote(req, res) {
     try {
         const state = req.body.state
         console.log(state)
@@ -184,11 +177,10 @@ async function updateQuote(req, res){
         const device_state = deviceState['HAS_QUOTE']
         const updated_quote = await updateQuoteState(req.params.id, value)
         await updateDeviceState(req.params.id, device_state)
-    } catch (err ) {
+    } catch (err) {
         console.log(err)
     }
 }
-
 
 
 /*
@@ -247,7 +239,6 @@ async function getItemQrCodeView(req, res, next) {
 }
 
 
-
 /**
  * The endpoint to confirm a quote. This is called by the /qr/:id/confirm endpoint and is intentioned to
  *  be called by either the buyer or the seller after the buyer has paid for the item.
@@ -283,14 +274,9 @@ async function confirmQuote(req, res, next) {
 
         //const success = true;
         const success = await updateQuote(id, {
-            state: CONVERTED,
-            confirmation_details: {
-                final_price,
-                receipt_id,
-                receipt_date,
-                receipt_image: {
-                    img_type: receipt_image_type,
-                    img_data: receipt_image_data
+            state: CONVERTED, confirmation_details: {
+                final_price, receipt_id, receipt_date, receipt_image: {
+                    img_type: receipt_image_type, img_data: receipt_image_data
                 }
             }
         });
@@ -363,7 +349,7 @@ module.exports = {
     getListItem,
     getModelByBrandAndType,
     getItemDetails,
-    updateQuote,
+    postUpdateQuote,
     getItemQrCodeView,
     confirmQuote,
     rejectQuote,
