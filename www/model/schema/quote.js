@@ -31,24 +31,24 @@ const quoteSchema = new mongoose.Schema({
         confirmation_details: {
             final_price: {
                 type: Number,
-                required: true
+                required: false
             },
             receipt_id: {
                 type: String,
-                required: true
+                required: false
             },
             receipt_date: {
                 type: Date,
-                required: true
+                required: false
             },
             receipt_image: {
                 img_type: {
                     type: String,
-                    required: true
+                    required: false
                 },
                 img_data: {
                     type: Buffer,
-                    required: true
+                    required: false
                 }
             }
         }

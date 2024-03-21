@@ -29,17 +29,38 @@ async function getDeviceQuotation(item, providers) {
                         const $ = cheerio.load(html);
                         quote_data = []; // Initialize quote_data array
                         const data = $('.s-item__wrapper');
-                        data.each(() => { // Use parameters index and element in each loop
-                            const price = $('.s-item__price').text(); // Find price within each element
-                            quote_data.push(price);
+                        data.each((i, element) => { // Use parameters index and element in each loop
+                            //Get the title from the current element
+                            const title = $(element).find('.s-item__title').text(); // Find title within each element
+
+                            //Check that the title is for the correct item and not an accessory
+                            if (title.toLowerCase().includes(item.model.name.toLowerCase()) && !title.toLowerCase().includes('for')) {
+                                let price = $(element).find('.s-item__price').text(); // Find price within each element
+
+                                //If the price contains ' to ' then it is a range, so we take the first value
+                                if (price.includes('to')) {
+                                    price = price.split('to')[0];
+                                }
+
+                                quote_data.push(price);
+                            }
                         });
-                        let quote = quote_data[0].split(' ')[0].replace('$20.00', '').split('£')[1];
-                        console.log('ebay',quote)
-                        const quoteDetails = setQuoteDetails(provider, item, quote, url+searchItem)
-                        // console.log(quoteDetails)
-                        await addQuote(quoteDetails);
-                        quotation.push(quoteDetails)
-                        // return await addQuote(quoteDetails);
+
+                        //Order the quotes from lowest to highest
+                        quote_data.sort((a, b) => {
+                            return parseFloat(a) - parseFloat(b);
+                        });
+
+                        if (quote_data.length > 0) {
+
+                            let quote = quote_data[0].split(' ')[0].replace('$20.00', '').split('£')[1];
+                            console.log('ebay', quote)
+                            const quoteDetails = setQuoteDetails(provider, item, quote, url + searchItem)
+                            // console.log(quoteDetails)
+                            await addQuote(quoteDetails);
+                            quotation.push(quoteDetails)
+                            // return await addQuote(quoteDetails);
+                        }
                     })
                     .catch(error => {
                         console.error("Error:", error);
@@ -47,20 +68,20 @@ async function getDeviceQuotation(item, providers) {
             } else {
                 url = 'https://uk.webuy.com/sell/search/?stext='
                 searchItem = item.model.name.replace(' ', '+')
-                fetch(url+searchItem)
+                fetch(url + searchItem)
                     .then(response => {
-                        if(!response.ok) {
+                        if (!response.ok) {
                             throw new Error("No response from cex")
                         }
                         return response.text()
                     })
-                    .then( async html => {
+                    .then(async html => {
                         const $ = cheerio.load(html)
                         // console.log($)
                         const data = $('.wrapper-box')
                         data.each(() => {
                             console.log('item')
-                            console.log('cex price',$('.cash-price').text())
+                            console.log('cex price', $('.cash-price').text())
                         })
                         // console.log(price)
                         // let quote = quote_data[0]
@@ -74,7 +95,7 @@ async function getDeviceQuotation(item, providers) {
             }
         })
         return quotation
-    } catch (err){
+    } catch (err) {
         console.log(err)
     }
 }
@@ -98,10 +119,8 @@ function setQuoteDetails(provider, item, quote, url) {
         expiry: expiryDate
     }
 }
+
 module.exports = {getDeviceQuotation}
-
-
-
 
 
 // if (provider.name === 'cex') {
