@@ -154,7 +154,7 @@ async function getItemDetails(req, res, next) {
         }
 
         res.render('marketplace/item_details', {
-            item, specs, deviceCategory, deviceState, quotes, auth: req.isLoggedIn, user: req.user,
+            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user,
         })
     } catch (e) {
         console.log(e)

@@ -6,22 +6,35 @@
                     <h1 class="fw-bold text-center">Listing an Item</h1>
                     <!--                    Image of item-->
                     <div class="mb-3">
-                        <div id="carouselExample" class="carousel slide col-md-6 mb-4 bg-light">
-                            <div class="carousel-inner ">
-                                <% item.photos.forEach(  (photo, index) => {%>
-                                    <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                        <img src="<%= photo.replace('public','') %>" class="d-block img-fluid mx-auto detail-img" alt="...">
-                                    </div>
-                                <% }) %>
+                        <div class="w-auto">
+                            <div id="deviceImgCarousel" class="carousel slide" data-bs-theme="dark">
+                                <div class="carousel-inner ">
+                                    <% if(item.photos?.length > 0) { %>
+                                        <% item.photos.forEach((photo, index) => { %>
+                                            <div class="carousel-item d-flex justify-content-center <%= index === 0 ? 'active' : '' %>">
+                                                <img src="<%= photo.replace('public', '') %>"
+                                                     class="img-fluid h-100 mx-auto"
+                                                     alt="...">
+                                            </div>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <div class="carousel-item active d-flex justify-content-center">
+                                            <img src="https://placehold.co/600x600?text=No Images"
+                                                 class="img-fluid h-100 mx-auto" height="400" alt="...">
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#deviceImgCarousel"
+                                        data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#deviceImgCarousel"
+                                        data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
                             </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                                <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
                         </div>
                     </div>
 
@@ -73,7 +86,7 @@
                         <div class="mb-3 row">
                             <label for="deviceModel" class="col-sm-3 col-lg-2 col-form-label">Model</label>
                             <div class="col-sm-5">
-                                <select class="form-select" id="deviceModel" name="deviceModel" <%= role === 'admin'? '' : 'disabled' %>>
+                                <select class="form-select" id="deviceModel" name="deviceModel" <%= user.role >= 1? '' : 'disabled' %>>
 
                                     <% models.forEach(model => {%>
                                         <option value="<%= model._id %>"  <%= item.model.name === model.name ? 'selected':'' %>  ><%= model.name %></option>
