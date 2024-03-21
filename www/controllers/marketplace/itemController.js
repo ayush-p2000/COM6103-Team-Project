@@ -36,7 +36,6 @@ const axios = require('axios')
  * @author Zhicong Jiang
  */
 const postListItem = async (req, res) => {
-    console.log("PostingItem")
     var id = req.params.id;
     try {
         const files = req.files;
@@ -47,11 +46,9 @@ const postListItem = async (req, res) => {
         }
 
         if (typeof id === 'undefined') {
-            console.log("Adding")
             const deviceId = await listDevice(req.body, filePaths, req.user);
             res.status(200).send(deviceId);
         } else {
-            console.log("Updating")
             const deviceId = await updateDevice(id, req.body, filePaths);
             res.status(200).send(deviceId);
         }
@@ -72,7 +69,7 @@ async function getListItem(req, res) {
             let deviceTypes = await getAllDeviceType();
             let brands = await getAllBrand();
             res.render('marketplace/list_item', {
-                auth: req.isLoggedIn, user: req.user, role: 'user', deviceTypes: deviceTypes, brands: brands
+                auth: req.isLoggedIn, user: req.user, deviceTypes: deviceTypes, brands: brands
             });
         } catch (err) {
             console.log(err)
@@ -80,7 +77,6 @@ async function getListItem(req, res) {
     } else {
         try {
             let device = await getDevice(id);
-            console.log(device)
             if (device[0].model == null) {
                 let customModel = await getHistoryByDevice(id)
                 customModel[0].data.forEach(data => {
@@ -94,7 +90,7 @@ async function getListItem(req, res) {
                 });
             }
             res.render('marketplace/edit_item', {
-                auth: req.isLoggedIn, user: req.user, role: 'user', device: device[0]
+                auth: req.isLoggedIn, user: req.user, device: device[0]
             });
         } catch (err) {
             console.log(err)
@@ -158,7 +154,7 @@ async function getItemDetails(req, res, next) {
         }
 
         res.render('marketplace/item_details', {
-            item, specs, deviceCategory, deviceState, quotes, auth: req.isLoggedIn, user: req.user, role: 'user',
+            item, specs, deviceCategory, deviceState, quotes, auth: req.isLoggedIn, user: req.user,
         })
     } catch (e) {
         console.log(e)
@@ -171,8 +167,6 @@ async function getItemDetails(req, res, next) {
 async function postUpdateQuote(req, res) {
     try {
         const state = req.body.state
-        console.log(state)
-        console.log(quoteState[state])
         const value = quoteState[state]
         const device_state = deviceState['HAS_QUOTE']
         const updated_quote = await updateQuoteState(req.params.id, value)
