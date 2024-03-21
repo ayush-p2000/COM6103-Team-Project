@@ -31,9 +31,9 @@
                     <% devices.forEach(function(device) { %>
                         <tr>
                             <td><%= device._id %></td>
-                            <td><%= device.device_type.name %></td>
-                            <td><%= device.brand.name %></td>
-                            <td><%= device.model.name %></td>
+                            <td><%= device.device_type?.name %></td>
+                            <td><%= device.brand?.name %></td>
+                            <td><%= device.model?.name %></td>
                             <td><a href="/admin/devices/<%= device._id %>" class="btn btn-primary">View</a></td>
                         </tr>
                     <% }); %>
