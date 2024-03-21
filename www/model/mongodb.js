@@ -14,6 +14,8 @@ const {Quote} = require("./schema/quote");
 const {Retrieval} = require("./schema/retrieval");
 const {History} = require("./schema/history");
 
+const {UNKNOWN_DEVICE} = require("./enum/historyType");
+
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -104,9 +106,9 @@ async function getItemDetail(id) {
  * Get method to retrieve a quotation details of the device from the database
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
-async function getQuote(id) {
+async function getQuotes(deviceId) {
     try {
-        return await Quote.find({device: id}).populate('provider')
+        return await Quote.find({device: deviceId}).populate('provider')
     } catch (err) {
         console.log(err)
     }
@@ -213,41 +215,47 @@ const getModels = async (brandId,deviceTypeId) => {
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 const listDevice = async (deviceData, photos, user) => {
-    const newDevice = new Device({
-        device_type: mongoose.Types.ObjectId.isValid(deviceData.device_type)? deviceData.device_type : new mongoose.Types.ObjectId(),
-        brand: mongoose.Types.ObjectId.isValid(deviceData.brand)? deviceData.brand : new mongoose.Types.ObjectId(),
-        model: mongoose.Types.ObjectId.isValid(deviceData.model)? deviceData.model : new mongoose.Types.ObjectId(),
-        details: JSON.parse(deviceData.details),
-        category: deviceData.category,
-        good_condition: deviceData.good_condition,
-        state: deviceData.state,
-        data_service: deviceData.data_service,
-        additional_details: deviceData.additional_details,
-        listing_user: user.id,
-        photos: photos,
-        visible: deviceData.visible
-    });
-    const savedDevice = await newDevice.save();
+    try {
+        const newDevice = new Device({
+            device_type: mongoose.Types.ObjectId.isValid(deviceData.device_type)? deviceData.device_type : new mongoose.Types.ObjectId(),
+            brand: mongoose.Types.ObjectId.isValid(deviceData.brand)? deviceData.brand : new mongoose.Types.ObjectId(),
+            model: mongoose.Types.ObjectId.isValid(deviceData.model)? deviceData.model : new mongoose.Types.ObjectId(),
+            details: JSON.parse(deviceData.details),
+            category: deviceData.category,
+            good_condition: deviceData.good_condition,
+            state: deviceData.state,
+            data_service: deviceData.data_service,
+            additional_details: deviceData.additional_details,
+            listing_user: user.id,
+            photos: photos,
+            visible: deviceData.visible
+        });
+        const savedDevice = await newDevice.save();
 
-    if (!mongoose.Types.ObjectId.isValid(deviceData.model)){
-        const data = [
-            { name: 'device_type', value: deviceData.device_type, data_type: 0 },
-            { name: 'brand', value: deviceData.brand, data_type: 0 },
-            { name: 'model', value: deviceData.model, data_type: 0 }
-        ];
-        const newHistory = new History({
-            device: savedDevice,
-            history_type: 6,
-            data: data.map(item => ({
-                name: item.name,
-                value: item.value,
-                data_type: item.data_type
-            })),
-            actioned_by: user.id
-        })
-        const savedHistory = await newHistory.save();
+        if (!mongoose.Types.ObjectId.isValid(deviceData.model)){
+            const data = [
+                { name: 'device_type', value: deviceData.device_type, data_type: 0 },
+                { name: 'brand', value: deviceData.brand, data_type: 0 },
+                { name: 'model', value: deviceData.model, data_type: 0 }
+            ];
+            const newHistory = new History({
+                device: savedDevice,
+                history_type: 6,
+                data: data.map(item => ({
+                    name: item.name,
+                    value: item.value,
+                    data_type: item.data_type
+                })),
+                actioned_by: user.id
+            })
+            const savedHistory = await newHistory.save();
+        }
+
+        return savedDevice._id;
+    } catch (error) {
+        console.error("An error occurred while listing the device:", error);
+        throw error;
     }
-    return savedDevice._id;
 }
 
 /**
@@ -255,7 +263,7 @@ const listDevice = async (deviceData, photos, user) => {
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 const getAllUnknownDevices = async () => {
-    return History.find({history_type: 6});
+    return History.find({history_type: UNKNOWN_DEVICE});
 }
 
 /**
@@ -298,19 +306,6 @@ const addModel = async (modelData,properties,category) => {
 }
 
 /**
- * Getting Device's Detail by Device's id
- * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
- */
-const getDevice = async (id) => {
-    try {
-        return Device.find({_id:id}).populate('brand').populate('device_type').populate('model');
-    }catch (error) {
-        console.error("An error occurred while get Device:", error);
-        throw error;
-    }
-}
-
-/**
  * Updating Specific Field for The Specific Device
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
@@ -350,6 +345,20 @@ const getHistoryByDevice = async (id) => {
         throw error;
     }
 }
+
+/**
+ * Getting Device's Detail by Device's id
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const getDevice = async (id) => {
+    try {
+        return Device.find({_id:id}).populate('brand').populate('device_type').populate('model');
+    }catch (error) {
+        console.error("An error occurred while get Device:", error);
+        throw error;
+    }
+}
+
 
 /**
  * Get All Devices in DB
@@ -406,6 +415,14 @@ async function updateDeviceDetails(id, deviceDetails) {
     }
 }
 
+const getQuoteById = async (id) => {
+    return Quote.findOne({_id: id});//.populate('device').populate('provider').populate('device.listing_user').populate('device.model').populate('device.brand').populate('device.device_type');
+}
+
+const updateQuote = async (id, updatedProps) => {
+    return Quote.updateOne({_id: id}, updatedProps);
+}
+
 
 
 
@@ -418,6 +435,8 @@ module.exports = {
     updateUser,
     getUserItems,
     getItemDetail,
+    getQuoteById,
+    updateQuote,
     store,
     getAllDeviceType,
     getAllBrand,
@@ -429,7 +448,7 @@ module.exports = {
     addBrand,
     addModel,
     getDevice,
-    getQuote,
+    getQuotes,
     getProviders,
     addQuote,
     updateQuoteState,

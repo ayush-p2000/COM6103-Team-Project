@@ -83,7 +83,8 @@ const userSchema = new mongoose.Schema({
             [
                 {
                     type: mongoose.Schema.Types.ObjectId,
-                    ref: 'Device'
+                    ref: 'Device',
+                    autopopulate: true
                 }
             ],
     },
@@ -97,6 +98,8 @@ userSchema.pre('save', function(next) {
     this.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.first_name)}+${encodeURIComponent(this.last_name)}`;
     next();
 });
+
+userSchema.plugin(require('mongoose-autopopulate'));
 
 module.exports = {
     User: mongoose.model('User', userSchema)

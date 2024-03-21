@@ -9,7 +9,7 @@
         <div class="row mt-4 mt-3">
             <p class="fw-bold">Classification: </p>
             <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                <% Object.keys(deviceCategory).forEach(category => {%>
+                <% Object.keys(deviceCategory).forEach(category => { %>
                     <input type="checkbox" class="btn-check category-filter" id="<%= category %>" autocomplete="off">
                     <label class="btn btn-outline-primary" for="<%= category %>"><%= category %></label>
                 <% }) %>
@@ -53,14 +53,23 @@
             <div class="card mt-4">
                 <div class="card-body row d-flex align-items-center">
                     <div class="col-3 col-md-2 col-lg-2 col-xl-1">
-                        <img src="<%= item.photos[0].replace('public', '') %>" class="img-fluid item-img" alt="...">
+                        <% if (item.photos?.length > 0) { %>
+                            <img src="<%= item.photos[0].replace('public', '') %>" class="img-fluid item-img"
+                                 alt="Image of <%= item.model.name %>">
+                        <% } else { %>
+                            <img src="https://placehold.co/600x600?text=No Images" class="img-fluid item-img"
+                                 alt="Image of <%= item.model.name %>">
+                        <% } %>
                     </div>
                     <div class="col-6 col-md-8 col-lg-7 col-xl-8">
-                        <h4 class="d-flex align-items-center"><%= item.model.name %><span class="badge <%= Object.keys(deviceState).find(key => deviceState[key] === item.state) === 'LISTED' ? 'bg-success': 'bg-warning'%> ms-2"
-                                                                                          style="font-size: 0.3em;"><%= Object.keys(deviceState).find(key => deviceState[key] === item.state) %></span>
+                        <h4 class="d-flex align-items-center"><%= item.model.name %><span
+                                    class="badge <%= Object.keys(deviceState).find(key => deviceState[key] === item.state) === 'LISTED' ? 'bg-success' : 'bg-warning' %> ms-2"
+                                    style="font-size: 0.3em;"><%= Object.keys(deviceState).find(key => deviceState[key] === item.state) %></span>
                         </h4>
                         <p class="m-0 p-0 text-muted"><small>Device Type: </small><%= item.device_type.name %></p>
-                        <p class="m-0 p-0 text-muted category"><small>Classification: </small><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) %></p>
+                        <p class="m-0 p-0 text-muted category">
+                            <small>Classification: </small><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) %>
+                        </p>
                         <!--   TODO: once quotation is done, add the price here        -->
                         <% quotations.forEach(quoteArray => { %>
                             <% if (quoteArray.length > 0) { %>
@@ -72,7 +81,7 @@
                         <% }) %>
                     </div>
                     <div class="col-3 col-md-2 col-lg-3 col-xl-3 d-flex justify-content-end align-items-center">
-                        <a href="/item/<%= item._id%>" class="btn btn-primary">View</a>
+                        <a href="/item/<%= item._id %>" class="btn btn-primary">View</a>
                     </div>
                 </div>
             </div>

@@ -3,11 +3,18 @@
  */
 
 const mockData = require('../../util/mock/mockData')
-const { getPaginatedResults } = require("../../model/utils/utils")
-const { Device} = require("../../model/schema/device")
-const {getUserItems, getHistoryByDevice, getQuote, getProviders, addQuote,getAllDevices} = require('../../model/mongodb')
+const {getPaginatedResults} = require("../../model/utils/utils")
+const {Device} = require("../../model/schema/device")
+const {
+    getUserItems,
+    getQuotes,
+    getHistoryByDevice,
+    getProviders,
+    addQuote,
+    getAllDevices
+} = require('../../model/mongodb')
 const {join} = require("path");
-const deviceState =require("../../model/enum/deviceState")
+const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
 const {getDeviceQuotation} = require("../../util/web-scrape/getDeviceQuotation")
 const cheerio = require("cheerio");
@@ -17,7 +24,7 @@ const cheerio = require("cheerio");
  * @author Zhicong Jiang
  */
 const getMarketplace = async (req, res, next) => {
-    const {items, pagination} = await getPaginatedResults(Device, req.params.page, {},{}, 3);
+    const {items, pagination} = await getPaginatedResults(Device, req.params.page, {}, {}, 3);
     try {
         var devices = await getAllDevices()
         for (const item of devices) {
@@ -40,61 +47,70 @@ const getMarketplace = async (req, res, next) => {
                 item.model = {name: model}
             }
         }
-    }catch (e){
+    } catch (e) {
         console.log(e)
     }
-    res.render('marketplace/marketplace', {devices, items,deviceCategory, auth: req.isLoggedIn, user:req.user, pagination})
+    res.render('marketplace/marketplace', {
+        devices,
+        items,
+        deviceCategory,
+        auth: req.isLoggedIn,
+        user: req.user,
+        pagination
+    })
 }
 
 /**
  * Get User's items to display it in the my-items page, so that the user can see what items they have listed in the application
  * Here the function also checks if there is quotation details in the database for the item, if not then it'll fetch the details from getDeviceQuotation method
- * @author Vinroy Miltan Dsouza & Zhicong Jiang
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang
  */
 async function getMyItems(req, res, next) {
-    try{
-        const devices = await getUserItems(req.user.id)
+    try {
+        const items = await getUserItems(req.user.id)
         const providers = await getProviders()
         let quotations = []
-        let items = []
-        for (const device of devices) {
-            if (device.model == null) {
+        for (const item of items) {
+            if (item.model == null) {
                 var deviceType = ""
                 var brand = ""
                 var model = ""
-                const customModel = await getHistoryByDevice(device._id)
+                const customModel = await getHistoryByDevice(item._id)
                 customModel[0].data.forEach(data => {
-                    if (data.name === "device_type"){
+                    if (data.name === "device_type") {
                         deviceType = data.value
-                    }else if(data.name === "brand"){
+                    } else if (data.name === "brand") {
                         brand = data.value
-                    }else if(data.name === "model"){
+                    } else if (data.name === "model") {
                         model = data.value
                     }
                 });
-                device.device_type = {name:deviceType}
-                device.brand = {name:brand}
-                device.model = {name:model}
+                item.device_type = {name: deviceType}
+                item.brand = {name: brand}
+                item.model = {name: model}
             }
-            let quotes = await getQuote(device._id)
-            if(quotes.length === 0) {
-                if (Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) !== 'UNKNOWN') {
-                    console.log('No quotations available')
-                    quotes = await getDeviceQuotation(device, providers)
-                }
+
+            let quotes = await getQuotes(item._id)
+            if (quotes.length === 0) {
+                console.log('No quotes available')
+                quotes = await getDeviceQuotation(item, providers)
             }
-            // if(Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) !== 'UNKNOWN') {
-            //     items.push(device)
-            // }
-            items.push(device)
             quotations.push(quotes)
         }
-        res.render('marketplace/my_items', {items, quotations, deviceState, deviceCategory, auth: req.isLoggedIn, user:req.user, role:'user'})
-    }catch (e) {
+        console.log(quotations)
+        res.render('marketplace/my_items', {
+            items,
+            quotations,
+            deviceState,
+            deviceCategory,
+            auth: req.isLoggedIn,
+            user: req.user,
+            role: 'user'
+        })
+    } catch (e) {
         console.log(e)
     }
 }
-
 
 // async function getDeviceQuotation(item, provider) {
 //     let url
@@ -146,8 +162,6 @@ async function getMyItems(req, res, next) {
 //         console.log(err)
 //     }
 // }
-
-
 
 
 module.exports = {

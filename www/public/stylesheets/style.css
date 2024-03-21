@@ -27,6 +27,18 @@ a {
     box-shadow: 0 0 10px rgba(113, 213, 255, 0.6);
 }
 
+.hover-grow i{
+    transition: 0.2s;
+}
+
+.hover-grow:hover i {
+    /* Scale the item up slightly when hovered over. */
+    transform: scale(1.1);
+
+    /* Add a shadow to the item. */
+    text-shadow: 0 0 10px rgba(113, 213, 255, 0.6);
+}
+
 /*marketplace style*/
 .marketplace .item-img {
     padding: 20px;

@@ -7,8 +7,7 @@ const passport = require("passport")
 const session = require("express-session")
 const axios = require("axios");
 const bodyParser = require('body-parser');
-
-
+const fs = require('fs');
 
 const mongo = require('./model/mongodb')
 
@@ -19,6 +18,7 @@ const authRouter = require('./routes/authentication');
 const dataRouter = require('./routes/data');
 const paymentRouter = require('./routes/payment');
 const marketplaceRouter = require('./routes/marketplace');
+const qrRouter = require('./routes/qr');
 const userRouter = require('./routes/user');
 
 const debugRouter = require('./routes/debug');
@@ -61,7 +61,8 @@ app.use("/javascripts", express.static(path.join(__dirname, "node_modules/jquery
 
 // Most routes start with / rather than /<name of file> as the files are being used as descriptive groups of routes
 app.use('/', authInfo, indexRouter);
-app.use('/admin',isAuthenticated, adminRouter); // TODO: Add isAuthenticated once admin login is completed
+app.use('/qr', authInfo, qrRouter)
+app.use('/admin', isAuthenticated, adminRouter); // TODO: Add isAuthenticated once admin login is completed
 app.use('/', authRouter);
 app.use('/', dataRouter);
 app.use('/', isAuthenticated, paymentRouter);
@@ -71,8 +72,6 @@ app.use('/', isAuthenticated, userRouter);
 if (process.env.ENVIRONMENT === undefined || process.env.ENVIRONMENT !== "prod") {
     app.use('/debug', debugRouter);
 }
-
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -87,7 +86,14 @@ app.use(function (err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+
+    //Check if the error page exists in 'views/error' and render it, otherwise render the default error page
+    //Check if file exists
+    if (fs.existsSync(path.join(__dirname, 'views', 'error', `${err.status || 500}.ejs`)) === true) {
+        res.render(`error/${err.status || 500}`, {auth: req.isLoggedIn, user: req.user, message: err?.message});
+    } else {
+        res.render('error', {auth: req.isLoggedIn, user: req.user, message: err?.message});
+    }
 });
 
 module.exports = app;

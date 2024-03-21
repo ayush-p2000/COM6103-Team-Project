@@ -68,7 +68,7 @@
                                                     <h5 class="card-title"><%= device.model.name %></h5>
                                                     <p class="card-text m-0"><small>Device Type:</small> <%= device.device_type.name %></p>
                                                     <p class="card-text m-0"><small>Brand:</small> <%= device.brand.name %></p>
-                                                    <p class="card-text"><small class="text-muted">Release at <%= device.model.properties[2].value %></small></p>
+                                                    <p class="card-text"><small class="text-muted">Release at <%= device.model.properties[2]?.value %></small></p>
                                                 </div>
                                             </div>
                                         </div>
