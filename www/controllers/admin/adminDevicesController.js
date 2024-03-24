@@ -6,7 +6,8 @@ const gsmarena = require('gsmarena-api');
 const {get} = require("axios");
 const {renderAdminLayout,renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
 const {getItemDetail, getAllDeviceType, getAllBrand, updateDeviceDetails, getModels,getAllUnknownDevices, addDeviceType, addBrand, addModel,
-    getHistoryByDevice
+    getHistoryByDevice,
+    getAllDevices
 } = require("../../model/mongodb")
 
 const dataService = require("../../model/enum/dataService")
@@ -14,9 +15,9 @@ const deviceCategory = require("../../model/enum/deviceCategory")
 const deviceState = require("../../model/enum/deviceState")
 
 const {Device} = require("../../model/schema/device")
-function getDevicesPage(req, res, next) {
-    //TODO: Add functionality for the devices page
-    renderAdminLayout(req, res, "devices", {})
+async function getDevicesPage(req, res, next) {
+    const devices = await getAllDevices();
+    renderAdminLayout(req, res, "devices", {devices: devices})
 }
 
 /**
@@ -125,7 +126,12 @@ async function getUserDeviceDetailsPage(req, res, next) {
 
         if (item.model != null) {
             models = await getModels(item.brand._id, item.device_type._id)
-            const specs = JSON.parse(item.model.properties.find(property => property.name === 'specifications')?.value)
+            const specProp = item.model.properties.find(property => property.name === 'specifications')?.value;
+            if (specProp != null) {
+                specs = JSON.parse(specProp)
+            } else {
+                specs = []
+            }
         }
         else{
             var type = ""
@@ -151,7 +157,8 @@ async function getUserDeviceDetailsPage(req, res, next) {
 
     } catch (err) {
         console.log(err)
-        res.status(500).json({error: 'internal server error'})
+        res.status(500)
+        next(err)
     }
 
 }

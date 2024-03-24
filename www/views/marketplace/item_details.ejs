@@ -10,16 +10,16 @@
                     <div class="carousel-inner ">
                         <% if(item.photos?.length > 0) { %>
                             <% item.photos.forEach((photo, index) => { %>
-                                <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                <div class="carousel-item d-flex justify-content-center <%= index === 0 ? 'active' : '' %>">
                                     <img src="<%= photo.replace('public', '') %>"
-                                         class="img-fluid w-100"
+                                         class="img-fluid h-100 mx-auto"
                                          alt="...">
                                 </div>
                             <% }) %>
                         <% } else { %>
-                            <div class="carousel-item active">
+                            <div class="carousel-item d-flex justify-content-center active">
                                 <img src="https://placehold.co/600x600?text=No Images"
-                                     class="img-fluid" height="400" alt="...">
+                                     class="img-fluid h-100 mx-auto" height="400" alt="...">
                             </div>
                         <% } %>
                     </div>
@@ -95,7 +95,7 @@
             <h5 class="fw-bold mt-4">Quotes</h5>
             <!--     Show device if the category is current       -->
             <% if(Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) === "CURRENT") { %>
-                <% quotes.forEach( quote => { %>
+                <% quotes.forEach( (quote, index) => { %>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card border-primary mt-3">
@@ -114,7 +114,9 @@
                                                     same product or similar products.</p>
                                                 <p class="card-text"><small>Fetched from <%= quote.provider.name %>
                                                         site</small></p>
-                                                <p id="quoteState"></p>
+                                                <p id="quoteState" class="quote-state" data-quote-id="<%= quote._id %>">
+                                                    <%= Object.keys(quoteState).find(key => quoteState[key] === quote.state) %>
+                                                </p>
                                             </div>
 
 
@@ -123,12 +125,12 @@
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <a href="<%= quote.url %>" target="_blank"
                                                            class="btn btn-primary mx-2 my-2">Visit <%= quote.provider.name.toUpperCase() %></a>
-                                                        <a class="btn btn-warning mx-2 my-2" id="star-quote">Star
-                                                            Quote</a>
-                                                        <a class="btn btn-primary mx-2 my-2" id="accept-quote">Accept
-                                                            Quote</a>
-                                                        <a class="btn btn-danger mx-2 my-2" id="reject-quote">Reject
-                                                            Quote</a>
+                                                        <button class="btn btn-warning mx-2 my-2 star-quote" data-quote-id="<%= quote._id %>" id="star-quote">Star
+                                                            Quote</button>
+                                                        <button class="btn btn-primary mx-2 my-2 accept-quote" data-quote-id="<%= quote._id %>" id="accept-quote">Accept
+                                                            Quote</button>
+                                                        <button class="btn btn-danger mx-2 my-2 reject-quote" data-quote-id="<%= quote._id %>" id="reject-quote">Reject
+                                                            Quote</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -198,7 +200,7 @@
                                         <div class="row">
                                             <div class="col-md-12 mt-2 mx-auto w-100">
                                                 <a href="https://www.ebay.co.uk/sl/prelist/suggest" target="_blank"
-                                                   class="btn btn-primary">
+                                                   class="btn btn-primary auction-quote" data-device-id="<%= item._id %>">
                                                     Click here to go to eBay</a>
                                             </div>
                                         </div>
@@ -285,7 +287,7 @@
                                         <div class="card h-100">
                                             <div class="card-body">
                                                 <div class="d-flex align-content-center">
-                                                    <a class="btn btn-success w-100 text-center my-auto" id="checkBtn">Checkout</a>
+                                                    <a class="btn btn-success w-100 text-center my-auto recycle-quote" data-quote-id="<%= item._id %>" id="checkBtn">Checkout</a>
                                                 </div>
                                             </div>
                                         </div>
