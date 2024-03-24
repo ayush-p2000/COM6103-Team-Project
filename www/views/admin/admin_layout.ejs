@@ -1,0 +1,91 @@
+<%- include("../components/header") %>
+<%- include("../components/navbar") %>
+
+<div class="container-fluid vh-100 w-100">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 bg-light bg-dark m-0 px-3 h-100 vh-100">
+            <nav id="sidebarMenu" class="d-md-block sidebar collapse text-light">
+                <div class="position-sticky pt-3">
+                    <a class="navbar-brand fs-4 fw-medium" href="/admin">
+                        <!-- Logo Placeholder -->
+                        <div class="bg-body-secondary text-center mx-3">
+                            <small class="text-muted fst-italic py-2">Logo</small>
+                        </div>
+                    </a>
+
+                    <hr>
+
+                    <ul class="nav flex-column">
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white active" aria-current="page" href="/admin">
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/admin/accounts">
+                                Manage Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/admin/reports">
+                                Reports
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/admin/devices">
+                                Devices
+                            </a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/admin/types">
+                                Types
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/admin/moderation">
+                                Moderation
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/admin/">
+                                Settings
+                            </a>
+                        </li>
+
+                    </ul>
+
+                    <hr>
+
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/my-profile">
+                                My Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <!-- TODO: Add Sign Out Functionality -->
+                            <form action="/logout" method="POST" class="m-0">
+                                <button class="nav-link text-white" type="submit">Sign Out</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <div class="col-md-9 col-lg-10 px-md-4 h-100">
+            <% if(currentRoute === undefined) { %>
+                <%- include('dashboard') %>
+            <% } else if (placeholder !== null){ %>
+                <p><%= placeholder %></p>
+            <% } else { %>
+                <%- include(currentRoute) %>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include("../components/footer") %>
+</div>

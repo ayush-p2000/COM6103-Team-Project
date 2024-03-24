@@ -1,0 +1,45 @@
+<script src="/javascripts/reports/reports_util.js"></script>
+
+<% if (report !== undefined) { %>
+    <script src="/javascripts/reports/<%= report %>.js"></script>
+<% } %>
+
+<div class="container-fluid h-100 py-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="row">
+                    <div class="col-md-4 text-left align-content-center my-auto">
+                        <a class="btn btn-primary mx-4" href="/admin/reports">Back</a>
+                    </div>
+                    <div class="col-md-4 py-4">
+                        <div class="text-center">
+                            <h1><%= title %> Report</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 px-4">
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <%# TODO: Remove this TRUE once other reports exist%>
+                        <% if (true) { %>
+                            <%- include("sales", {labels: data.labels, retrieval: data.datasets, table: data.table}) -%>
+                        <% } else if (report !== undefined) { %>
+                            <%- include(report, {labels: data.labels, retrieval: data.retrieval}) -%>
+                        <% } else { %>
+                            <div class="text-center">
+                                <h1>Report not found</h1>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

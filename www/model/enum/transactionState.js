@@ -1,0 +1,19 @@
+const AWAITING_PAYMENT = 0;
+const PAYMENT_RECEIVED = 1;
+const PAYMENT_FAILED = 2;
+const PAYMENT_CANCELLED = 3;
+const PAYMENT_EXPIRED = 4;
+const PAYMENT_REFUNDED = 5;
+const PAYMENT_PENDING = 6;
+
+const transactionState = {
+    AWAITING_PAYMENT,
+    PAYMENT_RECEIVED,
+    PAYMENT_FAILED,
+    PAYMENT_CANCELLED,
+    PAYMENT_EXPIRED,
+    PAYMENT_REFUNDED,
+    PAYMENT_PENDING
+};
+
+module.exports = transactionState;

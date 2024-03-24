@@ -1,0 +1,226 @@
+<%- include('../components/header') %>
+<%- include('../components/navbar') %>
+
+<div class="m-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card rounded shadow">
+                <div class="card-body p-4">
+                    <h1 class="fw-bold text-center">Listing an Item</h1>
+                    <!--                    Image of item-->
+
+                    <div class="mb-3">
+                        <label for="itemImage" class="form-label">Pick images of the device</label>
+                        <div id="imagePreview" class="row p-1">
+                            <% device.photos.forEach(function(photo) { %>
+                                <img src="<%= photo.replace('public', '') %>" class="img-thumbnail col-2">
+                            <% }); %>
+                        </div>
+                        <input class="form-control" type="file" id="itemImage" name="itemImage" accept="image/*"  multiple>
+                    </div>
+
+
+
+                    <!--                    Device information-->
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">Device information</p>
+
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3 row">
+                                    <label for="deviceType" class="col-sm-6 col-lg-4 col-form-label fw-bold">Device Type</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-select" id="deviceType">
+                                            <option value="-1"><%= device.device_type.name %></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--                        Brand -->
+                                <div class="mb-3 row">
+                                    <label for="deviceBrand" class="col-sm-6 col-lg-4 col-form-label fw-bold">Brand</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-select" id="deviceBrand">
+                                            <option value="<%= device.brand._id %>"><%= device.brand.name %>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--                        Model-->
+                                <div class="mb-3 row">
+                                    <label for="deviceModel" class="col-sm-6 col-lg-4 col-form-label fw-bold">Model</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-select" id="deviceModel">
+                                            <option value="<%= device.model._id %>"><%= device.model.name %>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <% if (device.model.properties.length > 0){%>
+                                <div class="col-12 col-md-6 col-xl-4" id="selected-model-content">
+                                    <div class="card p-3 ">
+                                        <div class="row" id="selected-model-content">
+                                            <div class="col-3">
+                                                <img src="<%= device.model.properties[0].value %>" class="img-fluid rounded-start" >
+                                            </div>
+                                            <div class="col-9">
+                                                <div class="card-body p-0">
+                                                    <h5 class="card-title"><%= device.model.name %></h5>
+                                                    <p class="card-text m-0"><small>Device Type:</small> <%= device.device_type.name %></p>
+                                                    <p class="card-text m-0"><small>Brand:</small> <%= device.brand.name %></p>
+                                                    <p class="card-text"><small class="text-muted">Release at <%= device.model.properties[2]?.value %></small></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <%}%>
+                        </div>
+                    </div>
+
+                    <!--                    Device Condition-->
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">Device Condition</p>
+                        <label for="deviceCondition" class="col-sm-4 col-form-label fw-bold ">Is your device in good condition?</label>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Device Condition Choose">
+                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionYes" autocomplete="off" <%= device.good_condition ? 'checked' : ''%>>
+                            <label class="btn btn-outline-primary" for="conditionYes">Yes</label>
+
+                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionNo" autocomplete="off" <%= !device.good_condition ? 'checked' : ''%>>
+                            <label class="btn btn-outline-primary" for="conditionNo">No</label>
+                        </div>
+                        <ul class="text-muted">
+                            <li>It turns on and functions normally</li>
+                            <li>All the buttons work</li>
+                            <li>The cameras work and all lenses are free of damage</li>
+                            <li>The battery is able to remain charged and provide continuous use time</li>
+                            <li>The body is free of dents and scratches</li>
+                            <li>The touchscreen and back glass are undamaged</li>
+                            <li>The display is free of distortion, lines and black or white spots</li>
+                        </ul>
+                    </div>
+
+                    <div id="detail-condition" >
+                        <div>
+                            <label for="deviceFunctionality" class="col-sm-8 col-form-label fw-bold">1. Does your device turn on and work properly?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityYes" autocomplete="off" <%= device.details[0].value === "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="functionalityYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityNo" autocomplete="off" <%= device.details[0].value !== "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="functionalityNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="btnCondition" class="col-sm-8 col-form-label fw-bold">2. All the buttons are working probably?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnYes" autocomplete="off" <%= device.details[1].value === "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="btnYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnNo" autocomplete="off" <%= device.details[1].value !== "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="btnNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="cameraCondition" class="col-sm-8 col-form-label fw-bold">3. The cameras work and all lenses are free of damage?</label>
+                            <div class="btn-group btn-group-sm" role="group" >
+                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraYes" autocomplete="off" <%= device.details[2].value === "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="cameraYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraNo" autocomplete="off" <%= device.details[2].value !== "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="cameraNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="batteryCondition" class="col-sm-8 col-form-label fw-bold">4. The battery is able to remain charged and provide continuous use time?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryYes" autocomplete="off" <%= device.details[3].value === "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="batteryYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryNo" autocomplete="off" <%= device.details[3].value !== "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="batteryNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="bodyCondition" class="col-sm-8 col-form-label fw-bold">5. The body is free of dents and scratches?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyYes" autocomplete="off" <%= device.details[4].value === "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="bodyYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyNo" autocomplete="off" <%= device.details[4].value !== "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="bodyNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="touchscreenCondition" class="col-sm-8 col-form-label fw-bold">6. The touchscreen and back glass are undamaged?</label>
+                            <div class="btn-group btn-group-sm" role="group" >
+                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenYes" autocomplete="off" <%= device.details[5].value === "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="touchscreenYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenNo" autocomplete="off" <%= device.details[5].value !== "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="touchscreenNo">No</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="displayCondition" class="col-sm-8 col-form-label fw-bold ">7. The display is free of distortion, lines and black or white spots?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="displayRadio" id="displayYes" autocomplete="off" <%= device.details[6].value === "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="displayYes">Yes</label>
+
+                                <input type="radio" class="btn-check" name="displayRadio" id="displayNo" autocomplete="off" <%= device.details[6].value !== "Good" ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="displayNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--                    Service add-on-->
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">Service add-on</p>
+                        <div>
+                            <label for="dataService" class="col-sm-2 col-form-label fw-bold">Data Service</label>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Data Service Choose">
+                                <input type="radio" class="btn-check" name="dataRadio" id="dataNone" autocomplete="off" <%= device.data_service === 0 ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="dataNone">None</label>
+
+                                <input type="radio" class="btn-check" name="dataRadio" id="dataWiping" autocomplete="off" <%= device.data_service === 1 ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="dataWiping">Wiping by third party</label>
+
+                                <input type="radio" class="btn-check" name="dataRadio" id="dataRetrieval" autocomplete="off" <%= device.data_service === 2 ? 'checked' : ''%>>
+                                <label class="btn btn-outline-primary" for="dataRetrieval">Data retrieval (+ £8.99)</label>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!--                    Additional Information-->
+                    <div class="my-3">
+                        <p class="fw-bold fs-5">Additional Information</p>
+                        <textarea class="form-control" id="additionalInfo" rows="3"
+                                  placeholder="Please provide any additional details or special requests regarding your device."><%= device.additional_details %></textarea>
+                    </div>
+
+
+                    <!--                    Submit Button-->
+                    <div class="row justify-content-center">
+                        <div class="col-sm-6">
+                            <p class="btn btn-primary mb-3 d-block mx-auto" id="submitBtn">Submit for Approval</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/javascripts/marketplace/edit_item.js"></script>
+<%- include('../components/footer') %>
