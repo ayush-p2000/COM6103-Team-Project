@@ -6,12 +6,109 @@
         </div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-3">
-            <div class="form-check form-switch mx-auto">
+        <div class="col-md-3 d-flex justify-content-start">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal">
+                Add Accounts
+            </button>
+        </div>
+        <div class="col-md-3 d-flex justify-content-center">
+            <div class="form-check form-switch">
                 <input type="checkbox" class="form-check-input" id="staffOnly">
                 <label class="form-check-label" for="staffOnly">Staff Only</label>
             </div>
         </div>
+    </div>
+    <form method="POST" name="userPermissions" action="/addUser" class="w-100">
+    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="userModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="pb-2">
+                        <div class="form-floating m-1">
+                            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" required>
+                            <label for="firstName">First Name</label>
+                        </div>
+                        <div class="form-floating m-1">
+                            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name" required >
+                            <label for="lastName">Last Name</label>
+                        </div>
+                        <div class="form-floating mt-1 mx-1">
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="name@example.com"
+                                   required>
+                            <label for="email">Email address</label>
+                        </div>
+                        <div class="form-floating m-1">
+                            <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required>
+                            <label for="dateOfBirth">Date of Birth</label>
+                        </div>
+                        <div class="form-floating m-1">
+                            <input type="number" class="form-control" id="phone" name="phone" placeholder="+99 1234567890" required>
+                            <label for="phone">Phone</label>
+                        </div>
+                        <div class="form-floating m-1">
+                            <input type="text" class="form-control" id="address_1" name="address_1" placeholder="22 High street" required>
+                            <label for="address_1">Address Line 1</label>
+                        </div>
+                        <div class="form-floating m-1">
+                            <input type="text" class="form-control" id="address_2" name="address_2" placeholder="Apartment 07" required>
+                            <label for="address_2">Address Line 2</label>
+                        </div>
+                        <div class="form-floating m-1">
+                            <input type="text" class="form-control" id="postcode" name="postcode" placeholder="XY0 XYZ0" required>
+                            <label for="postcode">Postcode</label>
+                        </div>
+                        <div class="form-floating m-1">
+                            <input type="text" class="form-control" id="city" name="city" placeholder="Sheffield" required>
+                            <label for="city">City</label>
+                        </div>
+                        <div class="form-floating m-1">
+                            <input type="text" class="form-control" id="county" name="county" placeholder="United Kingdom" required>
+                            <label for="county">County</label>
+                        </div>
+                        <div class="form-floating m-1">
+                            <input type="text" class="form-control" id="country" name="country" placeholder="United Kingdom" required>
+                            <label for="country">Country</label>
+                        </div>
+                        <div class="form-floating m-1">
+                        <select name="role" id="role" class="d-inline-block form-control">
+                            <option value="">Select role</option>
+                            <option value="0">USER</option>
+                            <option value="1">STAFF</option>
+                            <option value="2">ADMIN</option>
+                        </select>
+                            <label for="role">Role</label>
+                        </div>
+
+                        <h5 class="mt-3 mb-3 text-center">Create password</h5>
+                        <div class="form-floating mb-1 mx-1">
+                            <input type="password" class="form-control" id="password" name="password"
+                                   placeholder="Password"
+                                   required>
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="form-floating mb-1 mx-1">
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                                   placeholder="Confirm Password"
+                                   required>
+                            <label for="confirmPassword">Confirm Password</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary w-30" type="submit">Save details</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </form>
+
     </div>
     <div class="row">
         <div class="col-md-12">
