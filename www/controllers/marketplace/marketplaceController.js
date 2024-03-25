@@ -24,6 +24,7 @@ const cheerio = require("cheerio");
  * @author Zhicong Jiang<zjiang34@sheffield.ac.uk>
  */
 const getMarketplace = async (req, res, next) => {
+    const deviceTypes = await getAllDeviceType()
     const {items, pagination} = await getPaginatedResults(Device, req.params.page, {}, {}, 3);
     try {
         var devices = await getAllDevices()
@@ -51,6 +52,7 @@ const getMarketplace = async (req, res, next) => {
         console.log(e)
     }
     res.render('marketplace/marketplace', {
+        deviceTypes,
         devices,
         items,
         deviceCategory,
@@ -68,7 +70,6 @@ const getMarketplace = async (req, res, next) => {
 async function getMyItems(req, res, next) {
     try {
         const deviceTypes = await getAllDeviceType()
-        console.log(deviceTypes)
         const items = await getUserItems(req.user.id)
         const providers = await getProviders()
         let quotations = []
