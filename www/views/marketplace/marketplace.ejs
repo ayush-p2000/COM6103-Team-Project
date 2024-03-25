@@ -43,7 +43,7 @@
                     <div class="card h-100">
                         <img src="<%= device.photos[0].replace('public', '') %>" class="card-img-top img-fluid item-img" alt="...">
                         <div class="card-body">
-                            <h5 class="card-title"><%= device.model.name %></h5>
+                            <h5 class="card-title modelName"><%= device.model.name %></h5>
                             <p class="m-0 p-0 text-muted deviceType"><small>Device Type: </small><%= device.device_type.name %></p>
                             <p class="m-0 p-0 text-muted category">
                                 <small>Classification: </small><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) %>
@@ -59,4 +59,5 @@
 </div>
 
 <script src="/javascripts/marketplace/filter.js"></script>
+<script src="/javascripts/marketplace/search_item.js"></script>
 <%- include("../components/footer") %>
