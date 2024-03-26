@@ -42,7 +42,7 @@
                                 <td><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) %></td>
                                 <td><span class="badge <%= Object.keys(deviceState).find(key => deviceState[key] === device.state) === 'LISTED' ? 'bg-success' : 'bg-warning' %> ms-2"><%= Object.keys(deviceState).find(key => deviceState[key] === device.state) %></span></td>
                                 <td><%= device.visible %></td>
-                                <td><%= device.listing_user?._id %></td>
+                                <td><a href="/admin/accounts/<%= device.listing_user?._id %>"> <%= device.listing_user?._id %> </a></td>
                                 <td><a href="/admin/devices/<%= device._id %>" class="btn btn-primary">View</a></td>
                             </tr>
                         <% }); %>
