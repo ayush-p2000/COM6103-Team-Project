@@ -1,5 +1,4 @@
 const form = document.getElementById("form")
-const token = document.getElementById("token")
 
 const executeCaptcha = (publicKey, actionName) => {
     grecaptcha.ready(function () {
