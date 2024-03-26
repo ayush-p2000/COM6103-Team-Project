@@ -365,6 +365,7 @@ const getDevice = async (id) => {
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 const getAllDevices = async () => {
+
     return Device.find().populate('brand').populate('device_type').populate('model').populate('listing_user');
 }
 

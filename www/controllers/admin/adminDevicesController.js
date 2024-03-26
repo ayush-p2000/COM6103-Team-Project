@@ -17,12 +17,33 @@ const deviceState = require("../../model/enum/deviceState")
 const {Device} = require("../../model/schema/device")
 
 /**
- * Get All Device with Specific Field Showing
+ * Get All Device with Specific Field Showing and Support Unknown Devices
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 async function getDevicesPage(req, res, next) {
     const devices = await getAllDevices();
-    renderAdminLayout(req, res, "devices", {devices: devices,deviceCategory,deviceState})
+    for (const device of devices) {
+        if (device.model == null) {
+            var deviceType = ""
+            var brand = ""
+            var model = ""
+            const customModel = await getHistoryByDevice(device._id)
+            customModel[0].data.forEach(data => {
+                if (data.name === "device_type") {
+                    deviceType = data.value
+                } else if (data.name === "brand") {
+                    brand = data.value
+                } else if (data.name === "model") {
+                    model = data.value
+                }
+            });
+            device.device_type = {name: deviceType}
+            device.brand = {name: brand}
+            device.model = {name: model}
+        }
+    }
+
+    renderAdminLayout(req, res, "devices", {devices: devices,deviceState,deviceCategory})
 }
 
 /**
