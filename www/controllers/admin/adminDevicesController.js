@@ -15,9 +15,14 @@ const deviceCategory = require("../../model/enum/deviceCategory")
 const deviceState = require("../../model/enum/deviceState")
 
 const {Device} = require("../../model/schema/device")
+
+/**
+ * Get All Device with Specific Field Showing
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
 async function getDevicesPage(req, res, next) {
     const devices = await getAllDevices();
-    renderAdminLayout(req, res, "devices", {devices: devices})
+    renderAdminLayout(req, res, "devices", {devices: devices,deviceCategory,deviceState})
 }
 
 /**
