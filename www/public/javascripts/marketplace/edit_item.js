@@ -101,13 +101,6 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     function postUpdateDataToServer() {
 
-        var dataService = 0;
-        dataRadios.forEach(function(radio, index) {
-            if (radio.checked) {
-                dataService = index;
-                return;
-            }
-        });
 
         var details = [
             { name: "functionality", value: functionalityYes.checked? "Good" : "Bad" },
@@ -122,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var formData = new FormData();
         formData.append('details', JSON.stringify(details));
         formData.append('good_condition', conditionYes.checked);
-        formData.append('data_service', dataService);
+        formData.append('data_service', 0);
         formData.append('additional_details', additionalInfo.value !== "" ? additionalInfo.value : "Not Provided");
 
 

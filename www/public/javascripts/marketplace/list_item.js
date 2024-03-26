@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function() {
             selectedModel = customModel.value
             selectedBrand = customBrand.value
             selectedType = customDeviceType.value
-            category = 3
+            category = 3  //Unknown
         }else{
             const selectedModelObj = models.find(model => model._id === selectedModelId);
             selectedModel = selectedModelObj._id
@@ -225,15 +225,6 @@ document.addEventListener("DOMContentLoaded", function() {
             selectedType = selectedModelObj.deviceType
             category = selectedModelObj.category
         }
-
-
-        var dataService = 0;
-        dataRadios.forEach(function(radio, index) {
-            if (radio.checked) {
-                dataService = index;
-                return;
-            }
-        });
 
         var details = [
             { name: "functionality", value: functionalityYes.checked? "Good" : "Bad" },
@@ -253,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function() {
         formData.append('category', category);
         formData.append('good_condition', conditionYes.checked);
         formData.append('state', 1); // default to review when posted
-        formData.append('data_service', dataService);
+        formData.append('data_service', 0);
         formData.append('additional_details', additionalInfo.value !== "" ? additionalInfo.value : "Not Provided");
         formData.append('visible', false); // default to false when posted
 
