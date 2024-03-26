@@ -27,11 +27,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const customDeviceType = document.getElementById('custom-device-type')
     const customSubmit = document.getElementById('custom-submit')
 
+    const deviceColor = document.getElementById('deviceColor')
+    const deviceCapacity = document.getElementById('deviceCapacity')
+    const deviceYear = document.getElementById('deviceYear')
 
-    const saveBtn = document.getElementById('saveBtn')
-    const deviceCategory = document.getElementById('deviceCategory')
-    const deviceState = document.getElementById('deviceState')
-    const deviceVisibleYes = document.getElementById('visibleYes')
+
 
     const displayYes = document.getElementById('displayYes')
     const touchscreenYes = document.getElementById('touchscreenYes')
@@ -233,7 +233,11 @@ document.addEventListener("DOMContentLoaded", function() {
             { name: "battery", value: batteryYes.checked? "Good" : "Bad" },
             { name: "body", value: bodyYes.checked? "Good" : "Bad" },
             { name: "touchscreen", value: touchscreenYes.checked? "Good" : "Bad" },
-            { name: "display", value: displayYes.checked? "Good" : "Bad" }
+            { name: "display", value: displayYes.checked? "Good" : "Bad" },
+
+            { name: "color", value: deviceColor.value },
+            { name: "capacity", value: deviceCapacity.value },
+            { name: "years used", value: deviceYear.value }
         ];
 
         var formData = new FormData();
