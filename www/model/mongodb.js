@@ -334,12 +334,12 @@ const updateDevice = async (id, deviceData, photos) => {
 }
 
 /**
- * Getting Device's Detail by Device's id
+ * Getting UNKNOWN Device's custom model Detail by Device's id
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
-const getHistoryByDevice = async (id) => {
+const getUnknownDeviceHistoryByDevice = async (id) => {
     try {
-        return History.find({device:id});
+        return History.find({device:id, history_type: 6});
     }catch (error) {
         console.error("An error occurred while get History By Device:", error);
         throw error;
@@ -456,5 +456,5 @@ module.exports = {
     updateDevice,
     updateDeviceDetails,
     updateDeviceState,
-    getHistoryByDevice,
+    getUnknownDeviceHistoryByDevice,
 }

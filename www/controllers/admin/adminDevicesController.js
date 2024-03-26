@@ -6,7 +6,7 @@ const gsmarena = require('gsmarena-api');
 const {get} = require("axios");
 const {renderAdminLayout,renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
 const {getItemDetail, getAllDeviceType, getAllBrand, updateDeviceDetails, getModels,getAllUnknownDevices, addDeviceType, addBrand, addModel,
-    getHistoryByDevice,
+    getUnknownDeviceHistoryByDevice,
     getAllDevices
 } = require("../../model/mongodb")
 
@@ -27,7 +27,7 @@ async function getDevicesPage(req, res, next) {
             var deviceType = ""
             var brand = ""
             var model = ""
-            const customModel = await getHistoryByDevice(device._id)
+            const customModel = await getUnknownDeviceHistoryByDevice(device._id)
             customModel[0].data.forEach(data => {
                 if (data.name === "device_type") {
                     deviceType = data.value
@@ -163,7 +163,7 @@ async function getUserDeviceDetailsPage(req, res, next) {
             var type = ""
             var brand = ""
             var model = ""
-            const customModel = await getHistoryByDevice(item._id)
+            const customModel = await getUnknownDeviceHistoryByDevice(item._id)
             customModel[0].data.forEach(data => {
                 if (data.name === "device_type"){
                     type = data.value
