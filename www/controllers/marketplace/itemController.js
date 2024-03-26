@@ -39,17 +39,18 @@ const postListItem = async (req, res) => {
     var id = req.params.id;
     try {
         const files = req.files;
-        const filePaths = [];
+
+        const filesBase64 = [];
         for (let i = 0; i < files.length; i++) {
-            const filePath = files[i].path;
-            filePaths.push(filePath);
+            const base64Data = files[i].buffer.toString('base64')
+            filesBase64.push(base64Data);
         }
 
         if (typeof id === 'undefined') {
-            const deviceId = await listDevice(req.body, filePaths, req.user);
+            const deviceId = await listDevice(req.body, filesBase64, req.user);
             res.status(200).send(deviceId);
         } else {
-            const deviceId = await updateDevice(id, req.body, filePaths);
+            const deviceId = await updateDevice(id, req.body, filesBase64);
             res.status(200).send(deviceId);
         }
     } catch (err) {
