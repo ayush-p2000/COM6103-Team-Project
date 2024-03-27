@@ -339,7 +339,7 @@ const updateDevice = async (id, deviceData, photos) => {
  */
 const getUnknownDeviceHistoryByDevice = async (id) => {
     try {
-        return History.find({device:id, history_type: 6});
+        return History.find({device:id, history_type: UNKNOWN_DEVICE});
     }catch (error) {
         console.error("An error occurred while get History By Device:", error);
         throw error;

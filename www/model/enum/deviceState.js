@@ -24,7 +24,7 @@ const deviceState = {
     REJECTED,
     deviceStateToColour: function(deviceState) {
         switch (deviceState) {
-            case 2:
+            case LISTED:
                 return "bg-success";
             default:
                 return "bg-warning"; // Default color if state is not recognized
@@ -33,27 +33,27 @@ const deviceState = {
 
     deviceStateToString: function (deviceState) {
         switch (deviceState) {
-            case 0:
+            case DRAFT:
                 return "DRAFT";
-            case 1:
+            case IN_REVIEW:
                 return "IN_REVIEW";
-            case 2:
+            case LISTED:
                 return "LISTED";
-            case 3:
+            case HAS_QUOTE:
                 return "HAS_QUOTE";
-            case 4:
+            case SOLD:
                 return "SOLD";
-            case 5:
+            case RECYCLED:
                 return "RECYCLED";
-            case 6:
+            case AUCITON:
                 return "AUCITON";
-            case 7:
+            case DATA_RECOVERY:
                 return "DATA_RECOVERY";
-            case 8:
+            case CLOSED:
                 return "CLOSED";
-            case 9:
+            case HIDDEN:
                 return "HIDDEN";
-            case 10:
+            case REJECTED:
                 return "REJECTED";
             default:
                 return "UNKNOWN";
