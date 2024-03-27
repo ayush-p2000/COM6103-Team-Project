@@ -42,7 +42,11 @@ const postListItem = async (req, res) => {
 
         const filesBase64 = [];
         for (let i = 0; i < files.length; i++) {
-            const base64Data = files[i].buffer.toString('base64')
+
+            const image_data = Buffer.from(files[i].buffer, 'base64');
+            const image_type = files[i].mimetype;
+            const base64Data = {img_data:image_data,img_type:image_type}
+
             filesBase64.push(base64Data);
         }
 

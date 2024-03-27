@@ -60,8 +60,14 @@ const deviceSchema = new mongoose.Schema({
         },
         photos: [
             {
-                type: String,
-                required: true
+                img_type: {
+                    type: String,
+                    required: false
+                },
+                img_data: {
+                    type: Buffer,
+                    required: false
+                }
             }
         ],
         visible: {
