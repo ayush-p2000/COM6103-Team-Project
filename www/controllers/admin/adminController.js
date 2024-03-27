@@ -3,11 +3,6 @@
  */
 
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
-const {randomBytes, pbkdf2} = require("node:crypto");
-const {User} = require("../../model/schema/user");
-const {USER} = require("../../model/enum/roleTypes");
-const {getAllUsers} = require("../../model/mongodb");
-const {promisify} = require("node:util");
 
 function getAdminDashboard(req, res, next) {
     const route = req.params.contentRoute ?? "dashboard";
