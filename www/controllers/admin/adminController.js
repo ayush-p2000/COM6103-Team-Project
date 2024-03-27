@@ -20,6 +20,7 @@ const createStaff = async (req, res, next) => {
     const {randomBytes, pbkdf2} = require("node:crypto")
     const {promisify} = require("node:util");
     const pbkdf2Promise = promisify(pbkdf2)
+    const {User} = require("../../model/schema/user");
     const {getAllUsers} = require("../../model/mongodb");
     const {renderAdminLayout} = require("../../util/layout/layoutUtils");
     const {USER} = require("../../model/enum/roleTypes");
