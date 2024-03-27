@@ -13,6 +13,4 @@ router.get('/dashboard', getUserDashboard);
 
 router.get('/my-items/:page?', getMyItems);
 
-router.post('/addUser', registerUser);
-
 module.exports = router;

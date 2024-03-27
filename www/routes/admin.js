@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {getAdminDashboard} = require("../controllers/admin/adminController");
+const {getAdminDashboard,createStaff} = require("../controllers/admin/adminController");
 const {
     getAccountDetailsPage, getAccountsPage, getEditAccountPage
 } = require("../controllers/admin/adminAccountsController");
@@ -49,5 +49,7 @@ router.get('/devices/:id', getUserDeviceDetailsPage);
 router.post('/devices/:id',upload.none(), updateUserDeviceDetailsPage)
 
 router.get('/getModelFromBrandAndType', getModelsFromTypeAndBrand)
+
+router.post('/addUser', createStaff);
 
 module.exports = router;
