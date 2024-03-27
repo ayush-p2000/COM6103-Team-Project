@@ -7,7 +7,7 @@ const multer = require('multer');
 const {getMockItem, getMockQuote} = require("../../util/mock/mockData");
 const fixedToCurrency = require("../../util/currency/fixedToCurrency");
 const {ACCEPTED, REJECTED, CONVERTED, EXPIRED, stateToString, stateToColour} = require("../../model/enum/quoteState");
-const {updateQuote, getQuoteById} = require("../../model/mongodb");
+const {updateQuote, getQuoteById, getUnknownDeviceHistoryByDevice} = require("../../model/mongodb");
 const mongoose = require("mongoose");
 const QRCode = require('qrcode');
 const {
@@ -79,7 +79,7 @@ async function getListItem(req, res) {
         try {
             let device = await getDevice(id);
             if (device[0].model == null) {
-                let customModel = await getHistoryByDevice(id)
+                let customModel = await getUnknownDeviceHistoryByDevice(id)
                 customModel[0].data.forEach(data => {
                     if (data.name === "device_type") {
                         device[0].device_type = {name: data.value}
@@ -134,7 +134,7 @@ async function getItemDetails(req, res, next) {
             var deviceType = ""
             var brand = ""
             var model = ""
-            const customModel = await getHistoryByDevice(item._id)
+            const customModel = await getUnknownDeviceHistoryByDevice(item._id)
             customModel[0].data.forEach(data => {
                 if (data.name === "device_type") {
                     deviceType = data.value
