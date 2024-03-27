@@ -1,6 +1,7 @@
-/*
-* Passport functions
-*/
+/**
+ * Passport Authentication
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
 
 const LocalStrategy = require('passport-local');
 const {pbkdf2} = require("node:crypto")
