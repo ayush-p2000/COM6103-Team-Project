@@ -17,14 +17,18 @@ document.addEventListener("DOMContentLoaded", function() {
     const dataRadios = document.querySelectorAll('input[name="dataRadio"]');
 
 
+    const deviceColor = document.getElementById('deviceColor')
+    const deviceCapacity = document.getElementById('deviceCapacity')
+    const deviceYear = document.getElementById('deviceYear')
 
-    const displayYes = document.getElementById('displayYes')
-    const touchscreenYes = document.getElementById('touchscreenYes')
-    const bodyYes = document.getElementById('bodyYes')
-    const batteryYes = document.getElementById('batteryYes')
-    const cameraYes = document.getElementById('cameraYes')
-    const btnYes = document.getElementById('btnYes')
-    const functionalityYes = document.getElementById('functionalityYes')
+    const displayRadios = document.getElementsByName('displayRadio')
+    const touchscreenRadios = document.getElementsByName('touchscreenRadio')
+    const bodyRadios = document.getElementsByName('bodyRadio')
+    const batteryRadios = document.getElementsByName('batteryRadio')
+    const cameraRadios = document.getElementsByName('cameraRadio')
+    const btnRadios = document.getElementsByName('btnRadio')
+    const functionalityRadios = document.getElementsByName('functionalityRadio')
+
 
 
     /**
@@ -43,14 +47,14 @@ document.addEventListener("DOMContentLoaded", function() {
     conditionYes.addEventListener('change', ()=> {
         // Show further condition term if yes
         if (conditionYes.checked) {
-            functionalityYes.checked = true;
-            displayYes.checked = true;
-            touchscreenYes.checked = true;
-            bodyYes.checked = true;
-            batteryYes.checked = true;
-            displayYes.checked = true;
-            cameraYes.checked = true;
-            btnYes.checked = true;
+            setSelectedRadioValue("functionalityRadio","5")
+            setSelectedRadioValue("btnRadio","5")
+            setSelectedRadioValue("cameraRadio","5")
+            setSelectedRadioValue("batteryRadio","5")
+            setSelectedRadioValue("bodyRadio","5")
+            setSelectedRadioValue("touchscreenRadio","5")
+            setSelectedRadioValue("displayRadio","5")
+
             conditionList.classList.remove("d-block");
             conditionList.classList.add("d-none")
         }
@@ -62,6 +66,26 @@ document.addEventListener("DOMContentLoaded", function() {
             conditionList.classList.add("d-block");
         }
     });
+
+    function setSelectedRadioValue(radio,value) {
+        var radios = document.getElementsByName(radio);
+
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].value === value) {
+                radios[i].checked = true;
+                break;
+            }
+        }
+    }
+
+    function getSelectedRadioValue(radios) {
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                return radios[i].value;
+            }
+        }
+        return null;
+    }
 
     /**
      * Handling submit action
@@ -101,28 +125,25 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     function postUpdateDataToServer() {
 
-        var dataService = 0;
-        dataRadios.forEach(function(radio, index) {
-            if (radio.checked) {
-                dataService = index;
-                return;
-            }
-        });
 
         var details = [
-            { name: "functionality", value: functionalityYes.checked? "Good" : "Bad" },
-            { name: "button", value: btnYes.checked? "Good" : "Bad" },
-            { name: "camera", value: cameraYes.checked? "Good" : "Bad" },
-            { name: "battery", value: batteryYes.checked? "Good" : "Bad" },
-            { name: "body", value: bodyYes.checked? "Good" : "Bad" },
-            { name: "touchscreen", value: touchscreenYes.checked? "Good" : "Bad" },
-            { name: "display", value: displayYes.checked? "Good" : "Bad" }
+            { name: "functionality",value: getSelectedRadioValue(functionalityRadios)},
+            { name: "button", value: getSelectedRadioValue(btnRadios)},
+            { name: "camera", value: getSelectedRadioValue(cameraRadios)},
+            { name: "battery", value: getSelectedRadioValue(batteryRadios)},
+            { name: "body", value: getSelectedRadioValue(bodyRadios)},
+            { name: "touchscreen", value: getSelectedRadioValue(touchscreenRadios) },
+            { name: "display", value: getSelectedRadioValue(displayRadios)},
+
+            { name: "color", value: deviceColor.value },
+            { name: "capacity", value: deviceCapacity.value },
+            { name: "years used", value: deviceYear.value }
         ];
 
         var formData = new FormData();
         formData.append('details', JSON.stringify(details));
         formData.append('good_condition', conditionYes.checked);
-        formData.append('data_service', dataService);
+        formData.append('data_service', 0);
         formData.append('additional_details', additionalInfo.value !== "" ? additionalInfo.value : "Not Provided");
 
 
