@@ -1,0 +1,10 @@
+<div>
+    <canvas id="classes_chart"></canvas>
+    <script src="/javascripts/reports/charts/classes.js"></script>
+    <script>
+        const labels = <%- JSON.stringify(labels) %>;
+        const data = <%- JSON.stringify(datasets[0]) %>;
+        const backgrounds = <%- JSON.stringify(deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category))) %>;
+        const borderColours = <%- JSON.stringify(deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category, true))) %>;
+    </script>
+</div>

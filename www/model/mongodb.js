@@ -425,6 +425,18 @@ const updateQuote = async (id, updatedProps) => {
 }
 
 
+const getDevicesGroupByCategory = async () => {
+    return Device.aggregate([
+        {
+            $group: {
+                _id: "$category",
+                total: {$sum: 1}
+            }
+        }
+    ]);
+}
+
+
 
 
 module.exports = {
@@ -457,4 +469,7 @@ module.exports = {
     updateDeviceDetails,
     updateDeviceState,
     getUnknownDeviceHistoryByDevice,
+    getAllDeviceTypes,
+    getAllBrands,
+    getDevicesGroupByCategory
 }
