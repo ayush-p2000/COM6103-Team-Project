@@ -3,13 +3,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const classes_dataset = [
         {
             label: 'Classes',
-            data: data,
-            backgroundColor: backgrounds,
-            borderColor: borderColours,
+            data: classes_data,
+            backgroundColor: classes_backgrounds,
+            borderColor: classes_borderColours,
             borderWidth: 1,
             lineTension: 0,
         }
     ];
 
-    createChart('#classes_chart', labels, classes_dataset, 'bar');
+    createChart('#classes_chart', classes_labels, classes_dataset, 'bar');
 });

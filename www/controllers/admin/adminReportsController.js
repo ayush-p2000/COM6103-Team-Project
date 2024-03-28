@@ -4,15 +4,17 @@
 
 const {getMockGraphData, getMockSalesData} = require("../../util/mock/mockData");
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
-const {getDevicesGroupByCategory, getAllDevices} = require("../../model/mongodb");
+const {getDevicesGroupByCategory, getAllDevices, getDevicesGroupByState} = require("../../model/mongodb");
 const deviceCategory = require("../../model/enum/deviceCategory");
 const deviceState = require("../../model/enum/deviceState");
 
 async function getReportsPage(req, res, next) {
     const classes = await prepareClassesData();
+    const cases = await prepareCasesData();
     renderAdminLayout(req, res, "reports/reports",
         {
             classes: classes,
+            cases: cases,
             deviceCategory,
             deviceState
         }
@@ -30,6 +32,9 @@ async function getReportPage(req, res, next) {
             break;
         case "classes":
             data = await prepareClassesData();
+            break;
+        case "cases":
+            data = await prepareCasesData();
             break;
         default:
             data = {...getMockGraphData(), table: getMockSalesData()}
@@ -59,6 +64,47 @@ async function prepareClassesData() {
 
     deviceGroups.forEach(group => {
         const index = deviceCategoryIntegers.indexOf(group._id);
+        data[index] = group.total;
+    });
+
+    const table = [];
+
+    devices.forEach(device => {
+        table.push({
+            name: `${device.brand?.name ?? "Unbranded"} ${device.model?.name ?? "Unknown Model"}`,
+            category: device.category,
+            state: device.state,
+            date_added: device.createdAt.toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric"
+            }),
+            user: device.listing_user,
+            device_id: device._id,
+        });
+    });
+
+    return {labels: labels, datasets: [data], table: table};
+
+}
+
+/**
+ * Prepare the data for the classes report
+ * @returns {Promise<{datasets: any[][], table: *[], labels: *[]}>}
+ */
+async function prepareCasesData() {
+    const deviceGroups = await getDevicesGroupByState();
+    const devices = await getAllDevices();
+    const deviceStatesIntegers = deviceState.getList();
+    const labels = [];
+    deviceStatesIntegers.forEach(value => labels.push(deviceState.deviceStateToString(value)));
+
+    const data = Array(labels.length).fill(0);
+
+    deviceGroups.forEach(group => {
+        const index = deviceStatesIntegers.indexOf(group._id);
         data[index] = group.total;
     });
 

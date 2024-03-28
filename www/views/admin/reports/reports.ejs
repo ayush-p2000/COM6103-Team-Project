@@ -120,9 +120,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title text-center">Devices per State</h5>
 
-                                    <div>
-                                        <canvas class="my-4 w-100" id="case_state_chart"></canvas>
-                                    </div>
+                                    <%- include("charts/cases", cases) %>
 
                                     <div class="d-flex justify-content-end">
                                         <a class="btn btn-outline-primary" href="/admin/reports/cases">View Details</a>

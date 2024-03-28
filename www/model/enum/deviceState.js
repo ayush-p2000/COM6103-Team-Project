@@ -80,6 +80,37 @@ const deviceState = {
                 return "Unknown";
         }
     },
+
+    deviceStateToRGB: function (deviceState, border = false) {
+        switch (deviceState) {
+            case DRAFT:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case IN_REVIEW:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case LISTED:
+                return border ? 'rgb(0, 0, 255)' : 'rgba(0, 0, 255, 0.2)';
+            case HAS_QUOTE:
+                return border ? 'rgb(0, 128, 0)' : 'rgba(0, 128, 0, 0.2)';
+            case SOLD:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case RECYCLED:
+                return border ? 'rgb(0, 128, 0)' : 'rgba(0, 128, 0, 0.2)';
+            case AUCITON:
+                return border ? 'rgb(255, 165, 0)' : 'rgba(255, 165, 0, 0.2)';
+            case DATA_RECOVERY:
+                return border ? 'rgb(13,202,240)' : 'rgba(13,202,240, 0.2)';
+            case CLOSED:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case HIDDEN:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case REJECTED:
+                return border ? 'rgb(255, 99, 132)' : 'rgba(255, 99, 132, 0.2)';
+            default:
+                return border ? 'rgb(255, 165, 0)' : 'rgba(255, 165, 0, 0.2)';
+        }
+    },
+
+    getList: () => Object.values(deviceState).filter(value => typeof value === 'number')
 };
 
 module.exports = deviceState;

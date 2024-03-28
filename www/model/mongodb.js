@@ -436,7 +436,16 @@ const getDevicesGroupByCategory = async () => {
     ]);
 }
 
-
+const getDevicesGroupByState = async () => {
+    return Device.aggregate([
+        {
+            $group: {
+                _id: "$state",
+                total: {$sum: 1}
+            }
+        }
+    ]);
+}
 
 
 module.exports = {
@@ -471,5 +480,6 @@ module.exports = {
     getUnknownDeviceHistoryByDevice,
     getAllDeviceTypes,
     getAllBrands,
-    getDevicesGroupByCategory
+    getDevicesGroupByCategory,
+    getDevicesGroupByState
 }
