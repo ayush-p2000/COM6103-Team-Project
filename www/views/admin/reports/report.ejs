@@ -26,10 +26,8 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <% if (report === "classes") { %>
-                            <%- include("classes", {labels: data.labels, datasets: data.datasets, table: data.table}) -%>
-                        <% } else if(report === "cases") { %>
-                            <%- include("cases", {labels: data.labels, datasets: data.datasets, table: data.table}) -%>
+                        <% if (typeof report !== 'undefined') { %>
+                            <%- include(report, {labels: data.labels, datasets: data.datasets, table: data.table}) -%>
                         <% } else { %>
                             <div class="text-center">
                                 <h1>Report not found</h1>
