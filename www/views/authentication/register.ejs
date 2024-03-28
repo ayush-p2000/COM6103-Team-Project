@@ -107,10 +107,10 @@
                             <input type="hidden" id="token" name="token">
                             <button class="btn btn-primary w-100 py-2"
                                     id="submit-btn"
-                                    <%= failedCaptcha ? "disabled": ""%>
                                     data-sitekey="<%= process.env.CAPTCHA_PUBLIC %>>"
                                     data-callback='onSubmit'
-                                    data-action='submit'>Sign up
+                                    disabled
+                                    data-action='submit'>Register
                             </button>
 
                             <div class="text-center align-content-center fw-bolder mt-3">
@@ -127,7 +127,7 @@
 <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.CAPTCHA_PUBLIC %>"></script>
 <script src="/javascripts/captcha/captcha.js"></script>
 <script>
-    executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "register")
+    executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "register", <%= failedCaptcha %>)
 </script>
 
 <!----------------------------------------------- Footer ------------------------------------------------>
