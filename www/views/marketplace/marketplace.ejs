@@ -70,7 +70,7 @@
                             <h5 class="card-title"><%= device.model.name %></h5>
                             <p class="m-0 ">Device Type: <span
                                         class="fw-light fst-italic text-muted"><%= device.device_type.name %></span></p>
-                            <p>Classification: <span class="fw-light fst-italic text-muted"><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) %></span></p>
+                            <p>Classification: <span class="fw-light fst-italic text-muted"><%= deviceCategory.deviceCategoryToString(device.category) %></span></p>
                             <p>By: <span class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span></p>
                             <a class="btn btn-primary btn-sm mb-1 item-detail-btn" href="/item/<%= device._id %>"> View</a>
                         </div>

@@ -38,15 +38,25 @@
         </div>
 
         <div class="col-md-6">
-            <h3 class="display-4 fw-bold mb-3" id="modelName"><%= item.model.name %><span
-                        class="badge <%= Object.keys(deviceState).find(key => deviceState[key] === item.state) === 'LISTED' ? 'bg-success' : 'bg-warning' %> ms-2"
-                        style="font-size: 0.3em;"
-                        id="stateBadge"><%= Object.keys(deviceState).find(key => deviceState[key] === item.state) %></span>
+            <h3 class="display-4 fw-bold mb-3 d-flex align-content-center" id="modelName"><%= item.model.name %>
             </h3>
 
-            <p class="lead text-muted"><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) %></p>
+            <p>
+                <span
+                        class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %> my-auto fs-6"
+                        id="stateBadge">
+                    <%= deviceState.deviceStateToString(item.state) %>
+                </span>
 
-            <% if(Object.keys(deviceState).find(key => deviceState[key] === item.state) !== 'LISTED' && item.listing_user._id.toString() === user.id) { %>
+                <span
+                        class="badge <%= (!item.visible) ? "bg-danger" : "d-none" %> ms-2 fs-6">
+                    Hidden
+                </span>
+            </p>
+
+            <p class="lead text-muted"><%= deviceCategory.deviceCategoryToString(item.category) %></p>
+
+            <% if(item.state !== deviceState.LISTED && item.listing_user._id.toString() === user.id) { %>
                 <a href="/list-item/<%= item._id %>" class="btn btn-primary">Edit Details</a>
             <% } %>
 
@@ -125,12 +135,20 @@
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <a href="<%= quote.url %>" target="_blank"
                                                            class="btn btn-primary mx-2 my-2">Visit <%= quote.provider.name.toUpperCase() %></a>
-                                                        <button class="btn btn-warning mx-2 my-2 star-quote" data-quote-id="<%= quote._id %>" id="star-quote">Star
-                                                            Quote</button>
-                                                        <button class="btn btn-primary mx-2 my-2 accept-quote" data-quote-id="<%= quote._id %>" id="accept-quote">Accept
-                                                            Quote</button>
-                                                        <button class="btn btn-danger mx-2 my-2 reject-quote" data-quote-id="<%= quote._id %>" id="reject-quote">Reject
-                                                            Quote</button>
+                                                        <button class="btn btn-warning mx-2 my-2 star-quote"
+                                                                data-quote-id="<%= quote._id %>" id="star-quote">Star
+                                                            Quote
+                                                        </button>
+                                                        <button class="btn btn-primary mx-2 my-2 accept-quote"
+                                                                data-quote-id="<%= quote._id %>" id="accept-quote">
+                                                            Accept
+                                                            Quote
+                                                        </button>
+                                                        <button class="btn btn-danger mx-2 my-2 reject-quote"
+                                                                data-quote-id="<%= quote._id %>" id="reject-quote">
+                                                            Reject
+                                                            Quote
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -200,7 +218,8 @@
                                         <div class="row">
                                             <div class="col-md-12 mt-2 mx-auto w-100">
                                                 <a href="https://www.ebay.co.uk/sl/prelist/suggest" target="_blank"
-                                                   class="btn btn-primary auction-quote" data-device-id="<%= item._id %>">
+                                                   class="btn btn-primary auction-quote"
+                                                   data-device-id="<%= item._id %>">
                                                     Click here to go to eBay</a>
                                             </div>
                                         </div>
@@ -287,7 +306,8 @@
                                         <div class="card h-100">
                                             <div class="card-body">
                                                 <div class="d-flex align-content-center">
-                                                    <a class="btn btn-success w-100 text-center my-auto recycle-quote" data-quote-id="<%= item._id %>" id="checkBtn">Checkout</a>
+                                                    <a class="btn btn-success w-100 text-center my-auto recycle-quote"
+                                                       data-quote-id="<%= item._id %>" id="checkBtn">Checkout</a>
                                                 </div>
                                             </div>
                                         </div>
