@@ -13,7 +13,7 @@
                         <label for="itemImage" class="form-label">Pick images of the device</label>
                         <div id="imagePreview" class="row p-1">
                             <% device.photos.forEach(function(photo) { %>
-                                <img src="<%= photo.replace('public', '') %>" class="img-thumbnail col-2">
+                                <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data).toString('base64') %>" class="img-thumbnail col-2">
                             <% }); %>
                         </div>
                         <input class="form-control" type="file" id="itemImage" name="itemImage" accept="image/*"  multiple>
@@ -76,6 +76,41 @@
                                 </div>
                             <%}%>
                         </div>
+
+                        <div class="row mt-2">
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3 row">
+                                    <label for="deviceColor" class="col-sm-6 col-lg-4 col-form-label fw-bold">Color</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-select" id="deviceColor">
+                                            <% const colors = ["Red", "Orange", "Yellow", "Green", "Cyan", "Blue", "Violet", "Other"]; %>
+                                            <% colors.forEach(color => { %>
+                                                <option value="<%= color %>" <% if (device.details[7]?.value === color) { %> selected <% } %>><%= color %></option>
+                                            <% }); %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="deviceCapacity" class="col-sm-6 col-lg-4 col-form-label fw-bold">Capacity</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-select" id="deviceCapacity">
+                                            <% const capacities = ["Less Than 16 Gb", "16 Gb", "32 Gb", "64 Gb", "128 Gb", "256 Gb", "512 Gb", "1 Tb", "2 Tb", "Larger Than 2 Tb"]; %>
+                                            <% capacities.forEach(capacity => { %>
+                                                <option value="<%= capacity %>" <% if (device.details[8]?.value === capacity) { %> selected <% } %>><%= capacity %></option>
+                                            <% }); %>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="deviceYear" class="col-form-label fw-bold">It has been in use for how many years?</label>
+                                    <div>
+                                        <input type="number" class="form-control" id="deviceYear" name="deviceYear" min="0" value="<%= device.details[9]?.value ? device.details[9].value : '0' %>" >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!--                    Device Condition-->
@@ -83,10 +118,10 @@
                         <p class="fw-bold fs-5">Device Condition</p>
                         <label for="deviceCondition" class="col-sm-4 col-form-label fw-bold ">Is your device in good condition?</label>
                         <div class="btn-group btn-group-sm" role="group" aria-label="Device Condition Choose">
-                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionYes" autocomplete="off" <%= device.good_condition ? 'checked' : ''%>>
+                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionYes"  <%= device.good_condition ? 'checked' : ''%>>
                             <label class="btn btn-outline-primary" for="conditionYes">Yes</label>
 
-                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionNo" autocomplete="off" <%= !device.good_condition ? 'checked' : ''%>>
+                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionNo"  <%= !device.good_condition ? 'checked' : ''%>>
                             <label class="btn btn-outline-primary" for="conditionNo">No</label>
                         </div>
                         <ul class="text-muted">
@@ -100,106 +135,101 @@
                         </ul>
                     </div>
 
-                    <div id="detail-condition" >
-                        <div>
-                            <label for="deviceFunctionality" class="col-sm-8 col-form-label fw-bold">1. Does your device turn on and work properly?</label>
+                    <div id="detail-condition" class="<%= device.good_condition ? 'd-none' : 'd-block'%>">
+                        <div class="mb-3">
+                            <label for="functionalityRadio" class="d-block col-form-label fw-bold">1. How well would you rate the overall functionality of the device?</label>
                             <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityYes" autocomplete="off" <%= device.details[0].value === "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="functionalityYes">Yes</label>
-
-                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityNo" autocomplete="off" <%= device.details[0].value !== "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="functionalityNo">No</label>
+                                <span class="me-2">Poor</span>
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                    <input type="radio" class="btn-check" name="functionalityRadio" id="functionality<%= i %>" value="<%= i %>" <% if (device.details[0]?.value === i.toString()) { %> checked <% } %>>
+                                    <label class="btn btn-outline-primary" for="functionality<%= i %>"><%= i %></label>
+                                <% } %>
+                                <span class="ms-2">Excellent</span>
                             </div>
                         </div>
 
-                        <div>
-                            <label for="btnCondition" class="col-sm-8 col-form-label fw-bold">2. All the buttons are working probably?</label>
+                        <div class="mb-3">
+                            <label for="btnRadio" class="d-block col-form-label fw-bold">2. How well would you rate the functionality of all the buttons?</label>
                             <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="btnRadio" id="btnYes" autocomplete="off" <%= device.details[1].value === "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="btnYes">Yes</label>
+                                <span class="me-2">Poor</span>
 
-                                <input type="radio" class="btn-check" name="btnRadio" id="btnNo" autocomplete="off" <%= device.details[1].value !== "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="btnNo">No</label>
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                    <input type="radio" class="btn-check" name="btnRadio" id="btn<%= i %>" value="<%= i %>" <% if (device.details[1]?.value === i.toString()) { %> checked <% } %>>
+                                    <label class="btn btn-outline-primary" for="btn<%= i %>"><%= i %></label>
+                                <% } %>
+                                <span class="ms-2">Excellent</span>
                             </div>
                         </div>
 
-                        <div>
-                            <label for="cameraCondition" class="col-sm-8 col-form-label fw-bold">3. The cameras work and all lenses are free of damage?</label>
+                        <div class="mb-3">
+                            <label for="cameraRadio" class="d-block col-form-label fw-bold">3. How well would you rate the performance of the cameras and the condition of all lenses?</label>
                             <div class="btn-group btn-group-sm" role="group" >
-                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraYes" autocomplete="off" <%= device.details[2].value === "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="cameraYes">Yes</label>
+                                <span class="me-2">Poor</span>
 
-                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraNo" autocomplete="off" <%= device.details[2].value !== "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="cameraNo">No</label>
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                    <input type="radio" class="btn-check" name="cameraRadio" id="camera<%= i %>" value="<%= i %>" <% if (device.details[2]?.value === i.toString()) { %> checked <% } %>>
+                                    <label class="btn btn-outline-primary" for="camera<%= i %>"><%= i %></label>
+                                <% } %>
+
+                                <span class="ms-2">Excellent</span>
                             </div>
                         </div>
 
-                        <div>
-                            <label for="batteryCondition" class="col-sm-8 col-form-label fw-bold">4. The battery is able to remain charged and provide continuous use time?</label>
+                        <div class="mb-3">
+                            <label for="batteryRadio" class="d-block col-form-label fw-bold">4. How well would you rate the battery's ability to remain charged and provide continuous use time?</label>
                             <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryYes" autocomplete="off" <%= device.details[3].value === "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="batteryYes">Yes</label>
+                                <span class="me-2">Poor</span>
 
-                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryNo" autocomplete="off" <%= device.details[3].value !== "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="batteryNo">No</label>
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                    <input type="radio" class="btn-check" name="batteryRadio" id="battery<%= i %>" value="<%= i %>" <% if (device.details[3]?.value === i.toString()) { %> checked <% } %>>
+                                    <label class="btn btn-outline-primary" for="battery<%= i %>"><%= i %></label>
+                                <% } %>
+
+                                <span class="ms-2">Excellent</span>
                             </div>
                         </div>
 
-                        <div>
-                            <label for="bodyCondition" class="col-sm-8 col-form-label fw-bold">5. The body is free of dents and scratches?</label>
+                        <div class="mb-3">
+                            <label for="bodyRadio" class="d-block col-form-label fw-bold">5. How well would you rate the condition of the device body in terms of dents and scratches?</label>
                             <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyYes" autocomplete="off" <%= device.details[4].value === "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="bodyYes">Yes</label>
+                                <span class="me-2">Poor</span>
 
-                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyNo" autocomplete="off" <%= device.details[4].value !== "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="bodyNo">No</label>
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                    <input type="radio" class="btn-check" name="bodyRadio" id="body<%= i %>" value="<%= i %>" <% if (device.details[4]?.value === i.toString()) { %> checked <% } %>>
+                                    <label class="btn btn-outline-primary" for="body<%= i %>"><%= i %></label>
+                                <% } %>
+                                <span class="ms-2">Excellent</span>
                             </div>
                         </div>
 
-                        <div>
-                            <label for="touchscreenCondition" class="col-sm-8 col-form-label fw-bold">6. The touchscreen and back glass are undamaged?</label>
+                        <div class="mb-3">
+                            <label for="touchscreenRadio" class="d-block col-form-label fw-bold">6. How well would you rate the condition of the touchscreen and back glass in terms of damage?</label>
                             <div class="btn-group btn-group-sm" role="group" >
-                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenYes" autocomplete="off" <%= device.details[5].value === "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="touchscreenYes">Yes</label>
+                                <span class="me-2">Poor</span>
 
-                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenNo" autocomplete="off" <%= device.details[5].value !== "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="touchscreenNo">No</label>
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                    <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen<%= i %>" value="<%= i %>" <% if (device.details[5]?.value === i.toString()) { %> checked <% } %>>
+                                    <label class="btn btn-outline-primary" for="touchscreen<%= i %>"><%= i %></label>
+                                <% } %>
+
+                                <span class="ms-2">Excellent</span>
                             </div>
                         </div>
 
-                        <div>
-                            <label for="displayCondition" class="col-sm-8 col-form-label fw-bold ">7. The display is free of distortion, lines and black or white spots?</label>
+                        <div class="mb-3">
+                            <label for="displayRadio" class="d-block col-form-label fw-bold ">7. How well would you rate the display in terms of distortion, lines, and the presence of black or white spots?</label>
                             <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="displayRadio" id="displayYes" autocomplete="off" <%= device.details[6].value === "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="displayYes">Yes</label>
+                                <span class="me-2 ">Poor</span>
 
-                                <input type="radio" class="btn-check" name="displayRadio" id="displayNo" autocomplete="off" <%= device.details[6].value !== "Good" ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="displayNo">No</label>
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                    <input type="radio" class="btn-check" name="displayRadio" id="display<%= i %>" value="<%= i %>" <% if (device.details[6]?.value === i.toString()) { %> checked <% } %>>
+                                    <label class="btn btn-outline-primary" for="display<%= i %>"><%= i %></label>
+                                <% } %>
+
+                                <span class="ms-2">Excellent</span>
                             </div>
                         </div>
                     </div>
-
-
-                    <!--                    Service add-on-->
-                    <div class="my-3">
-                        <p class="fw-bold fs-5">Service add-on</p>
-                        <div>
-                            <label for="dataService" class="col-sm-2 col-form-label fw-bold">Data Service</label>
-                            <div class="btn-group btn-group-sm" role="group" aria-label="Data Service Choose">
-                                <input type="radio" class="btn-check" name="dataRadio" id="dataNone" autocomplete="off" <%= device.data_service === 0 ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="dataNone">None</label>
-
-                                <input type="radio" class="btn-check" name="dataRadio" id="dataWiping" autocomplete="off" <%= device.data_service === 1 ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="dataWiping">Wiping by third party</label>
-
-                                <input type="radio" class="btn-check" name="dataRadio" id="dataRetrieval" autocomplete="off" <%= device.data_service === 2 ? 'checked' : ''%>>
-                                <label class="btn btn-outline-primary" for="dataRetrieval">Data retrieval (+ £8.99)</label>
-
-                            </div>
-                        </div>
-                    </div>
-
-
 
                     <!--                    Additional Information-->
                     <div class="my-3">

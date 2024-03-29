@@ -7,54 +7,46 @@
 
         <!--Filter and Sorter-->
         <div class="row mt-4 mt-3">
-            <p class="fw-bold">Classification: </p>
-            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+            <p class="fw-bold">Category: </p>
+            <div class="btn-group btn-group-sm flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
                 <% Object.keys(deviceCategory).forEach(category => { %>
-                    <input type="checkbox" class="btn-check category-filter" id="<%= category %>" autocomplete="off">
+                    <input type="checkbox" class="btn-check category-filter" id="<%= category %>">
                     <label class="btn btn-outline-primary" for="<%= category %>"><%= category %></label>
                 <% }) %>
             </div>
         </div>
 
+
         <div class="row mt-2">
             <p class="fw-bold">Device Type: </p>
-            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                <input type="checkbox" class="btn-check" id="phoneCheck" autocomplete="off">
-                <label class="btn btn-outline-primary" for="phoneCheck">Phone</label>
-
-                <input type="checkbox" class="btn-check" id="tabletCheck" autocomplete="off">
-                <label class="btn btn-outline-primary" for="tabletCheck">Tablet</label>
-
-                <input type="checkbox" class="btn-check" id="laptopCheck" autocomplete="off">
-                <label class="btn btn-outline-primary" for="laptopCheck">Laptop</label>
-
-                <input type="checkbox" class="btn-check" id="watchCheck" autocomplete="off">
-                <label class="btn btn-outline-primary" for="watchCheck">Watch</label>
-
-                <input type="checkbox" class="btn-check" id="pcCheck" autocomplete="off">
-                <label class="btn btn-outline-primary" for="pcCheck">PC</label>
+            <div class="btn-group btn-group-sm flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
+                <% deviceTypes.forEach(deviceType => { %>
+                    <input type="checkbox" class="btn-check deviceType-filter" id="<%= deviceType.name %>" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="<%= deviceType.name %>"><%= deviceType.name %></label>
+                <% }) %>
             </div>
         </div>
 
-        <div class="row mt-2">
-            <p class="fw-bold">Pricing: </p>
-            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                <input type="radio" class="btn-check" name="priceOrder" id="priceDescending" autocomplete="off">
-                <label class="btn btn-outline-primary" for="priceDescending">Descending</label>
+<!--        <div class="row mt-2">-->
+<!--            <p class="fw-bold">Pricing: </p>-->
+<!--            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">-->
+<!--                <input type="radio" class="btn-check price-filter" name="priceOrder" id="priceDescending" autocomplete="off">-->
+<!--                <label class="btn btn-outline-primary" for="priceDescending">Descending</label>-->
 
-                <input type="radio" class="btn-check" name="priceOrder" id="priceAscending" autocomplete="off">
-                <label class="btn btn-outline-primary" for="priceAscending">Ascending</label>
+<!--                <input type="radio" class="btn-check price-filter" name="priceOrder" id="priceAscending" autocomplete="off">-->
+<!--                <label class="btn btn-outline-primary" for="priceAscending">Ascending</label>-->
 
-            </div>
-        </div>
-        <button class="btn btn-primary mt-5" id="clearFiltersBtn">Clear Filters</button>
+<!--            </div>-->
+<!--        </div>-->
+        <button class="btn btn-primary btn-sm mt-2" id="clearFiltersBtn">Clear Filters</button>
 
         <% items.forEach(item => { %>
-            <div class="card mt-4">
+            <div class="card mt-4 item">
                 <div class="card-body row d-flex align-items-center">
                     <div class="col-3 col-md-2 col-lg-2 col-xl-1">
                         <% if (item.photos?.length > 0) { %>
-                            <img src="<%= item.photos[0].replace('public', '') %>" class="img-fluid item-img"
+
+                            <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data).toString('base64') %>" class="img-fluid item-img"
                                  alt="Image of <%= item.model.name %>">
                         <% } else { %>
                             <img src="https://placehold.co/600x600?text=No Images" class="img-fluid item-img"
@@ -66,7 +58,7 @@
                                     class="badge <%= Object.keys(deviceState).find(key => deviceState[key] === item.state) === 'LISTED' ? 'bg-success' : 'bg-warning' %> ms-2"
                                     style="font-size: 0.3em;"><%= Object.keys(deviceState).find(key => deviceState[key] === item.state) %></span>
                         </h4>
-                        <p class="m-0 p-0 text-muted"><small>Device Type: </small><%= item.device_type.name %></p>
+                        <p class="m-0 p-0 text-muted deviceType"><small>Device Type: </small><%= item.device_type.name %></p>
                         <p class="m-0 p-0 text-muted category">
                             <small>Classification: </small><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) %>
                         </p>
@@ -92,4 +84,3 @@
 <script src="/javascripts/marketplace/filter.js"></script>
 
 <%- include("../components/footer") %>
-```
