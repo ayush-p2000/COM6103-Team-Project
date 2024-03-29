@@ -8,7 +8,6 @@ const {Device} = require("../../model/schema/device")
 const {
     getUserItems,
     getQuotes,
-    getHistoryByDevice,
     getProviders,
     addQuote,
     getAllDevices, getAllDeviceType,
@@ -34,7 +33,7 @@ const getMarketplace = async (req, res, next) => {
                 var deviceType = ""
                 var brand = ""
                 var model = ""
-                const customModel = await getHistoryByDevice(item._id)
+                const customModel = await getUnknownDeviceHistoryByDevice(item._id)
                 customModel[0].data.forEach(data => {
                     if (data.name === "device_type") {
                         deviceType = data.value
