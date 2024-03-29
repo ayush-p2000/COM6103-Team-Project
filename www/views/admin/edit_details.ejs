@@ -12,7 +12,7 @@
                                     <% if(item.photos?.length > 0) { %>
                                         <% item.photos.forEach((photo, index) => { %>
                                             <div class="carousel-item d-flex justify-content-center <%= index === 0 ? 'active' : '' %>">
-                                                <img src="<%= photo.replace('public', '') %>"
+                                                <img src="data:image/png;base64,<%= photo %>"
                                                      class="img-fluid h-100 mx-auto"
                                                      alt="...">
                                             </div>

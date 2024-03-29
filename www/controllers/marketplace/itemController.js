@@ -7,7 +7,7 @@ const multer = require('multer');
 const {getMockItem, getMockQuote} = require("../../util/mock/mockData");
 const fixedToCurrency = require("../../util/currency/fixedToCurrency");
 const {ACCEPTED, REJECTED, CONVERTED, EXPIRED, stateToString, stateToColour} = require("../../model/enum/quoteState");
-const {updateQuote, getQuoteById} = require("../../model/mongodb");
+const {updateQuote, getQuoteById, getUnknownDeviceHistoryByDevice} = require("../../model/mongodb");
 const mongoose = require("mongoose");
 const QRCode = require('qrcode');
 const {
@@ -39,17 +39,22 @@ const postListItem = async (req, res) => {
     var id = req.params.id;
     try {
         const files = req.files;
-        const filePaths = [];
+
+        const filesBase64 = [];
         for (let i = 0; i < files.length; i++) {
-            const filePath = files[i].path;
-            filePaths.push(filePath);
+
+            const image_data = Buffer.from(files[i].buffer, 'base64');
+            const image_type = files[i].mimetype;
+            const base64Data = {img_data:image_data,img_type:image_type}
+
+            filesBase64.push(base64Data);
         }
 
         if (typeof id === 'undefined') {
-            const deviceId = await listDevice(req.body, filePaths, req.user);
+            const deviceId = await listDevice(req.body, filesBase64, req.user);
             res.status(200).send(deviceId);
         } else {
-            const deviceId = await updateDevice(id, req.body, filePaths);
+            const deviceId = await updateDevice(id, req.body, filesBase64);
             res.status(200).send(deviceId);
         }
     } catch (err) {
@@ -78,7 +83,7 @@ async function getListItem(req, res) {
         try {
             let device = await getDevice(id);
             if (device[0].model == null) {
-                let customModel = await getHistoryByDevice(id)
+                let customModel = await getUnknownDeviceHistoryByDevice(id)
                 customModel[0].data.forEach(data => {
                     if (data.name === "device_type") {
                         device[0].device_type = {name: data.value}
@@ -133,7 +138,7 @@ async function getItemDetails(req, res, next) {
             var deviceType = ""
             var brand = ""
             var model = ""
-            const customModel = await getHistoryByDevice(item._id)
+            const customModel = await getUnknownDeviceHistoryByDevice(item._id)
             customModel[0].data.forEach(data => {
                 if (data.name === "device_type") {
                     deviceType = data.value

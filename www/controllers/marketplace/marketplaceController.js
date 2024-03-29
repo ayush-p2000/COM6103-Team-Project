@@ -11,7 +11,8 @@ const {
     getHistoryByDevice,
     getProviders,
     addQuote,
-    getAllDevices, getAllDeviceType
+    getAllDevices, getAllDeviceType,
+    getUnknownDeviceHistoryByDevice
 } = require('../../model/mongodb')
 const {join} = require("path");
 const deviceState = require("../../model/enum/deviceState")
@@ -78,7 +79,7 @@ async function getMyItems(req, res, next) {
                 var deviceType = ""
                 var brand = ""
                 var model = ""
-                const customModel = await getHistoryByDevice(item._id)
+                const customModel = await getUnknownDeviceHistoryByDevice(item._id)
                 customModel[0].data.forEach(data => {
                     if (data.name === "device_type") {
                         deviceType = data.value
