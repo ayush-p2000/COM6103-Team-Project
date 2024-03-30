@@ -78,7 +78,7 @@ const createStaff = async (req, res, next) => {
                 role:role
             });
         }
-        if(req.user.role > USER) {
+        if(req.user.role > USER && req.body.role <= req.user.role) {
             await user.save()
         }
 
