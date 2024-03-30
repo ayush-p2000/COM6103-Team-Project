@@ -80,6 +80,8 @@ const deviceState = {
                 return "Unknown";
         }
     },
+
+    getList: () => Object.values(deviceCategory).filter(value => typeof value === 'number')
 };
 
 module.exports = deviceState;

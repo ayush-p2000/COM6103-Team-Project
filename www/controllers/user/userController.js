@@ -5,6 +5,8 @@
 //const {getMockUser} = require("../../util/mock/mockData");
 const {User} = require("../../model/schema/user");
 
+const {getAllUsers} = require("../../model/mongodb");
+
 //------------------------------------------------ Rendering user Database -------------------------------------------------------------------------//
 
 
@@ -86,6 +88,7 @@ async function updateUserDetails(req, res, next){
 
         // Find the user by ID and update the specified fields
         const updatedUser = await User.findByIdAndUpdate(req.user.id, updateFields, {new: true});
+        const users = {};
 
         if (!updatedUser) {
             return res.status(404).send('Server Error'); // Any possible error comes out e.g. Database connection, User unidentified, etc...
@@ -104,6 +107,8 @@ async function updateUserDetails(req, res, next){
         res.status(500).send('Server error');
     }
 }
+
+
 
 module.exports = {
     getUserProfile,
