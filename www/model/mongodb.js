@@ -64,11 +64,11 @@ async function getUserById(id) {
 }
 
 async function searchUser(filter) {
-    return await User.findOne(filter);
+    return User.findOne(filter);
 }
 
 async function searchUserAndPopulate(filter) {
-    return User.find(filter).populate('listed_devices').populate('listed_devices.model').populate('listed_devices.brand').populate('listed_devices.device_type');
+    return User.findOne(filter).populate('listed_devices').populate('listed_devices.model').populate('listed_devices.brand').populate('listed_devices.device_type');
 }
 
 async function createUser(user) {

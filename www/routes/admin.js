@@ -16,6 +16,7 @@ const {
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
 
 const {upload} = require('../middlewares/multer')
+const {insertStaffDetails} = require("../controllers/admin/adminController");
 
 
 /* GET home page. */
@@ -49,5 +50,7 @@ router.get('/devices/:id', getUserDeviceDetailsPage);
 router.post('/devices/:id',upload.none(), updateUserDeviceDetailsPage)
 
 router.get('/getModelFromBrandAndType', getModelsFromTypeAndBrand)
+
+router.post('/accounts/:id', insertStaffDetails );
 
 module.exports = router;
