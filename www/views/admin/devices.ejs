@@ -39,9 +39,9 @@
                                 <td><%= device.device_type?.name %></td>
                                 <td><%= device.brand?.name %></td>
                                 <td><%= device.model?.name %></td>
-                                <td><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) %></td>
-                                <td><span class="badge <%= deviceState.deviceStateToColour(device.state) %> ms-2"><%= deviceState.deviceStateToString(device.state) %></span></td>
-                                <td><%= device.visible %></td>
+                                <td><%= deviceCategory.deviceCategoryToString(device.category) %></td>
+                                <td><span class="badge <%= deviceState.deviceStateToColour(device.state, "bg-") %> mx-auto"><%= deviceState.deviceStateToString(device.state) %></span></td>
+                                <td><span class="badge <%= (device.visible ? "bg-success" : "bg-danger") %>"><%= (device.visible) ? "Visible" : "Hidden" %></span></td>
                                 <td><a href="/admin/accounts/<%= device.listing_user?._id %>"> <%= device.listing_user?._id ?? "Unknown User" %> </a></td>
                                 <td><a href="/admin/devices/<%= device._id %>" class="btn btn-primary">View</a></td>
                             </tr>
