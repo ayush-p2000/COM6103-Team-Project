@@ -12,65 +12,41 @@
 
         <!--Filter and Sorter-->
         <div class="row mt-4 mt-3">
-            <p class="fw-bold">Classification: </p>
-            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                <input type="checkbox" class="btn-check" id="currentClass" autocomplete="off">
-                <label class="btn btn-outline-primary" for="currentClass">Current</label>
-
-                <input type="checkbox" class="btn-check" id="recycleClass" autocomplete="off">
-                <label class="btn btn-outline-primary" for="recycleClass">Recycle</label>
-
-                <input type="checkbox" class="btn-check" id="rareClass" autocomplete="off">
-                <label class="btn btn-outline-primary" for="rareClass">Rare</label>
-
-                <input type="checkbox" class="btn-check" id="UnknownClass" autocomplete="off">
-                <label class="btn btn-outline-primary" for="UnknownClass">Unknown</label>
+            <p class="fw-bold">Category: </p>
+            <div class="btn-group btn-group-sm flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
+                <% Object.keys(deviceCategory).forEach(category => { %>
+                    <input type="checkbox" class="btn-check category-filter" id="<%= category %>">
+                    <label class="btn btn-outline-primary" for="<%= category %>"><%= category %></label>
+                <% }) %>
             </div>
         </div>
+
 
         <div class="row mt-2">
             <p class="fw-bold">Device Type: </p>
-            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                <input type="checkbox" class="btn-check" id="phoneCheck" autocomplete="off">
-                <label class="btn btn-outline-primary" for="phoneCheck">Phone</label>
-
-                <input type="checkbox" class="btn-check" id="tabletCheck" autocomplete="off">
-                <label class="btn btn-outline-primary" for="tabletCheck">Tablet</label>
-
-                <input type="checkbox" class="btn-check" id="laptopCheck" autocomplete="off">
-                <label class="btn btn-outline-primary" for="laptopCheck">Laptop</label>
-
-                <input type="checkbox" class="btn-check" id="watchCheck" autocomplete="off">
-                <label class="btn btn-outline-primary" for="watchCheck">Watch</label>
-
-                <input type="checkbox" class="btn-check" id="pcCheck" autocomplete="off">
-                <label class="btn btn-outline-primary" for="pcCheck">PC</label>
+            <div class="btn-group btn-group-sm flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
+                <% deviceTypes.forEach(deviceType => { %>
+                    <input type="checkbox" class="btn-check deviceType-filter" id="<%= deviceType.name %>" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="<%= deviceType.name %>"><%= deviceType.name %></label>
+                <% }) %>
             </div>
         </div>
 
-        <div class="row mt-2">
-            <p class="fw-bold">Pricing: </p>
-            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                <input type="radio" class="btn-check" name="priceOrder" id="priceDescending" autocomplete="off" checked>
-                <label class="btn btn-outline-primary" for="priceDescending">Descending</label>
+        <button class="btn btn-primary btn-sm mt-2" id="clearFiltersBtn">Clear Filters</button>
 
-                <input type="radio" class="btn-check" name="priceOrder" id="priceAscending" autocomplete="off">
-                <label class="btn btn-outline-primary" for="priceAscending">Ascending</label>
 
-            </div>
-        </div>
 
         <!--items list-->
         <div class="row g-2 mt-2">
             <% devices.forEach(device => { if(device.visible){%>
-                <div class="col-6 col-md-4 col-xl-2">
+                <div class="col-6 col-md-4 col-xl-2 item">
                     <div class="card h-100">
                         <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data).toString('base64') %>" class="card-img-top img-fluid item-img" alt="...">
                         <div class="card-body">
-                            <h5 class="card-title"><%= device.model.name %></h5>
-                            <p class="m-0 ">Device Type: <span
-                                        class="fw-light fst-italic text-muted"><%= device.device_type.name %></span></p>
-                            <p>Classification: <span class="fw-light fst-italic text-muted"><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === device.category) %></span></p>
+                            <h5 class="card-title modelName"><%= device.model.name %></h5>
+                            <p class="m-0 p-0 text-muted deviceType"><small>Device Type: </small><%= device.device_type.name %></p>
+                            <p class="m-0 p-0 text-muted category">
+                                <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
                             <p>By: <span class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span></p>
                             <a class="btn btn-primary btn-sm mb-1 item-detail-btn" href="/item/<%= device._id %>"> View</a>
                         </div>
@@ -82,4 +58,5 @@
     </div>
 </div>
 
+<script src="/javascripts/marketplace/filter_with_search.js"></script>
 <%- include("../components/footer") %>
