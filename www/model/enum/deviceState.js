@@ -81,7 +81,7 @@ const deviceState = {
         }
     },
 
-    getList: () => Object.values(deviceCategory).filter(value => typeof value === 'number')
+    getList: () => Object.values(deviceState).filter(value => typeof value === 'number')
 };
 
 module.exports = deviceState;
