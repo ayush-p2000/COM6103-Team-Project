@@ -60,7 +60,9 @@
                                     disabled
                                     data-sitekey="<%= process.env.CAPTCHA_PUBLIC %>>"
                                     data-callback='onSubmit'
-                                    data-action='submit'>Sign in
+                                    data-action='submit'>
+                                <span class="spinner-border spinner-border-sm me-2" role="status" id="spinner"></span>
+                                Loading...
                             </button>
                             <input type="hidden" id="token" name="token">
                             <div class="text-center align-content-center fw-bolder mt-3 ">
@@ -79,7 +81,7 @@
 <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.CAPTCHA_PUBLIC %>"></script>
 <script src="/javascripts/captcha/captcha.js"></script>
 <script>
-    executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "login", <%= failedCaptcha %>)
+    executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "Login", <%= failedCaptcha %>)
 </script>
 
 <div class="fixed-bottom z-0">

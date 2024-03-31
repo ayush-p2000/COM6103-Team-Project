@@ -110,7 +110,9 @@
                                     data-sitekey="<%= process.env.CAPTCHA_PUBLIC %>>"
                                     data-callback='onSubmit'
                                     disabled
-                                    data-action='submit'>Register
+                                    data-action='submit'>
+                                <span class="spinner-border spinner-border-sm me-2" role="status" id="spinner"></span>
+                                Loading...
                             </button>
 
                             <div class="text-center align-content-center fw-bolder mt-3">
@@ -127,7 +129,7 @@
 <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.CAPTCHA_PUBLIC %>"></script>
 <script src="/javascripts/captcha/captcha.js"></script>
 <script>
-    executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "register", <%= failedCaptcha %>)
+    executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "Register", <%= failedCaptcha %>)
 </script>
 
 <!----------------------------------------------- Footer ------------------------------------------------>
