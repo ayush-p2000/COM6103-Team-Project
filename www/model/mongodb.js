@@ -17,7 +17,7 @@ const {History} = require("./schema/history");
 const {UNKNOWN_DEVICE} = require("./enum/historyType");
 
 const {UNKNOWN} = require("./enum/deviceCategory")
-const {LISTED} = require("./enum/deviceState")
+const {HAS_QUOTE} = require("./enum/deviceState")
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -379,7 +379,14 @@ const getAllDevices = async (filter = {}) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getCarouselDevices = async (imgPerCarousel) => {
-    return await Device.find({category: {$ne: UNKNOWN}, state: LISTED}).populate("model").limit(imgPerCarousel * 3)
+    const devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE}).populate("model").select({model:1,photos:1, listing_user:0, brand:0, device_type:0}).limit(imgPerCarousel * 3)
+    // devices = Array.from(devices)
+    for (let i = 0; i < devices.length; i++) {
+        const quotes = await getQuotes(devices[i]._id);
+        devices[i] = {...devices[i]._doc, quote: quotes.length ? quotes[0]:null}
+    }
+    console.log(devices[0])
+    return devices
 }
 
 /**

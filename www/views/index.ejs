@@ -51,7 +51,7 @@
                                          style="height: 200px; object-fit: cover">
                                     <div class="card-body">
                                         <h5 class="card-title"><%= item.model.name %></h5>
-                                        <p class="m-0 p-0 fs-6">Price: <span class="fw-bold"><%= 1 %>$</span></p>
+                                        <p class="m-0 p-0 fs-6">Price: <span class="fw-bold"><%= item.quote ? quote.value : "Price not found" %></span></p>
                                     </div>
                                 </div>
                             </div>
