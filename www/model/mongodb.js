@@ -29,8 +29,9 @@ const connectionString = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST
 
 /* Variables */
 let connected = false;
+let store;
 
-mongoose.connect(connectionString);
+mongoose.connect(connectionString)
 
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
@@ -38,21 +39,6 @@ db.once('open', async () => {
     console.log(`Connected to ${MONGO_CONNNAME}`);
     connected = true;
 });
-
-/* Session Storage */
-let store;
-if (connected) {
-    // Use Session schema from connect-mongo which aligns with express-session setup.
-    store = new MongoStore.create({
-        client: db,
-        dbName: process.env.MONGO_DBNAME,
-        collection: 'sessions',
-        expires: 1000 * 60 * 60 * 48,
-        crypto: {
-            secret: process.env.STORE_SECRET || "secret",
-        }
-    });
-}
 
 /* Functions */
 async function getAllUsers() {
