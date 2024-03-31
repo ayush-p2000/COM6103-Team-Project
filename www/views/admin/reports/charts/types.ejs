@@ -1,0 +1,12 @@
+<div>
+    <canvas id="types_chart"></canvas>
+    <script src="/javascripts/reports/charts/types.js"></script>
+    <script>
+        const types_labels = <%- JSON.stringify(labels) %>;
+        const types_data = <%- JSON.stringify(datasets[0]) %>;
+        const labels = <%- JSON.stringify(labels) %>;
+        const labels_colours = labels.map(label => pickRandomColour(label))
+        const types_backgrounds = labels_colours.map(colour => colour.background);
+        const types_borderColours = labels_colours.map(colour => colour.border);
+    </script>
+</div>

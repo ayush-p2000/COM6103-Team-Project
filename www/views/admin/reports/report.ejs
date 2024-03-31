@@ -26,12 +26,8 @@
 
                 <div class="row">
                     <div class="col-md-12">
-
-                        <%# TODO: Remove this TRUE once other reports exist%>
-                        <% if (true) { %>
-                            <%- include("sales", {labels: data.labels, retrieval: data.datasets, table: data.table}) -%>
-                        <% } else if (report !== undefined) { %>
-                            <%- include(report, {labels: data.labels, retrieval: data.retrieval}) -%>
+                        <% if (typeof report !== 'undefined') { %>
+                            <%- include(report, {labels: data.labels, datasets: data.datasets, table: data.table}) -%>
                         <% } else { %>
                             <div class="text-center">
                                 <h1>Report not found</h1>

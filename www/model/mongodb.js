@@ -41,7 +41,7 @@ db.once('open', async () => {
 
 /* Session Storage */
 let store;
-if(connected){
+if (connected) {
     // Use Session schema from connect-mongo which aligns with express-session setup.
     store = new MongoStore.create({
         client: db,
@@ -53,6 +53,7 @@ if(connected){
         }
     });
 }
+
 /* Functions */
 async function getAllUsers() {
     return User.find();
@@ -127,7 +128,7 @@ async function getProviders() {
  * Add method to save the details of a new Quote to the database
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
-async function addQuote(quoteDetails){
+async function addQuote(quoteDetails) {
     try {
         const quote = new Quote({
             device: quoteDetails.device,
@@ -162,7 +163,7 @@ async function updateQuoteState(id, state) {
  */
 async function updateDeviceState(id, state) {
     try {
-        return await Device.updateOne({device:id}, {state: state})
+        return await Device.updateOne({device: id}, {state: state})
     } catch (err) {
         console.log(err)
     }
@@ -175,7 +176,7 @@ async function updateDeviceState(id, state) {
 const getAllDeviceType = async () => {
     try {
         return await DeviceType.find();
-    }catch (error) {
+    } catch (error) {
         console.error("An error occurred while get All DeviceType:", error);
         throw error;
     }
@@ -188,7 +189,7 @@ const getAllDeviceType = async () => {
 const getAllBrand = async () => {
     try {
         return await Brand.find();
-    }catch (error) {
+    } catch (error) {
         console.error("An error occurred while get All Brand:", error);
         throw error;
     }
@@ -199,11 +200,13 @@ const getAllBrand = async () => {
  * Get a List of Models Base on Specific Brand and Type
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
-const getModels = async (brandId,deviceTypeId) => {
+const getModels = async (brandId, deviceTypeId) => {
     try {
-        return await Model.find({brand: new mongoose.Types.ObjectId(brandId),
-            deviceType: new mongoose.Types.ObjectId(deviceTypeId)})
-    }catch (error) {
+        return await Model.find({
+            brand: new mongoose.Types.ObjectId(brandId),
+            deviceType: new mongoose.Types.ObjectId(deviceTypeId)
+        })
+    } catch (error) {
         console.error("An error occurred while get Models:", error);
         throw error;
     }
@@ -217,9 +220,9 @@ const getModels = async (brandId,deviceTypeId) => {
 const listDevice = async (deviceData, photos, user) => {
     try {
         const newDevice = new Device({
-            device_type: mongoose.Types.ObjectId.isValid(deviceData.device_type)? deviceData.device_type : new mongoose.Types.ObjectId(),
-            brand: mongoose.Types.ObjectId.isValid(deviceData.brand)? deviceData.brand : new mongoose.Types.ObjectId(),
-            model: mongoose.Types.ObjectId.isValid(deviceData.model)? deviceData.model : new mongoose.Types.ObjectId(),
+            device_type: mongoose.Types.ObjectId.isValid(deviceData.device_type) ? deviceData.device_type : new mongoose.Types.ObjectId(),
+            brand: mongoose.Types.ObjectId.isValid(deviceData.brand) ? deviceData.brand : new mongoose.Types.ObjectId(),
+            model: mongoose.Types.ObjectId.isValid(deviceData.model) ? deviceData.model : new mongoose.Types.ObjectId(),
             details: JSON.parse(deviceData.details),
             category: deviceData.category,
             good_condition: deviceData.good_condition,
@@ -232,11 +235,11 @@ const listDevice = async (deviceData, photos, user) => {
         });
         const savedDevice = await newDevice.save();
 
-        if (!mongoose.Types.ObjectId.isValid(deviceData.model)){
+        if (!mongoose.Types.ObjectId.isValid(deviceData.model)) {
             const data = [
-                { name: 'device_type', value: deviceData.device_type, data_type: 0 },
-                { name: 'brand', value: deviceData.brand, data_type: 0 },
-                { name: 'model', value: deviceData.model, data_type: 0 }
+                {name: 'device_type', value: deviceData.device_type, data_type: 0},
+                {name: 'brand', value: deviceData.brand, data_type: 0},
+                {name: 'model', value: deviceData.model, data_type: 0}
             ];
             const newHistory = new History({
                 device: savedDevice,
@@ -294,7 +297,7 @@ const addBrand = async (name) => {
  * Add a New Model to db
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
-const addModel = async (modelData,properties,category) => {
+const addModel = async (modelData, properties, category) => {
     const newModel = new Model({
         name: modelData.name,
         brand: modelData.brand,
@@ -327,7 +330,7 @@ const updateDevice = async (id, deviceData, photos) => {
         }
         const updatedDevice = await Device.updateOne(filter, update);
         return updatedDevice._id;
-    }catch (error) {
+    } catch (error) {
         console.error("An error occurred while update Device:", error);
         throw error;
     }
@@ -339,8 +342,8 @@ const updateDevice = async (id, deviceData, photos) => {
  */
 const getUnknownDeviceHistoryByDevice = async (id) => {
     try {
-        return History.find({device:id, history_type: UNKNOWN_DEVICE});
-    }catch (error) {
+        return History.find({device: id, history_type: UNKNOWN_DEVICE});
+    } catch (error) {
         console.error("An error occurred while get History By Device:", error);
         throw error;
     }
@@ -352,8 +355,8 @@ const getUnknownDeviceHistoryByDevice = async (id) => {
  */
 const getDevice = async (id) => {
     try {
-        return Device.find({_id:id}).populate('brand').populate('device_type').populate('model');
-    }catch (error) {
+        return Device.find({_id: id}).populate('brand').populate('device_type').populate('model');
+    } catch (error) {
         console.error("An error occurred while get Device:", error);
         throw error;
     }
@@ -394,15 +397,15 @@ async function updateDeviceDetails(id, deviceDetails) {
         console.log(deviceDetails);
         const filter = {_id: id}
         const device = {
-        $set: {
-            model : deviceDetails.model,
-            details : JSON.parse(deviceDetails.details),
-            category : deviceDetails.category,
-            good_condition : deviceDetails.good_condition,
-            state : deviceDetails.state,
-            additional_details : deviceDetails.additional_details,
-            visible : deviceDetails.visible
-        }
+            $set: {
+                model: deviceDetails.model,
+                details: JSON.parse(deviceDetails.details),
+                category: deviceDetails.category,
+                good_condition: deviceDetails.good_condition,
+                state: deviceDetails.state,
+                additional_details: deviceDetails.additional_details,
+                visible: deviceDetails.visible
+            }
         }
         const updatedDevice = await Device.updateOne(filter, device)
 
@@ -424,7 +427,70 @@ const updateQuote = async (id, updatedProps) => {
     return Quote.updateOne({_id: id}, updatedProps);
 }
 
+/**
+ * Returns a count of devices grouped by device category
+ * @returns {Promise<Aggregate<Array<any>>>}
+ * @author Benjamin Lister
+ */
+const getDevicesGroupByCategory = async () => {
+    return Device.aggregate([
+        {
+            $group: {
+                _id: "$category",
+                total: {$sum: 1}
+            }
+        }
+    ]);
+}
 
+/**
+ * Returns a count of devices grouped by device state
+ * @returns {Promise<Aggregate<Array<any>>>}
+ * @author Benjamin Lister
+ */
+const getDevicesGroupByState = async () => {
+    return Device.aggregate([
+        {
+            $group: {
+                _id: "$state",
+                total: {$sum: 1}
+            }
+        }
+    ]);
+}
+
+/**
+ * Returns a count of devices grouped by device type
+ * Includes the device type name and the total count of devices of that type
+ * @returns {Promise<Aggregate<Array<any>>>}
+ * @author Benjamin Lister
+ */
+const getDevicesGroupByType = async () => {
+    //This aggregation effectively mimics a join statement from SQL
+    return Device.aggregate([
+        {
+            //Mongoose Aggregation doesn't support autopopulating, so we have to manually lookup the device type
+            $lookup: {
+                from: "devicetypes",
+                localField: "device_type",
+                foreignField: "_id",
+                as: "device_type"
+            },
+        },
+        {
+            //Unwind the device type array so we can group by the device type name
+            $unwind: "$device_type"
+        },
+        {
+            //Group by the device type _id but also include the device type name and count of devices of that type
+            $group: {
+                _id: "$device_type",
+                name: {$first: "$device_type.name"},
+                total: {$sum: 1}
+            }
+        }
+    ]);
+}
 
 
 module.exports = {
@@ -457,4 +523,9 @@ module.exports = {
     updateDeviceDetails,
     updateDeviceState,
     getUnknownDeviceHistoryByDevice,
+    getAllDeviceTypes,
+    getAllBrands,
+    getDevicesGroupByCategory,
+    getDevicesGroupByState,
+    getDevicesGroupByType,
 }
