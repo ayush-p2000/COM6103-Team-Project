@@ -22,43 +22,65 @@ const deviceState = {
     CLOSED,
     HIDDEN,
     REJECTED,
-    deviceStateToColour: function(deviceState) {
+    deviceStateToColour: function (deviceState, prefix = "") {
         switch (deviceState) {
+            case DRAFT:
+                return prefix + "secondary";
+            case IN_REVIEW:
+                return prefix + "secondary"
             case LISTED:
-                return "bg-success";
+                return prefix + "primary";
+            case HAS_QUOTE:
+                return prefix + "success";
+            case SOLD:
+                return prefix + "secondary"
+            case RECYCLED:
+                return prefix + "success";
+            case AUCITON:
+                return prefix + "warning";
+            case DATA_RECOVERY:
+                return prefix + "info";
+            case CLOSED:
+                return prefix + "secondary";
+            case HIDDEN:
+                return prefix + "secondary";
+            case REJECTED:
+                return prefix + "danger";
             default:
-                return "bg-warning"; // Default color if state is not recognized
+                return prefix + "warning"; // Default color if state is not recognized
         }
     },
 
     deviceStateToString: function (deviceState) {
         switch (deviceState) {
             case DRAFT:
-                return "DRAFT";
+                return "Draft";
             case IN_REVIEW:
-                return "IN_REVIEW";
+                return "In Review";
             case LISTED:
-                return "LISTED";
+                return "Listed";
             case HAS_QUOTE:
-                return "HAS_QUOTE";
+                return "Has Quote";
             case SOLD:
-                return "SOLD";
+                return "Sold";
             case RECYCLED:
-                return "RECYCLED";
+                return "Recycled";
             case AUCITON:
-                return "AUCITON";
+                return "Auction";
             case DATA_RECOVERY:
-                return "DATA_RECOVERY";
+                return "Data Recovery";
             case CLOSED:
-                return "CLOSED";
+                return "Closed";
             case HIDDEN:
-                return "HIDDEN";
+                return "Hidden";
             case REJECTED:
-                return "REJECTED";
+                return "Rejected";
             default:
-                return "UNKNOWN";
+                return "Unknown";
         }
-    }
+    },
+
+    getList: () => Object.values(deviceCategory).filter(value => typeof value === 'number')
 };
 
 module.exports = deviceState;

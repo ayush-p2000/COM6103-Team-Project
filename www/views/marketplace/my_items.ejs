@@ -9,9 +9,9 @@
         <div class="row mt-4 mt-3">
             <p class="fw-bold">Category: </p>
             <div class="btn-group btn-group-sm flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
-                <% Object.keys(deviceCategory).forEach(category => { %>
-                    <input type="checkbox" class="btn-check category-filter" id="<%= category %>">
-                    <label class="btn btn-outline-primary" for="<%= category %>"><%= category %></label>
+                <% deviceCategory.getList().forEach(category => { %>
+                    <input type="checkbox" class="btn-check category-filter" id="<%= deviceCategory.deviceCategoryToString(category) %>">
+                    <label class="btn btn-outline-primary" for="<%= deviceCategory.deviceCategoryToString(category) %>"><%= deviceCategory.deviceCategoryToString(category) %></label>
                 <% }) %>
             </div>
         </div>
@@ -26,19 +26,7 @@
                 <% }) %>
             </div>
         </div>
-
-<!--        <div class="row mt-2">-->
-<!--            <p class="fw-bold">Pricing: </p>-->
-<!--            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">-->
-<!--                <input type="radio" class="btn-check price-filter" name="priceOrder" id="priceDescending" autocomplete="off">-->
-<!--                <label class="btn btn-outline-primary" for="priceDescending">Descending</label>-->
-
-<!--                <input type="radio" class="btn-check price-filter" name="priceOrder" id="priceAscending" autocomplete="off">-->
-<!--                <label class="btn btn-outline-primary" for="priceAscending">Ascending</label>-->
-
-<!--            </div>-->
-<!--        </div>-->
-        <button class="btn btn-primary btn-sm mt-2" id="clearFiltersBtn">Clear Filters</button>
+        <button class="btn btn-primary mt-5" id="clearFiltersBtn">Clear Filters</button>
 
         <% items.forEach(item => { %>
             <div class="card mt-4 item">
@@ -54,13 +42,20 @@
                         <% } %>
                     </div>
                     <div class="col-6 col-md-8 col-lg-7 col-xl-8">
-                        <h4 class="d-flex align-items-center"><%= item.model.name %><span
-                                    class="badge <%= Object.keys(deviceState).find(key => deviceState[key] === item.state) === 'LISTED' ? 'bg-success' : 'bg-warning' %> ms-2"
-                                    style="font-size: 0.3em;"><%= Object.keys(deviceState).find(key => deviceState[key] === item.state) %></span>
+                        <h4 class="d-flex align-items-center"><%= item.model.name %>
+                            <span
+                                    class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %> ms-2"
+                                    style="font-size: 0.5em;"><%= deviceState.deviceStateToString(item.state) %>
+                            </span>
+
+                            <span
+                                    class="badge <%= (!item.visible) ? "bg-danger" : "d-none" %> ms-2"
+                                    style="font-size: 0.5em">Hidden
+                            </span>
                         </h4>
                         <p class="m-0 p-0 text-muted deviceType"><small>Device Type: </small><%= item.device_type.name %></p>
                         <p class="m-0 p-0 text-muted category">
-                            <small>Classification: </small><%= Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) %>
+                            <small>Classification: </small><%= deviceCategory.deviceCategoryToString(item.category) %>
                         </p>
                         <!--   TODO: once quotation is done, add the price here        -->
                         <% quotations.forEach(quoteArray => { %>
