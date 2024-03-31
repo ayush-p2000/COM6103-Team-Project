@@ -3,6 +3,8 @@
  */
 
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
+const {User} = require("../../model/schema/user");
+const {getAllUsers, searchUserAndPopulate} = require("../../model/mongodb");
 
 function getAdminDashboard(req, res, next) {
     const route = req.params.contentRoute ?? "dashboard";
