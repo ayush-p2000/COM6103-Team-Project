@@ -19,12 +19,12 @@ async function getAccountsPage(req, res, next) {
 
 async function getAccountDetailsPage(req, res, next) {
     const user = await searchUserAndPopulate({_id: req.params.id});
-    renderAdminLayout(req, res, "user_details", {user});
+    renderAdminLayout(req, res, "user_details", {userDetails: user});
 }
 
 function getEditAccountPage(req, res, next) {
     //TODO: Add functionality for editing account details
-    renderAdminLayoutPlaceholder(res, "edit_user", {}, "Edit Account Details (out of scope)");
+    renderAdminLayoutPlaceholder(req, res, "edit_user", {}, "Edit Account Details (out of scope)");
 }
 
 module.exports = {

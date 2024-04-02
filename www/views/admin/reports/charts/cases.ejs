@@ -1,0 +1,10 @@
+<div>
+    <canvas id="cases_chart"></canvas>
+    <script src="/javascripts/reports/charts/cases.js"></script>
+    <script>
+        const cases_labels = <%- JSON.stringify(labels) %>;
+        const cases_data = <%- JSON.stringify(datasets[0]) %>;
+        const cases_backgrounds = <%- JSON.stringify(deviceState.getList().map(category => deviceState.deviceStateToRGB(category))) %>;
+        const cases_borderColours = <%- JSON.stringify(deviceState.getList().map(category => deviceState.deviceStateToRGB(category, true))) %>;
+    </script>
+</div>

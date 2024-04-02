@@ -66,11 +66,11 @@ async function getUserById(id) {
 }
 
 async function searchUser(filter) {
-    return await User.findOne(filter);
+    return User.findOne(filter);
 }
 
 async function searchUserAndPopulate(filter) {
-    return User.find(filter).populate('listed_devices').populate('listed_devices.model').populate('listed_devices.brand').populate('listed_devices.device_type');
+    return User.findOne(filter).populate('listed_devices').populate('listed_devices.model').populate('listed_devices.brand').populate('listed_devices.device_type');
 }
 
 async function createUser(user) {
@@ -444,6 +444,71 @@ const updateQuote = async (id, updatedProps) => {
     return Quote.updateOne({_id: id}, updatedProps);
 }
 
+/**
+ * Returns a count of devices grouped by device category
+ * @returns {Promise<Aggregate<Array<any>>>}
+ * @author Benjamin Lister
+ */
+const getDevicesGroupByCategory = async () => {
+    return Device.aggregate([
+        {
+            $group: {
+                _id: "$category",
+                total: {$sum: 1}
+            }
+        }
+    ]);
+}
+
+/**
+ * Returns a count of devices grouped by device state
+ * @returns {Promise<Aggregate<Array<any>>>}
+ * @author Benjamin Lister
+ */
+const getDevicesGroupByState = async () => {
+    return Device.aggregate([
+        {
+            $group: {
+                _id: "$state",
+                total: {$sum: 1}
+            }
+        }
+    ]);
+}
+
+/**
+ * Returns a count of devices grouped by device type
+ * Includes the device type name and the total count of devices of that type
+ * @returns {Promise<Aggregate<Array<any>>>}
+ * @author Benjamin Lister
+ */
+const getDevicesGroupByType = async () => {
+    //This aggregation effectively mimics a join statement from SQL
+    return Device.aggregate([
+        {
+            //Mongoose Aggregation doesn't support autopopulating, so we have to manually lookup the device type
+            $lookup: {
+                from: "devicetypes",
+                localField: "device_type",
+                foreignField: "_id",
+                as: "device_type"
+            },
+        },
+        {
+            //Unwind the device type array so we can group by the device type name
+            $unwind: "$device_type"
+        },
+        {
+            //Group by the device type _id but also include the device type name and count of devices of that type
+            $group: {
+                _id: "$device_type",
+                name: {$first: "$device_type.name"},
+                total: {$sum: 1}
+            }
+        }
+    ]);
+}
+
 
 module.exports = {
     getAllUsers,
@@ -475,5 +540,10 @@ module.exports = {
     updateDeviceDetails,
     updateDeviceState,
     getUnknownDeviceHistoryByDevice,
-    getCarouselDevices
+    getCarouselDevices,
+    getAllDeviceTypes,
+    getAllBrands,
+    getDevicesGroupByCategory,
+    getDevicesGroupByState,
+    getDevicesGroupByType,
 }
