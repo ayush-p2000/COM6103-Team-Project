@@ -25,7 +25,7 @@ const cheerio = require("cheerio");
  */
 const getMarketplace = async (req, res, next) => {
     const deviceTypes = await getAllDeviceType()
-    const {items, pagination} = await getPaginatedResults(Device, req.params.page, {}, {}, 3);
+    const {items, pagination} = await getPaginatedResults(Device, req.params.page, {}, {}, 10);
     try {
         var devices = await getAllDevices()
         for (const item of devices) {

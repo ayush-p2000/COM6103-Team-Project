@@ -16,6 +16,8 @@ const {History} = require("./schema/history");
 
 const {UNKNOWN_DEVICE} = require("./enum/historyType");
 
+const {UNKNOWN} = require("./enum/deviceCategory")
+const {HAS_QUOTE} = require("./enum/deviceState")
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -353,9 +355,24 @@ const getDevice = async (id) => {
  * Get All Devices in DB
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
-const getAllDevices = async () => {
+const getAllDevices = async (filter = {}) => {
 
-    return Device.find().populate('brand').populate('device_type').populate('model').populate('listing_user');
+    return Device.find(filter).populate('brand').populate('device_type').populate('model').populate('listing_user');
+}
+
+/**
+ * Get devices for landing page carousel
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const getCarouselDevices = async (imgPerCarousel) => {
+    const devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE}).populate("model").select({model:1,photos:1, listing_user:0, brand:0, device_type:0}).limit(imgPerCarousel * 3)
+    // devices = Array.from(devices)
+    for (let i = 0; i < devices.length; i++) {
+        const quotes = await getQuotes(devices[i]._id);
+        devices[i] = {...devices[i]._doc, quote: quotes.length ? quotes[0]:null}
+    }
+    console.log(devices[0])
+    return devices
 }
 
 /**
@@ -509,6 +526,7 @@ module.exports = {
     updateDeviceDetails,
     updateDeviceState,
     getUnknownDeviceHistoryByDevice,
+    getCarouselDevices,
     getAllDeviceTypes,
     getAllBrands,
     getDevicesGroupByCategory,
