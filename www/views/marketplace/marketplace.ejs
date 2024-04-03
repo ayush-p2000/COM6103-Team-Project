@@ -49,9 +49,9 @@
                             <p class="m-0 p-0 text-muted deviceType"><small>Device Type: </small><%= device.device_type.name %></p>
                             <p class="m-0 p-0 text-muted category">
                                 <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
-                            <p>By: <span class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span></p>
-                            <a class="btn btn-primary btn-sm mb-1 item-detail-btn" href="/item/<%= device._id %>"> View</a>
+                            <p class="m-0">By: <span class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span></p>
                         </div>
+                        <a class="btn btn-primary btn-sm mb-1 mx-2" href="/item/<%= device._id %>"> View</a>
                     </div>
                 </div>
             <% }}) %>

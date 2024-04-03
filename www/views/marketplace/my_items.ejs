@@ -36,7 +36,6 @@
                 <div class="card-body row d-flex align-items-center">
                     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
                         <% if (item.photos?.length > 0) { %>
-
                             <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data).toString('base64') %>" class="img-fluid item-img cover-image"
                                  alt="Image of <%= item.model.name %>">
                         <% } else { %>
@@ -44,7 +43,7 @@
                                  alt="Image of <%= item.model.name %>">
                         <% } %>
                     </div>
-                    <div class="col-8 col-sm-7 col-md-8 col-lg-7 col-xl-8 pt-1">
+                    <div class="col-8 col-sm-7 col-md-8 col-lg-9 col-xl-10 pt-1">
                         <h4 class="d-flex align-items-center"><%= item.model.name %>
                             <span
                                     class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %> ms-2"
@@ -70,8 +69,8 @@
                             <% } %>
                         <% }) %>
                     </div>
-                    <div class="col-12 col-sm-2 col-md-2 col-lg-3 col-xl-3 d-flex justify-content-end align-items-center">
-                        <a href="/item/<%= item._id %>" class="btn btn-primary btn-sm">View</a>
+                    <div class="col-12 col-sm-2 col-lg-1">
+                        <a href="/item/<%= item._id %>" class="w-100 mt-2 btn btn-primary btn-sm ">View</a>
                     </div>
                 </div>
             </div>
