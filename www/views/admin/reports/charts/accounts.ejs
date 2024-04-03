@@ -39,7 +39,7 @@
                                     <%= user.email %>
                                 </td>
                                 <td>
-                                    <%= roleTypes.getRoleNameByRank(user.role) %>
+                                    <%= roleTypes.roleTypeToString(user.role) %>
                                 </td>
                                 <td>
                                     <%= user.active ? "Yes" : "No" %>

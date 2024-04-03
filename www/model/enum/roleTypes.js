@@ -7,7 +7,7 @@ const roleTypes = {
     STAFF,
     ADMIN,
 
-    getRoleNameByRank: function (rank) {
+    roleTypeToString: function (rank) {
         switch (rank) {
             case USER:
                 return "User"
@@ -16,7 +16,7 @@ const roleTypes = {
             case ADMIN:
                 return "Admin"
             default:
-                return "User"
+                return "Not Specified"
         }
     }
 };
