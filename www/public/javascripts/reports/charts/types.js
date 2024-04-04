@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
             lineTension: 0,
         }
     ];
-
     createChart('#types_chart', types_labels, types_dataset, 'bar');
 });
 
@@ -58,3 +57,4 @@ function pickRandomColour(name) {
 
     return out;
 }
+

@@ -4,21 +4,31 @@
 
 const {getMockGraphData, getMockSalesData} = require("../../util/mock/mockData");
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
-const {getDevicesGroupByCategory, getAllDevices, getDevicesGroupByState, getDevicesGroupByType, getAllDeviceTypes} = require("../../model/mongodb");
+const {
+    getDevicesGroupByCategory,
+    getAllDevices,
+    getDevicesGroupByState,
+    getDevicesGroupByType,
+    getAllDeviceTypes, getAccountsCountByStatus, getAllUsers
+} = require("../../model/mongodb");
 const deviceCategory = require("../../model/enum/deviceCategory");
 const deviceState = require("../../model/enum/deviceState");
+const accountStatus = require("../../model/enum/accountStatus")
+const roleTypes = require("../../model/enum/roleTypes")
 
 async function getReportsPage(req, res, next) {
     const classes = await prepareClassesData();
     const cases = await prepareCasesData();
     const types = await prepareTypesData();
+
     renderAdminLayout(req, res, "reports/reports",
         {
             classes: classes,
             cases: cases,
             types: types,
             deviceCategory,
-            deviceState
+            deviceState,
+            accountStatus
         }
     );
 }
@@ -41,6 +51,9 @@ async function getReportPage(req, res, next) {
         case "types":
             data = await prepareTypesData();
             break;
+        case "accounts":
+            data = await prepareActiveAccountsData();
+            break;
         default:
             data = {...getMockGraphData(), table: getMockSalesData()}
     }
@@ -50,7 +63,9 @@ async function getReportPage(req, res, next) {
         report: type,
         data: {labels: data.labels, datasets: data.datasets, table: data.table},
         deviceCategory,
-        deviceState
+        deviceState,
+        accountStatus,
+        roleTypes
     });
 }
 
@@ -177,6 +192,39 @@ async function prepareTypesData() {
     });
 
     return {labels: labels, datasets: [data], table: table};
+
+}
+
+/**
+ * Prepare the data for the active accounts report
+ * @returns {Promise<{datasets: any[][], table: *[], labels: *[]}>}
+ * @author Adrian Urbanczyk
+ */
+const prepareActiveAccountsData = async () => {
+    const accountCount = await getAccountsCountByStatus()
+    const users = await getAllUsers()
+    const labels = accountCount.map(item => item._id ? "Active" : "Inactive")
+    const data = accountCount.map(item => item.count)
+    const table = []
+
+    users.forEach(user => {
+        table.push({
+            name: `${user.first_name} ${user.last_name}`,
+            id: user._id,
+            active: user.active,
+            role: user.role,
+            email:user.email,
+            date_added: user.createdAt.toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric"
+            }),
+        });
+    });
+
+    return {labels, datasets: [data], table: table};
 
 }
 
