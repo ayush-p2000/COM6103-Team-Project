@@ -33,6 +33,45 @@
         </div>
     </div>
 
+    <!-- Carousel Section -->
+    <% if (items.length >= 3) { %>
+        <h2 class="text-center mt-5 mb-1">Our marketplace</h2>
+        <div id="landingCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner ">
+                <% for(let i = 0; i < Math.floor(items.length / imgPerCarousel); i++) { %>
+                    <div class="carousel-item <%= i === 0 ? "active" : "" %>" data-bs-interval="5000">
+                        <div class="row g-2 mb-4 w-100 gx-5 p-5 w-100 me-auto ms-auto ">
+                            <% for(let j = i * 3; j < i * imgPerCarousel + imgPerCarousel; j++) {
+                                const item = items[j];
+                            %>
+                            <div class="col-sm-4 col-md-3 col-lg-2 col-xl-2 item">
+                                <div class="card h-100">
+                                    <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data).toString('base64') %>"
+                                         class="card-img-top img-fluid item-img" alt="..."
+                                         style="height: 200px; object-fit: cover">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><%= item.model.name %></h5>
+                                        <p class="m-0 p-0 fs-6">Price: <span class="fw-bold"><%= item.quote ? quote.value : "Price not found" %></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+            <button class="carousel-control-prev arrow-control" type="button" data-bs-target="#landingCarousel"
+                    data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-success" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next arrow-control" type="button" data-bs-target="#landingCarousel"
+                    data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-success" aria-hidden="true" ></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    <% } %>
 
     <!-- Features Section -->
     <div class="container-fluid feature mt-3 landing-page px-5 pb-5" id="features">

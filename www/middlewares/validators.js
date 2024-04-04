@@ -1,3 +1,8 @@
+/**
+ * A Validator Middleware to validate form inputs
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+
 const {body,check, validationResult} = require("express-validator")
 
 const errorsToSession = (req, res, next) => {
