@@ -23,6 +23,9 @@ const passportStrategy = new LocalStrategy({
                 // Passes error to the session error handler
                 return callback(null, false, {message: 'Incorrect email or password.'})
             }
+            if(user.active == false){
+                return callback(null, false, {message: 'Account has been deactivated'})
+            }
             // Encrypt password from the form, with user's salt.
             crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function (err, hashedPassword) {
                 if (err) throw err;
