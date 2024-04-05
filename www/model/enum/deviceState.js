@@ -4,7 +4,7 @@ const LISTED = 2;
 const HAS_QUOTE = 3;
 const SOLD = 4;
 const RECYCLED = 5;
-const AUCITON = 6;
+const AUCTION = 6;
 const DATA_RECOVERY = 7;
 const CLOSED = 8;
 const HIDDEN = 9;
@@ -17,11 +17,12 @@ const deviceState = {
     HAS_QUOTE,
     SOLD,
     RECYCLED,
-    AUCITON,
+    AUCTION,
     DATA_RECOVERY,
     CLOSED,
     HIDDEN,
     REJECTED,
+
     deviceStateToColour: function (deviceState, prefix = "") {
         switch (deviceState) {
             case DRAFT:
@@ -36,7 +37,7 @@ const deviceState = {
                 return prefix + "secondary"
             case RECYCLED:
                 return prefix + "success";
-            case AUCITON:
+            case AUCTION:
                 return prefix + "warning";
             case DATA_RECOVERY:
                 return prefix + "info";
@@ -65,7 +66,7 @@ const deviceState = {
                 return "Sold";
             case RECYCLED:
                 return "Recycled";
-            case AUCITON:
+            case AUCTION:
                 return "Auction";
             case DATA_RECOVERY:
                 return "Data Recovery";
@@ -80,7 +81,36 @@ const deviceState = {
         }
     },
 
-    getList: () => Object.values(deviceCategory).filter(value => typeof value === 'number')
+    deviceStateToRGB: function (deviceState, border = false) {
+        switch (deviceState) {
+            case DRAFT:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case IN_REVIEW:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case LISTED:
+                return border ? 'rgb(0, 0, 255)' : 'rgba(0, 0, 255, 0.2)';
+            case HAS_QUOTE:
+                return border ? 'rgb(0, 128, 0)' : 'rgba(0, 128, 0, 0.2)';
+            case SOLD:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case RECYCLED:
+                return border ? 'rgb(0, 128, 0)' : 'rgba(0, 128, 0, 0.2)';
+            case AUCTION:
+                return border ? 'rgb(255, 165, 0)' : 'rgba(255, 165, 0, 0.2)';
+            case DATA_RECOVERY:
+                return border ? 'rgb(13,202,240)' : 'rgba(13,202,240, 0.2)';
+            case CLOSED:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case HIDDEN:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case REJECTED:
+                return border ? 'rgb(255, 99, 132)' : 'rgba(255, 99, 132, 0.2)';
+            default:
+                return border ? 'rgb(255, 165, 0)' : 'rgba(255, 165, 0, 0.2)';
+        }
+    },
+
+    getList: () => Object.values(deviceState).filter(value => typeof value === 'number')
 };
 
 module.exports = deviceState;

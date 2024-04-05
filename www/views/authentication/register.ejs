@@ -19,7 +19,7 @@
         <div class="col-md-5">
             <div class="justify-content-center h-100 mt-3 align-items-center">
                 <main class="form-signin w-100 m-auto p-2 justify-content-center align-items-center overflow-hidden fw-bold card shadow-lg rounded-3 bg-transparent">
-                    <form class="w-75 py-5" method="POST" action="/register">
+                    <form class="w-75 py-5" method="POST" action="/register" id="form">
                         <h2 class="parent-text text-center align-items-center justify-content-center fw-bold pb-4 my-2">
                             Register
                         </h2>
@@ -116,10 +116,12 @@
                             <input type="hidden" id="token" name="token">
                             <button class="btn btn-primary w-100 py-2"
                                     id="submit-btn"
-                                    <%= failedCaptcha ? "disabled": ""%>
                                     data-sitekey="<%= process.env.CAPTCHA_PUBLIC %>>"
                                     data-callback='onSubmit'
-                                    data-action='submit'>Sign up
+                                    disabled
+                                    data-action='submit'>
+                                <span class="spinner-border spinner-border-sm me-2" role="status" id="spinner"></span>
+                                Loading...
                             </button>
 
                             <div class="text-center align-content-center fw-bolder mt-3">
@@ -136,7 +138,7 @@
 <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.CAPTCHA_PUBLIC %>"></script>
 <script src="/javascripts/captcha/captcha.js"></script>
 <script>
-    executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "register")
+    executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "Register", <%= failedCaptcha %>)
 </script>
 
 <!----------------------------------------------- Footer ------------------------------------------------>

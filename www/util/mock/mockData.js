@@ -52,37 +52,35 @@ const getMockItems = () => {
     return [
         {
             id: 1,
-            name: "Iphone15 pro",
-            picUrl: "https://m.media-amazon.com/images/I/81Wwngkh2OL.__AC_SY445_SX342_QL70_ML2_.jpg",
-            classification: "Current",
-            deviceType: "Phone",
-            price: 599,
+            name: "Apple Watch(SE)-2022",
+            picUrl: "https://source.unsplash.com/random/200x200",
+            classification: "Recycle",
+            deviceType: "Watch",
+            price: 169,
             owner: "Terenz"
         },
         {
             id: 2,
-            name: "iPad 10.9-2022",
-            picUrl: "https://majormobiles.com/cdn/shop/products/blue_20fc3cd7-c225-45e1-bdad-7e1537f8fa00_295x.jpg?v=1667829428",
+            name: "Apple Watch(SE)-2022",
+            picUrl: "https://source.unsplash.com/random/200x200",
             classification: "Recycle",
-            deviceType: "Tablet",
-            price: 399,
+            deviceType: "Watch",
+            price: 169,
             owner: "Terenz"
         },
         {
             id: 3,
-            name: "13-inch MacBook Air",
-            picUrl: "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/macbook-air-space-gray-config-" +
-                "201810?wid=1078&hei=624&fmt=jpeg&qlt=90&.v=1664499515473",
-            classification: "Current",
-            deviceType: "Laptop",
-            price: 899,
+            name: "Apple Watch(SE)-2022",
+            picUrl: "https://source.unsplash.com/random/200x200",
+            classification: "Recycle",
+            deviceType: "Watch",
+            price: 169,
             owner: "Terenz"
         },
         {
             id: 4,
             name: "Apple Watch(SE)-2022",
-            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
-                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            picUrl: "https://source.unsplash.com/random/200x200",
             classification: "Recycle",
             deviceType: "Watch",
             price: 169,
@@ -91,8 +89,7 @@ const getMockItems = () => {
         {
             id: 5,
             name: "Apple Watch(SE)-2022",
-            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
-                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            picUrl: "https://source.unsplash.com/random/200x200",
             classification: "Recycle",
             deviceType: "Watch",
             price: 169,
@@ -101,8 +98,7 @@ const getMockItems = () => {
         {
             id: 6,
             name: "Apple Watch(SE)-2022",
-            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
-                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            picUrl: "https://source.unsplash.com/random/200x200",
             classification: "Recycle",
             deviceType: "Watch",
             price: 169,
@@ -111,8 +107,7 @@ const getMockItems = () => {
         {
             id: 7,
             name: "Apple Watch(SE)-2022",
-            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
-                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            picUrl: "https://source.unsplash.com/random/200x200",
             classification: "Recycle",
             deviceType: "Watch",
             price: 169,
@@ -121,8 +116,7 @@ const getMockItems = () => {
         {
             id: 8,
             name: "Apple Watch(SE)-2022",
-            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
-                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            picUrl: "https://source.unsplash.com/random/200x200",
             classification: "Recycle",
             deviceType: "Watch",
             price: 169,
@@ -131,8 +125,7 @@ const getMockItems = () => {
         {
             id: 9,
             name: "Apple Watch(SE)-2022",
-            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
-                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            picUrl: "https://source.unsplash.com/random/200x200",
             classification: "Recycle",
             deviceType: "Watch",
             price: 169,
@@ -141,8 +134,7 @@ const getMockItems = () => {
         {
             id: 10,
             name: "Apple Watch(SE)-2022",
-            picUrl: "https://www.backmarket.co.uk/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D828/https://d2e6ccu" +
-                "jb3mkqf.cloudfront.net/ea9b978e-789e-4882-a7f7-f6325c2574ca-1_09f5ca86-d5bf-4db4-bdc8-43eafdd98b5d.jpg",
+            picUrl: "https://source.unsplash.com/random/200x200",
             classification: "Recycle",
             deviceType: "Watch",
             price: 169,
@@ -166,7 +158,7 @@ function getMockPurchaseData() {
         'Huawei P40', 'Huawei P40 Pro', 'Huawei Mate 40 Pro'
     ];
 
-    const choices = [ "CEX", "GAME", "eBay", "Recycling"]
+    const choices = ["CEX", "GAME", "eBay", "Recycling"]
 
     const paymentMethod = ["PayPal", "Stripe"]
 
@@ -342,7 +334,7 @@ const getMockQuote = () => {
             good_condition: true,
             state: HAS_QUOTE,
             data_service: DATA_WIPING,
-            additionalDetails : "This is a test quote, but pretend there is information about the specific device here.",
+            additionalDetails: "This is a test quote, but pretend there is information about the specific device here.",
             listing_user: {
                 _id: "123",
                 first_name: "John",
@@ -376,6 +368,111 @@ const getMockQuote = () => {
     }
 }
 
+const getMockLandingCarousel = () => {
+    return [
+        {
+            _id: 1,
+            model: {
+                name: "iPhone 12 Pro"
+            },
+            quote: {
+                value: 7
+            },
+            img: "https://source.unsplash.com/random/200x200"
+        },
+        {
+            _id: 2,
+            model: {
+                name: "Samsung Galaxy S21 Ultra"
+            },
+            quote: {
+                value: 3
+            },
+            img: "https://source.unsplash.com/random/200x200"
+        },
+        {
+            _id: 3,
+            model: {
+                name: "Google Pixel 6"
+            },
+            quote: {
+                value: 5
+            },
+            img: "https://source.unsplash.com/random/200x200"
+        },
+        {
+            _id: 4,
+            model: {
+                name: "iPad Air (2020)"
+            },
+            quote: {
+                value: 9
+            },
+            img: "https://source.unsplash.com/random/200x200"
+        },
+        {
+            _id: 5,
+            model: {
+                name: "MacBook Pro (M1)"
+            },
+            quote: {
+                value: 2
+            },
+            img: "https://source.unsplash.com/random/200x200"
+        },
+        {
+            _id: 6,
+            model: {
+                name: "Dell XPS 13"
+            },
+            quote: {
+                value: 8
+            },
+            img: "https://source.unsplash.com/random/200x200"
+        },
+        {
+            _id: 7,
+            model: {
+                name: "Apple Watch Series 7"
+            },
+            quote: {
+                value: 4
+            },
+            img: "https://source.unsplash.com/random/200x200"
+        },
+        {
+            _id: 8,
+            model: {
+                name: "Fitbit Charge 5"
+            },
+            quote: {
+                value: 6
+            },
+            img: "https://source.unsplash.com/random/200x200"
+        },
+        {
+            _id: 9,
+            model: {
+                name: "Surface Laptop 4"
+            },
+            quote: {
+                value: 10
+            },
+            img: "https://source.unsplash.com/random/200x200"
+        },
+        {
+            _id: 10,
+            model: {
+                name: "OnePlus 9 Pro"
+            },
+            quote: {
+                value: 1
+            },
+            img: "https://source.unsplash.com/random/200x200"
+        }]
+
+}
+
 module.exports = {
     getMockAccountsList,
     getMockItems,
@@ -385,5 +482,6 @@ module.exports = {
     getMockSalesData,
     getMockUserId,
     getMockItem,
-    getMockQuote
+    getMockQuote,
+    getMockLandingCarousel
 }

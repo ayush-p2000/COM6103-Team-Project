@@ -1,4 +1,8 @@
-/* Middleware to secure routes */
+/**
+ * An Authentication Middleware to secure routes
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+
 const {STAFF, ADMIN} = require("../model/enum/roleTypes")
 const isAuthenticated = (req, res, next) => {
     req.isLoggedIn = false;

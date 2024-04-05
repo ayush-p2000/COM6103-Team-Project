@@ -66,9 +66,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title text-center">Devices per Class</h5>
 
-                                    <div>
-                                        <canvas class="my-4 w-100" id="device_class_chart"></canvas>
-                                    </div>
+                                    <%- include("charts/classes", classes) %>
 
                                     <div class="d-flex justify-content-end">
                                         <a class="btn btn-outline-primary" href="/admin/reports/classes">View Details</a>
@@ -122,9 +120,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title text-center">Devices per State</h5>
 
-                                    <div>
-                                        <canvas class="my-4 w-100" id="case_state_chart"></canvas>
-                                    </div>
+                                    <%- include("charts/cases", cases) %>
 
                                     <div class="d-flex justify-content-end">
                                         <a class="btn btn-outline-primary" href="/admin/reports/cases">View Details</a>
@@ -136,17 +132,15 @@
 
 
                     <div class="col-md-6">
-                        <a href="/admin/reports/devices" class="text-decoration-none text-body">
+                        <a href="/admin/reports/types" class="text-decoration-none text-body">
                             <div class="card shadow-sm hover-shadow h-100">
                                 <div class="card-body">
                                     <h5 class="card-title text-center">Devices per Type</h5>
 
-                                    <div>
-                                        <canvas class="my-4 w-100" id="device_type_chart"></canvas>
-                                    </div>
+                                    <%- include("charts/types", types) %>
 
                                     <div class="d-flex justify-content-end">
-                                        <a class="btn btn-outline-primary" href="/admin/reports/devices">View Details</a>
+                                        <a class="btn btn-outline-primary" href="/admin/reports/types">View Details</a>
                                     </div>
                                 </div>
                             </div>
