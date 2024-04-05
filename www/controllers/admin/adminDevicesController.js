@@ -130,12 +130,12 @@ async function postNewModel(req, res, next) {
 
 function getDeviceTypePage(req, res, next) {
     //TODO: Add functionality for the device type page
-    renderAdminLayoutPlaceholder(req,res, "device_types", {}, "Device Type Page Here")
+    renderAdminLayoutPlaceholder(req,res, "device_types", {}, null)
 }
 
 function getDeviceTypeDetailsPage(req, res, next) {
     //TODO: Add functionality for the device type details page
-    renderAdminLayoutPlaceholder(req,res, "device_type_details", {}, "Device Type Details Page Here")
+    renderAdminLayoutPlaceholder(req,res, "device_type_details", {})
 }
 
 /**

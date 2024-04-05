@@ -180,6 +180,6 @@ document.addEventListener('DOMContentLoaded', function () {
     createChart('#case_state_chart', ['In Review', 'Listed', 'Hidden', 'Has Quote', 'Sold', 'Recycled', 'Auction', 'Data Retrieval', 'Closed (Recently)'], [mock_device_states_dataset], 'bar');
     createChart('#device_class_chart', ['Current', 'Rare', 'Recycle', 'Unknown'], [mock_device_classes_dataset], 'bar');
     createChart('#device_type_chart', ['Phone', 'Tablet', 'Laptop', 'Desktop', 'Console', 'Other'], [mock_device_types_dataset], 'bar');
-    createChart('#accounts_chart', ['Active', 'Inactive'], [mock_accounts_dataset], 'bar');
-    createChart('#account_type_chart', ['User', 'Staff', 'Admin'], [mock_account_types_dataset], 'bar');
+    createChart('#accounts_chart_mock', ['Active', 'Inactive'], [mock_accounts_dataset], 'bar');
+    createChart('#account_types_chart_mock', ['User', 'Staff', 'Admin'], [mock_account_types_dataset], 'bar');
 });

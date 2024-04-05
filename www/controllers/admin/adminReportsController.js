@@ -9,7 +9,7 @@ const {
     getAllDevices,
     getDevicesGroupByState,
     getDevicesGroupByType,
-    getAllDeviceTypes, getAccountsCountByStatus, getAllUsers
+    getAllDeviceTypes, getAccountsCountByStatus, getAllUsers, getAccountsCountByType
 } = require("../../model/mongodb");
 const deviceCategory = require("../../model/enum/deviceCategory");
 const deviceState = require("../../model/enum/deviceState");
@@ -20,15 +20,19 @@ async function getReportsPage(req, res, next) {
     const classes = await prepareClassesData();
     const cases = await prepareCasesData();
     const types = await prepareTypesData();
-
+    const accounts = await prepareActiveAccountsData()
+    const account_types = await prepareAccountTypesData()
     renderAdminLayout(req, res, "reports/reports",
         {
             classes: classes,
             cases: cases,
             types: types,
+            accounts,
+            account_types,
             deviceCategory,
             deviceState,
-            accountStatus
+            accountStatus,
+            roleTypes
         }
     );
 }
@@ -53,6 +57,9 @@ async function getReportPage(req, res, next) {
             break;
         case "accounts":
             data = await prepareActiveAccountsData();
+            break;
+        case "account_types":
+            data = await prepareAccountTypesData();
             break;
         default:
             data = {...getMockGraphData(), table: getMockSalesData()}
@@ -204,6 +211,39 @@ const prepareActiveAccountsData = async () => {
     const accountCount = await getAccountsCountByStatus()
     const users = await getAllUsers()
     const labels = accountCount.map(item => item._id ? "Active" : "Inactive")
+    const data = accountCount.map(item => item.count)
+    const table = []
+
+    users.forEach(user => {
+        table.push({
+            name: `${user.first_name} ${user.last_name}`,
+            id: user._id,
+            active: user.active,
+            role: user.role,
+            email:user.email,
+            date_added: user.createdAt.toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric"
+            }),
+        });
+    });
+
+    return {labels, datasets: [data], table: table};
+
+}
+
+/**
+ * Prepare the data for the active accounts report
+ * @returns {Promise<{datasets: any[][], table: *[], labels: *[]}>}
+ * @author Adrian Urbanczyk
+ */
+const prepareAccountTypesData = async () => {
+    const accountCount = await getAccountsCountByType()
+    const users = await getAllUsers()
+    const labels = accountCount.map(item => roleTypes.roleTypeToString(item._id))
     const data = accountCount.map(item => item.count)
     const table = []
 
