@@ -16,6 +16,8 @@ const {History} = require("./schema/history");
 
 const {UNKNOWN_DEVICE} = require("./enum/historyType");
 
+const {UNKNOWN} = require("./enum/deviceCategory")
+const {HAS_QUOTE} = require("./enum/deviceState")
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -29,8 +31,9 @@ const connectionString = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST
 
 /* Variables */
 let connected = false;
+let store;
 
-mongoose.connect(connectionString);
+mongoose.connect(connectionString)
 
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
@@ -38,21 +41,6 @@ db.once('open', async () => {
     console.log(`Connected to ${MONGO_CONNNAME}`);
     connected = true;
 });
-
-/* Session Storage */
-let store;
-if (connected) {
-    // Use Session schema from connect-mongo which aligns with express-session setup.
-    store = new MongoStore.create({
-        client: db,
-        dbName: process.env.MONGO_DBNAME,
-        collection: 'sessions',
-        expires: 1000 * 60 * 60 * 48,
-        crypto: {
-            secret: process.env.STORE_SECRET || "secret",
-        }
-    });
-}
 
 /* Functions */
 async function getAllUsers() {
@@ -367,9 +355,24 @@ const getDevice = async (id) => {
  * Get All Devices in DB
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
-const getAllDevices = async () => {
+const getAllDevices = async (filter = {}) => {
 
-    return Device.find().populate('brand').populate('device_type').populate('model').populate('listing_user');
+    return Device.find(filter).populate('brand').populate('device_type').populate('model').populate('listing_user');
+}
+
+/**
+ * Get devices for landing page carousel
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const getCarouselDevices = async (imgPerCarousel) => {
+    const devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE}).populate("model").select({model:1,photos:1, listing_user:0, brand:0, device_type:0}).limit(imgPerCarousel * 3)
+    // devices = Array.from(devices)
+    for (let i = 0; i < devices.length; i++) {
+        const quotes = await getQuotes(devices[i]._id);
+        devices[i] = {...devices[i]._doc, quote: quotes.length ? quotes[0]:null}
+    }
+    console.log(devices[0])
+    return devices
 }
 
 /**
@@ -492,6 +495,18 @@ const getDevicesGroupByType = async () => {
     ]);
 }
 
+const getAccountsCountByStatus = async () => {
+    return User.aggregate([
+        {
+            $group: {
+                _id: "$active",
+                count: { $sum: 1}
+            }
+        },
+        { $sort: { "_id": -1 } },
+    ])
+}
+
 
 module.exports = {
     getAllUsers,
@@ -523,9 +538,11 @@ module.exports = {
     updateDeviceDetails,
     updateDeviceState,
     getUnknownDeviceHistoryByDevice,
+    getCarouselDevices,
     getAllDeviceTypes,
     getAllBrands,
     getDevicesGroupByCategory,
     getDevicesGroupByState,
     getDevicesGroupByType,
+    getAccountsCountByStatus
 }

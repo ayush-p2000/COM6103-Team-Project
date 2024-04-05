@@ -6,17 +6,21 @@
 const LocalStrategy = require('passport-local');
 const {pbkdf2} = require("node:crypto")
 const {searchUser} = require("../model/mongodb")
+const {SEVEN_DAYS_S} = require("../util/time/time")
 const session = require("express-session")
-const mongo = require("../model/mongodb");
 const passport = require("passport")
 const crypto = require("node:crypto")
+const MongoStore = require("connect-mongo");
+const mongoose = require("mongoose")
+const db = mongoose.connection
 
 // Creates a passport local strategy which determines how user authentication is performed.
 // The verify callback is executed after user submits login form.
 const passportStrategy = new LocalStrategy({
         usernameField: 'email',
-        passwordField: 'password'
-    }, async function verify(email, password, callback) {
+        passwordField: 'password',
+        passReqToCallback: true
+    }, async function verify(req, email, password, callback) {
         try {
             const user = await searchUser({email: email});
             if (!user || user.email !== email) {
@@ -31,6 +35,7 @@ const passportStrategy = new LocalStrategy({
                     // Passes error to the session error handler
                     return callback(null, false, {message: 'Incorrect email or password.'});
                 }
+
                 return callback(null, user);
             });
         } catch (err) {
@@ -47,13 +52,24 @@ const passportAuthenticate = passport.authenticate('local', {
     }
 )
 
+// Mongo Session Storage Setup
+const store = MongoStore.create({
+    client: db.getClient(),
+    dbName: process.env.MONGO_DBNAME,
+    collection: 'sessions',
+    crypto: {
+        secret: process.env.STORE_SECRET || "secret",
+    },
+    ttl: SEVEN_DAYS_S, // 7 days default session expiration
+})
+
 // Setup express sessions with MongoDB storage.
 const sessionSetup = session({
     secret: process.env.SESSION_SECRET || "secret",
-    resave: false,
+    store,
+    secure: true,
+    resave: true,
     saveUninitialized: false,
-    store: mongo.store,
-    name: "sessionId"
 })
 
 // Determines what data is stored in session after the user is authenticated (after login form is submitted).

@@ -102,4 +102,8 @@ a {
     border-color: var(--bs-success)
 }
 
+.arrow-control {
+    width: 5%;
+}
+
 
