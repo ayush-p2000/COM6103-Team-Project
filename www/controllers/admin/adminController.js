@@ -71,6 +71,10 @@ async function insertStaffDetails(req,res,next){
             updateFields.role = role;
         }
 
+        if (req.user.role > USER && req.body.role <= req.user.role) {
+            return res.status(403).send('You do not have the required permissions to perform this action');
+        }
+
         const userDetails = await User.findByIdAndUpdate(user, updateFields, {new: true});
 
         if (!userDetails) {
