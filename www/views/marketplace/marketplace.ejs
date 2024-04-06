@@ -12,11 +12,14 @@
 
         <!--Filter and Sorter-->
         <div class="row mt-4 mt-3">
-            <p class="fw-bold">Category: </p>
+            <div class="row mb-1">
+                <p class="fw-bold col-6 col-sm-8 col-md-10 mb-0">Category: </p>
+                <button class="btn btn-primary btn-sm col-6 col-sm-4 col-md-2" id="clearFiltersBtn">Clear Filters</button>
+            </div>
             <div class="btn-group btn-group-sm flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
-                <% Object.keys(deviceCategory).forEach(category => { %>
-                    <input type="checkbox" class="btn-check category-filter" id="<%= category %>">
-                    <label class="btn btn-outline-primary" for="<%= category %>"><%= category %></label>
+                <% deviceCategory.getList().forEach(category => { %>
+                    <input type="checkbox" class="btn-check category-filter" id="<%= deviceCategory.deviceCategoryToString(category) %>">
+                    <label class="btn btn-outline-primary" for="<%= deviceCategory.deviceCategoryToString(category) %>"><%= deviceCategory.deviceCategoryToString(category) %></label>
                 <% }) %>
             </div>
         </div>
@@ -32,14 +35,13 @@
             </div>
         </div>
 
-        <button class="btn btn-primary btn-sm mt-2" id="clearFiltersBtn">Clear Filters</button>
 
 
 
         <!--items list-->
         <div class="row g-2 mt-2">
             <% devices.forEach(device => { if(device.visible){%>
-                <div class="col-6 col-md-4 col-xl-2 item">
+                <div class="col-12 col-sm-6 col-md-4 col-xl-2 item">
                     <div class="card h-100">
                         <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data).toString('base64') %>" class="card-img-top img-fluid item-img" alt="...">
                         <div class="card-body">
@@ -47,9 +49,9 @@
                             <p class="m-0 p-0 text-muted deviceType"><small>Device Type: </small><%= device.device_type.name %></p>
                             <p class="m-0 p-0 text-muted category">
                                 <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
-                            <p>By: <span class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span></p>
-                            <a class="btn btn-primary btn-sm mb-1 item-detail-btn" href="/item/<%= device._id %>"> View</a>
+                            <p class="m-0">By: <span class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span></p>
                         </div>
+                        <a class="btn btn-primary btn-sm mb-1 mx-2" href="/item/<%= device._id %>"> View</a>
                     </div>
                 </div>
             <% }}) %>

@@ -39,6 +39,13 @@ a {
     text-shadow: 0 0 10px rgba(113, 213, 255, 0.6);
 }
 
+.cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
 /*marketplace style*/
 .marketplace .item-img {
     padding: 20px;
@@ -48,11 +55,6 @@ a {
     object-fit: contain;
 }
 
-.marketplace .item-detail-btn {
-    position: absolute;
-    bottom: 5px;
-    right: 10px;
-}
 
 
 .user-dashboard .item-img {
