@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    $('#accounts_table').DataTable({
+    $('#accounts_types_table').DataTable({
 
     });
 });
