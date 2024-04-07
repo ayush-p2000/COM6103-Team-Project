@@ -201,6 +201,14 @@ const getModels = async (brandId, deviceTypeId) => {
 }
 
 /**
+ * Get a All Models
+ * @author Adrian Urbanczyk
+ */
+const getAllModels = async () => {
+    return await Model.find().populate("deviceType").populate("brand")
+}
+
+/**
  * Adding a Device to the Database
  * If User Input Custom Model,Create a History Link To The Device
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
@@ -532,4 +540,5 @@ module.exports = {
     getDevicesGroupByCategory,
     getDevicesGroupByState,
     getDevicesGroupByType,
+    getAllModels
 }

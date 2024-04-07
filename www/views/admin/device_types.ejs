@@ -1,0 +1,111 @@
+<div class="container">
+    <div class="row my-3">
+        <div class="col-md-12 text-center">
+            <h2>Flagged Devices</h2>
+            <hr>
+        </div>
+    </div>
+
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deviceTypeModal" >Register New DeviceType</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#brandModal" >Register New Brand</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modelModal" >Register New Model</button>
+
+    <div class="modal fade" id="deviceTypeModal" tabindex="-1" aria-labelledby="deviceTypeModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deviceTypeModal">New Device Type</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="device-type-name" class="col-form-label">Device Type Name:</label>
+                            <input type="text" class="form-control" id="device-type-name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="device-type-description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="device-type-description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="deviceType-submit">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="brandModal" tabindex="-1" aria-labelledby="brandModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="brandModal">New Brand</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="brand-name" class="col-form-label">Brand Name:</label>
+                            <input type="text" class="form-control" id="brand-name">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="brand-submit">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modelModal" tabindex="-1" aria-labelledby="modelModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modelModal">New Model</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="device-type-for-model" class="col-form-label">DeviceType</label>
+                            <select class="form-select" id="device-type-for-model">
+                                <% deviceTypes.forEach(function(device) { %>
+                                    <option value="<%= device.id %>"><%= device.name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="device-brand-for-model" class="col-form-label">Brand:</label>
+                            <select class="form-select" id="device-brand-for-model">
+                                <% brands.forEach(function(brand) { %>
+                                    <option value="<%= brand.id %>"><%= brand.name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="model-name" class="col-form-label">Model Name:</label>
+                            <input type="text" class="form-control" id="model-name">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="model-submit">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav nav-pills nav-justified mt-4 mb-4">
+        <a class="nav-link <%= subpage === "brands" ? "active" : ""%>" aria-current="page" href="/admin/types/brands">Brands</a>
+        <a class="nav-link <%= subpage === "models" ? "active" : ""%>" href="/admin/types/models">Models</a>
+        <a class="nav-link <%= subpage === "device-types" ? "active" : ""%>" href="/admin/types/device-types">Types</a>
+    </nav>
+
+    <%- include("components/device_types_tables/" + subpage) %>
+</div>
+
+<script src="/javascripts/deviceManagement/unknown_devices.js"></script>
+<script src="/javascripts/userManagement/userManagement.js"></script>

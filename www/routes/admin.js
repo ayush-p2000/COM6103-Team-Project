@@ -41,7 +41,7 @@ router.get('/reports', getReportsPage);
 
 router.get('/reports/:report_type', getReportPage);
 
-router.get('/types', getDeviceTypePage);
+router.get('/types/:subpage?', getDeviceTypePage);
 
 router.get('/types/:id', getDeviceTypeDetailsPage);
 

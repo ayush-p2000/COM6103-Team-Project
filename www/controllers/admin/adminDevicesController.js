@@ -7,7 +7,8 @@ const {get} = require("axios");
 const {renderAdminLayout,renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
 const {getItemDetail, getAllDeviceType, getAllBrand, updateDeviceDetails, getModels,getAllUnknownDevices, addDeviceType, addBrand, addModel,
     getUnknownDeviceHistoryByDevice,
-    getAllDevices
+    getAllDevices,
+    getAllModels
 } = require("../../model/mongodb")
 
 const dataService = require("../../model/enum/dataService")
@@ -128,9 +129,13 @@ async function postNewModel(req, res, next) {
     }
 }
 
-function getDeviceTypePage(req, res, next) {
-    //TODO: Add functionality for the device type page
-    renderAdminLayoutPlaceholder(req,res, "device_types", {}, "Device Type Page Here")
+async function getDeviceTypePage(req, res, next) {
+    const subpage = req.params.subpage ? req.params.subpage : "brands";
+    const deviceTypes = await getAllDeviceType()
+    const brands = await getAllBrand()
+    const models = subpage === "models" ? await getAllModels() : [];
+
+    renderAdminLayoutPlaceholder(req,res, "device_types", {brands,deviceTypes,subpage,models}, null)
 }
 
 function getDeviceTypeDetailsPage(req, res, next) {
