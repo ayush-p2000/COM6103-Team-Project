@@ -43,3 +43,47 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 })
+
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteUser = document.getElementById('deleteUser');
+
+    // Function to handle user action
+    function handleUserAction(confirmMessage, endpoint) {
+        // Prompt user with confirmation message
+        const isConfirmed = confirm(confirmMessage);
+        if (isConfirmed) {
+            const formData = new FormData();
+            const userId = document.getElementById('userId').value;
+            const firstName = "Deleted";
+            const lastName = "User";
+            console.log(userId);
+            console.log(firstName);
+            console.log(lastName);
+            formData.append('id', userId);
+            formData.append('firstName',firstName);
+            formData.append('lastName',lastName);
+
+            fetch(endpoint, {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response is not correct');
+                    }
+                    window.location.href = '/admin/accounts';
+                    return response.text();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+
+    }
+
+    // Call handleUserAction function when deleteUser is clicked
+    deleteUser.addEventListener('click', function () {
+        handleUserAction("Are you sure you want to delete this user?", '/admin/deleteUser');
+    });
+});

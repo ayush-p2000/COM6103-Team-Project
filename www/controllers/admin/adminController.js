@@ -4,7 +4,7 @@
 
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
 const {User} = require("../../model/schema/user");
-const {getAllUsers, searchUserAndPopulate} = require("../../model/mongodb");
+const {getAllUsers, searchUserAndPopulate, updateUser} = require("../../model/mongodb");
 
 function getAdminDashboard(req, res, next) {
     const route = req.params.contentRoute ?? "dashboard";
@@ -115,9 +115,28 @@ async function activateUser(req,res,next){
     renderAdminLayout(req, res, "user_management", {users});
 }
 
+async function deleteUser(req,res,next){
+    try {
+        const userId = req.body.id;
+        const user = {
+            first_name: req.body.firstName,
+            last_name: req.body.lastName
+        };
+        const updatedUser = await User.findByIdAndUpdate(userId, user, { new: true });
+        let users = [];
+        users = await getAllUsers();
+        renderAdminLayout(req, res, "user_management", {users});
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+    }
+
 module.exports = {
     getAdminDashboard,
     insertStaffDetails,
     deactivateUser,
-    activateUser
+    activateUser,
+    deleteUser
 }

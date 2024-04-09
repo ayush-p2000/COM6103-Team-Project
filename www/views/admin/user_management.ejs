@@ -33,6 +33,7 @@
                     <tbody>
 
                     <% users.forEach(user => { %>
+                        <% if (user.first_name !== 'Deleted' && user.last_name !== 'User') { %>
                         <tr>
                             <% if (user.active) { %>
                             <td><%= user.email %></td>
@@ -43,6 +44,7 @@
                             <td><%= user.role %></td>
                             <td><a href="/admin/accounts/<%= user._id %>">view</a></td>
                         </tr>
+                        <% } %>
                     <% }) %>
                     </tbody>
                 </table>
