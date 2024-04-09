@@ -4,7 +4,7 @@
 
 const {Readable} = require('stream');
 const archiver = require('archiver');
-const {getItemDetail, getRetrievalObjectByDeviceId, getRetrieval} = require("../../model/mongodb");
+const {getItemDetail, getRetrievalObjectByDeviceId, getRetrieval, deleteRetrieval} = require("../../model/mongodb");
 const retrievalState = require("../../model/enum/retrievalState");
 const dataTypes = require("../../model/enum/dataTypes");
 
@@ -182,7 +182,27 @@ async function getFileDownload(req, res, next) {
 }
 
 async function deleteDataRetrieval(req, res, next) {
-    //TODO: Implement this function
+    try {
+        //Get the retrieval ID from the request
+        const {id} = req.params;
+
+        //Get the retrieval object from the database
+        const retrievalObject = await getRetrieval(id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
+            res.status(404).send('Item not available for retrieval');
+            return;
+        }
+
+        //Delete the retrieval object
+        await deleteRetrieval(id);
+
+        res.status(200).send('Retrieval deleted successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
 }
 
 async function getRetrievalEditPage(req, res, next) {
@@ -317,6 +337,130 @@ async function errorStateHandler(req, res, next) {
     }
 }
 
+async function postURL(req, res, next) {
+    try {
+        //Get the retrieval ID from the request
+        const {id} = req.params;
+
+        const url = req.body.url;
+        const name = req.body.name;
+
+        //Check if the URL exists in the body
+        if (typeof (url) === 'undefined' || url === null) {
+            res.status(400).send('URL not provided');
+            return;
+        }
+
+        //Check if the name exists in the body
+        if (typeof (name) === 'undefined' || name === null) {
+            res.status(400).send('Name not provided');
+            return;
+        }
+
+        //Get the retrieval object from the database
+        const retrievalObject = await getRetrieval(id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
+            res.status(404).send('Item not available for retrieval');
+            return;
+        }
+
+        //Add the URL to the retrieval object
+        retrievalObject.data.push({
+            name: name,
+            value: url,
+            use_buffer: false,
+            data_type: dataTypes.URL,
+        });
+
+        await retrievalObject.save();
+
+        res.status(200).send('URL added successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+}
+
+async function postFiles(req, res, next) {
+    try {
+        //Get the retrieval ID from the request
+        const {id} = req.params;
+
+        const files = req.files;
+
+        //Check if the files exist in the body
+        if (typeof (files) === 'undefined' || files === null) {
+            res.status(400).send('Files not provided');
+            return;
+        }
+
+        //Get the retrieval object from the database
+        const retrievalObject = await getRetrieval(id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
+            res.status(404).send('Item not available for retrieval');
+            return;
+        }
+
+        //Add the files to the retrieval object
+        files.forEach(file => {
+            retrievalObject.data.push({
+                name: file.originalname,
+                value: file.mimetype,
+                buffer: file.buffer,
+                use_buffer: true,
+                data_type: (file.mimetype.includes('image') ? dataTypes.IMAGE : dataTypes.FILE),
+            });
+        });
+
+        await retrievalObject.save();
+
+        res.status(200).send('Files added successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+}
+
+async function deleteFile(req, res, next) {
+    try {
+        //Get the retrieval ID and file ID from the request
+        const {retrieval_id, file_id} = req.params;
+
+        //Get the retrieval object from the database
+        const retrievalObject = await getRetrieval(retrieval_id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
+            res.status(404).send('Item not available for retrieval');
+            return;
+        }
+
+        //Find the file in the retrieval object's data array
+        const fileIndex = retrievalObject.data.findIndex(file => file._id.toString() === file_id);
+
+        //If the file is not found, then the file is not available
+        if (fileIndex === -1) {
+            res.status(404).send('File not available for deletion');
+            return;
+        }
+
+        //Remove the file from the retrieval object
+        retrievalObject.data.splice(fileIndex, 1);
+
+        await retrievalObject.save();
+
+        res.status(200).send('File deleted successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+
+}
+
 module.exports = {
     getItemDataRetrieval,
     getFilePage,
@@ -326,5 +470,8 @@ module.exports = {
     getRetrievalEditPage,
     promoteRetrieval,
     demoteRetrieval,
-    errorStateHandler
+    errorStateHandler,
+    postURL,
+    postFiles,
+    deleteFile
 }

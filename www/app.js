@@ -64,7 +64,7 @@ app.use('/', authInfo, indexRouter);
 app.use('/qr', authInfo, qrRouter)
 app.use('/admin', isAuthenticated, adminRouter); // TODO: Add isAuthenticated once admin login is completed
 app.use('/', authRouter);
-app.use('/', retrievalRouter);
+app.use('/', isAuthenticated, retrievalRouter);
 app.use('/', isAuthenticated, paymentRouter);
 app.use('/', isAuthenticated, marketplaceRouter);
 app.use('/', isAuthenticated, userRouter);

@@ -19,6 +19,7 @@ const {UNKNOWN_DEVICE} = require("./enum/historyType");
 const {UNKNOWN} = require("./enum/deviceCategory")
 const {HAS_QUOTE} = require("./enum/deviceState")
 const deviceState = require("./enum/deviceState");
+const retrievalState = require("./enum/retrievalState");
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -443,6 +444,24 @@ const getRetrieval = async (retrievalId) => {
     return Retrieval.findOne({_id: retrievalId}).populate('device');//.populate('device.model').populate('device.brand').populate('device.device_type');
 }
 
+const deleteRetrieval = async (retrievalId) => {
+    //When deleting a retrieval, it is more of a soft delete. In this case, this means that we will remove the data from the retrieval object but keep the rest of the object in place
+    //This is to ensure that we can still track the history of the retrieval and the device, as well as the transaction that took place
+
+    //Get the retrieval object
+    const retrieval = await getRetrieval(retrievalId);
+
+    //Clear the data array
+    retrieval.data = [];
+
+    //Update the state to DATA_DELETED
+    retrieval.retrieval_state = retrievalState.DATA_DELETED;
+    retrieval.locked = true;
+
+    //Save the retrieval object
+    return retrieval.save();
+}
+
 /**
  * Returns a count of devices grouped by device category
  * @returns {Promise<Aggregate<Array<any>>>}
@@ -557,6 +576,7 @@ module.exports = {
     getAllBrands,
     getRetrievalObjectByDeviceId,
     getRetrieval,
+    deleteRetrieval,
     getDevicesGroupByCategory,
     getDevicesGroupByState,
     getDevicesGroupByType,

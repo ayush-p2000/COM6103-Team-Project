@@ -18,6 +18,7 @@ async function onPromotePressed(retrievalID) {
         window.location.reload();
     } catch (error) {
         console.error(error);
+        spinner.addClass('d-none');
     }
 }
 
@@ -31,6 +32,7 @@ async function onDemotePressed(retrievalID) {
         window.location.reload();
     } catch (error) {
         console.error(error);
+        spinner.addClass('d-none');
     }
 }
 
@@ -78,6 +80,7 @@ async function onErrorStateConfirm() {
         window.location.reload();
     } catch (error) {
         console.error(error);
+        promotionSpinner.addClass('d-none');
     }
 
 }
@@ -87,8 +90,32 @@ function onAddURLPressed() {
     addURLModal.modal('show');
 }
 
-function onAddURLSubmit() {
+async function onAddURLSubmit(retrievalID) {
+    const urlSpinner = $('#urlSpinner');
+    urlSpinner.removeClass('d-none');
 
+    const urlInput = $('#urlInput');
+    const url = urlInput.val();
+
+    const nameInput = $('#nameInput');
+    const name = nameInput.val();
+
+    if (url === '') {
+        urlSpinner.addClass('d-none');
+        return;
+    }
+
+    try {
+        const response = await axios.post(`/retrieval/${retrievalID}/file/add/url`, {
+            url: url,
+            name: name
+        });
+
+        window.location.reload();
+    } catch (error) {
+        console.error(error);
+        urlSpinner.addClass('d-none');
+    }
 }
 
 function onUploadPressed() {
@@ -96,29 +123,66 @@ function onUploadPressed() {
     uploadModal.modal('show');
 }
 
-function onUploadSubmit() {
+async function onUploadSubmit(retrievalID) {
+    const uploadSpinner = $('#uploadSpinner');
+    uploadSpinner.removeClass('d-none');
 
+    const uploadFileInput = $('#fileInput');
+    const files = uploadFileInput[0].files;
+
+    //Ensure there is no more than 10 files
+    if (files.length > 10) {
+        uploadSpinner.addClass('d-none');
+        return;
+    }
+
+    const formData = new FormData();
+    //Add the files to the form data
+    for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+    }
+
+    try {
+        const response = await axios.post(`/retrieval/${retrievalID}/file/add/`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        window.location.reload();
+    } catch (error) {
+        console.error(error);
+        uploadSpinner.addClass('d-none');
+    }
 }
 
-function onDeleteFile() {
+function onDeleteFile(retrievalID, fileID) {
+    const deleteRetrievalID = $('#deleteRetrievalID');
+    const deleteFileID = $('#deleteFileID');
+
+    deleteRetrievalID.val(retrievalID);
+    deleteFileID.val(fileID);
+
     const deleteModal = $('#deleteFileModal');
     deleteModal.modal('show');
 }
 
-function onDeleteFileConfirm() {
-
-}
-
-function onDeleteConfirm(retrievalID) {
-    // Get the modal
-    const confirmModal = $('#deleteConfirmationModal');
-
+async function onDeleteFileConfirm() {
     try {
-        //const response = axios.delete(`/retrieval/${retrievalID}`)
+        const deleteFileSpinner = $('#deleteFileSpinner');
+        deleteFileSpinner.removeClass('d-none');
 
-        confirmModal.modal('hide');
+        const deleteRetrievalID = $('#deleteRetrievalID');
+        const deleteFileID = $('#deleteFileID');
+
+        const retrievalID = deleteRetrievalID.val();
+        const fileID = deleteFileID.val();
+
+        const response = await axios.delete(`/retrieval/${retrievalID}/file/${fileID}`);
+
         window.location.reload();
     } catch (error) {
         console.error(error);
+        deleteFileSpinner.addClass('d-none');
     }
 }

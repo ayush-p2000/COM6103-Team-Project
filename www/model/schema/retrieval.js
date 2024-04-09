@@ -47,7 +47,12 @@ const retrievalSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-        }
+        },
+        locked: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
     },
     {
         timestamps: true
