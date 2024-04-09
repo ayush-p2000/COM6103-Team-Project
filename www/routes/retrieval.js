@@ -3,8 +3,8 @@ const router = express.Router();
 
 const {getDataRetrivalPage, getDataSetPage} = require("../controllers/retrieval/dataRetrievalController");
 
-router.get('/data', getDataRetrivalPage);
+router.get('/retrieval', getDataRetrivalPage);
 
-router.get('/data/:id', getDataSetPage);
+router.get('/retrieval/:id', getDataSetPage);
 
 module.exports = router;

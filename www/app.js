@@ -15,7 +15,7 @@ const mongo = require('./model/mongodb')
 const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
 const authRouter = require('./routes/authentication');
-const dataRouter = require('./routes/data');
+const retrievalRouter = require('./routes/retrieval');
 const paymentRouter = require('./routes/payment');
 const marketplaceRouter = require('./routes/marketplace');
 const qrRouter = require('./routes/qr');
@@ -64,7 +64,7 @@ app.use('/', authInfo, indexRouter);
 app.use('/qr', authInfo, qrRouter)
 app.use('/admin', isAuthenticated, adminRouter); // TODO: Add isAuthenticated once admin login is completed
 app.use('/', authRouter);
-app.use('/', dataRouter);
+app.use('/', retrievalRouter);
 app.use('/', isAuthenticated, paymentRouter);
 app.use('/', isAuthenticated, marketplaceRouter);
 app.use('/', isAuthenticated, userRouter);

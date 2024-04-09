@@ -7,7 +7,12 @@ const multer = require('multer');
 const {getMockItem, getMockQuote} = require("../../util/mock/mockData");
 const fixedToCurrency = require("../../util/currency/fixedToCurrency");
 const {ACCEPTED, REJECTED, CONVERTED, EXPIRED, stateToString, stateToColour} = require("../../model/enum/quoteState");
-const {updateQuote, getQuoteById, getUnknownDeviceHistoryByDevice} = require("../../model/mongodb");
+const {
+    updateQuote,
+    getQuoteById,
+    getUnknownDeviceHistoryByDevice,
+    getRetrievalObjectByDeviceId
+} = require("../../model/mongodb");
 const mongoose = require("mongoose");
 const QRCode = require('qrcode');
 const {
@@ -30,6 +35,8 @@ const dataService = require("../../model/enum/dataService")
 const {generateQR} = require("../../util/qr/qrcodeGenerator");
 const cheerio = require('cheerio')
 const axios = require('axios')
+const retrievalState = require("../../model/enum/retrievalState");
+const dataTypes = require("../../model/enum/dataTypes");
 
 /**
  * Handling Request to post item base on the info in request body
@@ -45,7 +52,7 @@ const postListItem = async (req, res) => {
 
             const image_data = Buffer.from(files[i].buffer, 'base64');
             const image_type = files[i].mimetype;
-            const base64Data = {img_data:image_data,img_type:image_type}
+            const base64Data = {img_data: image_data, img_type: image_type}
 
             filesBase64.push(base64Data);
         }
@@ -178,6 +185,32 @@ async function postUpdateQuote(req, res) {
         await updateDeviceState(req.params.id, device_state)
     } catch (err) {
         console.log(err)
+    }
+}
+
+async function getItemDataRetrieval(req, res, next) {
+    try {
+        //Get the item ID from the request
+        const {id} = req.params;
+
+        //Get the item from the database
+        const item = await getItemDetail(id);
+
+        //Get the retrieval object from the database
+        const retrievalObject = await getRetrievalObjectByDeviceId(id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof(retrievalObject) === 'undefined' || retrievalObject === null) {
+            res.status(404);
+            next({message: "Item not available for retrieval", status: 404});
+            return;
+        }
+
+        res.render('marketplace/data_retrieval', {device: item, retrieval: retrievalObject, auth: req.isLoggedIn, user: req.user, retrievalState, dataTypes});
+    } catch (error) {
+        console.error(error);
+        res.status(500);
+        next({message: "Internal server error", status: 500});
     }
 }
 
@@ -348,6 +381,7 @@ module.exports = {
     getListItem,
     getModelByBrandAndType,
     getItemDetails,
+    getItemDataRetrieval,
     postUpdateQuote,
     getItemQrCodeView,
     confirmQuote,

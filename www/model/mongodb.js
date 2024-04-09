@@ -430,6 +430,10 @@ const updateQuote = async (id, updatedProps) => {
     return Quote.updateOne({_id: id}, updatedProps);
 }
 
+const getRetrievalObjectByDeviceId = async (deviceId) => {
+    return Retrieval.findOne({device: deviceId}).populate('device');
+}
+
 /**
  * Returns a count of devices grouped by device category
  * @returns {Promise<Aggregate<Array<any>>>}
@@ -541,6 +545,7 @@ module.exports = {
     getCarouselDevices,
     getAllDeviceTypes,
     getAllBrands,
+    getRetrievalObjectByDeviceId,
     getDevicesGroupByCategory,
     getDevicesGroupByState,
     getDevicesGroupByType,
