@@ -1,0 +1,60 @@
+<div class="col-6 ms-auto me-auto">
+    <h3>Model Details Page</h3>
+
+    <form method="POST">
+        <div class="form-group mt-3">
+            <label for="name">Model Name</label>
+            <input type="text" class="form-control mt-1" name="name" id="name" value="<%= item.name %>">
+        </div>
+        <div class="form-group mt-3">
+            <label for="modelBrand" class="form-label">Brand:</label>
+            <select class="form-select" id="modelBrand" name="modelBrand">
+                <% brands.forEach(function(brand) { %>
+                    <option <%= brand.id == item.brand ? "selected" : "" %>
+                            value="<%= brand.id %>"><%= brand.name %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="form-group mt-3">
+            <label for="modelType" class="form-label">Device Type</label>
+            <select class="form-select" name="modelType" id="modelType">
+                <% deviceTypes.forEach(function(type) { %>
+                    <option <%= type.id == item.deviceType ? "selected" : "" %>
+                            value="<%= type.id %>"><%= type.name %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="d-flex justify-content-between">
+
+            <button type="submit" class="btn btn-primary mt-3">Save</button>
+            <button type="button" class="btn btn-danger mt-3" data-bs-toggle="modal"
+                    data-bs-target="#form-confirmation-modal">Delete
+            </button>
+        </div>
+
+    </form>
+
+
+    <form method="POST" action="/admin/types/models/<%= item.id %>/delete">
+        <input type="hidden" name="id" value="<%= item.id %>">
+        <div class="modal" tabindex="-1" id="form-confirmation-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Are you sure?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h4 class="text-danger">Warning!</h4>
+                        <p>Be aware that all devices associated with this brand will be completely removed from the
+                            system.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete permamently</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -8,7 +8,17 @@ const {renderAdminLayout,renderAdminLayoutPlaceholder} = require("../../util/lay
 const {getItemDetail, getAllDeviceType, getAllBrand, updateDeviceDetails, getModels,getAllUnknownDevices, addDeviceType, addBrand, addModel,
     getUnknownDeviceHistoryByDevice,
     getAllDevices,
-    getAllModels
+    getAllModels,
+    getBrandById,
+    getDeviceTypeById,
+    getModelById,
+    updateDeviceTypeDetails,
+    updateBrandDetails,
+    updateModelDetails,
+    getAllModelsOfType,
+    deleteType,
+    deleteModel,
+    deleteBrand
 } = require("../../model/mongodb")
 
 const dataService = require("../../model/enum/dataService")
@@ -16,6 +26,8 @@ const deviceCategory = require("../../model/enum/deviceCategory")
 const deviceState = require("../../model/enum/deviceState")
 
 const {Device} = require("../../model/schema/device")
+const {getBrand} = require("gsmarena-api/src/services/catalog");
+const {DeviceType} = require("../../model/schema/deviceType");
 
 /**
  * Get All Device with Specific Field Showing and Support Unknown Devices
@@ -138,9 +150,82 @@ async function getDeviceTypePage(req, res, next) {
     renderAdminLayoutPlaceholder(req,res, "device_types", {brands,deviceTypes,subpage,models}, null)
 }
 
-function getDeviceTypeDetailsPage(req, res, next) {
-    //TODO: Add functionality for the device type details page
-    renderAdminLayoutPlaceholder(req,res, "device_type_details", {}, "Device Type Details Page Here")
+/**
+ * Device Type Details View Controller
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+async function getDeviceTypeDetailsPage(req, res, next) {
+    const subpage = req.params.subpage
+    const id = req.params.id
+
+    let item = {}
+    let brands = [];
+    let deviceTypes = []
+    let typeModels = []
+
+    switch (subpage){
+        case "brands":
+            item = await getBrandById(id);
+            break;
+        case "models":
+            item = await getModelById(id)
+            deviceTypes = await getAllDeviceType()
+            brands = await getAllBrand()
+            break;
+        case "device-types":
+            item = await getDeviceTypeById(id)
+            typeModels = await getAllModelsOfType(item.id)
+            break;
+        default:
+            res.redirect("/admin/types")
+    }
+    // Make subpage singular form
+    const itemType = subpage.slice(0,-1)
+
+    renderAdminLayoutPlaceholder(req,res, "device_type_details", {item, itemType, brands, deviceTypes, typeModels}, null)
+}
+/**
+ * Update Device Type
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const updateDeviceType = async (req,res,next) => {
+    const id = req.params.id
+    const subpage = req.params.subpage
+    switch (subpage){
+        case "brands":
+            await updateBrandDetails(id, req.body.name)
+            break;
+        case "models":
+            await updateModelDetails(id, req.body.name, req.body.modelBrand, req.body.modelType)
+            break;
+        case "device-types":
+            await updateDeviceTypeDetails(id, req.body.name, req.body.description)
+            break;
+        default:
+            res.redirect("/admin/types")
+    }
+    res.redirect(`/admin/types/${subpage}/${id}`)
+}
+
+const deleteDeviceType = async (req,res,next) => {
+    const id = req.params.id
+    const subpage = req.params.subpage
+
+    switch (subpage){
+        case "brands":
+            await deleteBrand(id)
+            break;
+        case "models":
+            await deleteModel(id)
+            break;
+        case "device-types":
+            await deleteType(id)
+            break;
+        default:
+            res.redirect("/admin/types")
+    }
+    res.redirect(`/admin/types/${subpage}`)
+
 }
 
 /**
@@ -236,4 +321,6 @@ module.exports = {
     getUserDeviceDetailsPage,
     updateUserDeviceDetailsPage,
     getModelsFromTypeAndBrand,
+    updateDeviceType,
+    deleteDeviceType
 }
