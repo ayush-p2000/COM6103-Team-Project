@@ -8,16 +8,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-function onDeleteConfirm(retrievalID) {
+async function onDeleteConfirm(retrievalID) {
     // Get the modal
     const confirmModal = $('#deleteConfirmationModal');
 
+    const deleteSpinner = $('#deleteSpinner');
+    deleteSpinner.removeClass('d-none');
+
     try {
-        //const response = axios.delete(`/retrieval/${retrievalID}`)
+        const response = await axios.delete(`/retrieval/${retrievalID}`)
 
         confirmModal.modal('hide');
         window.location.reload();
     } catch (error) {
         console.error(error);
+        deleteSpinner.addClass('d-none');
     }
 }
