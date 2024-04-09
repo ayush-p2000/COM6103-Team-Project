@@ -95,8 +95,21 @@
 
     <div class="row bg-light text-dark p-4 mt-4">
         <div class="col-md-12">
-            <h5 class="fw-bold">Additional Details: </h5>
-            <p class="lead"><%= item.additional_details %></p>
+            <div class="row">
+                <div class="col-12">
+                    <h5 class="fw-bold">Additional Details: </h5>
+                    <p class="lead"><%= item.additional_details %></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <!-- TODO: Implement this once data retrieval is available -->
+                    <h5 class="fw-bold">Data Retrieval Service: </h5>
+                    <p>Status: <span class="alert alert-secondary p-0 px-2">Awaiting Delivery</span></p>
+                    <a class="btn btn-outline-info w-100">Access Data Here</a>
+                </div>
+            </div>
         </div>
     </div>
 
