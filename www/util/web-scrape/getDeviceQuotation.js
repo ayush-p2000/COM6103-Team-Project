@@ -16,7 +16,6 @@ async function getDeviceQuotation(item, providers) {
             if (provider.name === 'ebay') {
                 url = 'https://www.ebay.co.uk/sch/i.html?_nkw=';
                 searchItem = item.model.name.replace(' ', '+');
-
                 fetch(url + searchItem)
                     .then(response => {
                         if (!response.ok) {
@@ -57,7 +56,7 @@ async function getDeviceQuotation(item, providers) {
                             console.log('ebay', quote)
                             const quoteDetails = setQuoteDetails(provider, item, quote, url + searchItem)
                             // console.log(quoteDetails)
-                            await addQuote(quoteDetails);
+                            // await addQuote(quoteDetails);
                             quotation.push(quoteDetails)
                             // return await addQuote(quoteDetails);
                         }
@@ -67,7 +66,9 @@ async function getDeviceQuotation(item, providers) {
                     });
             } else {
                 url = 'https://uk.webuy.com/sell/search/?stext='
-                searchItem = item.model.name.replace(' ', '+')
+                searchItem = item.model.name.replaceAll(' ', '+')
+                console.log(item.model.name)
+                console.log(url+searchItem)
                 fetch(url + searchItem)
                     .then(response => {
                         if (!response.ok) {
@@ -75,19 +76,14 @@ async function getDeviceQuotation(item, providers) {
                         }
                         return response.text()
                     })
-                    .then(async html => {
+                    .then(html => {
+                        const cheerio = require('cheerio');
                         const $ = cheerio.load(html)
-                        // console.log($)
-                        const data = $('.wrapper-box')
-                        data.each(() => {
-                            console.log('item')
-                            console.log('cex price', $('.cash-price').text())
+                        const data = $('.content')
+                        data.each((i, element) => {
+                            let price = $(element).find('.cash-price').text()
+                            console.log(price)
                         })
-                        // console.log(price)
-                        // let quote = quote_data[0]
-                        // const quoteDetails = setQuoteDetails(provider, item)
-                        // console.log(quoteDetails)
-                        // return await addQuote(quoteDetails)
                     })
                     .catch(err => {
                         console.log(err)
