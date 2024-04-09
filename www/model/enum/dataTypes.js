@@ -1,52 +1,24 @@
-const STRING = 0;
-const NUMBER = 1;
-const BOOLEAN = 2;
-const RANGE = 3;
-const ENUM = 4;
-const OBJECT = 5;
-const ARRAY = 6;
-const DATE = 7;
 const IMAGE = 8;
 const FILE = 9;
 const URL = 10;
+const ARCHIVE = 11;
 
 const dataTypes = {
-    STRING,
-    NUMBER,
-    BOOLEAN,
-    RANGE,
-    ENUM,
-    OBJECT,
-    ARRAY,
-    DATE,
     IMAGE,
     FILE,
     URL,
+    ARCHIVE,
 
     dataTypeToString: function (dataType) {
         switch (dataType) {
-            case STRING:
-                return "String";
-            case NUMBER:
-                return "Number";
-            case BOOLEAN:
-                return "Boolean";
-            case RANGE:
-                return "Range";
-            case ENUM:
-                return "Enum";
-            case OBJECT:
-                return "Object";
-            case ARRAY:
-                return "Array";
-            case DATE:
-                return "Date";
             case IMAGE:
                 return "Image";
             case FILE:
                 return "File";
             case URL:
                 return "URL";
+            case ARCHIVE:
+                return "Compressed File";
             default:
                 return "Unknown";
         }
@@ -54,28 +26,14 @@ const dataTypes = {
 
     dataTypeToColour: function (dataType, prefix = "") {
         switch (dataType) {
-            case STRING:
-                return prefix + "secondary";
-            case NUMBER:
-                return prefix + "info";
-            case BOOLEAN:
-                return prefix + "success";
-            case RANGE:
-                return prefix + "warning";
-            case ENUM:
-                return prefix + "danger";
-            case OBJECT:
-                return prefix + "primary";
-            case ARRAY:
-                return prefix + "dark";
-            case DATE:
-                return prefix + "light";
             case IMAGE:
                 return prefix + "dark";
             case FILE:
-                return prefix + "dark";
+                return prefix + "secondary";
             case URL:
-                return prefix + "dark";
+                return prefix + "info";
+            case ARCHIVE:
+                return prefix + "warning";
             default:
                 return prefix + "secondary";
         }

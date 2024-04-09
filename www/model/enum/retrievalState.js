@@ -94,11 +94,116 @@ const retrievalState = {
         }
     },
 
+    retrievalStepToPromotionButtonString: (state) => {
+        switch(state) {
+            case AWAITING_DEVICE:
+                return 'Received Device';
+            case DEVICE_RECEIVED:
+                return 'Data Recovered';
+            case DATA_RECOVERED:
+                return "Promote to 'Data Available'"
+            case DATA_RECOVERY_FAILED:
+                return 'No Further Steps';
+            case DATA_RECOVERY_CANCELLED:
+                return 'No Further Steps';
+            case AVAILABLE_FOR_RETREIVAL:
+                return "No Further Steps"
+            case EXPIRING_SOON:
+                return "No Further Steps"
+            case RETRIEVAL_EXPIRED:
+                return "No Further Steps"
+            case DATA_DELETED:
+                return "No Further Steps"
+            default:
+                return 'Unknown';
+        }
+    },
+
+    retrievalStepToDemotionButtonString: (state) => {
+        switch(state) {
+            case AWAITING_DEVICE:
+                return 'No Further Steps';
+            case DEVICE_RECEIVED:
+                return 'Awaiting Device';
+            case DATA_RECOVERED:
+                return "Demote to 'Device Received'"
+            case DATA_RECOVERY_FAILED:
+                return "Demote to 'Device Received'";
+            case DATA_RECOVERY_CANCELLED:
+                return "Demote to 'Device Received'";
+            case AVAILABLE_FOR_RETREIVAL:
+                return "Demote to 'Data Recovered'";
+            case EXPIRING_SOON:
+                return "Demote to 'Data Recovered'";
+            case RETRIEVAL_EXPIRED:
+                return "No Further Steps";
+            case DATA_DELETED:
+                return "No Further Steps";
+            default:
+                return 'Unknown';
+        }
+    },
+
+    getNextTypicalState: (state) => {
+        switch(state) {
+            case AWAITING_DEVICE:
+                return DEVICE_RECEIVED;
+            case DEVICE_RECEIVED:
+                return DATA_RECOVERED;
+            case DATA_RECOVERED:
+                return AVAILABLE_FOR_RETREIVAL;
+            case DATA_RECOVERY_FAILED:
+                return DATA_DELETED;
+            case DATA_RECOVERY_CANCELLED:
+                return DATA_DELETED;
+            case AVAILABLE_FOR_RETREIVAL:
+                return EXPIRING_SOON;
+            case EXPIRING_SOON:
+                return RETRIEVAL_EXPIRED;
+            case RETRIEVAL_EXPIRED:
+                return DATA_DELETED;
+            case DATA_DELETED:
+                return DATA_DELETED;
+            default:
+                return state;
+        }
+    },
+
+    getPreviousTypicalState: (state) => {
+        switch(state) {
+            case AWAITING_DEVICE:
+                return AWAITING_DEVICE;
+            case DEVICE_RECEIVED:
+                return AWAITING_DEVICE;
+            case DATA_RECOVERED:
+                return DEVICE_RECEIVED;
+            case DATA_RECOVERY_FAILED:
+                return DEVICE_RECEIVED;
+            case DATA_RECOVERY_CANCELLED:
+                return DEVICE_RECEIVED;
+            case AVAILABLE_FOR_RETREIVAL:
+                return DATA_RECOVERED;
+            case EXPIRING_SOON:
+                return AVAILABLE_FOR_RETREIVAL;
+            case RETRIEVAL_EXPIRED:
+                return EXPIRING_SOON;
+            case DATA_DELETED:
+                return DATA_DELETED;
+            default:
+                return state;
+        }
+    },
+
+    hasPreviousStep: (state) => (state !== AWAITING_DEVICE),
+    hasNextStep: (state) => (state !== DATA_DELETED && state !== RETRIEVAL_EXPIRED && state !== DATA_RECOVERY_FAILED && state !== DATA_RECOVERY_CANCELLED && state !== AVAILABLE_FOR_RETREIVAL),
+
     stateHasFiles: (state) => (state === DATA_RECOVERED || state === AVAILABLE_FOR_RETREIVAL || state === EXPIRING_SOON),
 
     isExpiredState: (state) => (state === DATA_DELETED || state === RETRIEVAL_EXPIRED),
 
     isFailedState: (state) => (state === DATA_RECOVERY_FAILED || state === DATA_RECOVERY_CANCELLED),
+
+    isValidStateValue: (state) => (state >= AWAITING_DEVICE && state <= DATA_DELETED),
 
     getList: () => Object.values(retrievalState).filter(value => typeof value === 'number')
 };

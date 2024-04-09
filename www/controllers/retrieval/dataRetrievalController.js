@@ -182,7 +182,139 @@ async function getFileDownload(req, res, next) {
 }
 
 async function deleteDataRetrieval(req, res, next) {
+    //TODO: Implement this function
+}
 
+async function getRetrievalEditPage(req, res, next) {
+    try {
+        //Get the item ID from the request
+        const {id} = req.params;
+
+        //Get the item from the database
+        const item = await getItemDetail(id);
+
+        //Get the retrieval object from the database
+        const retrievalObject = await getRetrievalObjectByDeviceId(id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
+            res.status(404);
+            next({message: "Item not available for retrieval", status: 404});
+            return;
+        }
+
+        res.render('retrieval/data_retrieval_staff', {
+            device: item,
+            retrieval: retrievalObject,
+            auth: req.isLoggedIn,
+            user: req.user,
+            retrievalState,
+            dataTypes
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500);
+        next({message: "Internal server error", status: 500});
+    }
+}
+
+async function promoteRetrieval(req, res, next) {
+    try {
+        //Get the retrieval ID from the request
+        const {id} = req.params;
+
+        //Get the retrieval object from the database
+        const retrievalObject = await getRetrieval(id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
+            res.status(404).send('Item not available for retrieval');
+            return;
+        }
+
+        //Promote the retrieval object
+        const newValue = retrievalState.getNextTypicalState(retrievalObject.retrieval_state)
+        if (retrievalState.isValidStateValue(newValue)) {
+            retrievalObject.retrieval_state = newValue;
+        }
+
+        await retrievalObject.save();
+
+        res.status(200).send('Retrieval promoted successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+}
+
+async function demoteRetrieval(req, res, next) {
+    try {
+        //Get the retrieval ID from the request
+        const {id} = req.params;
+
+        //Get the retrieval object from the database
+        const retrievalObject = await getRetrieval(id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
+            res.status(404).send('Item not available for retrieval');
+            return;
+        }
+
+        //Demote the retrieval object
+        const newValue = retrievalState.getPreviousTypicalState(retrievalObject.retrieval_state)
+        if (retrievalState.isValidStateValue(newValue)) {
+            retrievalObject.retrieval_state = newValue;
+        }
+
+        await retrievalObject.save();
+
+        res.status(200).send('Retrieval demoted successfully');
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+}
+
+async function errorStateHandler(req, res, next) {
+    try {
+        //Get the retrieval ID and the state from the request
+        const {id} = req.params;
+
+        const state = req.body.state;
+
+        //Check if the state exists in the body
+        if (typeof (state) === 'undefined' || state === null) {
+            res.status(400).send('State not provided');
+            return;
+        }
+
+        //Get the retrieval object from the database
+        const retrievalObject = await getRetrieval(id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
+            res.status(404).send('Item not available for retrieval');
+            return;
+        }
+
+        //Check if the state is a valid state
+        if (!retrievalState.isValidStateValue(state)) {
+            res.status(400).send('Invalid state provided');
+            return;
+        }
+
+        //Set the state of the retrieval object
+        retrievalObject.retrieval_state = state;
+
+        await retrievalObject.save();
+
+        res.status(200).send('State updated successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
 }
 
 module.exports = {
@@ -190,5 +322,9 @@ module.exports = {
     getFilePage,
     getFileDownload,
     deleteDataRetrieval,
-    getRetrievalDownload
+    getRetrievalDownload,
+    getRetrievalEditPage,
+    promoteRetrieval,
+    demoteRetrieval,
+    errorStateHandler
 }

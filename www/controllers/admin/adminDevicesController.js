@@ -7,7 +7,8 @@ const {get} = require("axios");
 const {renderAdminLayout,renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
 const {getItemDetail, getAllDeviceType, getAllBrand, updateDeviceDetails, getModels,getAllUnknownDevices, addDeviceType, addBrand, addModel,
     getUnknownDeviceHistoryByDevice,
-    getAllDevices
+    getAllDevices,
+    getAllRetrievalDevices
 } = require("../../model/mongodb")
 
 const dataService = require("../../model/enum/dataService")
@@ -59,6 +60,22 @@ async function getFlaggedDevicesPage(req, res, next) {
         renderAdminLayout(req, res, "unknown_devices", {devices,deviceTypes,brands});
     } catch (e) {
         console.log(e)
+        res.status(500);
+        next(e);
+    }
+}
+
+async function getRetrievalDevicesPage(req, res, next) {
+    try {
+        const devices = await getAllRetrievalDevices()
+        const deviceTypes = await getAllDeviceType()
+        const brands = await getAllBrand()
+
+        renderAdminLayout(req, res, "retrieval_devices", {devices,deviceTypes,brands, deviceCategory, deviceState});
+    } catch (e) {
+        console.log(e)
+        res.status(500);
+        next(e);
     }
 }
 
@@ -223,6 +240,7 @@ const updateUserDeviceDetailsPage = async (req, res) => {
 module.exports = {
     getDevicesPage,
     getFlaggedDevicesPage,
+    getRetrievalDevicesPage,
     getDeviceTypePage,
     getDeviceTypeDetailsPage,
     postNewDeviceType,

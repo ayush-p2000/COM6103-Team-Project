@@ -18,6 +18,7 @@ const {UNKNOWN_DEVICE} = require("./enum/historyType");
 
 const {UNKNOWN} = require("./enum/deviceCategory")
 const {HAS_QUOTE} = require("./enum/deviceState")
+const deviceState = require("./enum/deviceState");
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -255,6 +256,10 @@ const listDevice = async (deviceData, photos, user) => {
  */
 const getAllUnknownDevices = async () => {
     return History.find({history_type: UNKNOWN_DEVICE});
+}
+
+const getAllRetrievalDevices = async () => {
+    return Device.find({state: deviceState.DATA_RECOVERY});
 }
 
 /**
@@ -534,6 +539,7 @@ module.exports = {
     listDevice,
     getAllDevices,
     getAllUnknownDevices,
+    getAllRetrievalDevices,
     addDeviceType,
     addBrand,
     addModel,

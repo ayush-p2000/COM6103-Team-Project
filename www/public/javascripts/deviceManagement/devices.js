@@ -3,3 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
         "processing": true,
     });
 });
+
+function openDeviceDataRetrievalModal(device_id) {
+    $('#deviceDataRetrievalModal').modal('show');
+}

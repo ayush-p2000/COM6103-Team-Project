@@ -5,6 +5,7 @@
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
 const {User} = require("../../model/schema/user");
 const {getAllUsers, searchUserAndPopulate} = require("../../model/mongodb");
+const roleTypes = require("../../model/enum/roleTypes");
 
 function getAdminDashboard(req, res, next) {
     const route = req.params.contentRoute ?? "dashboard";
@@ -71,7 +72,7 @@ async function insertStaffDetails(req,res,next){
             updateFields.role = role;
         }
 
-        if (req.user.role > USER && req.body.role <= req.user.role) {
+        if (req.user.role > roleTypes.USER && req.body.role <= req.user.role) {
             return res.status(403).send('You do not have the required permissions to perform this action');
         }
 
