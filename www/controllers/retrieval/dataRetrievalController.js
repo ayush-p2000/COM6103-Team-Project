@@ -56,6 +56,13 @@ async function getRetrievalDownload(req, res, next) {
             return;
         }
 
+        //If the retrieval object is expired, or there are no files to download, then don't proceed further
+        if (retrievalState.isExpiredState(retrievalObject.retrieval_state) || retrievalObject.data.length === 0) {
+            res.status(404);
+            next({message: "Item not available for retrieval, this retrieval is expired", status: 404});
+            return;
+        }
+
         //Prepare the data for download, by creating a zip file with the data
         const files = [];
         retrievalObject.data.forEach(file => {
@@ -366,6 +373,12 @@ async function postURL(req, res, next) {
             return;
         }
 
+        //If the retrieval object is expired, then don't proceed further
+        if (retrievalState.isExpiredState(retrievalObject.retrieval_state)) {
+            res.status(403).send(`This retrieval is expired and cannot be edited`);
+            return;
+        }
+
         //Add the URL to the retrieval object
         retrievalObject.data.push({
             name: name,
@@ -402,6 +415,12 @@ async function postFiles(req, res, next) {
         //If the retrieval object is not found, then the item is not available for retrieval
         if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
             res.status(404).send('Item not available for retrieval');
+            return;
+        }
+
+        //If the retrieval object is expired, then don't proceed further
+        if (retrievalState.isExpiredState(retrievalObject.retrieval_state)) {
+            res.status(403).send(`This retrieval is expired and cannot be edited`);
             return;
         }
 
