@@ -8,10 +8,10 @@ const {Device} = require("../../model/schema/device")
 const {
     getUserItems,
     getQuotes,
-    getHistoryByDevice,
     getProviders,
     addQuote,
-    getAllDevices, getUnknownDeviceHistoryByDevice
+    getAllDevices, getAllDeviceType,
+    getUnknownDeviceHistoryByDevice
 } = require('../../model/mongodb')
 const {join} = require("path");
 const deviceState = require("../../model/enum/deviceState")
@@ -21,10 +21,11 @@ const cheerio = require("cheerio");
 
 /**
  * Get All Users Devices
- * @author Zhicong Jiang
+ * @author Zhicong Jiang<zjiang34@sheffield.ac.uk>
  */
 const getMarketplace = async (req, res, next) => {
-    const {items, pagination} = await getPaginatedResults(Device, req.params.page, {}, {}, 3);
+    const deviceTypes = await getAllDeviceType()
+    const {items, pagination} = await getPaginatedResults(Device, req.params.page, {}, {}, 10);
     try {
         var devices = await getAllDevices()
         for (const item of devices) {
@@ -32,7 +33,7 @@ const getMarketplace = async (req, res, next) => {
                 var deviceType = ""
                 var brand = ""
                 var model = ""
-                const customModel = await getHistoryByDevice(item._id)
+                const customModel = await getUnknownDeviceHistoryByDevice(item._id)
                 customModel[0].data.forEach(data => {
                     if (data.name === "device_type") {
                         deviceType = data.value
@@ -51,6 +52,7 @@ const getMarketplace = async (req, res, next) => {
         console.log(e)
     }
     res.render('marketplace/marketplace', {
+        deviceTypes,
         devices,
         items,
         deviceCategory,
@@ -63,10 +65,11 @@ const getMarketplace = async (req, res, next) => {
 /**
  * Get User's items to display it in the my-items page, so that the user can see what items they have listed in the application
  * Here the function also checks if there is quotation details in the database for the item, if not then it'll fetch the details from getDeviceQuotation method
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 async function getMyItems(req, res, next) {
     try {
+        const deviceTypes = await getAllDeviceType()
         const items = await getUserItems(req.user.id)
         const providers = await getProviders()
         let quotations = []
@@ -97,8 +100,9 @@ async function getMyItems(req, res, next) {
             }
             quotations.push(quotes)
         }
-        console.log(quotations)
+        // console.log(quotations)
         res.render('marketplace/my_items', {
+            deviceTypes,
             items,
             quotations,
             deviceState,

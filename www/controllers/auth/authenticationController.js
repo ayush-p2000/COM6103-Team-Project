@@ -7,7 +7,6 @@ const {randomBytes, pbkdf2} = require("node:crypto")
 const {promisify} = require('node:util')
 const { validationResult } = require("express-validator")
 const pbkdf2Promise = promisify(pbkdf2)
-let user = ""
 
 //------------------------------------------------- User Registration Data feeding and Authenticating -------------------------------------------//
 
@@ -46,21 +45,28 @@ const registerUser = async (req, res, next) => {
         const salt = randomBytes(16)
         const hashedPassword = await pbkdf2Promise(password, salt, 310000, 32, 'sha256')
         const emailCheck = await User.findOne({email});
+
         if (emailCheck) {
             messages = ['User email already exists']
-            return res.render("authentication/register", {messages: messages, hasMessages: messages.length>0, auth: req.isLoggedIn, user:req.user}) // needs refined alert
-        } else {
-            user = new User({
-                first_name: firstName,
-                last_name: lastName,
-                date_of_birth: dateOfBirth,
-                phone_number,
-                email,
-                password: hashedPassword,
-                salt,
-                address
-            });
+            return res.render("authentication/register", {
+                messages: messages,
+                hasMessages: messages.length > 0,
+                auth: req.isLoggedIn,
+                user: req.user
+            }) // needs refined alert
         }
+
+        let user = new User({
+            first_name: firstName,
+            last_name: lastName,
+            date_of_birth: dateOfBirth,
+            phone_number,
+            email,
+            password: hashedPassword,
+            salt,
+            address
+        });
+
         if (req.session.messages.length > 0) {
             return res.redirect("/register")
         }

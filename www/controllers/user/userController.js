@@ -4,6 +4,9 @@
 
 //const {getMockUser} = require("../../util/mock/mockData");
 const {User} = require("../../model/schema/user");
+const {email} = require("../../public/javascripts/Emailing/emailing");
+
+const {getAllUsers} = require("../../model/mongodb");
 
 //------------------------------------------------ Rendering user Database -------------------------------------------------------------------------//
 
@@ -84,9 +87,21 @@ async function updateUserDetails(req, res, next){
         // message being displayed after the successful profile update
         messages = ['Profile Successfully Updated']
 
+        // sample usage of email sending
+
+        //use your email ID to send emails for testing or create an account in the ePanda and dynamically retrieve the email
+        const emailid = req.user.email
+        const subject = 'Update profile successful'
+
+        // Structure your message/text content the way you want. Note : It should be in 'html', so cover your text using ``.
+        const textmsg = `Dear user, <br><br> ${messages} <br><br><br><b>Thanks & Regards,<br><br><p style="color: #2E8B57">Team ePanda</p></b>`;
+
+        email(emailid, subject, textmsg)
+
+
         // Find the user by ID and update the specified fields
         const updatedUser = await User.findByIdAndUpdate(req.user.id, updateFields, {new: true});
-
+        
         if (!updatedUser) {
             return res.status(404).send('Server Error'); // Any possible error comes out e.g. Database connection, User unidentified, etc...
         }
@@ -104,6 +119,8 @@ async function updateUserDetails(req, res, next){
         res.status(500).send('Server error');
     }
 }
+
+
 
 module.exports = {
     getUserProfile,

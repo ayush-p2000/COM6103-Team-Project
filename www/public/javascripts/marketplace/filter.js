@@ -1,6 +1,12 @@
+
+/**
+ * Handling the filter for My-item
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+
+
 // Get all the checkboxes
 const checkboxes = document.querySelectorAll('.btn-check');
-
 const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 
 // Add event listener to the clear filters button
@@ -11,29 +17,35 @@ checkboxes.forEach(checkbox => {
 });
 
 function filterItems() {
+
     // Get the checked checkboxes
-    const checkedCheckboxes = document.querySelectorAll('.category-filter:checked');
+    const checkedClassification = document.querySelectorAll('.category-filter:checked');
+    const checkedDeviceType = document.querySelectorAll('.deviceType-filter:checked');
 
     // Get all items
-    const items = document.querySelectorAll('.card');
-
-
-    if(checkedCheckboxes.length === 0) {
-        items.forEach(item => {
-            item.style.display = 'block';
-        })
-        return
-    }
+    const items = document.querySelectorAll('.item');
 
     items.forEach(item => {
+        const itemDeviceType = item.querySelector('.deviceType').textContent.replace('Device Type: ', '').trim()
+        const itemCategory = item.querySelector('.category').textContent.replace('Classification: ', '').trim()
 
-        const itemCategory = item.querySelector('.category').textContent.replace('Classification: ', '')
-        // Show items that match the checked states
-        const match = Array.from(checkedCheckboxes).some(checkbox => itemCategory === checkbox.id)
-            item.style.display = match ?'block':'none';
+
+        var matchClassification = checkedClassification.length === 0 || Array.from(checkedClassification).some(checkbox => itemCategory === checkbox.id)
+        var matchDeviceType = checkedDeviceType.length === 0 || Array.from(checkedDeviceType).some(checkbox => itemDeviceType === checkbox.id)
+
+        if (matchClassification){
+            if (matchDeviceType){
+                item.style.display = 'block';
+            }else{
+                item.style.display = 'none';
+            }
+        }else{
+            item.style.display = 'none';
+        }
     });
 
 }
+
 function clearFilters() {
     // Uncheck all category checkboxes
     checkboxes.forEach(checkbox => {
@@ -41,7 +53,7 @@ function clearFilters() {
     });
 
     // Show all items
-    const items = document.querySelectorAll('.card');
+    const items = document.querySelectorAll('.item');
     items.forEach(item => {
         item.style.display = 'block';
     });

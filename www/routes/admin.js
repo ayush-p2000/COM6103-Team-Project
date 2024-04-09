@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {getAdminDashboard} = require("../controllers/admin/adminController");
+const {getAdminDashboard,deactivateUser, activateUser} = require("../controllers/admin/adminController");
 const {
     getAccountDetailsPage, getAccountsPage, getEditAccountPage
 } = require("../controllers/admin/adminAccountsController");
@@ -16,6 +16,7 @@ const {
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
 
 const {upload} = require('../middlewares/multer')
+const {insertStaffDetails} = require("../controllers/admin/adminController");
 
 
 /* GET home page. */
@@ -49,5 +50,11 @@ router.get('/devices/:id', getUserDeviceDetailsPage);
 router.post('/devices/:id',upload.none(), updateUserDeviceDetailsPage)
 
 router.get('/getModelFromBrandAndType', getModelsFromTypeAndBrand)
+
+router.post('/accounts/:id', insertStaffDetails );
+
+router.post('/deactivateUser',upload.none(), deactivateUser);
+
+router.post('/activateUser',upload.none(), activateUser);
 
 module.exports = router;
