@@ -434,6 +434,10 @@ const getRetrievalObjectByDeviceId = async (deviceId) => {
     return Retrieval.findOne({device: deviceId}).populate('device');
 }
 
+const getRetrieval = async (retrievalId) => {
+    return Retrieval.findOne({_id: retrievalId}).populate('device');//.populate('device.model').populate('device.brand').populate('device.device_type');
+}
+
 /**
  * Returns a count of devices grouped by device category
  * @returns {Promise<Aggregate<Array<any>>>}
@@ -546,6 +550,7 @@ module.exports = {
     getAllDeviceTypes,
     getAllBrands,
     getRetrievalObjectByDeviceId,
+    getRetrieval,
     getDevicesGroupByCategory,
     getDevicesGroupByState,
     getDevicesGroupByType,

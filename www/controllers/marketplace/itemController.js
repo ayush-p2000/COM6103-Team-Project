@@ -188,32 +188,6 @@ async function postUpdateQuote(req, res) {
     }
 }
 
-async function getItemDataRetrieval(req, res, next) {
-    try {
-        //Get the item ID from the request
-        const {id} = req.params;
-
-        //Get the item from the database
-        const item = await getItemDetail(id);
-
-        //Get the retrieval object from the database
-        const retrievalObject = await getRetrievalObjectByDeviceId(id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof(retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404);
-            next({message: "Item not available for retrieval", status: 404});
-            return;
-        }
-
-        res.render('marketplace/data_retrieval', {device: item, retrieval: retrievalObject, auth: req.isLoggedIn, user: req.user, retrievalState, dataTypes});
-    } catch (error) {
-        console.error(error);
-        res.status(500);
-        next({message: "Internal server error", status: 500});
-    }
-}
-
 
 /*
  * ######################################################################
@@ -381,7 +355,6 @@ module.exports = {
     getListItem,
     getModelByBrandAndType,
     getItemDetails,
-    getItemDataRetrieval,
     postUpdateQuote,
     getItemQrCodeView,
     confirmQuote,

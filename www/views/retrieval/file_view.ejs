@@ -1,0 +1,60 @@
+<%- include('../components/header') %>
+
+<%- include('../components/navbar') %>
+
+<div class="container-fluid h-100">
+    <div class="row mt-2">
+        <div class="col-md-12 text-center">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row justify-content-center my-2">
+                        <div class="col-md-6">
+                            <h1>File Viewer</h1>
+                            <div class="alert alert-light p-0 py-1 m-0 my-auto">
+                                <pre class="p-1 m-0 fs-2"><%= file.name %></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <% if (file.data_type === dataTypes.IMAGE) { %>
+                                        <%# If the file is an image, the value field contains the mime type, and the buffer field contains the image data %>
+                                        <%# The use_buffer field should be true if this is a correctly formatted image %>
+                                        <% if (file.use_buffer) { %>
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-12">
+                                                    <img src="data:<%= file.value %>;base64,<%= file.buffer.toString('base64') %>"
+                                                         class="img-fluid w-50" alt=""/>
+                                                </div>
+                                            </div>
+
+                                        <% } else { %>
+                                            <p>Invalid image data</p>
+                                        <% } %>
+                                    <% } else if (file.data_type === dataTypes.FILE) { %>
+                                        <%# The file type covers any other file type, such as text, pdf, etc. %>
+                                        <%# Because of this, it is not possible to display the file in the browser, so we just display the file type and size %>
+                                        <p>File type: <%= file.value %></p>
+                                        <p>File size: <%= file.buffer.length %> bytes</p>
+                                    <% } else { %>
+                                        <p>Invalid file type</p>
+                                    <% } %>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a class="btn btn-primary mt-2 w-100" href="<%= file._id %>/download">Download</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../components/footer') %>
