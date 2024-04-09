@@ -165,8 +165,13 @@ async function getItemDetails(req, res, next) {
             quote.qr_code = qr;
         }
 
+        let retrievalData = null;
+        if (item.state === deviceState.DATA_RECOVERY) {
+            retrievalData = await getRetrievalObjectByDeviceId(item._id);
+        }
+
         res.render('marketplace/item_details', {
-            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user,
+            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, retrievalData, retrievalState
         })
     } catch (e) {
         console.log(e)

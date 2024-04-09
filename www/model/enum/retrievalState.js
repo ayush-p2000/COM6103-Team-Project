@@ -69,6 +69,31 @@ const retrievalState = {
         }
     },
 
+    retrievalStateToNextStepString: (state) => {
+        switch(state) {
+            case AWAITING_DEVICE:
+                return 'Make sure to bring your device to us as soon as possible in order to start the data recovery process.';
+            case DEVICE_RECEIVED:
+                return 'We have received your device and are currently working on recovering your data.';
+            case DATA_RECOVERED:
+                return 'Your data has been successfully recovered and is available for download.';
+            case DATA_RECOVERY_FAILED:
+                return 'Unfortunately, we were unable to recover any data from your device.';
+            case DATA_RECOVERY_CANCELLED:
+                return 'Your data recovery process has been cancelled.';
+            case AVAILABLE_FOR_RETREIVAL:
+                return 'Your data is available for download.';
+            case EXPIRING_SOON:
+                return 'Your data is available for download, but will expire soon. Make sure to download it before it is too late.';
+            case RETRIEVAL_EXPIRED:
+                return 'Your data has expired and is no longer available for download.';
+            case DATA_DELETED:
+                return 'Your data has been deleted.';
+            default:
+                return 'Unknown';
+        }
+    },
+
     stateHasFiles: (state) => (state === DATA_RECOVERED || state === AVAILABLE_FOR_RETREIVAL || state === EXPIRING_SOON),
 
     isExpiredState: (state) => (state === DATA_DELETED || state === RETRIEVAL_EXPIRED),
