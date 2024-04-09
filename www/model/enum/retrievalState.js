@@ -134,7 +134,7 @@ const retrievalState = {
             case AVAILABLE_FOR_RETREIVAL:
                 return "Demote to 'Data Recovered'";
             case EXPIRING_SOON:
-                return "Demote to 'Data Recovered'";
+                return "No Further Steps";
             case RETRIEVAL_EXPIRED:
                 return "No Further Steps";
             case DATA_DELETED:
@@ -184,7 +184,7 @@ const retrievalState = {
             case AVAILABLE_FOR_RETREIVAL:
                 return DATA_RECOVERED;
             case EXPIRING_SOON:
-                return AVAILABLE_FOR_RETREIVAL;
+                return EXPIRING_SOON;
             case RETRIEVAL_EXPIRED:
                 return EXPIRING_SOON;
             case DATA_DELETED:
@@ -194,8 +194,8 @@ const retrievalState = {
         }
     },
 
-    hasPreviousStep: (state) => (state !== AWAITING_DEVICE),
-    hasNextStep: (state) => (state !== DATA_DELETED && state !== RETRIEVAL_EXPIRED && state !== DATA_RECOVERY_FAILED && state !== DATA_RECOVERY_CANCELLED && state !== AVAILABLE_FOR_RETREIVAL),
+    hasPreviousStep: (state) => (state !== AWAITING_DEVICE && state !== DATA_DELETED && state !== EXPIRING_SOON),
+    hasNextStep: (state) => (state !== DATA_DELETED && state !== RETRIEVAL_EXPIRED && state !== DATA_RECOVERY_FAILED && state !== DATA_RECOVERY_CANCELLED && state !== AVAILABLE_FOR_RETREIVAL && state !== EXPIRING_SOON),
 
     stateHasFiles: (state) => (state === DATA_RECOVERED || state === AVAILABLE_FOR_RETREIVAL || state === EXPIRING_SOON),
 

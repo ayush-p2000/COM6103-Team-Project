@@ -12,7 +12,7 @@
 
     <div class="row justify-content-center">
         <div class="col-md-4 text-center">
-            <div class="alert <%= retrievalState.retrievalStateToColor(retrieval.retrieval_state, "alert-") %>">
+            <div class="alert <%= retrievalState.retrievalStateToColor(retrieval.retrieval_state, "alert-") %> <%= (retrieval.retrieval_state === retrievalState.EXPIRING_SOON) ? "mb-0 rounded-bottom-0" : "" %>">
                 <h3><%= retrievalState.retrievalStateToString(retrieval.retrieval_state) %></h3>
                 <p class="p-0 m-0">Expires at: <span class="alert alert-secondary p-0 m-0 mx-1 px-2">
                 <%= new Intl.DateTimeFormat("en-GB", {
@@ -28,6 +28,24 @@
                 </span>
                 </p>
             </div>
+
+            <% if (retrieval.retrieval_state === retrievalState.EXPIRING_SOON) { %>
+            <div class="alert alert-info rounded-top-0">
+                <h4>Need more time?</h4>
+                <p>Extend the retrieval time by either 3 or 6 months for an additional fee</p>
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#extendModal"
+                                data-bs-whatever="3">Extend by 3 months (£6.99)
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#extendModal"
+                                data-bs-whatever="6">Extend by 6 months (£9.99)
+                        </button>
+                    </div>
+            </div>
+                <% } %>
 
         </div>
     </div>

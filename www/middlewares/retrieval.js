@@ -1,4 +1,4 @@
-const {deleteRetrieval} = require("../model/mongodb");
+const {deleteRetrieval, getRetrieval} = require("../model/mongodb");
 const {SEVEN_DAYS_S} = require("../util/time/time");
 const retrievalState = require("../model/enum/retrievalState");
 exports.verifyRetrievalExpiry = async (req, res, next) => {
@@ -25,7 +25,7 @@ exports.verifyRetrievalExpiry = async (req, res, next) => {
     }
 
     //Get the retrieval from the database
-    const retrieval = await db.getRetrieval(retrievalID);
+    const retrieval = await getRetrieval(retrievalID);
 
     //If the retrieval is null, skip the check
     if (retrieval === null) {
