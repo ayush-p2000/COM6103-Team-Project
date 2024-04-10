@@ -33,13 +33,13 @@
                 <div>
                     <label for="firstName" class="d-inline-block w-25">First Name: </label>
                     <input name="firstName" id="firstName" class="d-inline-block w-50 form-control"
-                           value="<%= user.first_name %>"/>
+                           value="<%= user.first_name %>" required/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div>
                     <label for="lastName" class="d-inline-block w-25">Last Name: </label>
                     <input name="lastName" id="lastName" class="d-inline-block w-50 form-control"
-                           value="<%= user.last_name %>"/>
+                           value="<%= user.last_name %>" required/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div>
@@ -61,40 +61,40 @@
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div>
                     <label for="phone" class="d-inline-block w-25">Telephone: </label>
-                    <input name="phone" id="phone" class="d-inline-block w-50 form-control" value="<%= user.phone_number %>"/>
+                    <input name="phone" id="phone" class="d-inline-block w-50 form-control" value="<%= user.phone_number %>" required/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div>
                     <label for="addressFirst" class="d-inline-block w-25">Address Line 1: </label>
                     <input name="addressFirst" id="addressFirst" class="d-inline-block w-50 form-control"
-                           value="<%= user.address.address_1%>"/>
+                           value="<%= user.address.address_1%>" required/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div>
                     <label for="addressSecond" class="d-inline-block w-25">Address Line 2: </label>
                     <input name="addressSecond" id="addressSecond" class="d-inline-block w-50 form-control"
-                           value="<%= user.address.address_2 %>"/>
+                           value="<%= user.address.address_2 %>" required/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div>
                     <label for="postCode" class="d-inline-block w-25">Post Code: </label>
                     <input name="postCode" id="postCode" class="d-inline-block w-50 form-control"
-                           value="<%= user.address.postcode %>"/>
+                           value="<%= user.address.postcode %>" required/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div>
                     <label for="city" class="d-inline-block w-25">City: </label>
-                    <input name="city" id="city" class="d-inline-block w-50 form-control" value="<%= user.address.city%>"/>
+                    <input name="city" id="city" class="d-inline-block w-50 form-control" value="<%= user.address.city%>" required/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
 
                 <div>
                     <label for="county" class="d-inline-block w-25">County: </label>
-                    <input name="county" id="county" class="d-inline-block w-50 form-control" value="<%= user.address.county%>"/>
+                    <input name="county" id="county" class="d-inline-block w-50 form-control" value="<%= user.address.county%>" required/>
                 </div>
 
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
@@ -102,7 +102,7 @@
                 <div>
                     <label for="country" class="d-inline-block w-25">Country: </label>
                     <input name="country" id="country" class="d-inline-block w-50 form-control"
-                           value="<%= user.address.country %>"/>
+                           value="<%= user.address.country %>" required/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3"/>
             </div>
