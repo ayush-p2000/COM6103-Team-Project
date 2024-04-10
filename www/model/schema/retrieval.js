@@ -53,6 +53,11 @@ const retrievalSchema = new mongoose.Schema({
             required: true,
             default: false
         },
+        is_extended: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
     },
     {
         timestamps: true

@@ -27,21 +27,29 @@
                 }).format(retrieval.expiry) %>
                 </span>
                 </p>
+
+                <% if (retrieval.is_extended) { %>
+                <div class="my-1 alert alert-success">
+                    <p class="p-0 m-0">Expiry was extended</p>
+                    <p class="p-0 m-0 small">Only one extension allowed. Once expired, data will be deleted</p>
+                    <small><span class="alert alert-danger p-0 px-1 m-0">Please make sure to download your data before expiry</span></small>
+                </div>
+                <% } %>
             </div>
 
-            <% if (retrieval.retrieval_state === retrievalState.EXPIRING_SOON) { %>
+            <% if (retrieval.retrieval_state === retrievalState.EXPIRING_SOON && !retrieval.is_extended) { %>
             <div class="alert alert-info rounded-top-0">
                 <h4>Need more time?</h4>
                 <p>Extend the retrieval time by either 3 or 6 months for an additional fee</p>
                 <div class="row">
                     <div class="col-6">
                         <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#extendModal"
-                                data-bs-whatever="3">Extend by 3 months (£6.99)
+                                data-bs-whatever="3" id="extend3" data-retrieval-id="<%= retrieval._id %>">Extend by 3 months (£6.99)
                         </button>
                     </div>
                     <div class="col-6">
                         <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#extendModal"
-                                data-bs-whatever="6">Extend by 6 months (£9.99)
+                                data-bs-whatever="6" id="extend6" data-retrieval-id="<%= retrieval._id %>">Extend by 6 months (£9.99)
                         </button>
                     </div>
             </div>

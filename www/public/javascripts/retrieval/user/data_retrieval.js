@@ -1,3 +1,9 @@
+const THREE_MONTH_COST = 6.99;
+const SIX_MONTH_COST = 9.99;
+const THREE_MONTH_EXTENSION = 3;
+const SIX_MONTH_EXTENSION = 6;
+const EXTENSION_TYPE = 'RETRIEVAL_EXTENSION';
+
 document.addEventListener('DOMContentLoaded', function () {
     const file_table = $('#file_table');
 
@@ -6,6 +12,60 @@ document.addEventListener('DOMContentLoaded', function () {
         file_table.DataTable({});
     }
 
+    const threeMonthExtensionButton = $('#extend3');
+    const sixMonthExtensionButton = $('#extend6');
+
+    threeMonthExtensionButton.on('click', async () => {
+        const form = document.createElement('form')
+        form.method = 'GET';
+        form.action = '/checkout'
+
+        const retrievalID = threeMonthExtensionButton.data('retrieval-id');
+
+        const formData = new FormData();
+
+        formData.append('retrieval_id', retrievalID);
+        formData.append('type', EXTENSION_TYPE);
+        formData.append('extension', THREE_MONTH_EXTENSION);
+        formData.append('total', THREE_MONTH_COST);
+
+        formData.forEach((value, key) => {
+            const input = document.createElement('input')
+            input.type = 'hidden'
+            input.name = key
+            input.value = value
+            form.appendChild(input)
+        });
+
+        document.body.appendChild(form)
+        form.submit()
+    });
+
+    sixMonthExtensionButton.on('click', async () => {
+        const form = document.createElement('form')
+        form.method = 'GET';
+        form.action = '/checkout'
+
+        const retrievalID = sixMonthExtensionButton.data('retrieval-id');
+
+        const formData = new FormData();
+
+        formData.append('retrieval_id', retrievalID);
+        formData.append('type', EXTENSION_TYPE);
+        formData.append('extension', SIX_MONTH_EXTENSION);
+        formData.append('total', SIX_MONTH_COST);
+
+        formData.forEach((value, key) => {
+            const input = document.createElement('input')
+            input.type = 'hidden'
+            input.name = key
+            input.value = value
+            form.appendChild(input)
+        });
+
+        document.body.appendChild(form)
+        form.submit()
+    });
 });
 
 async function onDeleteConfirm(retrievalID) {
