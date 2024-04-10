@@ -11,7 +11,7 @@ const dataTypes = require("../../model/enum/dataTypes");
 async function getItemDataRetrieval(req, res, next) {
     try {
         //Get the item ID from the request
-        const {id} = req.params;
+        const id = req.params.device_id;
 
         //Get the item from the database
         const item = await getItemDetail(id);
@@ -215,7 +215,7 @@ async function deleteDataRetrieval(req, res, next) {
 async function getRetrievalEditPage(req, res, next) {
     try {
         //Get the item ID from the request
-        const {id} = req.params;
+        const id = req.params.device_id;
 
         //Get the item from the database
         const item = await getItemDetail(id);

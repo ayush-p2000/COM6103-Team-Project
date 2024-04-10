@@ -1,6 +1,7 @@
-const {deleteRetrieval, getRetrieval} = require("../model/mongodb");
+const {deleteRetrieval, getRetrieval, getRetrievalObjectByDeviceId} = require("../model/mongodb");
 const {SEVEN_DAYS_S} = require("../util/time/time");
 const retrievalState = require("../model/enum/retrievalState");
+const {email} = require("../public/javascripts/Emailing/emailing");
 exports.verifyRetrievalExpiry = async (req, res, next) => {
     // Check if the retrieval is expired
     // If it is expired, call the deleteRetrieval function in mongodb.js and continue on
@@ -19,6 +20,17 @@ exports.verifyRetrievalExpiry = async (req, res, next) => {
         retrievalID = req.body.retrieval_id;
     }
 
+    //If the retrieval ID is still undefined or null, check the parameters for a device_id
+    if (typeof (retrievalID) === 'undefined' || retrievalID === null) {
+        const deviceID = req.params.device_id;
+        if (typeof (deviceID) !== 'undefined' && deviceID !== null) {
+            const retrieval = await getRetrievalObjectByDeviceId(deviceID);
+            if (retrieval !== null) {
+                retrievalID = retrieval._id;
+            }
+        }
+    }
+
     //If the retrieval ID is still undefined or null, skip the check
     if (typeof (retrievalID) === 'undefined' || retrievalID === null) {
         return next();
@@ -33,7 +45,7 @@ exports.verifyRetrievalExpiry = async (req, res, next) => {
     }
 
     //Get the expiry date of the retrieval
-    const expiryDate = retrieval.expiry_date;
+    const expiryDate = retrieval.expiry;
 
     //If the expiry date is null, skip the check
     if (expiryDate === null) {
@@ -46,12 +58,57 @@ exports.verifyRetrievalExpiry = async (req, res, next) => {
     //If the current date is after the expiry date, delete the retrieval
     if (currentDate > expiryDate) {
         await deleteRetrieval(retrievalID);
+
+        //Send the user an email informing them that their retrieval has expired
+        const userEmail = retrieval.device?.listing_user?.email;
+        const userFullName = `${retrieval.device?.listing_user?.first_name} ${retrieval.device?.listing_user?.last_name}`;
+        const deviceName = `${retrieval.device?.brand?.name} ${retrieval.device?.model?.name}`
+
+        const subject = "ePanda - Data Retrieval Expired";
+        const message = `Hi ${userFullName} <br><br> We just wanted to let you know that your data from your device has expired.
+        <br><br> The device this retrieval is associated with is your ${deviceName}.
+        <br> The data has now been deleted from our servers, and you will no longer be able to retrieve it.
+        <br><br> If you have any questions or need help, please do not hesitate to contact us.
+        <br> Thanks for using ePanda.
+        <br><br> Best regards, <p style="color: #2E8B57">Team Panda</p>`;
+
+        email(userEmail, subject, message)
+
+        //The expiring soon check can be skipped if the retrieval has expired
+        return next();
     }
 
     //If the expiry is soon (within 1 week), set the state to "Expiring"
     if (currentDate > (expiryDate - SEVEN_DAYS_S)) {
         retrieval.retrieval_state = retrievalState.EXPIRING_SOON;
         await retrieval.save();
+
+        //Send the user an email informing them that their retrieval is expiring soon
+        const userEmail = retrieval.device?.listing_user?.email;
+        const userFullName = `${retrieval.device?.listing_user?.first_name} ${retrieval.device?.listing_user?.last_name}`;
+        const deviceName = `${retrieval.device?.brand?.name} ${retrieval.device?.model?.name}`
+        const expiry= new Intl.DateTimeFormat("en-GB", {
+            year: "numeric",
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false,
+            timeZone: "Europe/London"
+        }).format(retrieval.expiry)
+
+        const subject = "ePanda - Data Retrieval Expiring Soon";
+        const message = `Hi ${userFullName} <br><br> We just wanted to let you know that your data from your device is expiring soon. 
+        <br><br> The device this retrieval is associated with is your ${deviceName}, 
+        <br> and it is due to expire on ${expiry}.
+        <br><br> Please make sure to download your data before it expires. or it will be deleted from our servers.
+        <br> If you need more time, you have the option to extend the retrieval period by 3 or 6 months for an additional fee.
+        <br> To do this, please log in to your account and go to the retrieval page to extend the retrieval period.
+        <br><br> If you have any questions or need help, please do not hesitate to contact us.
+        <br><br> Best regards, <p style="color: #2E8B57">Team Panda</p>`;
+        
+        email(userEmail, subject, message)
     }
 
     return next();

@@ -30,6 +30,6 @@ router.get('/retrieval/:retrieval_id/file/:file_id', verifyRetrievalExpiry, getF
 router.get('/retrieval/:retrieval_id/file/:file_id/download', verifyRetrievalExpiry, getFileDownload);
 router.delete('/retrieval/:retrieval_id/file/:file_id', isStaff, deleteFile);
 
-router.get('/admin/devices/:id/retrieval', isStaff, verifyRetrievalExpiry, getRetrievalEditPage);
+router.get('/admin/devices/:device_id/retrieval', isStaff, verifyRetrievalExpiry, getRetrievalEditPage);
 
 module.exports = router;

@@ -27,7 +27,8 @@ const retrievalSchema = new mongoose.Schema({
         device: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Device',
-            required: true
+            required: true,
+            autopopulate: true
         },
         data: [fileSchema],
         retrieval_state: {
@@ -63,6 +64,8 @@ const retrievalSchema = new mongoose.Schema({
         timestamps: true
     }
 );
+
+retrievalSchema.plugin(require('mongoose-autopopulate'));
 
 module.exports = {
     Retrieval: mongoose.model('Retrieval', retrievalSchema)
