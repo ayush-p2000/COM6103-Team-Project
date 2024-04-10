@@ -36,7 +36,7 @@
     "paypal-rest-sdk": "^1.8.1",
     "qrcode": "^1.5.3",
     "regex-escape": "^3.4.10",
-    "stripe": "^14.21.0"
+    "stripe": "^14.24.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",

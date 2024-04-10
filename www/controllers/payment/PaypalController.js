@@ -26,8 +26,8 @@ const payProduct = async(req,res)=>{
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": "http://localhost:3000/checkout/complete",
-                "cancel_url": "http://localhost:3000/checkout/paypal/cancelled"
+                "return_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete`,
+                "cancel_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/paypal/cancelled`
             },
             "transactions": [{
                 "item_list": {
@@ -98,7 +98,7 @@ const paypalSuccess = async(req,res)=>{
 
 }
 
-const paypalCancel = async(req,res)=>{
+const cancelPayment = async(req,res)=>{
 
     try {
 
@@ -114,5 +114,5 @@ module.exports = {
     getPaypal,
     payProduct,
     paypalSuccess,
-    paypalCancel
+    cancelPayment
 }
