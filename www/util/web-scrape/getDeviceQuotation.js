@@ -1,5 +1,6 @@
 const cheerio = require("cheerio");
 const {addQuote} = require("../../model/mongodb");
+const puppeteer = require('puppeteer')
 
 /**
  * Get method to fetch the quotation details from third-party providers like ebay etc.
@@ -16,6 +17,7 @@ async function getDeviceQuotation(item, providers) {
             if (provider.name === 'ebay') {
                 url = 'https://www.ebay.co.uk/sch/i.html?_nkw=';
                 searchItem = item.model.name.replace(' ', '+');
+                const link = url+searchItem
                 fetch(url + searchItem)
                     .then(response => {
                         if (!response.ok) {
@@ -54,40 +56,48 @@ async function getDeviceQuotation(item, providers) {
 
                             let quote = quote_data[0].split(' ')[0].replace('$20.00', '').split('£')[1];
                             console.log('ebay', quote)
-                            const quoteDetails = setQuoteDetails(provider, item, quote, url + searchItem)
-                            // console.log(quoteDetails)
-                            // await addQuote(quoteDetails);
+                            const quoteDetails = setQuoteDetails(provider, item, quote, link)
+                            console.log(quoteDetails)
+                            await addQuote(quoteDetails);
                             quotation.push(quoteDetails)
-                            // return await addQuote(quoteDetails);
+
                         }
                     })
                     .catch(error => {
                         console.error("Error:", error);
                     });
             } else {
-                url = 'https://uk.webuy.com/sell/search/?stext='
-                searchItem = item.model.name.replaceAll(' ', '+')
-                console.log(item.model.name)
-                console.log(url+searchItem)
-                fetch(url + searchItem)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error("No response from cex")
+                // Puppeteer module is used to web scrape the cex site which loads data dynamically
+                (async () => {
+                    const browser = await puppeteer.launch()
+                    const page = await browser.newPage()
+                    url = 'https://uk.webuy.com/sell/search/?stext='
+                    searchItem = item.model.name.replaceAll(' ', '+')
+                    let priceData = []
+                    await page.goto(url+searchItem)
+
+                    //Wait till the main body of the webpage is loaded
+                    await page.waitForSelector('#main')
+                    const deviceDetails = await page.$$('.wrapper-box');
+
+                    //Iterate through all the device details and get the price based on the title
+                    for(const device of deviceDetails) {
+
+                        //Get the title of the product
+                        const title = await device.evaluate(el => el.querySelector('.card-title').textContent)
+                        if (title.toLowerCase().includes(item.model.name.toLowerCase()) && !title.toLowerCase().includes('for')) {
+                            const price = await device.evaluate(el => el.querySelector('.cash-price.price-tag.mb-xxs').textContent)
+                            priceData.push(price.replace('Cash £',''))
                         }
-                        return response.text()
-                    })
-                    .then(html => {
-                        const cheerio = require('cheerio');
-                        const $ = cheerio.load(html)
-                        const data = $('.content')
-                        data.each((i, element) => {
-                            let price = $(element).find('.cash-price').text()
-                            console.log(price)
-                        })
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
+                    }
+
+
+                    const quoteDetails = setQuoteDetails(provider, item, priceData[0], url+searchItem)
+                    console.log(quoteDetails)
+                    await addQuote(quoteDetails)
+                    quotation.push(quoteDetails)
+
+                })();
             }
         })
         return quotation
@@ -118,32 +128,3 @@ function setQuoteDetails(provider, item, quote, url) {
 
 module.exports = {getDeviceQuotation}
 
-
-// if (provider.name === 'cex') {
-//     url = 'https://uk.webuy.com/sell/search/?stext='
-//     searchItem = item.model.name.replace(' '+ '+')
-//     fetch(url+searchItem)
-//         .then(response => {
-//             if(!response.ok) {
-//                 throw new Error("No response from cex")
-//             }
-//             return response.text()
-//         })
-//         .then( async html => {
-//             const $ = cheerio.load(html)
-//             const data = $('.search-product-card')
-//             // console.log(data)
-//             data.forEach(data => {
-//                 console.log('item')
-//                 console.log($(data).find('.cash-price').text())
-//             })
-//             // console.log(price)
-//             // let quote = quote_data[0]
-//             // const quoteDetails = setQuoteDetails(provider, item)
-//             // console.log(quoteDetails)
-//             // return await addQuote(quoteDetails)
-//         })
-//         .catch(err => {
-//             console.log(err)
-//         })
-// }
