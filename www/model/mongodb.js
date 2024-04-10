@@ -539,6 +539,18 @@ const getAccountsCountByStatus = async () => {
     ])
 }
 
+const getAccountsCountByType = async () => {
+    return User.aggregate([
+        {
+            $group: {
+                _id: "$role",
+                count: { $sum: 1}
+            }
+        },
+        { $sort: { "_id": 1 } },
+    ])
+}
+
 
 module.exports = {
     getAllUsers,
@@ -580,5 +592,6 @@ module.exports = {
     getDevicesGroupByCategory,
     getDevicesGroupByState,
     getDevicesGroupByType,
-    getAccountsCountByStatus
+    getAccountsCountByStatus,
+    getAccountsCountByType
 }
