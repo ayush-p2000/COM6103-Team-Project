@@ -2,7 +2,7 @@ const express = require('express');
 const {getCheckout, getCheckoutCompleted, fetchMethod,
 } = require("../controllers/payment/checkoutController");
 const {getPaypal, payProduct,
-    paypalSuccess, paypalCancel
+    paypalSuccess, Cancel, cancelPayment
 } = require("../controllers/payment/PaypalController");
 const {stripePayment, getStripe} = require("../controllers/payment/StripeController");
 
@@ -20,11 +20,13 @@ router.post('/checkout/paypal/pay', payProduct);
 
 router.get('/checkout/paypal/success', paypalSuccess);
 
-router.get('/checkout/paypal/cancelled', paypalCancel);
+router.get('/checkout/paypal/cancelled', cancelPayment);
+
+router.get('/checkout/stripe/cancelled', cancelPayment);
 
 router.get('/checkout/stripe', getStripe);
 
-router.post('/checkout/stripe/pay', stripePayment)
+router.post('/create-checkout-session', stripePayment)
 
 //TODO: Add function to handle /payment route
 router.get('/payment', function (req, res, next) {

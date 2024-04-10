@@ -154,7 +154,7 @@ const generateRandomToken = (length = 32) => {
 const resetPasswordLink = (token) => {
     const {BASE_URL, PORT} = process.env
     // Assuming your application is running on localhost:3000, adjust accordingly if not
-    const baseUrl = `http://${BASE_URL}:${PORT}`;
+    const baseUrl = `${BASE_URL}:${PORT}`;
     return `${baseUrl}/reset-password?token=${token}`;
 };
 
