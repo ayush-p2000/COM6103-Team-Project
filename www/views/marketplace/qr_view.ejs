@@ -134,7 +134,7 @@
                                             <% quote.device.photos.forEach((photo, index) => { %>
                                                 <div class="carousel-item <%= index === 0 ? "active" : "" %>"
                                                      data-bs-interval="false">
-                                                    <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data).toString('base64') %>"
+                                                    <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data ?? "").toString('base64') %>"
                                                          class="img-fluid w-50"
                                                          alt="Post Image">
                                                 </div>

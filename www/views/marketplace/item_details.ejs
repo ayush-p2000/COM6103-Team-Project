@@ -5,13 +5,13 @@
 <div class="container-fluid item-detail mt-5">
     <div class="row bg-light p-4">
         <div class="col-md-6">
-            <div class="w-auto">
-                <div id="deviceImgCarousel" class="carousel slide" data-bs-theme="dark">
+            <div class="w-auto h-100">
+                <div id="deviceImgCarousel" class="carousel slide h-100" data-bs-theme="dark">
                     <div class="carousel-inner ">
                         <% if(item.photos?.length > 0) { %>
                             <% item.photos.forEach((photo, index) => { %>
                                 <div class="carousel-item d-flex justify-content-center <%= index === 0 ? 'active' : '' %>">
-                                    <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data).toString('base64') %>"
+                                    <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data ?? "").toString('base64') %>"
                                          class="img-fluid h-100 mx-auto"
                                          alt="...">
                                 </div>

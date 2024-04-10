@@ -46,7 +46,7 @@
                             %>
                             <div class="col-sm-4 col-md-3 col-lg-2 col-xl-2 item">
                                 <div class="card h-100">
-                                    <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data).toString('base64') %>"
+                                    <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data ?? "").toString('base64') %>"
                                          class="card-img-top img-fluid item-img" alt="..."
                                          style="height: 200px; object-fit: cover">
                                     <div class="card-body">
