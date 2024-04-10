@@ -5,15 +5,14 @@ const {
 } = require("../controllers/retrieval/dataRetrievalController");
 const {isAuthenticated, isStaff} = require("../middlewares/auth");
 const multer = require("multer");
-const {verifyRetrievalExpiry} = require("../middlewares/retrieval");
+const {verifyRetrievalExpiry, isValidRetrievalUser} = require("../middlewares/retrieval");
 const router = express.Router();
 
-router.get('/retrieval/:id/download', verifyRetrievalExpiry, getRetrievalDownload);
-router.delete('/retrieval/:id', deleteDataRetrieval);
-router.post('/retrieval/:id/promote', isStaff, verifyRetrievalExpiry, promoteRetrieval);
-router.post('/retrieval/:id/demote', isStaff, verifyRetrievalExpiry, demoteRetrieval);
-router.post('/retrieval/:id/state/error', isStaff, verifyRetrievalExpiry, errorStateHandler);
-router.delete('/retrieval/:id', deleteDataRetrieval);
+router.delete('/retrieval/:id', isValidRetrievalUser, deleteDataRetrieval);
+router.get('/retrieval/:id/download', isValidRetrievalUser, verifyRetrievalExpiry, getRetrievalDownload);
+router.post('/retrieval/:id/promote', isStaff, isValidRetrievalUser, verifyRetrievalExpiry, promoteRetrieval);
+router.post('/retrieval/:id/demote', isStaff, isValidRetrievalUser, verifyRetrievalExpiry, demoteRetrieval);
+router.post('/retrieval/:id/state/error', isStaff, isValidRetrievalUser, verifyRetrievalExpiry, errorStateHandler);
 
 //Use multer to upload files to memory
 
@@ -24,12 +23,12 @@ const imgUpload = multer(
         }
     }
 );
-router.post('/retrieval/:id/file/add', isStaff, imgUpload.array('files', 10), verifyRetrievalExpiry, postFiles);
-router.post('/retrieval/:id/file/add/url', isStaff, verifyRetrievalExpiry, postURL);
-router.get('/retrieval/:retrieval_id/file/:file_id', verifyRetrievalExpiry, getFilePage);
-router.get('/retrieval/:retrieval_id/file/:file_id/download', verifyRetrievalExpiry, getFileDownload);
-router.delete('/retrieval/:retrieval_id/file/:file_id', isStaff, deleteFile);
+router.post('/retrieval/:id/file/add', isStaff, imgUpload.array('files', 10), isValidRetrievalUser, verifyRetrievalExpiry, postFiles);
+router.post('/retrieval/:id/file/add/url', isStaff, isValidRetrievalUser, verifyRetrievalExpiry, postURL);
+router.get('/retrieval/:retrieval_id/file/:file_id', isValidRetrievalUser, verifyRetrievalExpiry, getFilePage);
+router.get('/retrieval/:retrieval_id/file/:file_id/download', isValidRetrievalUser, verifyRetrievalExpiry, getFileDownload);
+router.delete('/retrieval/:retrieval_id/file/:file_id', isStaff, isValidRetrievalUser, deleteFile);
 
-router.get('/admin/devices/:device_id/retrieval', isStaff, verifyRetrievalExpiry, getRetrievalEditPage);
+router.get('/admin/devices/:device_id/retrieval', isStaff, isValidRetrievalUser, verifyRetrievalExpiry, getRetrievalEditPage);
 
 module.exports = router;

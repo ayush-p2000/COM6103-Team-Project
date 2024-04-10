@@ -8,6 +8,13 @@ const {getItemDetail, getRetrievalObjectByDeviceId, getRetrieval, deleteRetrieva
 const retrievalState = require("../../model/enum/retrievalState");
 const dataTypes = require("../../model/enum/dataTypes");
 
+/**
+ * Prepares and serves the data retrieval page for the user-side of the application
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ * @author Benjamin Lister
+ */
 async function getItemDataRetrieval(req, res, next) {
     try {
         //Get the item ID from the request
@@ -41,6 +48,12 @@ async function getItemDataRetrieval(req, res, next) {
     }
 }
 
+/**
+ * Prepares and serves a zip file for downloading all the files in a retrieval
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ */
 async function getRetrievalDownload(req, res, next) {
     try {
         //Get the retrieval ID from the request
@@ -74,10 +87,15 @@ async function getRetrievalDownload(req, res, next) {
             }
         });
 
+        //Based on: https://basavaraj-varji.medium.com/creating-a-zip-file-dynamically-on-requested-by-the-client-in-nodejs-loopback-554d06466300
+        // Accessed: 09/04/2024
+
+        //Create the zip file
         const archive = archiver('zip', {
             zlib: {level: 9}
         });
 
+        //Defines a promise that resolves when the archive is finalized in either an error or end event
         const finalPromise = new Promise((resolve, reject) => {
             archive.on('error', (err) => {
                 reject(err);
@@ -92,8 +110,11 @@ async function getRetrievalDownload(req, res, next) {
         res.setHeader('Content-disposition', `attachment; filename=${retrievalObject.device?.model?.name}_${retrievalObject._id}.zip`);
         res.setHeader('Content-type', 'application/zip');
 
+        //Pipe the archive to the response.
+        //This will send the zip file to the user once the archive is finalized
         archive.pipe(res);
 
+        //Append each buffer to the archive
         files.forEach(file => {
             const bufferStream = new Readable();
             bufferStream.push(file.buffer);
@@ -110,7 +131,12 @@ async function getRetrievalDownload(req, res, next) {
     }
 }
 
-
+/**
+ * Prepares and serves the file viewer page
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ */
 async function getFilePage(req, res, next) {
     //Get the retrieval ID and file ID from the request
     const {retrieval_id, file_id} = req.params;
@@ -152,6 +178,13 @@ async function getFilePage(req, res, next) {
     }
 }
 
+/**
+ * Prepares and serves a file for download
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<void>}
+ */
 async function getFileDownload(req, res, next) {
     try {
         //Get the retrieval ID and file ID from the request

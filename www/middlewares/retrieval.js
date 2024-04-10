@@ -2,6 +2,7 @@ const {deleteRetrieval, getRetrieval, getRetrievalObjectByDeviceId} = require(".
 const {SEVEN_DAYS_S} = require("../util/time/time");
 const retrievalState = require("../model/enum/retrievalState");
 const {email} = require("../public/javascripts/Emailing/emailing");
+const roleTypes = require("../model/enum/roleTypes");
 exports.verifyRetrievalExpiry = async (req, res, next) => {
     // Check if the retrieval is expired
     // If it is expired, call the deleteRetrieval function in mongodb.js and continue on
@@ -112,4 +113,64 @@ exports.verifyRetrievalExpiry = async (req, res, next) => {
     }
 
     return next();
+}
+
+exports.isValidRetrievalUser = async (req, res, next) => {
+    // Check if the user is the owner of the retrieval, or a staff member
+    // If they are the owner of the retrieval, continue on
+    // If they are a staff member, continue on
+    // If they are not the owner of the retrieval, send a 403 status code
+
+    //Get the retrieval ID from the request parameters
+    let retrievalID = req.params.id;
+
+    //If the retrieval ID is undefined or null, check for the parameter retrieval_id
+    if (typeof (retrievalID) === 'undefined' || retrievalID === null) {
+        retrievalID = req.params.retrieval_id;
+    }
+
+    //If the retrieval ID is still undefined or null, check the body for the retrieval_id
+    if (typeof (retrievalID) === 'undefined' || retrievalID === null) {
+        retrievalID = req.body.retrieval_id;
+    }
+
+    //If the retrieval ID is still undefined or null, check the parameters for a device_id
+    if (typeof (retrievalID) === 'undefined' || retrievalID === null) {
+        const deviceID = req.params.device_id;
+        if (typeof (deviceID) !== 'undefined' && deviceID !== null) {
+            const retrieval = await getRetrievalObjectByDeviceId(deviceID);
+            if (retrieval !== null) {
+                retrievalID = retrieval._id;
+            }
+        }
+    }
+
+    //If the retrieval ID is still undefined or null, skip the check
+    if (typeof (retrievalID) === 'undefined' || retrievalID === null) {
+        return next();
+    }
+
+    //Get the retrieval from the database
+    const retrieval = await getRetrieval(retrievalID);
+
+    //If the retrieval is null, skip the check
+    if (retrieval === null) {
+        return next();
+    }
+
+    //Get the user from the request
+    const user = req.user;
+
+    //If the user is null, reject the request as anonymous users cannot access retrievals
+    if (user === null) {
+        return res.render("error/401", {auth: req.isLoggedIn, user: req.user, message: "You do not have permission to access this resource", status: 401});
+    }
+
+    //If the user is the owner of the retrieval, continue on
+    if (retrieval.device?.listing_user?._id.toString() === user.id.toString() || user.role >= roleTypes.STAFF) {
+        return next();
+    }
+
+    //If the user is not the owner of the retrieval, send a 403 status code
+    res.render("error/403", {auth: req.isLoggedIn, user: req.user, message: "You do not have permission to access this retrieval", status: 403});
 }
