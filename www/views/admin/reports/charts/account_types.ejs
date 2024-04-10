@@ -1,0 +1,10 @@
+<div>
+    <canvas id="account_types_chart"></canvas>
+    <script src="/javascripts/reports/charts/account_types.js"></script>
+    <script>
+        const accounts_types_labels = <%- JSON.stringify(labels) %>;
+        const accounts_types_data = <%- JSON.stringify(datasets[0]) %>;
+        const account_types_backgrounds =  <%- JSON.stringify(roleTypes.getList().map(type => roleTypes.roleTypeToRGB(type))) %>;
+        const account_types_borderColors =  <%- JSON.stringify(roleTypes.getList().map(type => roleTypes.roleTypeToRGB(type, true))) %>;
+    </script>
+</div>

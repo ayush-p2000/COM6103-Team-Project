@@ -21,6 +21,10 @@
 
         <div class="row">
             <div class="shadow-lg ps-4 pe-4 pt-3 pb-3">
+                <div class="row" hidden="true">
+                    <input name="id" id="userId" hidden="true" class="d-inline-block w-50 form-control"
+                           value="<%= userDetails._id %>"/>
+                </div>
                 <div class="row">
                     <label for="firstName" class="d-inline-block w-25">First Name: </label>
                     <input name="firstName" id="firstName" class="d-inline-block w-50 form-control"
@@ -106,8 +110,12 @@
         <div class="row">
             <div class="mt-2 d-flex align-items-center justify-content-between mt-3">
                 <button class="btn btn-primary w-100" type="submit">Save details</button>
-                <button class="btn btn-danger ms-3 w-100" name="deleteUser">Delete User</button>
-                <button class="btn btn-danger ms-3 w-100" name="deactivateUser">Deactivate User</button>
+                <button class="btn btn-danger ms-3 w-100" type="button">Delete User</button>
+                <% if (userDetails.active) { %>
+                    <button class="btn btn-danger ms-3 w-100" type="button" id="deactivateUser">Deactivate User</button>
+                <% } else { %>
+                    <button class="btn btn-success ms-3 w-100" type="button" id="activateUser">Activate User</button>
+                <% } %>
             </div>
         </div>
         </form>
@@ -141,3 +149,4 @@
         </div>
     </div>
 </div>
+<script src="/javascripts/accountManagement/accountManagement.js"></script>

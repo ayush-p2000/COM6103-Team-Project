@@ -85,10 +85,39 @@ async function insertStaffDetails(req,res,next){
         res.status(500).send('Server error');
     }
 
+}
 
+async function deactivateUser(req,res,next){
+    const userId = req.body.id;
+
+    // Use Mongoose to update the document
+    const updatedUser = await User.findByIdAndUpdate(userId, { active: false }, { new: true });
+    if (!updatedUser) {
+        return res.status(404).send('Server Error'); // Any possible error comes out e.g. Database connection, User unidentified, etc...
+    }
+
+    let users = [];
+    users = await getAllUsers();
+    renderAdminLayout(req, res, "user_management", {users});
+}
+
+async function activateUser(req,res,next){
+    const userId = req.body.id;
+
+    // Use Mongoose to update the document
+    const updatedUser = await User.findByIdAndUpdate(userId, { active: true }, { new: true });
+    if (!updatedUser) {
+        return res.status(404).send('Server Error'); // Any possible error comes out e.g. Database connection, User unidentified, etc...
+    }
+
+    let users = [];
+    users = await getAllUsers();
+    renderAdminLayout(req, res, "user_management", {users});
 }
 
 module.exports = {
     getAdminDashboard,
-    insertStaffDetails
+    insertStaffDetails,
+    deactivateUser,
+    activateUser
 }

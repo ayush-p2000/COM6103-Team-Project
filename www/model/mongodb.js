@@ -599,6 +599,30 @@ const getDevicesGroupByType = async () => {
     ]);
 }
 
+const getAccountsCountByStatus = async () => {
+    return User.aggregate([
+        {
+            $group: {
+                _id: "$active",
+                count: { $sum: 1}
+            }
+        },
+        { $sort: { "_id": -1 } },
+    ])
+}
+
+const getAccountsCountByType = async () => {
+    return User.aggregate([
+        {
+            $group: {
+                _id: "$role",
+                count: { $sum: 1}
+            }
+        },
+        { $sort: { "_id": 1 } },
+    ])
+}
+
 
 module.exports = {
     getAllUsers,
@@ -646,5 +670,7 @@ module.exports = {
     getAllModelsOfType,
     deleteModel,
     deleteBrand,
-    deleteType
+    deleteType,
+    getAccountsCountByStatus,
+    getAccountsCountByType
 }
