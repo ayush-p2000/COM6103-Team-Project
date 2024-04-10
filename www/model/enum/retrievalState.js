@@ -69,6 +69,13 @@ const retrievalState = {
         }
     },
 
+    /**
+     * Returns a text string that describes the next step in the data retrieval process.
+     * This is used to give the user an indication of the next step in the process/what needs to be done.
+     * @param state {number} - The current state of the data retrieval process
+     * @returns {string} - A string that describes the next step in the data retrieval process
+     * @author Benjamin Lister
+     */
     retrievalStateToNextStepString: (state) => {
         switch(state) {
             case AWAITING_DEVICE:
@@ -94,6 +101,12 @@ const retrievalState = {
         }
     },
 
+    /**
+     * Returns a text string that can be used as a button label that describes what will happen if the state is promoted.
+     * @param state {number} - The current state of the data retrieval process
+     * @returns {string} - A string that can be used as a button label to promote the data retrieval process to the next step
+     * @author Benjamin Lister
+     */
     retrievalStepToPromotionButtonString: (state) => {
         switch(state) {
             case AWAITING_DEVICE:
@@ -119,6 +132,12 @@ const retrievalState = {
         }
     },
 
+    /**
+     * Returns a text string that can be used as a button label that describes what will happen if the state is demoted.
+     * @param state {number} - The current state of the data retrieval process
+     * @returns {string} - A string that can be used as a button label to demote the data retrieval process to the previous step
+     * @author Benjamin Lister
+     */
     retrievalStepToDemotionButtonString: (state) => {
         switch(state) {
             case AWAITING_DEVICE:
@@ -144,6 +163,13 @@ const retrievalState = {
         }
     },
 
+    /**
+     * Returns the next typical state in the data retrieval process.
+     * This describes the normal progression of the state machine, if there are no issues or edge cases that occur.
+     * @param state {number} - The current state of the data retrieval process
+     * @returns {number} - The next typical state in the data retrieval process
+     * @author Benjamin Lister
+     */
     getNextTypicalState: (state) => {
         switch(state) {
             case AWAITING_DEVICE:
@@ -169,6 +195,13 @@ const retrievalState = {
         }
     },
 
+    /**
+     * Returns the previous typical state in the data retrieval process.
+     * This describes the normal progression of the state machine, if there are no issues or edge cases that occur.
+     * @param state {number} - The current state of the data retrieval process
+     * @returns {number} - The previous typical state in the data retrieval process
+     * @author Benjamin Lister
+     */
     getPreviousTypicalState: (state) => {
         switch(state) {
             case AWAITING_DEVICE:
@@ -194,15 +227,65 @@ const retrievalState = {
         }
     },
 
+    /**
+     * Returns a boolean value that indicates whether the state has a previous step in the data retrieval process state machine.
+     * For example, AWAITING_DEVICE does not have a previous step as it is the entry point of the state machine.
+     * @param state {number} - The current state of the data retrieval process
+     * @returns {boolean} - A boolean value that indicates whether the state has a previous step in the data retrieval process state machine
+     * @author Benjamin Lister
+     */
     hasPreviousStep: (state) => (state !== AWAITING_DEVICE && state !== DATA_DELETED && state !== EXPIRING_SOON),
+
+    /**
+     * Returns a boolean value that indicates whether the state has a next step in the data retrieval process state machine.
+     * For example, DATA_DELETED does not have a next step as it is the final state of the state machine, as the data has been deleted.
+     * @param state {number} - The current state of the data retrieval process
+     * @returns {boolean} - A boolean value that indicates whether the state has a next step in the data retrieval process state machine
+     * @author Benjamin Lister
+     */
     hasNextStep: (state) => (state !== DATA_DELETED && state !== RETRIEVAL_EXPIRED && state !== DATA_RECOVERY_FAILED && state !== DATA_RECOVERY_CANCELLED && state !== AVAILABLE_FOR_RETREIVAL && state !== EXPIRING_SOON),
 
+    /**
+     * Returns a boolean value that indicates whether the given state should have files associated with it.
+     * This is NOT a check to see if the state has files associated with it, but rather if a given state would normally
+     *   expect to have files associated with it.
+     *  For example, DATA_DELETED does not have files associated with it, as the data has been deleted.
+     *  But, once data has been recovered, it is expected that there will be files associated with the retrieval.
+     *  This is used to determine what views to show to the user, and what actions they can take.
+     * @param state {number} - The current state of the data retrieval process
+     * @returns {boolean} - A boolean value that indicates whether the given state normally has files associated with it
+     * @author Benjamin Lister
+     */
     stateHasFiles: (state) => (state === DATA_RECOVERED || state === AVAILABLE_FOR_RETREIVAL || state === EXPIRING_SOON),
 
+    /**
+     * Returns a boolean value that indicates whether the given state is an expired state.
+     * This groups any states together which would indicate that the data retrieval process has expired.
+     * For example, any states where the data has been deleted or the retrieval has expired would be considered expired states.
+     * @param state {number} - The current state of the data retrieval process
+     * @returns {boolean} - A boolean value that indicates whether the given state is an expired state
+     * @author Benjamin Lister
+     */
     isExpiredState: (state) => (state === DATA_DELETED || state === RETRIEVAL_EXPIRED),
 
+    /**
+     * Returns a boolean value that indicates whether the given state is a failed state.
+     * This groups any states together which would indicate that the data retrieval process has failed.
+     * This encompasses error states such as when the data recovery process has failed or been cancelled.
+     * @param state {number} - The current state of the data retrieval process
+     * @returns {boolean} - A boolean value that indicates whether the given state is a failed state
+     * @author Benjamin Lister
+     */
     isFailedState: (state) => (state === DATA_RECOVERY_FAILED || state === DATA_RECOVERY_CANCELLED),
 
+    /**
+     * Returns a boolean value that indicates whether the given state is within the range of valid states.
+     * This is used to make sure a value is within the range of states that are defined in the retrievalState enum.
+     * This does NOT verify transitions between states, only that the value is within the range of valid states.
+     * @param state {number} - The current state of the data retrieval process
+     * @returns {boolean} - A boolean value that indicates whether the given state is within the range of valid states
+     * @author Benjamin Lister
+     */
     isValidStateValue: (state) => (state >= AWAITING_DEVICE && state <= DATA_DELETED),
 
     getList: () => Object.values(retrievalState).filter(value => typeof value === 'number')

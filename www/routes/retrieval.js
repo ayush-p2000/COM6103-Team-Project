@@ -23,6 +23,8 @@ const imgUpload = multer(
         }
     }
 );
+
+//Allow this route to accept multipart form data with files under the key 'files', with a maximum of 10 files
 router.post('/retrieval/:id/file/add', isStaff, imgUpload.array('files', 10), isValidRetrievalUser, verifyRetrievalExpiry, postFiles);
 router.post('/retrieval/:id/file/add/url', isStaff, isValidRetrievalUser, verifyRetrievalExpiry, postURL);
 router.get('/retrieval/:retrieval_id/file/:file_id', isValidRetrievalUser, verifyRetrievalExpiry, getFilePage);

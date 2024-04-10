@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
         file_table.DataTable({});
     }
 
+    /*
+     * Sets up the event handlers for the extension buttons.
+     * This will redirect the user to the checkout page with the correct parameters.
+     */
     const threeMonthExtensionButton = $('#extend3');
     const sixMonthExtensionButton = $('#extend6');
 
@@ -68,6 +72,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+/**
+ * Handles deletion of a retrieval after the user confirms the deletion,
+ * reloading the page on success
+ * @param retrievalID The ID of the retrieval to delete
+ * @author Benjamin Lister
+ */
 async function onDeleteConfirm(retrievalID) {
     // Get the modal
     const confirmModal = $('#deleteConfirmationModal');

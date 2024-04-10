@@ -3,6 +3,19 @@ const {SEVEN_DAYS_S} = require("../util/time/time");
 const retrievalState = require("../model/enum/retrievalState");
 const {email} = require("../public/javascripts/Emailing/emailing");
 const roleTypes = require("../model/enum/roleTypes");
+
+/**
+ * A Middleware to check if a retrieval is expired or expiring soon.
+ * If the retrieval is expired, it will be deleted from the database and the user will be informed via email.
+ * If the retrieval is expiring soon, the state of the retrieval will be set to "Expiring Soon" and the user will be informed via email.
+ * If the retrieval is not expired or expiring soon, the request will continue on without any changes.
+ * This middleware does not check if the user is a valid user for the retrieval.
+ * This middleware also does not return any responses to the user, all responses are passed to the next middleware.
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware in the chain
+ * @author Benjamin Lister
+ */
 exports.verifyRetrievalExpiry = async (req, res, next) => {
     // Check if the retrieval is expired
     // If it is expired, call the deleteRetrieval function in mongodb.js and continue on
@@ -115,6 +128,17 @@ exports.verifyRetrievalExpiry = async (req, res, next) => {
     return next();
 }
 
+/**
+ * A Middleware to check if a user is a valid user for a retrieval.
+ * A user is valid if they are the owner of the retrieval or a staff member.
+ * If the user is valid, the request will continue on.
+ * If the user is not logged in, they will be sent a 401 status code.
+ * If the user is not the owner of the retrieval, they will be sent a 403 status code.
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware in the chain
+ * @author Benjamin Lister
+ */
 exports.isValidRetrievalUser = async (req, res, next) => {
     // Check if the user is the owner of the retrieval, or a staff member
     // If they are the owner of the retrieval, continue on

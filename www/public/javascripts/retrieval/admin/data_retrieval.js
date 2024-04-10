@@ -8,6 +8,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+/**
+ * Handles the promotion of a retrieval when the promote button is pressed
+ * @param {String} retrievalID The ID of the retrieval to promote
+ * @author Benjamin Lister
+ */
 async function onPromotePressed(retrievalID) {
     try {
         const spinner = $('#promotionSpinner');
@@ -22,6 +27,11 @@ async function onPromotePressed(retrievalID) {
     }
 }
 
+/**
+ * Handles the demotion of a retrieval when the demote button is pressed
+ * @param {String} retrievalID The ID of the retrieval to demote
+ * @author Benjamin Lister
+ */
 async function onDemotePressed(retrievalID) {
     try {
         const spinner = $('#promotionSpinner');
@@ -36,6 +46,12 @@ async function onDemotePressed(retrievalID) {
     }
 }
 
+/**
+ * Displays the error state confirmation modal when an error state button is pressed
+ * @param retrievalID The ID of the retrieval to change the state of
+ * @param state The state to change the retrieval to
+ * @author Benjamin Lister
+ */
 async function onErrorStatePressed(retrievalID, state) {
 
     const errorStateRetrievalID = $('#errorStateRetrievalID');
@@ -48,6 +64,10 @@ async function onErrorStatePressed(retrievalID, state) {
     errorModal.modal('show');
 }
 
+/**
+ * Handles sending the error state to the server when the confirm button is pressed
+ * @author Benjamin Lister
+ */
 async function onErrorStateConfirm() {
     const errorModal = $('#errorStateModal');
     errorModal.modal('hide');
@@ -85,11 +105,21 @@ async function onErrorStateConfirm() {
 
 }
 
+/**
+ * Handles the display of the add URL modal when the add URL button is pressed
+ * @author Benjamin Lister
+ */
 function onAddURLPressed() {
     const addURLModal = $('#addURLModal');
     addURLModal.modal('show');
 }
 
+/**
+ * Handles the submission of the add URL form,
+ * reloading the page on success
+ * @param retrievalID The ID of the retrieval to add the URL to
+ * @author Benjamin Lister
+ */
 async function onAddURLSubmit(retrievalID) {
     const urlSpinner = $('#urlSpinner');
     urlSpinner.removeClass('d-none');
@@ -118,11 +148,21 @@ async function onAddURLSubmit(retrievalID) {
     }
 }
 
+/**
+ * Handles the display of the upload modal when the upload button is pressed
+ * @author Benjamin Lister
+ */
 function onUploadPressed() {
     const uploadModal = $('#uploadModal');
     uploadModal.modal('show');
 }
 
+/**
+ * Handles the submission of the upload form,
+ * reloading the page on success
+ * @param retrievalID The ID of the retrieval to add the files to
+ * @author Benjamin Lister
+ */
 async function onUploadSubmit(retrievalID) {
     const uploadSpinner = $('#uploadSpinner');
     uploadSpinner.removeClass('d-none');
@@ -156,6 +196,12 @@ async function onUploadSubmit(retrievalID) {
     }
 }
 
+/**
+ * Handles the display of the delete file modal when the delete button is pressed
+ * @param retrievalID The ID of the retrieval the file is in
+ * @param fileID The ID of the file to delete
+ * @author Benjamin Lister
+ */
 function onDeleteFile(retrievalID, fileID) {
     const deleteRetrievalID = $('#deleteRetrievalID');
     const deleteFileID = $('#deleteFileID');
@@ -167,6 +213,11 @@ function onDeleteFile(retrievalID, fileID) {
     deleteModal.modal('show');
 }
 
+/**
+ * Handles the deletion of a file when the confirm button is pressed,
+ * reloading the page on success
+ * @author Benjamin Lister
+ */
 async function onDeleteFileConfirm() {
     try {
         const deleteFileSpinner = $('#deleteFileSpinner');

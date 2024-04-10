@@ -53,6 +53,7 @@ async function getItemDataRetrieval(req, res, next) {
  * @param req The request object
  * @param res The response object
  * @param next The next middleware function
+ * @author Benjamin Lister
  */
 async function getRetrievalDownload(req, res, next) {
     try {
@@ -136,6 +137,7 @@ async function getRetrievalDownload(req, res, next) {
  * @param req The request object
  * @param res The response object
  * @param next The next middleware function
+ * @author Benjamin Lister
  */
 async function getFilePage(req, res, next) {
     //Get the retrieval ID and file ID from the request
@@ -180,10 +182,10 @@ async function getFilePage(req, res, next) {
 
 /**
  * Prepares and serves a file for download
- * @param req
- * @param res
- * @param next
- * @returns {Promise<void>}
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ * @author Benjamin Lister
  */
 async function getFileDownload(req, res, next) {
     try {
@@ -221,6 +223,13 @@ async function getFileDownload(req, res, next) {
     }
 }
 
+/**
+ * Handles the request to delete a retrieval object
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ * @author Benjamin Lister
+ */
 async function deleteDataRetrieval(req, res, next) {
     try {
         //Get the retrieval ID from the request
@@ -245,6 +254,13 @@ async function deleteDataRetrieval(req, res, next) {
     }
 }
 
+/**
+ * Prepares and serves the data retrieval page for the staff-side of the application
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ * @author Benjamin Lister
+ */
 async function getRetrievalEditPage(req, res, next) {
     try {
         //Get the item ID from the request
@@ -278,6 +294,13 @@ async function getRetrievalEditPage(req, res, next) {
     }
 }
 
+/**
+ * Handles the request to promote a retrieval object to the next typical state in the retrieval state machine
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ * @author Benjamin Lister
+ */
 async function promoteRetrieval(req, res, next) {
     try {
         //Get the retrieval ID from the request
@@ -307,6 +330,13 @@ async function promoteRetrieval(req, res, next) {
     }
 }
 
+/**
+ * Handles the request to demote a retrieval object to the previous typical state in the retrieval state machine
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ * @author Benjamin Lister
+ */
 async function demoteRetrieval(req, res, next) {
     try {
         //Get the retrieval ID from the request
@@ -337,6 +367,14 @@ async function demoteRetrieval(req, res, next) {
     }
 }
 
+/**
+ * Handles the request to place a retrieval object into an error state.
+ * This is currently used to handle the case where the data retrieval is not possible due to an error or the retrieval is cancelled.
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ * @author Benjamin Lister
+ */
 async function errorStateHandler(req, res, next) {
     try {
         //Get the retrieval ID and the state from the request
@@ -377,6 +415,13 @@ async function errorStateHandler(req, res, next) {
     }
 }
 
+/**
+ * Handles the request to add a URL to a retrieval object
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ * @author Benjamin Lister
+ */
 async function postURL(req, res, next) {
     try {
         //Get the retrieval ID from the request
@@ -429,6 +474,14 @@ async function postURL(req, res, next) {
     }
 }
 
+/**
+ * Handles the request to add files to a retrieval object.
+ * This supports a maximum of 10 files at a time.
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ * @author Benjamin Lister
+ */
 async function postFiles(req, res, next) {
     try {
         //Get the retrieval ID from the request
@@ -477,6 +530,13 @@ async function postFiles(req, res, next) {
     }
 }
 
+/**
+ * Handles the request to delete a file from a retrieval object
+ * @param req The request object
+ * @param res The response object
+ * @param next The next middleware function
+ * @author Benjamin Lister
+ */
 async function deleteFile(req, res, next) {
     try {
         //Get the retrieval ID and file ID from the request
@@ -510,7 +570,6 @@ async function deleteFile(req, res, next) {
         console.error(error);
         res.status(500).send('Internal server error');
     }
-
 }
 
 module.exports = {

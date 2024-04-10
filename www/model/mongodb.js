@@ -436,14 +436,37 @@ const updateQuote = async (id, updatedProps) => {
     return Quote.updateOne({_id: id}, updatedProps);
 }
 
+/**
+ * Returns a retrieval object that is associated with the provided device id.
+ * If you need to query the retrieval object by it's own ID, use {@link getRetrieval} instead.
+ * @param deviceId - The device ID to search for.
+ * @returns {Promise<Retrieval | null>} - The retrieval object associated with the device ID, or null if no retrieval object is found.
+ * @author Benjamin Lister
+ */
 const getRetrievalObjectByDeviceId = async (deviceId) => {
     return Retrieval.findOne({device: deviceId}).populate('device');
 }
 
+/**
+ * Returns a retrieval object that is associated with the provided retrieval ID.
+ * If you need to query the retrieval object by the device ID, use {@link getRetrievalObjectByDeviceId} instead.
+ * @param retrievalId - The retrieval ID to search for.
+ * @returns {Promise<Retrieval | null>} - The retrieval object associated with the retrieval ID, or null if no retrieval object is found.
+ * @author Benjamin Lister
+ */
 const getRetrieval = async (retrievalId) => {
     return Retrieval.findOne({_id: retrievalId}).populate('device');//.populate('device.model').populate('device.brand').populate('device.device_type');
 }
 
+/**
+ * Deletes a retrieval object from the database.
+ * This is a soft delete, meaning that the user's data is removed from the retrieval object, but the object itself is kept in the database.
+ * This is to ensure that we can still track the history of the retrieval and the device, as well as the transaction that took place.
+ *
+ * @param retrievalId - The ID of the retrieval object to delete.
+ * @returns {Promise<void>} - A promise that resolves when the retrieval object has been deleted.
+ * @author Benjamin Lister
+ */
 const deleteRetrieval = async (retrievalId) => {
     //When deleting a retrieval, it is more of a soft delete. In this case, this means that we will remove the data from the retrieval object but keep the rest of the object in place
     //This is to ensure that we can still track the history of the retrieval and the device, as well as the transaction that took place
