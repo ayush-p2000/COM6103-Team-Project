@@ -10,6 +10,7 @@ const {
     getQuotes,
     getProviders,
     addQuote,
+    deleteQuote,
     getAllDevices, getAllDeviceType,
     getUnknownDeviceHistoryByDevice
 } = require('../../model/mongodb')
@@ -71,7 +72,7 @@ async function getMyItems(req, res, next) {
     try {
         const deviceTypes = await getAllDeviceType()
         const items = await getUserItems(req.user.id)
-        const providers = await getProviders()
+        let providers = await getProviders()
         let quotations = []
         for (const item of items) {
             if (item.model == null) {
@@ -94,11 +95,46 @@ async function getMyItems(req, res, next) {
             }
 
             let quotes = await getQuotes(item._id)
+            // Check if there are no quotes available for that device
             if (quotes.length === 0) {
                 console.log('No quotes available')
                 quotes = await getDeviceQuotation(item, providers)
+            } else {
+                // Check for if only one quote is available for the device, if only one quote then scrape the website for other quote
+                if (quotes.length === 1) {
+                    let one_provider = []
+                    let new_quote
+                    console.log(quotes[0].provider.name)
+                    if (quotes[0].provider.name === 'ebay') {
+                        one_provider.push(providers.find(provider => provider.name === 'cex'))
+                        console.log(one_provider)
+                        new_quote = await getDeviceQuotation(item, one_provider)
+                    } else {
+                        one_provider.push(providers.find(provider => provider.name === 'ebay'))
+                        console.log(one_provider)
+                        new_quote = await getDeviceQuotation(item, one_provider)
+                    }
+                    quotes.push(new_quote)
+                }
             }
-            quotations.push(quotes)
+
+            //Check if the quote expiry date has passed, if yes then delete the quote and get a new quote from the web page
+            let updatedQuotes = []
+            for (const quote of quotes) {
+                const currentDate = new Date()
+                if(quote.expiry < currentDate) {
+                    let one_provider = []
+                    let new_quote
+                    one_provider.push(quote.provider)
+                    console.log('quote expired')
+                    const deleted_quote = await deleteQuote(quote._id)
+                    new_quote =  await getDeviceQuotation(item, one_provider)
+                    updatedQuotes.push(new_quote)
+                } else {
+                    updatedQuotes.push(quote)
+                }
+            }
+            quotations.push(updatedQuotes)
         }
         // console.log(quotations)
         res.render('marketplace/my_items', {
@@ -115,57 +151,6 @@ async function getMyItems(req, res, next) {
         console.log(e)
     }
 }
-
-// async function getDeviceQuotation(item, provider) {
-//     let url
-//     let searchItem
-//     let quote_data = []
-//     try {
-//         const url = 'https://www.ebay.co.uk/sch/i.html?_nkw=';
-//         const searchItem = item.model.name.replace(' ', '+');
-//
-//         fetch(url + searchItem)
-//             .then(response => {
-//                 if (!response.ok) {
-//                     throw new Error("No response from eBay");
-//                 }
-//                 return response.text();
-//             })
-//             .then(async html => {
-//                 const cheerio = require('cheerio'); // Import cheerio library
-//                 const $ = cheerio.load(html);
-//                 const quote_data = []; // Initialize quote_data array
-//                 const data = $('.s-item__wrapper');
-//                 data.each(() => { // Use parameters index and element in each loop
-//                     const price = $('.s-item__price').text(); // Find price within each element
-//                     quote_data.push(price);
-//                 });
-//                 let quote = quote_data[0].split(' ')[0].replace('$20.00', '').split('£')[1];
-//                 console.log(quote)
-//                 const providerId = provider[1]._id;
-//                 const today = new Date();
-//                 const expiryDate = new Date(today);
-//                 expiryDate.setDate(today.getDate() + 3);
-//                 const quoteDetails = {
-//                     device: item._id,
-//                     provider: providerId,
-//                     value: parseFloat(quote),
-//                     state: false,
-//                     expiry: expiryDate
-//                 };
-//                 // return await addQuote(quoteDetails);
-//             })
-//             .then(result => {
-//                 console.log("Quote added successfully:", result);
-//             })
-//             .catch(error => {
-//                 console.error("Error:", error);
-//             });
-//
-//     } catch (err){
-//         console.log(err)
-//     }
-// }
 
 
 module.exports = {
