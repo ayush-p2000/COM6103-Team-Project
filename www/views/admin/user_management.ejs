@@ -17,13 +17,15 @@
                 <label class="form-check-label" for="staffOnly">Staff Only</label>
             </div>
         </div>
-    </div>
     <form method="POST" name="userPermissions" action="/admin/accounts/create" class="w-100">
     <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="userModalLabel">Modal title</h1>
+                    <div class="alert alert-danger d-none error-message" role="alert">
+                       You donot have access to create user
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -101,8 +103,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary w-30" type="submit">Save details</button>
+                    <button class="btn btn-primary w-30" id="submitUser" type="button">Save details</button>
                 </div>
+
 
             </div>
         </div>

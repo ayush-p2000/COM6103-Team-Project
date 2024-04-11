@@ -32,7 +32,7 @@ function getEditAccountPage(req, res, next) {
 }
 
 const createStaff = async (req, res, next) => {
-
+    let unauthorizedAccess = false;
     const {randomBytes, pbkdf2} = require("node:crypto")
     const {promisify} = require("node:util");
     const pbkdf2Promise = promisify(pbkdf2)
@@ -97,14 +97,17 @@ const createStaff = async (req, res, next) => {
         if (req.user.role > USER && req.body.role <= req.user.role) {
             try {
                 await user.save()
+                let users = [];
+                users = await getAllUsers();
+                renderAdminLayout(req, res, "user_management", {users});
             }catch(error){
-                console.error('Error occured while saving user:', error);
+
             }
+        }else{
+            res.status(401).send('You do not have access');
         }
 
-        let users = [];
-        users = await getAllUsers();
-        renderAdminLayout(req, res, "user_management", {users});
+
 
     } catch (err) {
         return next(err)

@@ -54,11 +54,13 @@ router.post('/devices/:id',upload.none(), updateUserDeviceDetailsPage)
 router.get('/getModelFromBrandAndType', getModelsFromTypeAndBrand)
 
 
-router.post('/accounts/create', validateRegistration,createStaff);
+router.post('/accounts/create', upload.none(), createStaff);
 router.post('/accounts/:id', insertStaffDetails );
 
 router.post('/deactivateUser',upload.none(), deactivateUser);
 
 router.post('/activateUser',upload.none(), activateUser);
+
+router.get('/error',upload.none(),)
 
 module.exports = router;
