@@ -99,23 +99,21 @@ async function getMyItems(req, res, next) {
             if (quotes.length === 0) {
                 console.log('No quotes available')
                 quotes = await getDeviceQuotation(item, providers)
-            } else {
+            } else if (quotes.length === 1) {
                 // Check for if only one quote is available for the device, if only one quote then scrape the website for other quote
-                if (quotes.length === 1) {
-                    let one_provider = []
-                    let new_quote
-                    console.log(quotes[0].provider.name)
-                    if (quotes[0].provider.name === 'ebay') {
-                        one_provider.push(providers.find(provider => provider.name === 'cex'))
-                        console.log(one_provider)
-                        new_quote = await getDeviceQuotation(item, one_provider)
-                    } else {
-                        one_provider.push(providers.find(provider => provider.name === 'ebay'))
-                        console.log(one_provider)
-                        new_quote = await getDeviceQuotation(item, one_provider)
-                    }
-                    quotes.push(new_quote)
+                let one_provider = []
+                let new_quote
+                console.log(quotes[0].provider.name)
+                if (quotes[0].provider.name === 'ebay') {
+                    one_provider.push(providers.find(provider => provider.name === 'cex'))
+                    console.log(one_provider)
+                    new_quote = await getDeviceQuotation(item, one_provider)
+                } else {
+                    one_provider.push(providers.find(provider => provider.name === 'ebay'))
+                    console.log(one_provider)
+                    new_quote = await getDeviceQuotation(item, one_provider)
                 }
+                quotes.push(new_quote)
             }
 
             //Check if the quote expiry date has passed, if yes then delete the quote and get a new quote from the web page
