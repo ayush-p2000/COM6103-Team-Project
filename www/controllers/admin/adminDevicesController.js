@@ -93,9 +93,8 @@ async function getFlaggedDevicesPage(req, res, next) {
  */
 async function postNewDeviceType(req, res, next) {
     try {
-        console.log(req.body)
         const deviceType = await addDeviceType(req.body.name, req.body.description)
-        res.status(200).send("successfully")
+        res.status(200).send("Device Type Added Successfully")
     } catch (e) {
         console.log(e)
     }
@@ -108,7 +107,7 @@ async function postNewDeviceType(req, res, next) {
 async function postNewBrand(req, res, next) {
     try {
         const brand = await addBrand(req.body.name)
-        res.status(200).send("successfully")
+        res.status(200).send("Brand Added Successfully")
     } catch (e) {
         console.log(e)
     }
