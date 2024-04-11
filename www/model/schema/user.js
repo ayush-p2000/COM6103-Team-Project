@@ -12,62 +12,88 @@ const userSchema = new mongoose.Schema({
             required: true,
             default: true
         },
+
+        google_id:{
+            type: String,
+            required: false,
+            default: null
+        },
+        facebook_id:{
+            type: String,
+            required: false,
+            default: null
+        },
+
         first_name: {
             type: String,
-            required: true
+            default: null,
+            required: false
         },
         last_name: {
             type: String,
-            required: true
+            default: null,
+            required: false
         },
         date_of_birth: {
             type: Date,
-            required: true
+            default: null,
+            required: false
         },
         email: {
             type: String,
-            required: true
+            required: false,
+            default: null
         },
         phone_number: {
             type: String,
-            required: true
+            required: false,
+            default: null
         },
         avatar: {
           type: String,
+          default: null
         },
         address: {
             address_1: {
                 type: String,
-                required: true
+                default: null,
+                required: false
             },
             address_2: {
                 type: String,
+                default: null,
                 required: false
             },
             city: {
                 type: String,
-                required: true
+                default: null,
+                required: false
             },
             county: {
                 type: String,
-                required: true
+                default: null,
+                required: false
             },
             country: {
                 type: String,
-                required: true
+                default: null,
+                required: false
             },
             postcode: {
                 type: String,
-                required: true
+                default: null,
+                required: false
             },
         },
         password: {
             type: Buffer,
-            required: true
+            required: false,
+            default: null
         },
         salt: {
             type: Buffer,
-            required: true,
+            required: false,
+            default: null
         },
         token: {
             type: String,
@@ -75,7 +101,7 @@ const userSchema = new mongoose.Schema({
         },
         savedCo2: {
             type: Number,
-            required: true,
+            required: false,
             default: 0,
             min: 0
         },
@@ -94,9 +120,17 @@ const userSchema = new mongoose.Schema({
 );
 
 // Define a pre-save hook to generate the avatar URL based on first name and last name
+
+
 userSchema.pre('save', function(next) {
-    this.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.first_name)}+${encodeURIComponent(this.last_name)}`;
-    next();
+    if(this.google_id == null && this.facebook_id == null) {
+        this.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.first_name)}+${encodeURIComponent(this.last_name)}`;
+        next();
+    }
+    else
+    {
+        next();
+    }
 });
 
 userSchema.plugin(require('mongoose-autopopulate'));

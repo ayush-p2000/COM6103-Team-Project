@@ -6,7 +6,10 @@ const {User} = require("../../model/schema/user")
 const {randomBytes, pbkdf2} = require("node:crypto")
 const {promisify} = require('node:util')
 const { validationResult } = require("express-validator")
+const {email} = require("../../public/javascripts/Emailing/emailing");
+const passport = require("passport");
 const pbkdf2Promise = promisify(pbkdf2)
+let token = ""
 
 //------------------------------------------------- User Registration Data feeding and Authenticating -------------------------------------------//
 
@@ -85,12 +88,16 @@ const registerUser = async (req, res, next) => {
 
 //----------------------------------------------------- Logging Out User -------------------------------------------------------------------------------//
 
-const logoutUser = (req,res,next) => {
+const logoutUser = (req, res, next) => {
     req.logout(err => {
-        if(err) return next(err)
-        res.redirect("/login")
-    })
-}
+        if (err) return next(err);
+        req.session.destroy(err => {
+            if (err) return next(err);
+            res.redirect("/login");
+        });
+    });
+};
+
 
 //---------------------------------------------------- Rendering Login Page ----------------------------------------------------------------------------//
 
@@ -119,23 +126,23 @@ function getResetPasswordPage(req, res, next) {
 
 async function getForgotUser(req, res, next) {
     const { resetEmail } = req.body;
-    const token = generateRandomToken();
+    token = generateRandomToken();
     try {
         const user = await User.findOneAndUpdate(
             { email: resetEmail },
             { token: token }
         );
         if(user) {
-            console.log("Reset token generated for user:", user);
 
             // Generate the reset password link
             const link = resetPasswordLink(token);
 
-            // Log the link for debugging purposes
-            console.log("Reset password link:", link);
-
             // You can send the link to the user's email or provide it in the response
-            res.send(`Copy the token = ${token} and paste in the link Reset password link: ${link}`);
+            //res.send(`Copy the token = ${token} and paste in the link Reset password link: ${link}`);
+            res.send("Messsage has been sent to your email. Please follow the steps")
+            const subject = "Password Reset - ePanda"
+            const message = `Reset password link: ${link} <br><br> Regards,<br><p style="color: #2E8B57">Team Panda</p>`
+            email(resetEmail, subject, message )
         }
         else
         {
@@ -154,13 +161,13 @@ const generateRandomToken = (length = 32) => {
 const resetPasswordLink = (token) => {
     const {BASE_URL, PORT} = process.env
     // Assuming your application is running on localhost:3000, adjust accordingly if not
-    const baseUrl = `http://${BASE_URL}:${PORT}`;
+    const baseUrl = `${BASE_URL}:${PORT}`;
     return `${baseUrl}/reset-password?token=${token}`;
 };
 
 const resetPassword = async (req, res, next) => {
     try {
-        const { token, password, confirmPassword } = req.body;
+        const { password, confirmPassword } = req.body;
 
         // Find the user by the reset token
         const user = await User.findOne({ token });
@@ -184,13 +191,21 @@ const resetPassword = async (req, res, next) => {
         );
 
         // Password reset successful
-        res.status(200).send("Password reset successfully");
+        res.status(200).redirect('/login');
+        token = "";
     } catch (err) {
         console.error("Error resetting password:", err);
         res.status(500).send("Error resetting password");
     }
 };
 
+const googleAuth = passport.authenticate('google', {scope: ['profile', 'email'] })
+
+const googleAuthCallback = passport.authenticate('google', { failureRedirect: '/login'})
+
+const facebookAuth = passport.authenticate('facebook', {scope: ['public_profile', 'email'] })
+
+const facebookAuthCallback = passport.authenticate('facebook', { failureRedirect: '/login'})
 
 module.exports = {
     getLoginPage,
@@ -202,7 +217,11 @@ module.exports = {
     generateRandomToken,
     resetPassword,
     getResetPasswordPage,
-    resetPasswordLink
+    resetPasswordLink,
+    googleAuth,
+    googleAuthCallback,
+    facebookAuth,
+    facebookAuthCallback
 }
 
 //------------------------------------------------------------------ End of File ----------------------------------------------------------------------------//

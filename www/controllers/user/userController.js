@@ -36,89 +36,70 @@ async function getUserProfile(req, res, next) {
 
 async function updateUserDetails(req, res, next){
     let messages;
+    let checkUser = await User.findOne({_id: req.user.id})
     try {
-        const {firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country} = req.body; // Assuming these fields can be updated
 
+        const {firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country} = req.body; // Assuming these fields can be updated
         // Construct an object with the fields that need to be updated
         const updateFields = {};
 
-        if (firstName) updateFields.first_name = firstName; //update first name
-
-        if (lastName) updateFields.last_name = lastName; //update last name
-
-        if (phone) updateFields.phone_number = phone; //update phone
-
-        //update address line 1
-        if (addressFirst) {
-            updateFields.address = updateFields.address || {};
-            updateFields.address.address_1 = addressFirst;
+        if (firstName) {
+            updateFields.first_name = firstName; // Update first name
+            if( checkUser.google_id == null && checkUser.facebook_id == null ){
+                updateFields.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName)}+${encodeURIComponent(lastName || req.user.last_name)}`;
+            }
         }
 
-        //update address line 2
-        if (addressSecond) {
-            updateFields.address = updateFields.address || {};
-            updateFields.address.address_2 = addressSecond;
+
+        if (lastName) {
+            updateFields.last_name = lastName; // Update last name
+            if( checkUser.google_id == null && checkUser.facebook_id == null ) {
+                updateFields.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName || req.user.first_name)}+${encodeURIComponent(lastName)}`;
+            }
         }
 
-        //update city
-        if (city) {
-            updateFields.address = updateFields.address || {};
-            updateFields.address.city = city;
+        if (phone) updateFields.phone_number = phone; // Update phone
+
+        // Update address fields
+        if (addressFirst || addressSecond || postCode || city || county || country) {
+            updateFields.address = {
+                address_1: addressFirst || req.user.address.address_1,
+                address_2: addressSecond || req.user.address.address_2,
+                postcode: postCode || req.user.address.postcode,
+                city: city || req.user.address.city,
+                county: county || req.user.address.county,
+                country: country || req.user.address.country
+            };
         }
 
-        //update postcode
-        if (postCode) {
-            updateFields.address = updateFields.address || {};
-            updateFields.address.postcode = postCode;
-        }
+        // Message displayed after the successful profile update
+        messages = ['Profile Successfully Updated.'];
 
-        //update county
-        if (county) {
-            updateFields.address = updateFields.address || {};
-            updateFields.address.county = county;
-        }
+        // Sample usage of email sending
+        const emailid = req.user.email;
+        const subject = 'Update profile successful';
+        const textmsg = `Dear ${checkUser.first_name}, <br><br> ${messages} <br><br><br><b>Thanks & Regards,<br><br><p style="color: #2E8B57">Team ePanda</p></b>`;
 
-        //update county
-        if (country) {
-            updateFields.address = updateFields.address || {};
-            updateFields.address.country = country;
-        }
-
-        // message being displayed after the successful profile update
-        messages = ['Profile Successfully Updated']
-
-        // sample usage of email sending
-
-        //use your email ID to send emails for testing or create an account in the ePanda and dynamically retrieve the email
-        const emailid = req.user.email
-        const subject = 'Update profile successful'
-
-        // Structure your message/text content the way you want. Note : It should be in 'html', so cover your text using ``.
-        const textmsg = `Dear user, <br><br> ${messages} <br><br><br><b>Thanks & Regards,<br><br><p style="color: #2E8B57">Team ePanda</p></b>`;
-
-        email(emailid, subject, textmsg)
-
+        email(emailid, subject, textmsg);
 
         // Find the user by ID and update the specified fields
         const updatedUser = await User.findByIdAndUpdate(req.user.id, updateFields, {new: true});
-        
-        if (!updatedUser) {
-            return res.status(404).send('Server Error'); // Any possible error comes out e.g. Database connection, User unidentified, etc...
-        }
 
+        if (!updatedUser) {
+            return res.status(404).send('Server Error');
+        }
         res.render("user/user_profile", {
             messages: messages,
             hasMessages: messages.length > 0,
             user: updatedUser,
             auth: req.isLoggedIn
         });
-    }
-        // catching error
-    catch (err) {
+    } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
     }
 }
+
 
 
 
