@@ -342,18 +342,21 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <div class="alert alert-secondary mt-2 mb-0"
-                                                                             role="alert">
+                                                                <% if (history.history_type === historyType.REVIEW_REQUESTED) { %>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="alert alert-secondary mt-2 mb-0"
+                                                                                 role="alert">
 
-                                                                            <p class="text-center fw-bolder">Reason for
-                                                                                change:</p>
-                                                                            <p class="small m-0 text-center fst-italic">
-                                                                                "<%= history.data[0].value %>"</p>
+                                                                                <p class="text-center fw-bolder">Reason
+                                                                                    for
+                                                                                    change:</p>
+                                                                                <p class="small m-0 text-center fst-italic">
+                                                                                    "<%= history.data[0].value %>"</p>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                <% } %>
                                                             </div>
                                                         </div>
                                                     <% }) %>
@@ -435,7 +438,7 @@
                                 <p class="text-center lead">
                                     Visible to Public?
                                     <span class="spinner-grow spinner-grow-sm mx-2 d-none" role="status"
-                                         id="visibilitySpinner">
+                                          id="visibilitySpinner">
                                         <span class="visually-hidden">Loading...</span>
                                     </span>
                                 </p>
@@ -443,11 +446,13 @@
                                     visible to the public?</label>
                                 <div class="btn-group w-100" role="group">
                                     <input type="radio" class="btn-check" name="deviceVisible" id="visibleYes"
-                                           autocomplete="off" <%= item.visible === true ? 'checked' : '' %> onclick="onVisibilityChange('<%= item._id%>', 'true')">
+                                           autocomplete="off" <%= item.visible === true ? 'checked' : '' %>
+                                           onclick="onVisibilityChange('<%= item._id %>', 'true')">
                                     <label class="btn btn-outline-success" for="visibleYes">Yes</label>
 
                                     <input type="radio" class="btn-check" name="deviceVisible" id="visibleNo"
-                                           autocomplete="off" <%= item.visible === false ? 'checked' : '' %> onclick="onVisibilityChange('<%= item._id%>', 'false')">
+                                           autocomplete="off" <%= item.visible === false ? 'checked' : '' %>
+                                           onclick="onVisibilityChange('<%= item._id %>', 'false')">
                                     <label class="btn btn-outline-danger" for="visibleNo">No</label>
                                 </div>
 

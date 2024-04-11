@@ -277,6 +277,21 @@ const getReviewHistory = async (device) => {
 }
 
 /**
+ * Get History Data for a Specific Device and Filtered by History Types.
+ * This will be returned in reverse-chronological order.
+ * @param device - The device ID to get the history for
+ * @param historyTypes {Array<number>} - The history types to filter by
+ * @author Benjamin Lister
+ */
+const getHistoryByDevice = async (device, historyTypes) => {
+    //Get all the history of the device matching only the review history types ordered by the date they were created
+    return History.find({
+        device: device,
+        history_type: {$in: historyTypes}
+    }).sort({createdAt: -1});
+}
+
+/**
  * Add a New DeviceType to db
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
@@ -630,6 +645,7 @@ module.exports = {
     getAllUnknownDevices,
     addHistory,
     getReviewHistory,
+    getHistoryByDevice,
     addDeviceType,
     addBrand,
     addModel,

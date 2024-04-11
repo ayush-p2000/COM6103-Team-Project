@@ -30,6 +30,8 @@ const dataService = require("../../model/enum/dataService")
 const {generateQR} = require("../../util/qr/qrcodeGenerator");
 const cheerio = require('cheerio')
 const axios = require('axios')
+const historyType = require("../../model/enum/historyType");
+const roleTypes = require("../../model/enum/roleTypes");
 
 /**
  * Handling Request to post item base on the info in request body
@@ -126,7 +128,13 @@ async function getItemDetails(req, res, next) {
     try {
         const item = await getItemDetail(req.params.id)
         var specs = []
+
         var quotes = await getQuotes(req.params.id)
+        if (quotes.length > 0 && item.state < deviceState.HAS_QUOTE && item.state !== deviceState.IN_REVIEW) {
+            item.state = deviceState.HAS_QUOTE;
+            await item.save()
+        }
+
         if (item.model != null) {
             const specProp = item.model.properties.find(property => property.name === 'specifications')?.value;
             if (specProp != null) {
@@ -153,16 +161,17 @@ async function getItemDetails(req, res, next) {
             item.model = {name: model}
         }
 
-        if (quotes.length > 0 && item.state < deviceState.HAS_QUOTE) item.state = deviceState.HAS_QUOTE;
-
         // Add a QR code to each quote
         for (let quote of quotes) {
             const qr = await generateQR(quote._id);
             quote.qr_code = qr;
         }
 
+        const deviceReviewHistory = await getHistoryByDevice(req.params.id, [historyType.REVIEW_REQUESTED, historyType.REVIEW_REJECTED, historyType.REVIEW_ACCEPTED]);
+        const deviceVisibilityHistory = await getHistoryByDevice(req.params.id, [historyType.ITEM_HIDDEN, historyType.ITEM_UNHIDDEN]);
+
         res.render('marketplace/item_details', {
-            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user,
+            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes
         })
     } catch (e) {
         console.log(e)

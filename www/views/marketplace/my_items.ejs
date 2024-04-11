@@ -36,7 +36,7 @@
                 <div class="card-body row d-flex align-items-center">
                     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
                         <% if (item.photos?.length > 0) { %>
-                            <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data).toString('base64') %>" class="img-fluid item-img cover-image"
+                            <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data ?? "").toString('base64') %>" class="img-fluid item-img cover-image"
                                  alt="Image of <%= item.model.name %>">
                         <% } else { %>
                             <img src="https://placehold.co/600x600?text=No Images" class="img-fluid item-img cover-image"
