@@ -12,7 +12,7 @@ router.get('/checkout', getCheckout);
 
 router.post('/checkout', fetchMethod);
 
-router.get('/checkout/complete', getCheckoutCompleted);
+router.get('/checkout/complete?', getCheckoutCompleted);
 
 router.get('/checkout/paypal', getPaypal);
 
@@ -24,7 +24,7 @@ router.get('/checkout/paypal/cancelled', cancelPayment);
 
 router.get('/checkout/stripe/cancelled', cancelPayment);
 
-router.get('/checkout/stripe', getStripe);
+router.get('/checkout/stripe?', getStripe);
 
 router.post('/create-checkout-session', stripePayment)
 
