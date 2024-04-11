@@ -84,7 +84,6 @@ async function insertStaffDetails(req,res,next){
         console.error(err);
         res.status(500).send('Server error');
     }
-
 }
 
 async function deactivateUser(req,res,next){
@@ -113,6 +112,11 @@ async function activateUser(req,res,next){
     let users = [];
     users = await getAllUsers();
     renderAdminLayout(req, res, "user_management", {users});
+
+}
+
+async function error(req,res,next){
+
 }
 
 async function deleteUser(req,res,next){
