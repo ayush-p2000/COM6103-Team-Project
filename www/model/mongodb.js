@@ -18,6 +18,7 @@ const {UNKNOWN_DEVICE} = require("./enum/historyType");
 
 const {UNKNOWN} = require("./enum/deviceCategory")
 const {HAS_QUOTE} = require("./enum/deviceState")
+const {quoteState} = require("./enum/quoteState");
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -365,11 +366,17 @@ const getAllDevices = async (filter = {}) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getCarouselDevices = async (imgPerCarousel) => {
-    const devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE}).populate("model").select({model:1,photos:1, listing_user:0, brand:0, device_type:0}).limit(imgPerCarousel * 3)
+    const devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE}).populate("model").select({
+        model: 1,
+        photos: 1,
+        listing_user: 0,
+        brand: 0,
+        device_type: 0
+    }).limit(imgPerCarousel * 3)
     // devices = Array.from(devices)
     for (let i = 0; i < devices.length; i++) {
         const quotes = await getQuotes(devices[i]._id);
-        devices[i] = {...devices[i]._doc, quote: quotes.length ? quotes[0]:null}
+        devices[i] = {...devices[i]._doc, quote: quotes.length ? quotes[0] : null}
     }
     console.log(devices[0])
     return devices
@@ -500,10 +507,10 @@ const getAccountsCountByStatus = async () => {
         {
             $group: {
                 _id: "$active",
-                count: { $sum: 1}
+                count: {$sum: 1}
             }
         },
-        { $sort: { "_id": -1 } },
+        {$sort: {"_id": -1}},
     ])
 }
 
@@ -512,11 +519,76 @@ const getAccountsCountByType = async () => {
         {
             $group: {
                 _id: "$role",
-                count: { $sum: 1}
+                count: {$sum: 1}
             }
         },
-        { $sort: { "_id": 1 } },
+        {$sort: {"_id": 1}},
     ])
+}
+
+/*
+ * Referrals Calculation
+ * Referrals are defined in this context as a converted quote
+ * Referral value is our commission from the sale
+ * Our commission is currently £2.50 + 10% of the sale value
+ */
+
+const getReferralCountByMonth = async (numPrevMonths) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - numPrevMonths);
+    return Quote.aggregate([
+        {
+            $match: {
+                state: quoteState.CONVERTED,
+                "confirmation_details.receipt_date": {$gte: date}
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    $month: "$confirmation_details.receipt_date"
+                },
+                month: {$first: {$month: "$confirmation_details.receipt_date"}},
+                year: {$first: {$year: "$confirmation_details.receipt_date"}},
+                total: {$sum: 1}
+            }
+        },
+        {$sort: {"_id": 1}},
+    ]);
+}
+
+const getReferralValueByMonth = async (numPrevMonths) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - numPrevMonths);
+    return Quote.aggregate([
+        {
+            $match: {
+                state: quoteState.CONVERTED,
+                "confirmation_details.receipt_date": {$gte: date}
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    month: {$month: "$confirmation_details.receipt_date"}
+                },
+                month: {$first: {$month: "$confirmation_details.receipt_date"}},
+                year: {$first: {$year: "$confirmation_details.receipt_date"}},
+                total: {$sum: 1},
+                value: {$sum: {$add: [2.5, {$multiply: [0.1, "$confirmation_details.final_price"]}]}}
+            }
+        },
+        {$sort: {"_id.year": 1, "_id.month": 1}},
+    ]);
+}
+
+const getAllReferralsOrderedByDate = async (prevMonths) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - prevMonths);
+    return Quote.find({
+        state: quoteState.CONVERTED,
+        "confirmation_details.receipt_date": {$gte: date}
+    }).sort({"confirmation_details.receipt_date": 1});
 }
 
 
@@ -557,5 +629,8 @@ module.exports = {
     getDevicesGroupByState,
     getDevicesGroupByType,
     getAccountsCountByStatus,
-    getAccountsCountByType
+    getAccountsCountByType,
+    getReferralCountByMonth,
+    getReferralValueByMonth,
+    getAllReferralsOrderedByDate
 }
