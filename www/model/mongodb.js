@@ -501,7 +501,7 @@ async function getAllDeviceTypes() {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getAllBrands() {
-    return await Brand.find({is_deleted:false});
+    return await Brand.find({is_deleted: false});
 }
 
 /**
@@ -613,10 +613,10 @@ const getAccountsCountByStatus = async () => {
         {
             $group: {
                 _id: "$active",
-                count: { $sum: 1}
+                count: {$sum: 1}
             }
         },
-        { $sort: { "_id": -1 } },
+        {$sort: {"_id": -1}},
     ])
 }
 
@@ -625,13 +625,243 @@ const getAccountsCountByType = async () => {
         {
             $group: {
                 _id: "$role",
-                count: { $sum: 1}
+                count: {$sum: 1}
             }
         },
-        { $sort: { "_id": 1 } },
+        {$sort: {"_id": 1}},
     ])
 }
 
+/*
+ * Sales Calculation
+ * Sales are defined in this context as the total value of all transactions using our paymeny gateways
+ * This information is found within the transaction object inside the retrieval object
+ * These calculations also need to factor in money spent for retrieval extensions too
+ */
+
+/**
+ * Calculates and returns the number of sales made in the last numPrevMonths months.
+ * @param numPrevMonths {number} - The number of months to go back in time
+ * @returns {Promise<Aggregate<Array<any>>>}
+ */
+const getSalesCountByMonth = async (numPrevMonths) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - numPrevMonths);
+
+    return Retrieval.aggregate([
+        {
+            $facet: {
+                initial_sales: [
+                    {
+                        $match: {
+                            "transaction.transaction_state": 1,
+                            "transaction.value": {$gt: 0},
+                            "transaction.payment_date": {$gt: date}
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { month: { $month: "$transaction.payment_date" }, year: { $year: "$transaction.payment_date" } },
+                            count: { $sum: 1 }
+                        }
+                    }
+                ],
+                extension_sales: [
+                    {
+                        $match: {
+                            "extension_transaction.transaction_state": 1,
+                            "extension_transaction.value": {$gt: 0},
+                            "extension_transaction.payment_date": {$gt: date}
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { month: { $month: "$extension_transaction.payment_date" }, year: { $year: "$extension_transaction.payment_date" } },
+                            count: { $sum: 1 }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $project: {
+                all_sales: {
+                    $concatArrays: ["$initial_sales", "$extension_sales"]
+                }
+            }
+        },
+        { $unwind: "$all_sales" },
+        { $replaceRoot: { newRoot: "$all_sales" } },
+        {
+            $group: {
+                _id: { month: "$_id.month", year: "$_id.year" },
+                total: { $sum: "$count" }
+            }
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1 } }
+    ]);
+}
+
+/**
+ * Calculates and returns the total value of sales made in the last numPrevMonths months.
+ * This function returns two arrays, one for initial payments and one for extension payments
+ * @param numPrevMonths {number} - The number of months to go back in time
+ * @returns {Promise<[Array<any>, Array<any>]>} - An array of two arrays, one for initial payments and one for extension payments
+ */
+const getSalesValueByMonth = async (numPrevMonths) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - numPrevMonths);
+
+    return Retrieval.aggregate([
+        {
+            $facet: {
+                initial_sales: [
+                    {
+                        $match: {
+                            "transaction.transaction_state": 1,
+                            "transaction.value": {$gt: 0},
+                            "transaction.payment_date": {$gt: date}
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { month: { $month: "$transaction.payment_date" }, year: { $year: "$transaction.payment_date" } },
+                            value: { $sum: "$transaction.value" }
+                        }
+                    }
+                ],
+                extension_sales: [
+                    {
+                        $match: {
+                            "extension_transaction.transaction_state": 1,
+                            "extension_transaction.value": {$gt: 0},
+                            "extension_transaction.payment_date": {$gt: date}
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { month: { $month: "$extension_transaction.payment_date" }, year: { $year: "$extension_transaction.payment_date" } },
+                            value: { $sum: "$extension_transaction.value" }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $project: {
+                all_sales: {
+                    $concatArrays: ["$initial_sales", "$extension_sales"]
+                }
+            }
+        },
+        { $unwind: "$all_sales" },
+        { $replaceRoot: { newRoot: "$all_sales" } },
+        {
+            $group: {
+                _id: { month: "$_id.month", year: "$_id.year" },
+                value: { $sum: "$value" }
+            }
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1 } }
+    ]);
+}
+
+const getAllSalesOrderedByDate = async (numPrevMonths) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - numPrevMonths);
+
+    //This aggregation performs a facet operation to make two passes, one for initial sales and one for extension sales
+    //These are then combined together and sorted by date
+    //This is necessary as one parent object can potentially show up twice in the results, if a user pays for retrieval and then an extension
+    return Retrieval.aggregate([
+        {
+            $facet: {
+                initial_sales: [
+                    {
+                        $match: {
+                            "transaction.transaction_state": 1,
+                            "transaction.value": {$gt: 0},
+                            "transaction.payment_date": {$gt: date}
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            device: 1,
+                            value: "$transaction.value",
+                            date: "$transaction.payment_date",
+                            purchase_type: { $literal: 0 }
+                        }
+                    }
+                ],
+                extension_sales: [
+                    {
+                        $match: {
+                            "extension_transaction.transaction_state": 1,
+                            "extension_transaction.value": {$gt: 0},
+                            "extension_transaction.payment_date": {$gt: date}
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            device: 1,
+                            value: "$extension_transaction.value",
+                            date: "$extension_transaction.payment_date",
+                            purchase_type: { $literal: 1 }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $project: {
+                all_sales: {
+                    $concatArrays: ["$initial_sales", "$extension_sales"]
+                }
+            }
+        },
+        { $unwind: "$all_sales" },
+        { $replaceRoot: { newRoot: "$all_sales" } },
+        { $sort: { date: 1 } },
+        {
+            $lookup: {
+                from: "devices",
+                localField: "device",
+                foreignField: "_id",
+                as: "device"
+            }
+        },
+        { $unwind: "$device" },
+        {
+            $lookup: {
+                from: "brands",
+                localField: "device.brand",
+                foreignField: "_id",
+                as: "device.brand"
+            }
+        },
+        { $unwind: "$device.brand" },
+        {
+            $lookup: {
+                from: "models",
+                localField: "device.model",
+                foreignField: "_id",
+                as: "device.model"
+            }
+        },
+        { $unwind: "$device.model" },
+        {
+            $lookup: {
+                from: "users",
+                localField: "device.listing_user",
+                foreignField: "_id",
+                as: "device.listing_user"
+            }
+        },
+        { $unwind: "$device.listing_user" }
+    ]);
+}
 
 module.exports = {
     getAllUsers,
@@ -681,5 +911,8 @@ module.exports = {
     deleteBrand,
     deleteType,
     getAccountsCountByStatus,
-    getAccountsCountByType
+    getAccountsCountByType,
+    getSalesCountByMonth,
+    getSalesValueByMonth,
+    getAllSalesOrderedByDate,
 }
