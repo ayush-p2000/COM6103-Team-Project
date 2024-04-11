@@ -10,6 +10,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: 'linear',
                 display: true,
                 position: 'right',
+                ticks: {
+                    callback: function(value, index, values) {
+                        return '£' + value;
+                    }
+                },
 
                 // grid line settings
                 grid: {
@@ -27,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
             borderColor: 'rgba(255, 99, 132, 1)',
             borderWidth: 1,
             lineTension: 0,
+            yAxisID: 'y',
         },
 
         {
@@ -36,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
             borderColor: 'rgb(0,192,0)',
             borderWidth: 1,
             lineTension: 0,
+            yAxisID: 'y1',
         }
     ];
     createChart('#referrals_chart', referrals_labels, referrals_dataset, 'line', referrals_config_options);
