@@ -19,6 +19,7 @@ const {UNKNOWN_DEVICE} = require("./enum/historyType");
 const {UNKNOWN} = require("./enum/deviceCategory")
 const {HAS_QUOTE} = require("./enum/deviceState")
 const {quoteState} = require("./enum/quoteState");
+const historyType = require("./enum/historyType");
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -232,7 +233,7 @@ const listDevice = async (deviceData, photos, user) => {
             ];
             const newHistory = new History({
                 device: savedDevice,
-                history_type: 6,
+                history_type: historyType.UNKNOWN_DEVICE,
                 data: data.map(item => ({
                     name: item.name,
                     value: item.value,
@@ -256,6 +257,23 @@ const listDevice = async (deviceData, photos, user) => {
  */
 const getAllUnknownDevices = async () => {
     return History.find({history_type: UNKNOWN_DEVICE});
+}
+
+const addHistory = async (device, history_type, data, actioned_by) => {
+    return History.create({
+        device: device,
+        history_type: history_type,
+        data: data,
+        actioned_by: actioned_by
+    });
+}
+
+const getReviewHistory = async (device) => {
+    //Get all the history of the device matching only the review history types ordered by the date they were created
+    return History.find({
+        device: device,
+        history_type: {$in: [historyType.REVIEW_REQUESTED, historyType.REVIEW_ACCEPTED, historyType.REVIEW_REJECTED]}
+    }).sort({createdAt: -1});
 }
 
 /**
@@ -610,6 +628,8 @@ module.exports = {
     listDevice,
     getAllDevices,
     getAllUnknownDevices,
+    addHistory,
+    getReviewHistory,
     addDeviceType,
     addBrand,
     addModel,

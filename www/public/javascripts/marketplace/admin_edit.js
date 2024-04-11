@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const additionalInfo = document.getElementById('additionalInfo')
 
     //const deviceState = document.getElementById('deviceState')
-    const deviceVisible = document.getElementById('visibleYes')
+    //const deviceVisible = document.getElementById('visibleYes')
 
     const displayYes = document.getElementById('displayYes')
     const touchscreenYes = document.getElementById('touchscreenYes')
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.append('good_condition', conditionYes.checked);
         //formData.append('state', deviceState.value); // default to review when posted
         formData.append('additional_details', additionalInfo.value !== "" ? additionalInfo.value : "Not Provided");
-        formData.append('visible', deviceVisible.checked);
+        //formData.append('visible', deviceVisible.checked);
 
 
         var url = window.location.href
@@ -100,6 +100,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 })
+
+async function onVisibilityChange(itemID, visible) {
+    const spinner = $('#visibilitySpinner');
+
+    const visibleYesCheckbox = $('#visibleYes');
+    const visibleNoCheckbox = $('#visibleNo');
+    const visibleYesLabel = $('label[for="visibleYes"]');
+    const visibleNoLabel = $('label[for="visibleNo"]');
+
+    //Disable the checkboxes and labels to prevent multiple requests
+    visibleYesCheckbox.addClass('disabled');
+    visibleNoCheckbox.addClass('disabled');
+    visibleYesLabel.addClass('disabled');
+    visibleNoLabel.addClass('disabled');
+
+    spinner.removeClass('d-none');
+    try {
+        const response = await axios.post(`/admin/devices/${itemID}/visibility`, {
+            visible: visible
+        });
+
+        window.location.reload();
+    } catch (error) {
+        console.error(error);
+        spinner.addClass('d-none');
+
+        //Re-enable the checkboxes and labels
+        visibleYesCheckbox.removeClass('disabled');
+        visibleNoCheckbox.removeClass('disabled');
+        visibleYesLabel.removeClass('disabled');
+        visibleNoLabel.removeClass('disabled');
+    }
+}
 
 /**
  * Handles the promotion of a device when the promote button is pressed
@@ -188,3 +221,36 @@ async function onOverrideStateConfirm() {
     }
 
 }
+
+const onRequestChangesPressed = async (itemID) => {
+    const reasonModal = $('#requestChangesModal');
+    reasonModal.modal('show');
+
+    const requestChangesItemID = $('#requestChangesItemID');
+    requestChangesItemID.val(itemID);
+
+}
+
+const onRequestChangesConfirm = async () => {
+    const requestChangesItemID = $('#requestChangesItemID');
+    const requestChangesReason = $('#requestChangesReason');
+
+    const itemID = requestChangesItemID.val();
+    const reason = requestChangesReason.val();
+
+    const spinner = $('#requestChangesSpinner');
+    spinner.removeClass('d-none');
+
+    try {
+        const response = await axios.post(`/admin/devices/${itemID}/changes`,
+            {
+                reason: reason
+            });
+
+        window.location.reload();
+    } catch (error) {
+        console.error(error);
+        spinner.addClass('d-none');
+    }
+}
+

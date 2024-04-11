@@ -10,7 +10,8 @@ const {getReportsPage, getReportPage} = require("../controllers/admin/adminRepor
 const {
     getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage,
     getUserDeviceDetailsPage, updateUserDeviceDetailsPage, getModelsFromTypeAndBrand,postNewDeviceType,
-    postNewBrand, postNewModel, postDeviceStateOverride, postDeviceDemotion, postDevicePromotion
+    postNewBrand, postNewModel, postDeviceStateOverride, postDeviceDemotion, postDevicePromotion,
+    postDeviceChangeRequest, postDeviceVisibility
 } = require("../controllers/admin/adminDevicesController");
 
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
@@ -40,6 +41,8 @@ router.post('/devices/:id',upload.none(), updateUserDeviceDetailsPage)
 router.post('/devices/:id/promote',upload.none(), postDevicePromotion)
 router.post('/devices/:id/demote',upload.none(), postDeviceDemotion)
 router.post('/devices/:id/state',upload.none(), postDeviceStateOverride)
+router.post('/devices/:id/changes',upload.none(), postDeviceChangeRequest)
+router.post('/devices/:id/visibility',upload.none(), postDeviceVisibility)
 
 router.get('/moderation', getModerationDashboard);
 

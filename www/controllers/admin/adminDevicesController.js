@@ -4,10 +4,19 @@
 
 const gsmarena = require('gsmarena-api');
 const {get} = require("axios");
-const {renderAdminLayout,renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
-const {getItemDetail, getAllDeviceType, getAllBrand, updateDeviceDetails, getModels,getAllUnknownDevices, addDeviceType, addBrand, addModel,
+const {renderAdminLayout, renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
+const {
+    getItemDetail,
+    getAllDeviceType,
+    getAllBrand,
+    updateDeviceDetails,
+    getModels,
+    getAllUnknownDevices,
+    addDeviceType,
+    addBrand,
+    addModel,
     getUnknownDeviceHistoryByDevice,
-    getAllDevices
+    getAllDevices, addHistory, getReviewHistory
 } = require("../../model/mongodb")
 
 const dataService = require("../../model/enum/dataService")
@@ -15,6 +24,9 @@ const deviceCategory = require("../../model/enum/deviceCategory")
 const deviceState = require("../../model/enum/deviceState")
 
 const {Device} = require("../../model/schema/device")
+const historyType = require("../../model/enum/historyType");
+const {email} = require("../../public/javascripts/Emailing/emailing");
+const roleTypes = require("../../model/enum/roleTypes");
 
 /**
  * Get All Device with Specific Field Showing and Support Unknown Devices
@@ -43,7 +55,7 @@ async function getDevicesPage(req, res, next) {
         }
     }
 
-    renderAdminLayout(req, res, "devices", {devices: devices,deviceState,deviceCategory})
+    renderAdminLayout(req, res, "devices", {devices: devices, deviceState, deviceCategory})
 }
 
 /**
@@ -56,7 +68,7 @@ async function getFlaggedDevicesPage(req, res, next) {
         const deviceTypes = await getAllDeviceType()
         const brands = await getAllBrand()
 
-        renderAdminLayout(req, res, "unknown_devices", {devices,deviceTypes,brands});
+        renderAdminLayout(req, res, "unknown_devices", {devices, deviceTypes, brands});
     } catch (e) {
         console.log(e)
     }
@@ -69,7 +81,7 @@ async function getFlaggedDevicesPage(req, res, next) {
 async function postNewDeviceType(req, res, next) {
     try {
         console.log(req.body)
-        const deviceType = await addDeviceType(req.body.name,req.body.description)
+        const deviceType = await addDeviceType(req.body.name, req.body.description)
         res.status(200).send("successfully")
     } catch (e) {
         console.log(e)
@@ -103,25 +115,25 @@ async function postNewModel(req, res, next) {
         if (devices[0]) {
             let slug = devices[0].id
             const devicesDetail = await get(`https://phone-specs-clzpu7gyh-azharimm.vercel.app/${slug}`)
-            if (devicesDetail.data){
+            if (devicesDetail.data) {
                 var released = parseInt(devicesDetail.data.data.release_date.match(/\b\d+\b/)[0])
-                properties.push({ name: 'picture', value: devicesDetail.data.data.thumbnail })
-                properties.push({name:"specifications", value: JSON.stringify(devicesDetail.data.data.specifications)})
-                properties.push({name:"released", value: released})
+                properties.push({name: 'picture', value: devicesDetail.data.data.thumbnail})
+                properties.push({name: "specifications", value: JSON.stringify(devicesDetail.data.data.specifications)})
+                properties.push({name: "released", value: released})
                 //Greater than 10 is 2，5-10 is 1, 0-5 is 0
                 const currentDate = new Date();
                 const currentYear = currentDate.getFullYear()
-                if ((currentYear - released) <=5){
+                if ((currentYear - released) <= 5) {
                     category = 0
-                }else if ((currentYear - released) >5 && (currentYear - released) <=10){
+                } else if ((currentYear - released) > 5 && (currentYear - released) <= 10) {
                     category = 1
-                }else{
+                } else {
                     category = 2
                 }
             }
         }
 
-        const model = await addModel(req.body,properties,category)
+        const model = await addModel(req.body, properties, category)
         res.status(200).send("successfully")
     } catch (e) {
         console.log(e)
@@ -130,12 +142,12 @@ async function postNewModel(req, res, next) {
 
 function getDeviceTypePage(req, res, next) {
     //TODO: Add functionality for the device type page
-    renderAdminLayoutPlaceholder(req,res, "device_types", {}, "Device Type Page Here")
+    renderAdminLayoutPlaceholder(req, res, "device_types", {}, "Device Type Page Here")
 }
 
 function getDeviceTypeDetailsPage(req, res, next) {
     //TODO: Add functionality for the device type details page
-    renderAdminLayoutPlaceholder(req,res, "device_type_details", {}, "Device Type Details Page Here")
+    renderAdminLayoutPlaceholder(req, res, "device_type_details", {}, "Device Type Details Page Here")
 }
 
 /**
@@ -158,18 +170,17 @@ async function getUserDeviceDetailsPage(req, res, next) {
             } else {
                 specs = []
             }
-        }
-        else{
+        } else {
             var type = ""
             var brand = ""
             var model = ""
             const customModel = await getUnknownDeviceHistoryByDevice(item._id)
             customModel[0].data.forEach(data => {
-                if (data.name === "device_type"){
+                if (data.name === "device_type") {
                     type = data.value
-                }else if(data.name === "brand"){
+                } else if (data.name === "brand") {
                     brand = data.value
-                }else if(data.name === "model"){
+                } else if (data.name === "model") {
                     model = data.value
                 }
             });
@@ -179,7 +190,22 @@ async function getUserDeviceDetailsPage(req, res, next) {
             item.model = {name: model}
         }
 
-        renderAdminLayout(req, res, "edit_details", {item, deviceType, brands, models, specs, dataService, deviceCategory, deviceState}, "User Device Details page")
+        //Get the review history of the device
+        const reviewHistory = await getReviewHistory(item._id);
+
+        renderAdminLayout(req, res, "edit_details", {
+            item,
+            deviceType,
+            brands,
+            models,
+            specs,
+            reviewHistory,
+            roleTypes,
+            historyType,
+            dataService,
+            deviceCategory,
+            deviceState
+        }, "User Device Details page")
 
     } catch (err) {
         console.log(err)
@@ -210,7 +236,7 @@ async function getModelsFromTypeAndBrand(req, res) {
  */
 
 const updateUserDeviceDetailsPage = async (req, res) => {
-    try{
+    try {
         const item_id = req.params.id;
         console.log(req.body)
         const updatedItem = await updateDeviceDetails(item_id, req.body)
@@ -222,13 +248,13 @@ const updateUserDeviceDetailsPage = async (req, res) => {
 
 const postDevicePromotion = async (req, res) => {
     try {
-        //Get the retrieval ID from the request
+        //Get the device ID from the request
         const {id} = req.params;
 
-        //Get the retrieval object from the database
+        //Get the device object from the database
         const item = await getItemDetail(id);
 
-        //If the retrieval object is not found, then the item is not available for retrieval
+        //If the device object is not found, then the item is not available
         if (typeof (item) === 'undefined' || item === null) {
             res.status(404).send('Item not found');
             return;
@@ -238,6 +264,32 @@ const postDevicePromotion = async (req, res) => {
         const newValue = deviceState.getNextTypicalState(item.state)
         if (deviceState.isValidStateValue(newValue)) {
             item.state = newValue;
+
+            if (newValue === deviceState.REJECTED) {
+                const historyObject = {
+                    device: item._id,
+                    history_type: historyType.REVIEW_REJECTED,
+                    data: [],
+                    actioned_by: req.user.id
+                };
+                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+            } else if (newValue === deviceState.LISTED) {
+                const historyObject = {
+                    device: item._id,
+                    history_type: historyType.ITEM_APPROVED,
+                    data: [],
+                    actioned_by: req.user.id
+                };
+                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+            } else if (newValue === deviceState.HIDDEN) {
+                const historyObject = {
+                    device: item._id,
+                    history_type: historyType.ITEM_HIDDEN,
+                    data: [],
+                    actioned_by: req.user.id
+                };
+                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+            }
         }
 
         await item.save();
@@ -251,13 +303,13 @@ const postDevicePromotion = async (req, res) => {
 
 const postDeviceDemotion = async (req, res) => {
     try {
-        //Get the retrieval ID from the request
+        //Get the device ID from the request
         const {id} = req.params;
 
-        //Get the retrieval object from the database
+        //Get the device object from the database
         const item = await getItemDetail(id);
 
-        //If the retrieval object is not found, then the item is not available for retrieval
+        //If the device object is not found, then the item is not available
         if (typeof (item) === 'undefined' || item === null) {
             res.status(404).send('Item not found');
             return;
@@ -267,6 +319,32 @@ const postDeviceDemotion = async (req, res) => {
         const newValue = deviceState.getPreviousTypicalState(item.state)
         if (deviceState.isValidStateValue(newValue)) {
             item.state = newValue;
+
+            if (newValue === deviceState.REJECTED) {
+                const historyObject = {
+                    device: item._id,
+                    history_type: historyType.REVIEW_REJECTED,
+                    data: [],
+                    actioned_by: req.user.id
+                };
+                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+            } else if (newValue === deviceState.LISTED) {
+                const historyObject = {
+                    device: item._id,
+                    history_type: historyType.ITEM_APPROVED,
+                    data: [],
+                    actioned_by: req.user.id
+                };
+                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+            } else if (newValue === deviceState.HIDDEN) {
+                const historyObject = {
+                    device: item._id,
+                    history_type: historyType.ITEM_HIDDEN,
+                    data: [],
+                    actioned_by: req.user.id
+                };
+                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+            }
         }
 
         await item.save();
@@ -280,14 +358,14 @@ const postDeviceDemotion = async (req, res) => {
 
 const postDeviceStateOverride = async (req, res) => {
     try {
-        //Get the retrieval ID and the new state from the request
+        //Get the device ID and the new state from the request
         const {id} = req.params;
         const newState = parseInt(req.body.state);
 
-        //Get the retrieval object from the database
+        //Get the device object from the database
         const item = await getItemDetail(id);
 
-        //If the retrieval object is not found, then the item is not available for retrieval
+        //If the device object is not found, then the item is not available
         if (typeof (item) === 'undefined' || item === null) {
             res.status(404).send('Item not found');
             return;
@@ -301,11 +379,146 @@ const postDeviceStateOverride = async (req, res) => {
         //Override the device state
         if (deviceState.isValidStateValue(newState)) {
             item.state = newState;
+
+            if (newValue === deviceState.REJECTED) {
+                const historyObject = {
+                    device: item._id,
+                    history_type: historyType.REVIEW_REJECTED,
+                    data: [],
+                    actioned_by: req.user.id
+                };
+                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+            } else if (newValue === deviceState.LISTED) {
+                const historyObject = {
+                    device: item._id,
+                    history_type: historyType.ITEM_APPROVED,
+                    data: [],
+                    actioned_by: req.user.id
+                };
+                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+            } else if (newValue === deviceState.HIDDEN) {
+                const historyObject = {
+                    device: item._id,
+                    history_type: historyType.ITEM_HIDDEN,
+                    data: [],
+                    actioned_by: req.user.id
+                };
+                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+            }
         }
 
         await item.save();
 
         res.status(200).send('Device state overridden successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+}
+
+const postDeviceChangeRequest = async (req, res) => {
+    try {
+        //Get the device ID and the changes requested from the request
+        const {id} = req.params;
+        const reason = req.body.reason;
+
+        //Get the device object from the database
+        const item = await getItemDetail(id);
+
+        //If the device object is not found, then the item is not available
+        if (typeof (item) === 'undefined' || item === null) {
+            res.status(404).send('Item not found');
+            return;
+        }
+
+        if (!reason || reason === "") {
+            res.status(400).send('Invalid reason');
+            return;
+        }
+
+        const historyObject = {
+            device: item._id,
+            history_type: historyType.REVIEW_REQUESTED,
+            data: [
+                {
+                    name: 'reason',
+                    value: reason,
+                    data_type: 0
+                }
+            ],
+            actioned_by: req.user.id
+        };
+
+        const history = await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+
+        //Send an email to the user informing them of the change request
+        const email_address = item.listing_user?.email;
+        const full_name = `${item.listing_user?.first_name} ${item.listing_user?.last_name}`;
+        const subject = 'ePanda - Device Change Request';
+        const message = `Hi ${full_name},<br><br>
+        We are writing to you to inform you that a change request has been made for your device listing on ePanda. The reason for this change request is as follows:<br><br>
+        "${reason}"<br><br>
+        Please review the reason provided and make the necessary changes to your listing, otherwise your listing may be removed from the platform.<br><br>
+        Best regards, <p style="color: #2E8B57">Team Panda</p>`
+
+        //Send the email
+        email(email_address, subject, message);
+
+        res.status(200).send('Device change request submitted successfully');
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+}
+
+const postDeviceVisibility = async (req, res) => {
+    try {
+        //Get the device ID and the visibility value from the request
+        const {id} = req.params;
+        let visible = req.body.visible;
+
+        //Get the device object from the database
+        const item = await getItemDetail(id);
+
+        //If the device object is not found, then the item is not available
+        if (typeof (item) === 'undefined' || item === null) {
+            res.status(404).send('Item not found');
+            return;
+        }
+
+        if (!visible) {
+            res.status(400).send('Invalid visibility value');
+            return;
+        }
+
+        //Parse the visibility value to a boolean
+        visible = visible === 'true';
+
+        //Update the visibility of the device
+        item.visible = visible;
+
+        let history = null;
+        if (visible) {
+            history = {
+                device: item._id,
+                history_type: historyType.ITEM_UNHIDDEN,
+                data: [],
+                actioned_by: req.user.id
+            };
+        } else {
+            history = {
+                device: item._id,
+                history_type: historyType.ITEM_HIDDEN,
+                data: [],
+                actioned_by: req.user.id
+            };
+        }
+        await addHistory(history.device, history.history_type, history.data, history.actioned_by);
+
+        await item.save();
+
+        res.status(200).send('Device visibility updated successfully');
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal server error');
@@ -325,5 +538,7 @@ module.exports = {
     getModelsFromTypeAndBrand,
     postDevicePromotion,
     postDeviceDemotion,
-    postDeviceStateOverride
+    postDeviceStateOverride,
+    postDeviceChangeRequest,
+    postDeviceVisibility
 }
