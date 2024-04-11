@@ -54,6 +54,13 @@ passport.use(passportStrategy)
 passport.serializeUser(passportSerializeUser)
 passport.deserializeUser(passportDeserializeUser)
 
+
+/* Google Passport Strategy */
+require('./auth/googlePassportAuth')(passport)
+
+/* Facebook Passport Strategy */
+require('./auth/facebookPassportAuth')(passport)
+
 /* Static files */
 app.use("/stylesheets", express.static(path.join(__dirname, "node_modules/bootstrap/dist/css")))
 app.use("/javascripts", express.static(path.join(__dirname, "node_modules/bootstrap/dist/js")))

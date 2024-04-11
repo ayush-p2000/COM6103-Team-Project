@@ -10,8 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
             lineTension: 0,
         }
     ];
-    console.log(accounts_dataset)
-
     createChart('#accounts_chart', accounts_labels, accounts_dataset, 'bar');
 });
 
