@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {getAdminDashboard} = require("../controllers/admin/adminController");
+const {getAdminDashboard,deactivateUser, activateUser} = require("../controllers/admin/adminController");
 const {
     getAccountDetailsPage, getAccountsPage, getEditAccountPage,createStaff
 } = require("../controllers/admin/adminAccountsController");
@@ -56,5 +56,9 @@ router.get('/getModelFromBrandAndType', getModelsFromTypeAndBrand)
 
 router.post('/accounts/create', validateRegistration,createStaff);
 router.post('/accounts/:id', insertStaffDetails );
+
+router.post('/deactivateUser',upload.none(), deactivateUser);
+
+router.post('/activateUser',upload.none(), activateUser);
 
 module.exports = router;

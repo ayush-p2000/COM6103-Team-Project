@@ -131,7 +131,11 @@
 
                     <% users.forEach(user => { %>
                         <tr>
+                            <% if (user.active) { %>
                             <td><%= user.email %></td>
+                                <% } else { %>
+                                    <td style="color: red;"><%= user.email %></td>
+                                <% } %>
                             <td><%= user.first_name + " " + user.last_name %></td>
                             <td><%= user.role %></td>
                             <td><a href="/admin/accounts/<%= user._id %>">view</a></td>
