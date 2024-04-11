@@ -8,7 +8,12 @@ const deviceTypeSchema = new mongoose.Schema({
         description: {
             type: String,
             required: true
-        }
+        },
+        is_deleted: {
+            type: mongoose.Schema.Types.Boolean,
+            required: true,
+            default: false
+        },
     },
     {
         timestamps: true

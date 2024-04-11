@@ -85,6 +85,11 @@ const userSchema = new mongoose.Schema({
                 required: false
             },
         },
+        verified:{
+          type: Boolean,
+          default: false,
+          required: false
+        },
         password: {
             type: Buffer,
             required: false,

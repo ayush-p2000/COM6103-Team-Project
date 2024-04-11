@@ -19,6 +19,11 @@ const modelSchema = new mongoose.Schema({
             ref: 'DeviceType',
             required: true
         },
+        is_deleted: {
+            type: mongoose.Schema.Types.Boolean,
+            required: true,
+            default: false
+        },
         properties: [
             {
                 name: {
