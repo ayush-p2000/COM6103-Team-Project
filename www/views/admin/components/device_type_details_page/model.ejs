@@ -1,6 +1,14 @@
 <div class="col-6 ms-auto me-auto">
     <h3>Model Details Page</h3>
-
+    <% if (hasMessages) { %>
+        <section>
+            <ol class="mb-0 list-group list-group-numbered m-1">
+                <% messages.forEach(function(message) { %>
+                    <li class="border border-danger border-1 bg-danger-subtle pt-2 pb-2 rounded-1 mb-1 list-group-item"><%= message %></li>
+                <% }); %>
+            </ol>
+        </section>
+    <% } %>
     <form method="POST">
         <div class="form-group mt-3">
             <label for="name">Model Name</label>
@@ -46,7 +54,7 @@
                     </div>
                     <div class="modal-body text-center">
                         <h4 class="text-danger">Warning!</h4>
-                        <p>Be aware that all devices associated with this brand will be completely removed from the
+                        <p>Be aware that this model will be completely removed from the
                             system.</p>
                     </div>
                     <div class="modal-footer">

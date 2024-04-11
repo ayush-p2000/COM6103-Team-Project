@@ -14,6 +14,7 @@ const {
 } = require("../controllers/admin/adminDevicesController");
 
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
+const {validateDeviceTypeEdit} = require("../middlewares/validators")
 
 const {upload} = require('../middlewares/multer')
 const {insertStaffDetails} = require("../controllers/admin/adminController");
@@ -43,7 +44,7 @@ router.get('/reports/:report_type', getReportPage);
 router.get('/types/:subpage?', getDeviceTypePage);
 
 router.get('/types/:subpage/:id', getDeviceTypeDetailsPage);
-router.post('/types/:subpage/:id', updateDeviceType);
+router.post('/types/:subpage/:id',validateDeviceTypeEdit, updateDeviceType);
 router.post('/types/:subpage/:id/delete', deleteDeviceType)
 
 router.get('/devices/:id', getUserDeviceDetailsPage);

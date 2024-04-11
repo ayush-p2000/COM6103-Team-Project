@@ -2,6 +2,15 @@
     <h3>Device Type Details Page</h3>
 
     <form method="POST">
+        <% if (hasMessages) { %>
+            <section>
+                <ol class="mb-0 list-group list-group-numbered m-1">
+                    <% messages.forEach(function(message) { %>
+                        <li class="border border-danger border-1 bg-danger-subtle pt-2 pb-2 rounded-1 mb-1 list-group-item"><%= message %></li>
+                    <% }); %>
+                </ol>
+            </section>
+        <% } %>
         <div class="form-group mt-3">
             <label for="name">Device Type Name</label>
             <input type="text" class="form-control mt-1" name="name" id="name" value="<%= item.name %>">
@@ -31,7 +40,7 @@
                     </div>
                     <div class="modal-body text-center">
                         <h4 class="text-danger">Warning!</h4>
-                        <p >Be aware that all devices associated with this type will be completely removed from the system.</p>
+                        <p >Be aware that this device type will be completely removed from the system.</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

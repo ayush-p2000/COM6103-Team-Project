@@ -163,7 +163,7 @@ async function updateDeviceState(id, state) {
  */
 const getAllDeviceType = async () => {
     try {
-        return await DeviceType.find();
+        return await DeviceType.find({is_deleted: false});
     } catch (error) {
         console.error("An error occurred while get All DeviceType:", error);
         throw error;
@@ -176,7 +176,7 @@ const getAllDeviceType = async () => {
  */
 const getAllBrand = async () => {
     try {
-        return await Brand.find();
+        return await Brand.find({is_deleted: false});
     } catch (error) {
         console.error("An error occurred while get All Brand:", error);
         throw error;
@@ -215,7 +215,7 @@ const getModels = async (brandId, deviceTypeId) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getAllModels = async () => {
-    return await Model.find().populate("deviceType").populate("brand")
+    return await Model.find({is_deleted: false}).populate("deviceType").populate("brand")
 }
 
 /**
@@ -223,7 +223,7 @@ const getAllModels = async () => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getAllModelsOfType = async (type) => {
-    return await Model.find({deviceType: type}).populate("deviceType").populate("brand")
+    return await Model.find({deviceType: type, is_deleted: false}).populate("deviceType").populate("brand")
 }
 
 /**
@@ -326,7 +326,10 @@ const updateDeviceTypeDetails = async (id, name, description) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const deleteType = async id => {
-    await DeviceType.findByIdAndDelete(id)
+    const type = await getDeviceTypeById(id)
+    type.is_deleted = true
+    type.name = "Deleted device type"
+    await type.save()
 }
 /**
  * Add a New DeviceType to db
@@ -368,7 +371,10 @@ const updateBrandDetails = async (id, name) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const deleteBrand = async id => {
-    await Brand.findByIdAndDelete(id)
+    const brand = await getBrandById(id)
+    brand.is_deleted = true
+    brand.name = "Deleted brand"
+    await brand.save()
 }
 
 /**
@@ -391,7 +397,10 @@ const addModel = async (modelData, properties, category) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const deleteModel = async id => {
-    await Model.findByIdAndDelete(id)
+    const model = await getModelById(id)
+    model.is_deleted = true
+    model.name = "Deleted model"
+    await model.save()
 }
 
 /**
@@ -484,7 +493,7 @@ const getCarouselDevices = async (imgPerCarousel) => {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getAllDeviceTypes() {
-    return await DeviceType.find();
+    return await DeviceType.find({is_deleted: false});
 }
 
 /**
@@ -492,7 +501,7 @@ async function getAllDeviceTypes() {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getAllBrands() {
-    return await Brand.find();
+    return await Brand.find({is_deleted:false});
 }
 
 /**

@@ -162,23 +162,29 @@ async function getDeviceTypeDetailsPage(req, res, next) {
     let brands = [];
     let deviceTypes = []
     let typeModels = []
-
-    switch (subpage){
-        case "brands":
-            item = await getBrandById(id);
-            break;
-        case "models":
-            item = await getModelById(id)
-            deviceTypes = await getAllDeviceType()
-            brands = await getAllBrand()
-            break;
-        case "device-types":
-            item = await getDeviceTypeById(id)
-            typeModels = await getAllModelsOfType(item.id)
-            break;
-        default:
-            res.redirect("/admin/types")
+    try {
+        switch (subpage){
+            case "brands":
+                item = await getBrandById(id);
+                break;
+            case "models":
+                item = await getModelById(id)
+                deviceTypes = await getAllDeviceType()
+                brands = await getAllBrand()
+                break;
+            case "device-types":
+                item = await getDeviceTypeById(id)
+                typeModels = await getAllModelsOfType(item.id)
+                break;
+            default:
+                res.redirect("/admin/types")
+        }
+    }catch (err){
+        res.status(500)
+        console.log(err)
+        next(err)
     }
+
     // Make subpage singular form
     const itemType = subpage.slice(0,-1)
 
@@ -191,39 +197,58 @@ async function getDeviceTypeDetailsPage(req, res, next) {
 const updateDeviceType = async (req,res,next) => {
     const id = req.params.id
     const subpage = req.params.subpage
-    switch (subpage){
-        case "brands":
-            await updateBrandDetails(id, req.body.name)
-            break;
-        case "models":
-            await updateModelDetails(id, req.body.name, req.body.modelBrand, req.body.modelType)
-            break;
-        case "device-types":
-            await updateDeviceTypeDetails(id, req.body.name, req.body.description)
-            break;
-        default:
-            res.redirect("/admin/types")
+    if (req.session.messages.length > 0) {
+        return res.redirect(`/admin/types/${subpage}/${id}`)
     }
+
+    try {
+        switch (subpage){
+            case "brands":
+                await updateBrandDetails(id, req.body.name)
+                break;
+            case "models":
+                await updateModelDetails(id, req.body.name, req.body.modelBrand, req.body.modelType)
+                break;
+            case "device-types":
+                await updateDeviceTypeDetails(id, req.body.name, req.body.description)
+                break;
+            default:
+                res.redirect("/admin/types")
+        }
+    }catch(err){
+        console.log("here")
+
+        res.status(500)
+        console.log(err)
+        return next(err)
+    }
+
     res.redirect(`/admin/types/${subpage}/${id}`)
 }
 
 const deleteDeviceType = async (req,res,next) => {
     const id = req.params.id
     const subpage = req.params.subpage
-
-    switch (subpage){
-        case "brands":
-            await deleteBrand(id)
-            break;
-        case "models":
-            await deleteModel(id)
-            break;
-        case "device-types":
-            await deleteType(id)
-            break;
-        default:
-            res.redirect("/admin/types")
+    try {
+        switch (subpage){
+            case "brands":
+                await deleteBrand(id)
+                break;
+            case "models":
+                await deleteModel(id)
+                break;
+            case "device-types":
+                await deleteType(id)
+                break;
+            default:
+                res.redirect("/admin/types")
+        }
+    }catch (err){
+        res.status(500)
+        console.log(err)
+        next(err)
     }
+
     res.redirect(`/admin/types/${subpage}`)
 
 }
