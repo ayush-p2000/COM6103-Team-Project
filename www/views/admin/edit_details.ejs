@@ -40,17 +40,18 @@
 
                     <div class="my-3">
                         <p class="fw-bold fs-5">User information</p>
-                        <div class="mb-3 row">
+                        <div class="mb-3 row align-content-center">
                             <label for="user" class="col-sm-3 col-lg-2 col-form-label">Listed User: </label>
-                            <div class="col-sm-5">
-                                <p id="user" ><%= item.listing_user.first_name +" "+ item.listing_user.last_name %></p>
+                            <div class="col-sm-5 align-content-center">
+                                <p id="user"
+                                   class="my-auto"><%= item.listing_user.first_name + " " + item.listing_user.last_name %></p>
                             </div>
                         </div>
 
                         <div class="mb-3 row">
                             <label for="userEmail" class="col-sm-3 col-lg-2 col-form-label">Listed User Email: </label>
-                            <div class="col-sm-5">
-                                <p id="userEmail"><%= item.listing_user.email %></p>
+                            <div class="col-sm-5 align-content-center">
+                                <p id="userEmail" class="my-auto"><%= item.listing_user.email %></p>
                             </div>
                         </div>
                     </div>
@@ -63,8 +64,9 @@
                             <label for="deviceType" class="col-sm-3 col-lg-2 col-form-label">Device Type</label>
                             <div class="col-sm-5">
                                 <select class="form-select" id="deviceType" name="deviceType" disabled>
-                                    <% deviceType.forEach(device => {%>
-                                        <option <%= item.device_type && item.device_type.name === device.name ? 'selected' : '' %> value="<%=device._id %>"><%= device.name %></option>
+                                    <% deviceType.forEach(device => { %>
+                                        <option <%= item.device_type && item.device_type.name === device.name ? 'selected' : '' %>
+                                                value="<%= device._id %>"><%= device.name %></option>
                                     <% }) %>
                                 </select>
                             </div>
@@ -76,7 +78,8 @@
                             <div class="col-sm-5">
                                 <select class="form-select" id="deviceBrand" name="deviceBrand" disabled>
                                     <% brands.forEach(brand => { %>
-                                        <option <%= item.brand.name === brand.name ? 'selected':'' %> value="<%= brand._id%>"><%= brand.name %></option>
+                                        <option <%= item.brand.name === brand.name ? 'selected' : '' %>
+                                                value="<%= brand._id %>"><%= brand.name %></option>
                                     <% }) %>
                                 </select>
                             </div>
@@ -86,11 +89,12 @@
                         <div class="mb-3 row">
                             <label for="deviceModel" class="col-sm-3 col-lg-2 col-form-label">Model</label>
                             <div class="col-sm-5">
-                                <select class="form-select" id="deviceModel" name="deviceModel" <%= user.role >= 1? '' : 'disabled' %>>
+                                <select class="form-select" id="deviceModel"
+                                        name="deviceModel" <%= user.role >= 1 ? '' : 'disabled' %>>
 
-                                    <% models.forEach(model => {%>
-                                        <option value="<%= model._id %>"  <%= item.model.name === model.name ? 'selected':'' %>  ><%= model.name %></option>
-                                    <% })  %>
+                                    <% models.forEach(model => { %>
+                                        <option value="<%= model._id %>" <%= item.model.name === model.name ? 'selected' : '' %> ><%= model.name %></option>
+                                    <% }) %>
                                 </select>
                             </div>
                         </div>
@@ -102,7 +106,8 @@
 
                             <select class="form-select" id="deviceCategory" name="deviceCategory">
                                 <% Object.keys(deviceCategory).forEach(key => { %>
-                                    <option <%= deviceCategory[key] === item.category ? 'selected':'' %> value="<%= deviceCategory[key] %>"><%= key %></option>
+                                    <option <%= deviceCategory[key] === item.category ? 'selected' : '' %>
+                                            value="<%= deviceCategory[key] %>"><%= key %></option>
                                 <% }) %>
                             </select>
                         </div>
@@ -112,7 +117,7 @@
                         <h5 class="fw-bold mb-4">Specification: </h5>
                         <div class="col">
                             <% Object.keys(specs).forEach(spec => { %>
-                                <% if (['Announced','Status','Dimensions','Size','OS','USB'].includes(spec)) {%>
+                                <% if (['Announced', 'Status', 'Dimensions', 'Size', 'OS', 'USB'].includes(spec)) { %>
                                     <p><span class="fw-bold"><%= spec %>:</span> <%= specs[spec] %></p>
                             <% }}) %>
                         </div>
@@ -120,13 +125,16 @@
                     <!--                    Device Damage-->
                     <div class="my-3">
                         <p class="fw-bold fs-5">Device Condition</p>
-                        <label for="deviceCondition" class="col-sm-4 col-form-label ">Is the device in good condition?</label>
+                        <label for="deviceCondition" class="col-sm-4 col-form-label ">Is the device in good
+                            condition?</label>
                         <div class="btn-group btn-group-sm" role="group" aria-label="Device Condition Choose">
-                            <% const condition = item.good_condition  %>
-                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionYes" autocomplete="off" <%= condition ? 'checked':'' %> value="Yes">
+                            <% const condition = item.good_condition %>
+                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionYes"
+                                   autocomplete="off" <%= condition ? 'checked' : '' %> value="Yes">
                             <label class="btn btn-outline-primary" for="conditionYes">Yes</label>
 
-                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionNo" autocomplete="off" <%= !condition ? 'checked':'' %> value="No">
+                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionNo"
+                                   autocomplete="off" <%= !condition ? 'checked' : '' %> value="No">
                             <label class="btn btn-outline-primary" for="conditionNo">No</label>
                         </div>
                         <ul class="text-muted">
@@ -140,80 +148,101 @@
                         </ul>
                     </div>
 
-                    <div id="detail-condition" class="<%= condition ? 'd-none':'d-block' %>">
+                    <div id="detail-condition" class="<%= condition ? 'd-none' : 'd-block' %>">
                         <div>
-                            <label for="deviceFunctionality" class="col-sm-8 col-form-label fw-bold">1. Does your device turn on and work properly?</label>
+                            <label for="deviceFunctionality" class="col-sm-8 col-form-label fw-bold">1. Does your device
+                                turn on and work properly?</label>
                             <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityYes" autocomplete="off" <%= item.details.find(item => item.name === 'functionality')?.value === 'Good' ? 'checked' : '' %>>
+                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityYes"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'functionality')?.value === 'Good' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="functionalityYes">Yes</label>
 
-                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityNo" autocomplete="off" <%= item.details.find(item => item.name === 'functionality')?.value === 'Bad' ? 'checked' : ''%>>
+                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionalityNo"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'functionality')?.value === 'Bad' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="functionalityNo">No</label>
                             </div>
                         </div>
 
                         <div>
-                            <label for="btnCondition" class="col-sm-8 col-form-label fw-bold">2. All the buttons are working probably?</label>
+                            <label for="btnCondition" class="col-sm-8 col-form-label fw-bold">2. All the buttons are
+                                working probably?</label>
                             <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="btnRadio" id="btnYes" autocomplete="off" <%= item.details.find(item => item.name === 'button')?.value === 'Good' ? 'checked' : ''%>>
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnYes"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'button')?.value === 'Good' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="btnYes">Yes</label>
 
-                                <input type="radio" class="btn-check" name="btnRadio" id="btnNo" autocomplete="off" <%= item.details.find(item => item.name === 'button')?.value === 'Bad' ? 'checked' : ''%>>
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnNo"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'button')?.value === 'Bad' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="btnNo">No</label>
                             </div>
                         </div>
 
                         <div>
-                            <label for="cameraCondition" class="col-sm-8 col-form-label fw-bold">3. The cameras work and all lenses are free of damage?</label>
-                            <div class="btn-group btn-group-sm" role="group" >
-                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraYes" autocomplete="off" <%= item.details.find(item => item.name === 'camera')?.value === 'Good' ? 'checked' : ''%>>
+                            <label for="cameraCondition" class="col-sm-8 col-form-label fw-bold">3. The cameras work and
+                                all lenses are free of damage?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraYes"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'camera')?.value === 'Good' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="cameraYes">Yes</label>
 
-                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraNo" autocomplete="off" <%= item.details.find(item => item.name === 'camera')?.value === 'Bad' ? 'checked' : ''%>>
+                                <input type="radio" class="btn-check" name="cameraRadio" id="cameraNo"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'camera')?.value === 'Bad' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="cameraNo">No</label>
                             </div>
                         </div>
 
                         <div>
-                            <label for="batteryCondition" class="col-sm-8 col-form-label fw-bold">4. The battery is able to remain charged and provide continuous use time?</label>
+                            <label for="batteryCondition" class="col-sm-8 col-form-label fw-bold">4. The battery is able
+                                to remain charged and provide continuous use time?</label>
                             <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryYes" autocomplete="off" <%= item.details.find(item => item.name === 'battery')?.value === 'Good' ? 'checked' : ''%>>
+                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryYes"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'battery')?.value === 'Good' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="batteryYes">Yes</label>
 
-                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryNo" autocomplete="off" <%= item.details.find(item => item.name === 'battery')?.value === 'Bad' ? 'checked' : ''%>>
+                                <input type="radio" class="btn-check" name="batteryRadio" id="batteryNo"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'battery')?.value === 'Bad' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="batteryNo">No</label>
                             </div>
                         </div>
 
                         <div>
-                            <label for="bodyCondition" class="col-sm-8 col-form-label fw-bold">5. The body is free of dents and scratches?</label>
+                            <label for="bodyCondition" class="col-sm-8 col-form-label fw-bold">5. The body is free of
+                                dents and scratches?</label>
                             <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyYes" autocomplete="off" <%= item.details.find(item => item.name === 'body')?.value === 'Good' ? 'checked' : '' %>>
+                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyYes"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'body')?.value === 'Good' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="bodyYes">Yes</label>
 
-                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyNo" autocomplete="off" <%= item.details.find(item => item.name === 'body')?.value === 'Bad' ? 'checked' : '' %>>
+                                <input type="radio" class="btn-check" name="bodyRadio" id="bodyNo"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'body')?.value === 'Bad' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="bodyNo">No</label>
                             </div>
                         </div>
 
                         <div>
-                            <label for="touchscreenCondition" class="col-sm-8 col-form-label fw-bold">6. The touchscreen and back glass are undamaged?</label>
-                            <div class="btn-group btn-group-sm" role="group" >
-                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenYes" autocomplete="off" <%= item.details.find(item => item.name === 'touchscreen')?.value === 'Good' ? 'checked' : ''%>>
+                            <label for="touchscreenCondition" class="col-sm-8 col-form-label fw-bold">6. The touchscreen
+                                and back glass are undamaged?</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenYes"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'touchscreen')?.value === 'Good' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="touchscreenYes">Yes</label>
 
-                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenNo" autocomplete="off" <%= item.details.find(item => item.name === 'touchscreen')?.value === 'Bad' ? 'checked' : ''%>>
+                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreenNo"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'touchscreen')?.value === 'Bad' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="touchscreenNo">No</label>
                             </div>
                         </div>
 
                         <div>
-                            <label for="displayCondition" class="col-sm-8 col-form-label fw-bold ">7. The display is free of distortion, lines and black or white spots?</label>
+                            <label for="displayCondition" class="col-sm-8 col-form-label fw-bold ">7. The display is
+                                free of distortion, lines and black or white spots?</label>
                             <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="displayRadio" id="displayYes" autocomplete="off" <%= item.details.find(item => item.name === 'display')?.value === 'Good' ? 'checked' : ''%>>
+                                <input type="radio" class="btn-check" name="displayRadio" id="displayYes"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'display')?.value === 'Good' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="displayYes">Yes</label>
 
-                                <input type="radio" class="btn-check" name="displayRadio" id="displayNo" autocomplete="off" <%= item.details.find(item => item.name === 'display')?.value === 'Bad' ? 'checked' : ''%>>
+                                <input type="radio" class="btn-check" name="displayRadio" id="displayNo"
+                                       autocomplete="off" <%= item.details.find(item => item.name === 'display')?.value === 'Bad' ? 'checked' : '' %>>
                                 <label class="btn btn-outline-primary" for="displayNo">No</label>
                             </div>
                         </div>
@@ -223,34 +252,73 @@
                     <!--                    Additional Information-->
                     <div class="my-3">
                         <p class="fw-bold fs-5">Additional Information</p>
-                        <textarea class="form-control" id="additionalInfo" rows="3" placeholder="Please provide any additional details or special requests regarding your device."><%= item.additional_details %></textarea>
+                        <textarea class="form-control" id="additionalInfo" rows="3"
+                                  placeholder="Please provide any additional details or special requests regarding your device."><%= item.additional_details %></textarea>
                     </div>
 
 
                     <div class="my-3">
 
-                    <p class="fw-bold fs-5">Approval Status</p>
-                    <div class="mb-3 row">
-                        <label for="deviceState" class="col-sm-3 col-lg-2 col-form-label">Device State</label>
-                        <div class="col-sm-6">
-                            <select class="form-select" id="deviceState" name="deviceState">
-                                <% Object.keys(deviceState).forEach(key => { %>
-                                    <option value="<%= deviceState[key] %>" <%= item.state === deviceState[key] ? 'selected':'' %> ><%= key %></option>
-                                <% }) %>
-                            </select>
-                        </div>
-                    </div>
-
+                        <p class="fw-bold fs-5">Approval Status</p>
                         <div class="mb-3 row">
                             <div class="col-sm-6">
-                                <label for="deviceVisible" class="col-sm-8 col-lg-2 col-form-label">Make it visible to users</label>
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <input type="radio" class="btn-check" name="deviceVisible" id="visibleYes" autocomplete="off" <%= item.visible === true ? 'checked' : ''%>>
-                                    <label class="btn btn-outline-primary" for="visibleYes">Yes</label>
+                                <p class="text-center lead">Device State</p>
 
-                                    <input type="radio" class="btn-check" name="deviceVisible" id="visibleNo" autocomplete="off" <%= item.visible === false ? 'checked' : ''%>>
-                                    <label class="btn btn-outline-primary" for="visibleNo">No</label>
+                                <div class="alert <%= deviceState.deviceStateToColour(item.state, "alert-") %> mb-0 rounded-bottom-0">
+                                    <div class="d-inline-flex justify-content-center w-100">
+                                        <h3 class="text-center"><%= deviceState.deviceStateToString(item.state) %></h3>
+                                        <div class="spinner-grow mx-2 d-none" role="status" id="promotionSpinner">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+
                                 </div>
+
+                                <div class="d-inline-flex w-100">
+                                    <button class="btn btn-warning w-100 rounded-0 <%= (deviceState.hasPreviousStep(item.state)) ? "" : "disabled" %>"
+                                            onclick="onDemotePressed('<%= item._id %>')">
+                                        <i class="fa-solid fa-arrow-left"></i>
+                                        <%= deviceState.deviceStepToDemotionButtonString(item.state) %>
+                                    </button>
+                                    <button class="btn btn-success w-100 rounded-0 <%= (deviceState.hasNextStep(item.state)) ? "" : "disabled" %>"
+                                            onclick="onPromotePressed('<%= item._id %>')">
+                                        <%= deviceState.deviceStepToPromotionButtonString(item.state) %>
+                                        <i
+                                                class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+
+                                <div class="mb-2">
+                                    <button class="btn btn-outline-dark w-100 rounded-top-0"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#errorStatesCollapse">
+                                        <i class="fa-solid fa-exclamation-triangle"></i> Override State
+                                    </button>
+
+                                    <div class="collapse" id="errorStatesCollapse">
+                                        <% deviceState.getList().forEach((state, i) => { %>
+                                        <button class="btn <%= deviceState.deviceStateToColour(state, "btn-")%> w-100 <%= (i === 0) ? 'rounded-bottom-0' : (i === deviceState.getList().length - 1) ? 'rounded-top-0' : 'rounded-0' %>"
+                                                onclick="onOverrideStatePressed('<%= item._id %>', <%= state %>)">
+                                            <i class="fa-solid fa-exclamation-triangle"></i> <%= deviceState.deviceStateToString(state) %>
+                                        </button>
+                                        <% }) %>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <p class="text-center lead">Visible to Public?</p>
+                                <label for="deviceVisible" class="visually-hidden">Is the device
+                                    visible to the public?</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="deviceVisible" id="visibleYes"
+                                           autocomplete="off" <%= item.visible === true ? 'checked' : '' %>>
+                                    <label class="btn btn-outline-success" for="visibleYes">Yes</label>
+
+                                    <input type="radio" class="btn-check" name="deviceVisible" id="visibleNo"
+                                           autocomplete="off" <%= item.visible === false ? 'checked' : '' %>>
+                                    <label class="btn btn-outline-danger" for="visibleNo">No</label>
+                                </div>
+
                             </div>
                         </div>
 
@@ -267,5 +335,22 @@
         </div>
     </div>
 </div>
+
+<section id="modals">
+    <div class="modal fade" id="overrideStateModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4>Change Device State</h4>
+                    <p>Are you sure you want to override the device state?</p>
+                    <input type="hidden" id="overrideStateItemID">
+                    <input type="hidden" id="overrideStateType">
+                    <button class="btn btn-danger w-100 mt-2" onclick="onOverrideStateConfirm()">Confirm</button>
+                    <button class="btn btn-secondary w-100 mt-2" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <script src="/javascripts/marketplace/admin_edit.js"></script>

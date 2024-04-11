@@ -220,6 +220,98 @@ const updateUserDeviceDetailsPage = async (req, res) => {
     }
 }
 
+const postDevicePromotion = async (req, res) => {
+    try {
+        //Get the retrieval ID from the request
+        const {id} = req.params;
+
+        //Get the retrieval object from the database
+        const item = await getItemDetail(id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof (item) === 'undefined' || item === null) {
+            res.status(404).send('Item not found');
+            return;
+        }
+
+        //Promote the device
+        const newValue = deviceState.getNextTypicalState(item.state)
+        if (deviceState.isValidStateValue(newValue)) {
+            item.state = newValue;
+        }
+
+        await item.save();
+
+        res.status(200).send('Device promoted successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+}
+
+const postDeviceDemotion = async (req, res) => {
+    try {
+        //Get the retrieval ID from the request
+        const {id} = req.params;
+
+        //Get the retrieval object from the database
+        const item = await getItemDetail(id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof (item) === 'undefined' || item === null) {
+            res.status(404).send('Item not found');
+            return;
+        }
+
+        //Demote the device
+        const newValue = deviceState.getPreviousTypicalState(item.state)
+        if (deviceState.isValidStateValue(newValue)) {
+            item.state = newValue;
+        }
+
+        await item.save();
+
+        res.status(200).send('Device demoted successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+}
+
+const postDeviceStateOverride = async (req, res) => {
+    try {
+        //Get the retrieval ID and the new state from the request
+        const {id} = req.params;
+        const newState = parseInt(req.body.state);
+
+        //Get the retrieval object from the database
+        const item = await getItemDetail(id);
+
+        //If the retrieval object is not found, then the item is not available for retrieval
+        if (typeof (item) === 'undefined' || item === null) {
+            res.status(404).send('Item not found');
+            return;
+        }
+
+        if (!newState || isNaN(newState)) {
+            res.status(400).send('Invalid state value');
+            return;
+        }
+
+        //Override the device state
+        if (deviceState.isValidStateValue(newState)) {
+            item.state = newState;
+        }
+
+        await item.save();
+
+        res.status(200).send('Device state overridden successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+}
+
 module.exports = {
     getDevicesPage,
     getFlaggedDevicesPage,
@@ -231,4 +323,7 @@ module.exports = {
     getUserDeviceDetailsPage,
     updateUserDeviceDetailsPage,
     getModelsFromTypeAndBrand,
+    postDevicePromotion,
+    postDeviceDemotion,
+    postDeviceStateOverride
 }

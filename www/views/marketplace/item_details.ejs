@@ -56,9 +56,16 @@
 
             <p class="lead text-muted"><%= deviceCategory.deviceCategoryToString(item.category) %></p>
 
-            <% if(item.state !== deviceState.LISTED && item.listing_user._id.toString() === user.id) { %>
-                <a href="/list-item/<%= item._id %>" class="btn btn-primary">Edit Details</a>
+            <% if (user.id === item.listing_user._id.toString()) { %>
+                <div class="alert <%= deviceState.deviceStateToColour(item.state, "alert-") %> mt-3" role="alert">
+                    <p class="fw-bold m-0"><%= deviceState.deviceStateToNextStepString(item.state) %></p>
+                </div>
+                <% if(item.state <= deviceState.LISTED) { %>
+                    <a href="/list-item/<%= item._id %>" class="btn btn-primary">Edit Details</a>
+                <% } %>
             <% } %>
+
+
 
             <hr class="my-4">
 

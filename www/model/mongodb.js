@@ -344,7 +344,7 @@ const getUnknownDeviceHistoryByDevice = async (id) => {
  */
 const getDevice = async (id) => {
     try {
-        return Device.find({_id: id}).populate('brand').populate('device_type').populate('model');
+        return Device.findOne({_id: id}).populate('brand').populate('device_type').populate('model');
     } catch (error) {
         console.error("An error occurred while get Device:", error);
         throw error;
