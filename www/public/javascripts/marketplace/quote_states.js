@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
             formData.append('device', id)
             formData.append('model', model.innerText)
             formData.append('total', total)
+            formData.append('type', 'payment_retrieval')
 
             const form = document.createElement('form')
             form.method = 'GET';

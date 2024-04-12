@@ -15,12 +15,16 @@ const {updateTransaction} = require('../../model/mongodb')
 const transactionState = require('../../model/enum/transactionState')
 
 let data = {}
+var extension = 0
 
 function getPaypal (req, res, next) {
     data = {
         deviceId: req.query.deviceId,
         model: req.query.model,
         total: req.query.total
+    }
+    if (req.query.extension) {
+        extension = req.query.extension
     }
     res.render('payment/paypalGateway', {});
 }
@@ -87,7 +91,7 @@ const paypalSuccess = async(req,res)=>{
             "transactions": [{
                 "amount": {
                     "currency": "GBP",
-                    "total": "50.00"
+                    "total": `${data.total}`
                 }
             }]
         };
@@ -111,11 +115,23 @@ const paypalSuccess = async(req,res)=>{
 const cancelPayment = async(req,res)=>{
 
     try {
-        const transaction = {
-            deviceId: req.query.id,
-            value: 0,
-            state: transactionState['PAYMENT_CANCELLED'],
-            paymentMethod: req.query.type
+        let transaction
+        if (req.query.extension > 0) {
+            console.log(req.query.extension)
+            transaction = {
+                deviceId: req.query.id,
+                value: 0,
+                state: transactionState['PAYMENT_CANCELLED'],
+                paymentMethod: req.query.type,
+                extension: req.query.extension
+            }
+        } else {
+             transaction = {
+                deviceId: req.query.id,
+                value: 0,
+                state: transactionState['PAYMENT_CANCELLED'],
+                paymentMethod: req.query.type
+            }
         }
         await updateTransaction(transaction)
         res.render('payment/cancel');

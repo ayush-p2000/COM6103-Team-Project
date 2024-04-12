@@ -18,6 +18,7 @@ const {UNKNOWN_DEVICE} = require("./enum/historyType");
 
 const {UNKNOWN} = require("./enum/deviceCategory")
 const {HAS_QUOTE} = require("./enum/deviceState")
+const transactionState = require('./enum/transactionState')
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -535,12 +536,16 @@ async function addTransaction(transactionDetails) {
     }
 }
 
-function getDate() {
+function getDate(extension) {
     const currentDate = new Date()
 
     let currentMonth = currentDate.getMonth()
     let currentYear = currentDate.getFullYear();
-    currentMonth += 3;
+    if (extension) {
+        currentMonth += extension
+    } else {
+        currentMonth += 3;
+    }
 
     if (currentMonth > 11) {
         currentMonth -= 12;
@@ -554,15 +559,47 @@ async function updateTransaction(transactionDetails) {
 
     try {
         const filter = { device: transactionDetails.deviceId }
-        const update = {
-            $set: {
-                transaction: {
-                    value: transactionDetails.value,
-                    transaction_state: transactionDetails.state
-                },
-                payment_method: transactionDetails.paymentMethod
+        var update
+        if (transactionDetails.extension) {
+            if (transactionState.PAYMENT_CANCELLED === transactionState[transactionDetails.state]) {
+                update = {
+                    $set: {
+                        extension_transaction: {
+                            value: transactionDetails.value,
+                            transaction_state: transactionDetails.state,
+                            payment_date: new Date(),
+                            length: transactionDetails.extension
+                        },
+                        payment_method: transactionDetails.paymentMethod
+                    }
+                };
+            } else {
+                const date = getDate(transactionDetails.extension)
+                update = {
+                    $set: {
+                        expiry: date,
+                        extension_transaction: {
+                            value: transactionDetails.value,
+                            transaction_state: transactionDetails.state,
+                            payment_date: new Date(),
+                            length: transactionDetails.extension
+                        },
+                        is_extended: true,
+                        payment_method: transactionDetails.paymentMethod
+                    }
+                };
             }
-        };
+        } else {
+            update = {
+                $set: {
+                    transaction: {
+                        value: transactionDetails.value,
+                        transaction_state: transactionDetails.state
+                    },
+                    payment_method: transactionDetails.paymentMethod
+                }
+            };
+        }
         console.log(filter)
         return await Retrieval.updateOne(filter, update);
     }catch (err) {
@@ -570,9 +607,17 @@ async function updateTransaction(transactionDetails) {
     }
 }
 
-async function getTransaction(deviceId) {
+async function getTransactionByDevice(deviceId) {
     try {
         return await Retrieval.findOne({device: deviceId})
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+async function getTransactionById(id) {
+    try{
+        return await Retrieval.findOne({_id: id})
     } catch (err) {
         console.log(err)
     }
@@ -619,5 +664,6 @@ module.exports = {
     getAccountsCountByType,
     addTransaction,
     updateTransaction,
-    getTransaction
+    getTransactionByDevice,
+    getTransactionById
 }
