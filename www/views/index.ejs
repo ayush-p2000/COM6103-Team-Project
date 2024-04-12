@@ -25,9 +25,10 @@
                 </div>
 
                 <div class="lc-block d-grid gap-2 d-md-flex justify-content-md-start pb-3">
-                    <a class="btn btn-success px-4 me-md-2 mb-2 btn-bg"  <% if (auth) { %> style="display: none;" <% } else { %> href="/login" <% } %> role="button">Login</a>
-                    <a class="btn btn-outline-secondary px-4 me-md-2 mb-2" <% if (auth) { %> style="display: none;" <% } else { %> href="/register" <% } %> role="button">Sign Up</a>
-                    <a class="btn btn-success px-4 me-md-2 mb-2 btn-bg" <% if (auth) { %> href="/dashboard" <% } else { %> style="display: none;" <% } %> role="button">Go to DashBoard</a>
+                    <a class="btn btn-success px-4 me-md-2 mb-2 btn-bg <% if (auth) { %> d-none <% } %>" <% if (!auth) { %> href="/login" <% } %> role="button">Login</a>
+                    <a class="btn btn-outline-secondary px-4 me-md-2 mb-2 <% if (auth) { %> d-none <% } %>" <% if (!auth) { %> href="/register" <% } %> role="button">Sign Up</a>
+                    <a class="btn btn-success px-4 me-md-2 mb-2 btn-bg <% if (!auth) { %> d-none <% } %>" <% if (auth) { %> href="/dashboard" <% } %> role="button">Go to Dashboard</a>
+
                 </div>
 
             </div>
