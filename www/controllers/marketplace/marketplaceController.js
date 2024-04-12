@@ -96,9 +96,9 @@ async function getMyItems(req, res, next) {
                 item.model = {name: model}
             }
 
-            const state = Object.keys(deviceState).find(key => deviceState[key] === item.state)
+
             // Get quotes only if the device is listed or the device already has quotes
-            if (deviceState[state] === deviceState.LISTED || deviceState[state] === deviceState.HAS_QUOTE) {
+            if (item.state === deviceState.LISTED || item.state === deviceState.HAS_QUOTE) {
                 let quotes = await getQuotes(item._id)
                 // Check if there are no quotes available for that device
                 if (quotes.length === 0) {
@@ -121,9 +121,8 @@ async function getMyItems(req, res, next) {
                 let updatedQuotes = []
                 for (const quote of quotes) {
                     const currentDate = new Date()
-                    const state = Object.keys(quoteState).find(key => quoteState[key] === quote.state)
 
-                    if (quoteState[state] === quoteState.NEW || quoteState[state] === quoteState.ACCEPTED || quoteState[state] === quoteState.EXPIRED) {
+                    if (item.state === quoteState.NEW || item.state === quoteState.ACCEPTED || item.state === quoteState.EXPIRED) {
                         if(quote.expiry < currentDate) {
                             let one_provider = []
                             let new_quote
