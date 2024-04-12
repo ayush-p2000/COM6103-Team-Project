@@ -133,7 +133,7 @@
                     <tbody>
 
                     <% users.forEach(user => { %>
-                        <% if (user.first_name !== 'Deleted' && user.last_name !== 'User') { %>
+                        <% if (user.isDeleted === false) { %>
                         <tr>
                             <% if (user.active) { %>
                             <td><%= user.email %></td>

@@ -123,8 +123,13 @@ async function deleteUser(req,res,next){
     try {
         const userId = req.body.id;
         const user = {
-            first_name: req.body.firstName,
-            last_name: req.body.lastName
+            email: req.body.email,
+            google_id: null,
+            facebook_id: null,
+            password:null,
+            salt:null,
+            isDeleted:true
+
         };
         const updatedUser = await User.findByIdAndUpdate(userId, user, { new: true });
         let users = [];

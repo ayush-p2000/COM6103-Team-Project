@@ -54,27 +54,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isConfirmed) {
             const formData = new FormData();
             const userId = document.getElementById('userId').value;
-            const firstName = "Deleted";
-            const lastName = "User";
-            const email = "deletedEmail@gmail.com";
-            const phone = "00000000";
-            const addressFirst = "dummyAddress";
-            const addressSecond = "dummyAddressSecond";
-            const postCode = "Dummy";
-            const city = "Dummy";
-            const country = "Dummy";
+            const email = null;
 
-            console.log(userId);
-            console.log(firstName);
-            console.log(lastName);
-            console.log(postCode);
-            console.log(addressSecond);
-            console.log(country);
-            console.log(email);
-            console.log(phone);
             formData.append('id', userId);
-            formData.append('firstName',firstName);
-            formData.append('lastName',lastName);
+            formData.append('email',email);
 
             fetch(endpoint, {
                 method: 'POST',

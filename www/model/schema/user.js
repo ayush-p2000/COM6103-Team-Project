@@ -110,6 +110,11 @@ const userSchema = new mongoose.Schema({
             default: 0,
             min: 0
         },
+        isDeleted:{
+            type: Boolean,
+            default: false,
+            required: false
+        },
         listed_devices:
             [
                 {
