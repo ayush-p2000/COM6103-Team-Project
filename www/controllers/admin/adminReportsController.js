@@ -11,7 +11,7 @@ const {
     getDevicesGroupByType,
     getAllDeviceTypes, getAccountsCountByStatus, getAllUsers, getAccountsCountByType, getAllSalesOrderedByDate,
     getSalesCountByMonth, getSalesValueByMonth,
-    getReferralValueByMonth, getAllReferralsOrderedByDate
+    getReferralValueByMonth, getAllReferralsOrderedByDate, getReferralCountByMonth
 } = require("../../model/mongodb");
 const deviceCategory = require("../../model/enum/deviceCategory");
 const deviceState = require("../../model/enum/deviceState");
