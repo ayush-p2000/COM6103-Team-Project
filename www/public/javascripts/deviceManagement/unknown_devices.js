@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    window.location.href = '/admin/devices/flagged';
+                    window.location.reload()
                     return response.text();
                 })
                 .catch(error => {
@@ -76,7 +76,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    window.location.href = '/admin/devices/flagged';
+                    window.location.reload()
+
                     return response.text();
                 })
                 .catch(error => {
@@ -110,7 +111,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    window.location.href = '/admin/devices/flagged';
+                    window.location.reload()
+
                     return response.text();
                 })
                 .catch(error => {

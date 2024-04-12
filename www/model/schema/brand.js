@@ -5,6 +5,11 @@ const brandSchema = new mongoose.Schema({
             type: String,
             required: true
         },
+        is_deleted: {
+            type: mongoose.Schema.Types.Boolean,
+            required: true,
+            default: false
+        },
         models: [
             {
                 type: mongoose.Schema.Types.ObjectId,
