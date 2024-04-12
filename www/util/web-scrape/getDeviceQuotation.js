@@ -110,15 +110,16 @@ function getCexQuote(item, provider, quotation){
         for (const device of deviceDetails) {
 
             //Get the title of the product
-            const title = await device.evaluate(el => el.querySelector('.card-title').textContent)
-            if (title.toLowerCase().includes(item.model.name.toLowerCase()) && !title.toLowerCase().includes('for')) {
+            let title = await device.evaluate(el => el.querySelector('.card-title').textContent)
+            title = title.toLowerCase().replace('(', '').replace(')', '')
+            if (title.includes(item.model.name.toLowerCase()) && !title.toLowerCase().includes('for')) {
                 const price = await device.evaluate(el => el.querySelector('.cash-price.price-tag.mb-xxs').textContent)
                 priceData.push(price.replace('Cash £', ''))
             }
         }
 
         console.log(priceData[0])
-        const quoteDetails = setQuoteDetails(provider, item, priceData[0], url + searchItem)
+        const quoteDetails = setQuoteDetails(provider, item, priceData[0] ?? 0, url + searchItem)
         console.log(quoteDetails)
         await addQuote(quoteDetails)
         quotation.push(quoteDetails)
