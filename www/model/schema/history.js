@@ -4,7 +4,8 @@ const historySchema = new mongoose.Schema({
         device: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Device',
-            required: true
+            required: true,
+            autopopulate: true
         },
         history_type: {
             type: Number,
@@ -29,13 +30,16 @@ const historySchema = new mongoose.Schema({
         actioned_by: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            required: true
+            required: true,
+            autopopulate: true
         }
     },
     {
         timestamps: true
     }
 );
+
+historySchema.plugin(require('mongoose-autopopulate'));
 
 module.exports = {
     History: mongoose.model('History', historySchema)

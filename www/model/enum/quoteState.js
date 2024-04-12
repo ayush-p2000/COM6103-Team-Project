@@ -33,22 +33,22 @@ function stateToString(state) {
     }
 }
 
-function stateToColour(state) {
+function stateToColour(state, prefix="") {
     switch (state) {
         case NEW:
-            return "primary";
+            return prefix + "primary";
         case SAVED:
-            return "info";
+            return prefix + "info";
         case REJECTED:
-            return "danger";
+            return prefix + "danger";
         case ACCEPTED:
-            return "warning";
+            return prefix + "warning";
         case CONVERTED:
-            return "success";
+            return prefix + "success";
         case EXPIRED:
-            return "secondary";
+            return prefix + "secondary";
         default:
-            return "light";
+            return prefix + "light";
     }
 }
 

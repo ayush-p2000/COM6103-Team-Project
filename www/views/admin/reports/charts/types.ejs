@@ -4,9 +4,8 @@
     <script>
         const types_labels = <%- JSON.stringify(labels) %>;
         const types_data = <%- JSON.stringify(datasets[0]) %>;
-        const labels = <%- JSON.stringify(labels) %>;
-        const labels_colours = labels.map(label => pickRandomColour(label))
-        const types_backgrounds = labels_colours.map(colour => colour.background);
-        const types_borderColours = labels_colours.map(colour => colour.border);
+        const types_labels_colours = types_labels.map(label => pickRandomColour(label))
+        const types_backgrounds = types_labels_colours.map(colour => colour.background);
+        const types_border_colours = types_labels_colours.map(colour => colour.border);
     </script>
 </div>
