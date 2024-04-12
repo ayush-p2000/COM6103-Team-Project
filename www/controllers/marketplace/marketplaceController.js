@@ -104,12 +104,12 @@ async function getMyItems(req, res, next) {
                 if (quotes.length === 0) {
                     console.log('No quotes available')
                     quotes = await getDeviceQuotation(item, providers)
-                } else if(quotes.length === 1) {
+                } else if(quotes.length < providers.length) {
                     // Check for if only one quote is available for the device, if only one quote then scrape the website for other quote
                     let one_provider = []
                     let new_quote
                     providers.forEach(provider => {
-                        if (provider.name !== quotes[0].provider.name) {
+                        if (!quotes.find(quote => quote.provider.name === provider.name)) {
                             one_provider.push(provider)
                         }
                     })
