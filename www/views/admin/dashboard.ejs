@@ -37,7 +37,7 @@
                     <i class="fas fa-shopping-cart fa-5x text-white my-auto"></i>
                 </div>
                 <div class="card-footer-login">
-                    <p class="text-white m-0 text-center">Completed Sales</p>
+                    <p class="text-white m-0 text-center">Completed Sales (Previous <%= previous_months %> months)</p>
                 </div>
             </div>
         </div>
@@ -59,14 +59,40 @@
     <!--    Graph Placeholders -->
     <!--    TODO change to Report component once its finished -->
     <div class="row mb-3">
-        <div class="bg-body-secondary d-flex justify-content-around align-items-center col p-5">
-            <h3 class="p-5 text-muted">Graph Placeholder</h3>
+        <div class="col-12 p-2">
+            <a href="/admin/reports/sales" class="text-decoration-none text-body">
+                <div class="card shadow-sm hover-shadow">
+                    <div class="card-body" style="height: 350px">
+                        <h5 class="card-title text-center">Total Sales</h5>
+
+                        <%- include('reports/charts/sales', salesData) %>
+
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/sales">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
     <!--    TODO change to Report component once its finished -->
     <div class="row mb-3">
-        <div class="bg-body-secondary d-flex justify-content-around align-items-center col p-5">
-            <h3 class="p-5 text-muted">Graph Placeholder</h3>
+        <div class="col-12 p-2">
+            <a href="/admin/reports/referrals" class="text-decoration-none text-body">
+                <div class="card shadow-sm hover-shadow">
+                    <div class="card-body" style="height: 350px">
+                        <h5 class="card-title text-center">Total Referrals</h5>
+
+                        <%- include('reports/charts/referrals', referralsData) %>
+
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/referrals">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
+
+    <script src="/javascripts/reports/reports_util.js"></script>
 </div>

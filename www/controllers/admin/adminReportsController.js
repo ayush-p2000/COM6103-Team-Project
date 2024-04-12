@@ -48,7 +48,10 @@ async function getReportsPage(req, res, next) {
 
 async function getReportPage(req, res, next) {
     const type = req.params.report_type;
-    const title = type.charAt(0).toUpperCase() + type.slice(1);
+
+    //Create the title by removing underscores and capitalising the first letter of each word
+    const title = type.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+
     let data;
 
     switch (type) {
@@ -440,5 +443,7 @@ const prepareReferralsData = async () => {
 
 module.exports = {
     getReportsPage,
-    getReportPage
+    getReportPage,
+    prepareSalesData,
+    prepareReferralsData,
 }
