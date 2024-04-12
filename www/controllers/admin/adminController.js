@@ -4,17 +4,16 @@
 
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
 const {User} = require("../../model/schema/user");
-const {getAllUsers, searchUserAndPopulate} = require("../../model/mongodb");
+const {getAllUsers, searchUserAndPopulate, getUserById, getTotalAccountsCount} = require("../../model/mongodb");
 
-function getAdminDashboard(req, res, next) {
+async function getAdminDashboard(req, res, next) {
     const route = req.params.contentRoute ?? "dashboard";
 
-    const admin = {
-        name: "Chuck",
-        lastName: "Norris"
-    }
+    const admin = await getUserById(req.user.id);
 
-    renderAdminLayout(req, res, "dashboard",{admin, numOfUsers: 11, savedCo2:124.3, numOfFinishedTransactions: 1121})
+    const userCount = await getTotalAccountsCount();
+
+    renderAdminLayout(req, res, "dashboard", {admin, numOfUsers: userCount, savedCo2: 124.3, numOfSales: 1, numOfReferrals: 2})
 }
 
 async function insertStaffDetails(req,res,next){

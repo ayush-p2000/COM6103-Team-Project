@@ -608,6 +608,11 @@ const getDevicesGroupByType = async () => {
     ]);
 }
 
+const getTotalAccountsCount = async () => {
+    //Return the total number of accounts in the database
+    return User.countDocuments();
+}
+
 const getAccountsCountByStatus = async () => {
     return User.aggregate([
         {
@@ -680,6 +685,7 @@ module.exports = {
     deleteModel,
     deleteBrand,
     deleteType,
+    getTotalAccountsCount,
     getAccountsCountByStatus,
     getAccountsCountByType
 }
