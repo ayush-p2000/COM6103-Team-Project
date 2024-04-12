@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    createChart('#sales_chart', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'], mock_sales_dataset, 'line', mock_sales_options);
+    createChart('#r', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'], mock_sales_dataset, 'line', mock_sales_options);
 
-    $('#sales_table').DataTable({
+    $('#referrals_table').DataTable({
 
     });
 });

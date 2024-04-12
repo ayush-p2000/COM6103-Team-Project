@@ -18,6 +18,7 @@ const deviceSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Model',
             required: true,
+            autopopulate: true
         },
         details: [
             {

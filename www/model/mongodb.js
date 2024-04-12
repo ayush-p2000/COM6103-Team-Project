@@ -18,6 +18,8 @@ const {UNKNOWN_DEVICE} = require("./enum/historyType");
 
 const {UNKNOWN} = require("./enum/deviceCategory")
 const {HAS_QUOTE} = require("./enum/deviceState")
+const {quoteState} = require("./enum/quoteState");
+const historyType = require("./enum/historyType");
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -289,7 +291,7 @@ const listDevice = async (deviceData, photos, user) => {
             ];
             const newHistory = new History({
                 device: savedDevice,
-                history_type: 6,
+                history_type: historyType.UNKNOWN_DEVICE,
                 data: data.map(item => ({
                     name: item.name,
                     value: item.value,
@@ -313,6 +315,38 @@ const listDevice = async (deviceData, photos, user) => {
  */
 const getAllUnknownDevices = async () => {
     return History.find({history_type: UNKNOWN_DEVICE});
+}
+
+const addHistory = async (device, history_type, data, actioned_by) => {
+    return History.create({
+        device: device,
+        history_type: history_type,
+        data: data,
+        actioned_by: actioned_by
+    });
+}
+
+const getReviewHistory = async (device) => {
+    //Get all the history of the device matching only the review history types ordered by the date they were created
+    return History.find({
+        device: device,
+        history_type: {$in: [historyType.REVIEW_REQUESTED, historyType.REVIEW_ACCEPTED, historyType.REVIEW_REJECTED]}
+    }).sort({createdAt: -1});
+}
+
+/**
+ * Get History Data for a Specific Device and Filtered by History Types.
+ * This will be returned in reverse-chronological order.
+ * @param device - The device ID to get the history for
+ * @param historyTypes {Array<number>} - The history types to filter by
+ * @author Benjamin Lister
+ */
+const getHistoryByDevice = async (device, historyTypes) => {
+    //Get all the history of the device matching only the review history types ordered by the date they were created
+    return History.find({
+        device: device,
+        history_type: {$in: historyTypes}
+    }).sort({createdAt: -1});
 }
 
 /**
@@ -463,7 +497,7 @@ const getUnknownDeviceHistoryByDevice = async (id) => {
  */
 const getDevice = async (id) => {
     try {
-        return Device.find({_id: id}).populate('brand').populate('device_type').populate('model');
+        return Device.findOne({_id: id}).populate('brand').populate('device_type').populate('model');
     } catch (error) {
         console.error("An error occurred while get Device:", error);
         throw error;
@@ -626,10 +660,10 @@ const getAccountsCountByStatus = async () => {
         {
             $group: {
                 _id: "$active",
-                count: { $sum: 1}
+                count: {$sum: 1}
             }
         },
-        { $sort: { "_id": -1 } },
+        {$sort: {"_id": -1}},
     ])
 }
 
@@ -638,11 +672,76 @@ const getAccountsCountByType = async () => {
         {
             $group: {
                 _id: "$role",
-                count: { $sum: 1}
+                count: {$sum: 1}
             }
         },
-        { $sort: { "_id": 1 } },
+        {$sort: {"_id": 1}},
     ])
+}
+
+/*
+ * Referrals Calculation
+ * Referrals are defined in this context as a converted quote
+ * Referral value is our commission from the sale
+ * Our commission is currently £2.50 + 10% of the sale value
+ */
+
+const getReferralCountByMonth = async (numPrevMonths) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - numPrevMonths);
+    return Quote.aggregate([
+        {
+            $match: {
+                state: quoteState.CONVERTED,
+                "confirmation_details.receipt_date": {$gte: date}
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    $month: "$confirmation_details.receipt_date"
+                },
+                month: {$first: {$month: "$confirmation_details.receipt_date"}},
+                year: {$first: {$year: "$confirmation_details.receipt_date"}},
+                total: {$sum: 1}
+            }
+        },
+        {$sort: {"_id": 1}},
+    ]);
+}
+
+const getReferralValueByMonth = async (numPrevMonths) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - numPrevMonths);
+    return Quote.aggregate([
+        {
+            $match: {
+                state: quoteState.CONVERTED,
+                "confirmation_details.receipt_date": {$gte: date}
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    month: {$month: "$confirmation_details.receipt_date"}
+                },
+                month: {$first: {$month: "$confirmation_details.receipt_date"}},
+                year: {$first: {$year: "$confirmation_details.receipt_date"}},
+                total: {$sum: 1},
+                value: {$sum: {$add: [2.5, {$multiply: [0.1, "$confirmation_details.final_price"]}]}}
+            }
+        },
+        {$sort: {"_id.year": 1, "_id.month": 1}},
+    ]);
+}
+
+const getAllReferralsOrderedByDate = async (prevMonths) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - prevMonths);
+    return Quote.find({
+        state: quoteState.CONVERTED,
+        "confirmation_details.receipt_date": {$gte: date}
+    }).sort({"confirmation_details.receipt_date": 1});
 }
 
 
@@ -664,6 +763,9 @@ module.exports = {
     listDevice,
     getAllDevices,
     getAllUnknownDevices,
+    addHistory,
+    getReviewHistory,
+    getHistoryByDevice,
     addDeviceType,
     addBrand,
     addModel,
@@ -695,5 +797,8 @@ module.exports = {
     deleteBrand,
     deleteType,
     getAccountsCountByStatus,
-    getAccountsCountByType
+    getAccountsCountByType,
+    getReferralCountByMonth,
+    getReferralValueByMonth,
+    getAllReferralsOrderedByDate
 }

@@ -176,5 +176,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Call to each chart function
     createChart('#sales_chart', ['January', 'February', 'March', 'April', 'May', 'June', 'July'], mock_sales_dataset, 'line', mock_sales_config_options);
-    createChart('#referrals_chart', ['January', 'February', 'March', 'April', 'May', 'June', 'July'], mock_referrals_dataset, 'line');
 });
