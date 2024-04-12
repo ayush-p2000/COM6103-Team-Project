@@ -25,8 +25,8 @@ async function getReportsPage(req, res, next) {
     const types = await prepareTypesData();
     const accounts = await prepareActiveAccountsData()
     const account_types = await prepareAccountTypesData()
-    const referrals = await prepareReferralsData();
     const sales = await prepareSalesData();
+    const referrals = await prepareReferralsData();
     renderAdminLayout(req, res, "reports/reports",
         {
             classes: classes,
@@ -75,6 +75,12 @@ async function getReportPage(req, res, next) {
             break;
         case "sales":
             data = await prepareSalesData();
+            break;
+        case "sales":
+            data = await prepareSalesData();
+            break;
+        case "referrals":
+            data = await prepareReferralsData();
             break;
         default:
             data = {...getMockGraphData(), table: getMockSalesData()}
