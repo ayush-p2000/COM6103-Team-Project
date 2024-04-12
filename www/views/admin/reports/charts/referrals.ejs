@@ -1,0 +1,10 @@
+<div>
+    <canvas id="referrals_chart"></canvas>
+    <script src="/javascripts/reports/charts/referrals.js"></script>
+    <script>
+        const referrals_labels = <%- JSON.stringify(labels) %>;
+        const referrals_count_data = <%- JSON.stringify(datasets[0]) %>;
+        const referrals_value_data = <%- JSON.stringify(datasets[1]) %>;
+        const labels = <%- JSON.stringify(labels) %>;
+    </script>
+</div>

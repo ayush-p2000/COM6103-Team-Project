@@ -1,5 +1,5 @@
-/* globals Chart:false */
-
 document.addEventListener('DOMContentLoaded', function () {
-    'use strict'
+    $('#types_table').DataTable({
+
+    });
 });
