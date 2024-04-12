@@ -9,7 +9,8 @@ const {
     getAllDevices,
     getDevicesGroupByState,
     getDevicesGroupByType,
-    getAllDeviceTypes, getAccountsCountByStatus, getAllUsers, getAccountsCountByType
+    getAllDeviceTypes, getAccountsCountByStatus, getAllUsers, getAccountsCountByType, getAllSalesOrderedByDate,
+    getSalesCountByMonth, getSalesValueByMonth
 } = require("../../model/mongodb");
 const deviceCategory = require("../../model/enum/deviceCategory");
 const deviceState = require("../../model/enum/deviceState");
@@ -22,6 +23,7 @@ async function getReportsPage(req, res, next) {
     const types = await prepareTypesData();
     const accounts = await prepareActiveAccountsData()
     const account_types = await prepareAccountTypesData()
+    const sales = await prepareSalesData();
     renderAdminLayout(req, res, "reports/reports",
         {
             classes: classes,
@@ -29,6 +31,7 @@ async function getReportsPage(req, res, next) {
             types: types,
             accounts,
             account_types,
+            sales,
             deviceCategory,
             deviceState,
             accountStatus,
@@ -43,9 +46,6 @@ async function getReportPage(req, res, next) {
     let data;
 
     switch (type) {
-        case "sales":
-            data = {...getMockGraphData(), table: getMockSalesData()};
-            break;
         case "classes":
             data = await prepareClassesData();
             break;
@@ -60,6 +60,9 @@ async function getReportPage(req, res, next) {
             break;
         case "account_types":
             data = await prepareAccountTypesData();
+            break;
+        case "sales":
+            data = await prepareSalesData();
             break;
         default:
             data = {...getMockGraphData(), table: getMockSalesData()}
@@ -220,7 +223,7 @@ const prepareActiveAccountsData = async () => {
             id: user._id,
             active: user.active,
             role: user.role,
-            email:user.email,
+            email: user.email,
             date_added: user.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
@@ -253,7 +256,7 @@ const prepareAccountTypesData = async () => {
             id: user._id,
             active: user.active,
             role: user.role,
-            email:user.email,
+            email: user.email,
             date_added: user.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
@@ -266,6 +269,83 @@ const prepareAccountTypesData = async () => {
 
     return {labels, datasets: [data], table: table};
 
+}
+
+const SALES_PREV_MONTHS = 12;
+
+const prepareSalesData = async () => {
+    //Labels is an array of strings, each representing a month from the current month, going back 6 months
+    const labels = [];
+    const currentMonth = new Date().getMonth();
+
+    const monthMappping = {};
+
+    for (let i = 0; i < SALES_PREV_MONTHS; i++) {
+        //Determine the month
+        const month = currentMonth - i < 0 ? 12 + (currentMonth - i) : currentMonth - i;
+        //Determine the year for the month
+        const year = new Date().getFullYear() - (currentMonth - i < 0 ? 1 : 0);
+
+        //Add the short month name and year to the labels array
+        labels.push(new Date(year, month).toLocaleString('default', {month: 'short'}) + " " + year);
+
+        monthMappping[`${month}-${year}`] = i;
+    }
+    labels.reverse();
+    for (let i = 0; i < labels.length; i++) {
+        const monthYear = labels[i].split(" ");
+        //Convert the month name to a number
+        const map = `${new Date(`${monthYear[0]} 1, 2021`).getMonth()}-${monthYear[1]}`;
+
+        monthMappping[map] = i;
+    }
+
+
+    const count_data = await getSalesCountByMonth(SALES_PREV_MONTHS);
+    const value_data = await getSalesValueByMonth(SALES_PREV_MONTHS);
+
+    const referrals_count_data = Array(SALES_PREV_MONTHS).fill(0);
+    const referrals_value_data = Array(SALES_PREV_MONTHS).fill(0);
+
+    count_data.forEach(item => {
+        //The month retrieved from the database is in the format of {month: 1, year: 2021}
+        //We need to convert this to an index in the labels array
+        //Months in the map are 0 indexed, so we need to subtract 1 from the month
+        const index = monthMappping[`${item._id.month - 1}-${item._id.year}`];
+
+        referrals_count_data[index] = item.total;
+    });
+
+    value_data.forEach(item => {
+        //The month retrieved from the database is in the format of {month: 1, year: 2021}
+        //We need to convert this to an index in the labels array
+        //Months in the map are 0 indexed, so we need to subtract 1 from the month
+        const index = monthMappping[`${item._id.month - 1}-${item._id.year}`];
+
+        referrals_value_data[index] = item.value;
+    });
+
+    //Get all converted sales ordered by date
+    const table = [];
+
+    const sales = await getAllSalesOrderedByDate(SALES_PREV_MONTHS);
+    sales.forEach(referral => {
+        table.push({
+            date: referral.date.toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric"
+            }),
+            user: referral.device?.listing_user,
+            product: referral.device,
+            sale_value: referral.value,
+            purchase_type: referral.purchase_type,
+        });
+    });
+
+    return {labels, datasets: [referrals_count_data, referrals_value_data], table};
 }
 
 module.exports = {
