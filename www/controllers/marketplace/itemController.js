@@ -30,6 +30,7 @@ const dataService = require("../../model/enum/dataService")
 const {generateQR} = require("../../util/qr/qrcodeGenerator");
 const cheerio = require('cheerio')
 const axios = require('axios')
+const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const historyType = require("../../model/enum/historyType");
 const roleTypes = require("../../model/enum/roleTypes");
 
@@ -75,9 +76,13 @@ async function getListItem(req, res) {
         try {
             let deviceTypes = await getAllDeviceType();
             let brands = await getAllBrand();
-            res.render('marketplace/list_item', {
+
+            renderUserLayout(req, res, '../marketplace/list_item', {
                 auth: req.isLoggedIn, user: req.user, deviceTypes: deviceTypes, brands: brands
-            });
+            })
+            // res.render('marketplace/list_item', {
+            //     auth: req.isLoggedIn, user: req.user, deviceTypes: deviceTypes, brands: brands
+            // });
         } catch (err) {
             console.log(err)
         }
@@ -88,17 +93,20 @@ async function getListItem(req, res) {
                 let customModel = await getUnknownDeviceHistoryByDevice(id)
                 customModel[0].data.forEach(data => {
                     if (data.name === "device_type") {
-                        device[0].device_type = {name: data.value}
+                        device.device_type = {name: data.value}
                     } else if (data.name === "brand") {
-                        device[0].brand = {name: data.value}
+                        device.brand = {name: data.value}
                     } else if (data.name === "model") {
-                        device[0].model = {name: data.value, properties: []}
+                        device.model = {name: data.value, properties: []}
                     }
                 });
             }
-            res.render('marketplace/edit_item', {
+            renderUserLayout(req, res, '../marketplace/edit_item', {
                 auth: req.isLoggedIn, user: req.user, device: device
-            });
+            })
+            // res.render('marketplace/edit_item', {
+            //     auth: req.isLoggedIn, user: req.user, device: device
+            // });
         } catch (err) {
             console.log(err)
         }
@@ -170,9 +178,12 @@ async function getItemDetails(req, res, next) {
         const deviceReviewHistory = await getHistoryByDevice(req.params.id, [historyType.REVIEW_REQUESTED, historyType.REVIEW_REJECTED, historyType.REVIEW_ACCEPTED]);
         const deviceVisibilityHistory = await getHistoryByDevice(req.params.id, [historyType.ITEM_HIDDEN, historyType.ITEM_UNHIDDEN]);
 
-        res.render('marketplace/item_details', {
+        renderUserLayout(req, res, '../marketplace/item_details', {
             item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes
         })
+        // res.render('marketplace/item_details', {
+        //     item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user,
+        // })
     } catch (e) {
         console.log(e)
         res.status(500);
