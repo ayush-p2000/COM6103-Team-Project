@@ -1,11 +1,11 @@
 <%- include("../components/header") %>
 <%- include("../components/navbar") %>
 
-<div class="container-fluid vh-100 w-100">
+<div class="container-fluid w-100">
     <div class="row">
-        <div class="col-md-3 col-lg-2 bg-light bg-dark m-0 px-3 h-100 vh-100">
+        <div class="col-md-3 col-lg-2 bg-light bg-dark m-0 px-3 vh-100">
             <nav id="sidebarMenu" class="d-md-block sidebar collapse text-light">
-                <div class="position-sticky pt-3">
+                <div class="pt-3 position-sticky vh-100">
                     <a class="navbar-brand fs-4 fw-medium" href="/admin">
                         <!-- Logo Placeholder -->
                         <div class="bg-body-secondary text-center mx-3">
@@ -41,24 +41,11 @@
                     </ul>
                     <hr>
 
-<!--                    <ul class="nav flex-column">-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link text-white" href="/profile">-->
-<!--                                My Profile-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            &lt;!&ndash; TODO: Add Sign Out Functionality &ndash;&gt;-->
-<!--                            <form action="/logout" method="POST" class="m-0">-->
-<!--                                <button class="nav-link text-white" type="submit">Sign Out</button>-->
-<!--                            </form>-->
-<!--                        </li>-->
-<!--                    </ul>-->
                 </div>
             </nav>
         </div>
 
-        <div class="col-md-9 col-lg-10 px-md-4 h-100">
+        <div class="col-md-9 col-lg-10 px-md-4">
             <% if(currentRoute === undefined) { %>
                 <%- include('dashboard') %>
             <% } else if (placeholder !== null){ %>

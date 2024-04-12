@@ -1,7 +1,8 @@
 <div class="items m-5">
     <h4>My Items</h4>
-    <div class="row">
-        <% devices.forEach(device => { %>
+    <div class="row mb-5">
+        <% var displayDevices = devices.length <= 5 ? devices : devices.slice(0,5) %>
+        <% displayDevices.forEach(device => { %>
             <div class="col-12 col-sm-6 col-md-4 col-xl-2 item">
                 <div class="card h-100">
                     <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data).toString('base64') %>" class="card-img-top img-fluid item-img" alt="...">
@@ -17,7 +18,24 @@
         <% }) %>
         <a href="/my-items/" class="btn btn-primary w-auto h-25 my-auto">View All</a>
     </div>
-    <div class="row">
-
+    <div class="row mt-5">
+        <h4>Marketplace</h4>
+        <% displayDevices = marketDevices.length <= 5 ? marketDevices : marketDevices.slice(0,5) %>
+        <% displayDevices.forEach(device => { if(device.visible){ %>
+            <div class="col-12 col-sm-6 col-md-4 col-xl-2 item">
+                <div class="card h-100">
+                    <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data).toString('base64') %>" class="card-img-top img-fluid item-img" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title modelName"><%= device.model.name %></h5>
+                        <p class="m-0 p-0 text-muted deviceType"><small>Device Type: </small><%= device.device_type.name %></p>
+                        <p class="m-0 p-0 text-muted category">
+                            <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
+                        <p class="m-0">By: <span class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span></p>
+                    </div>
+                    <a class="btn btn-primary btn-sm mb-1 mx-2" href="/item/<%= device._id %>"> View</a>
+                </div>
+            </div>
+        <% }}) %>
+        <a href="/marketplace/" class="btn btn-primary w-auto h-25 my-auto">View All</a>
     </div>
 </div>
