@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 
-const {getAdminDashboard,deactivateUser, activateUser, deleteUser} = require("../controllers/admin/adminController");
+const {getAdminDashboard,deactivateUser, activateUser} = require("../controllers/admin/adminController");
 
 const {
-    getAccountDetailsPage, getAccountsPage, getEditAccountPage, createStaff
+    getAccountDetailsPage, getAccountsPage, getEditAccountPage, createStaff, deleteUser
 } = require("../controllers/admin/adminAccountsController");
 
 const {getReportsPage, getReportPage} = require("../controllers/admin/adminReportsController");
