@@ -40,6 +40,9 @@ const retrievalSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
+            payment_method: {
+                type:String
+            }
         },
         extension_transaction : {
             value : {
@@ -53,6 +56,9 @@ const retrievalSchema = new mongoose.Schema({
             },
             length: {
                 type: Number
+            },
+            payment_method: {
+                type:String
             }
         },
         is_extended: {
@@ -60,9 +66,7 @@ const retrievalSchema = new mongoose.Schema({
                 default: false,
                 required: true
         },
-        payment_method: {
-            type:String
-        }
+
     },
     {
         timestamps: true

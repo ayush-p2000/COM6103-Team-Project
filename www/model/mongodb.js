@@ -681,9 +681,10 @@ async function updateTransaction(transactionDetails) {
                             value: transactionDetails.value,
                             transaction_state: transactionDetails.state,
                             payment_date: new Date(),
-                            length: transactionDetails.extension
+                            length: transactionDetails.extension,
+                            payment_method: transactionDetails.paymentMethod
                         },
-                        payment_method: transactionDetails.paymentMethod
+
                     }
                 };
             } else {
@@ -695,10 +696,10 @@ async function updateTransaction(transactionDetails) {
                             value: transactionDetails.value,
                             transaction_state: transactionDetails.state,
                             payment_date: new Date(),
-                            length: transactionDetails.extension
+                            length: transactionDetails.extension,
+                            payment_method: transactionDetails.paymentMethod
                         },
                         is_extended: true,
-                        payment_method: transactionDetails.paymentMethod
                     }
                 };
             }
@@ -707,9 +708,10 @@ async function updateTransaction(transactionDetails) {
                 $set: {
                     transaction: {
                         value: transactionDetails.value,
-                        transaction_state: transactionDetails.state
+                        transaction_state: transactionDetails.state,
+                        payment_method: transactionDetails.paymentMethod
                     },
-                    payment_method: transactionDetails.paymentMethod
+
                 }
             };
         }
