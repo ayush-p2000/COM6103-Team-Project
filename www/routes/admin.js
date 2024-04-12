@@ -10,7 +10,8 @@ const {getReportsPage, getReportPage} = require("../controllers/admin/adminRepor
 const {
     getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage,
     getUserDeviceDetailsPage, updateUserDeviceDetailsPage, getModelsFromTypeAndBrand,postNewDeviceType,
-    postNewBrand, postNewModel, getRetrievalDevicesPage, updateDeviceType, deleteDeviceType
+    postNewBrand, postNewModel, getRetrievalDevicesPage, updateDeviceType, deleteDeviceType, postDeviceStateOverride, postDeviceDemotion, postDevicePromotion,
+    postDeviceChangeRequest, postDeviceVisibility
 } = require("../controllers/admin/adminDevicesController");
 
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
@@ -19,6 +20,7 @@ const {validateDeviceTypeEdit} = require("../middlewares/validators")
 const {upload} = require('../middlewares/multer')
 const {validateRegistration} = require("../middlewares/validators");
 const {insertStaffDetails} = require("../controllers/admin/adminController");
+const {populateDeviceObject} = require("../middlewares/devices");
 
 /* GET home page. */
 router.get("/", getAdminDashboard)
@@ -36,9 +38,14 @@ router.get('/devices/retrievals', getRetrievalDevicesPage);
 router.post('/devices/postNewDeviceType', upload.none(), postNewDeviceType);
 router.post('/devices/postNewBrand', upload.none(), postNewBrand);
 router.post('/devices/postNewModel', upload.none(), postNewModel);
-router.get('/devices/:id', getUserDeviceDetailsPage);
 
+router.get('/devices/:id', getUserDeviceDetailsPage);
 router.post('/devices/:id',upload.none(), updateUserDeviceDetailsPage)
+router.post('/devices/:id/promote',upload.none(), populateDeviceObject, postDevicePromotion)
+router.post('/devices/:id/demote',upload.none(), populateDeviceObject, postDeviceDemotion)
+router.post('/devices/:id/state',upload.none(), populateDeviceObject, postDeviceStateOverride)
+router.post('/devices/:id/changes',upload.none(), populateDeviceObject, postDeviceChangeRequest)
+router.post('/devices/:id/visibility',upload.none(), populateDeviceObject, postDeviceVisibility)
 
 router.get('/moderation', getModerationDashboard);
 

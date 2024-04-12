@@ -48,13 +48,35 @@ const retrievalSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
+            payment_date: {
+                type: Date,
+                required: false
+            },
         },
-        locked: {
+        extension_transaction: {
+            value: {
+                type: Number,
+                required: false
+            },
+            transaction_state: {
+                type: Number,
+                required: false
+            },
+            payment_date: {
+                type: Date,
+                required: false
+            },
+            length : {
+                type: Number,
+                required: false
+            }
+        },
+        is_extended: {
             type: Boolean,
             required: true,
             default: false
         },
-        is_extended: {
+        locked: {
             type: Boolean,
             required: true,
             default: false

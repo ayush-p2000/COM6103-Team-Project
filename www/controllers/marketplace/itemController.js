@@ -38,6 +38,8 @@ const axios = require('axios')
 const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const retrievalState = require("../../model/enum/retrievalState");
 const dataTypes = require("../../model/enum/dataTypes");
+const historyType = require("../../model/enum/historyType");
+const roleTypes = require("../../model/enum/roleTypes");
 
 /**
  * Handling Request to post item base on the info in request body
@@ -94,23 +96,23 @@ async function getListItem(req, res) {
     } else {
         try {
             let device = await getDevice(id);
-            if (device[0].model == null) {
+            if (device.model == null) {
                 let customModel = await getUnknownDeviceHistoryByDevice(id)
                 customModel[0].data.forEach(data => {
                     if (data.name === "device_type") {
-                        device[0].device_type = {name: data.value}
+                        device.device_type = {name: data.value}
                     } else if (data.name === "brand") {
-                        device[0].brand = {name: data.value}
+                        device.brand = {name: data.value}
                     } else if (data.name === "model") {
-                        device[0].model = {name: data.value, properties: []}
+                        device.model = {name: data.value, properties: []}
                     }
                 });
             }
             renderUserLayout(req, res, '../marketplace/edit_item', {
-                auth: req.isLoggedIn, user: req.user, device: device[0]
+                auth: req.isLoggedIn, user: req.user, device: device
             })
             // res.render('marketplace/edit_item', {
-            //     auth: req.isLoggedIn, user: req.user, device: device[0]
+            //     auth: req.isLoggedIn, user: req.user, device: device
             // });
         } catch (err) {
             console.log(err)
@@ -141,7 +143,13 @@ async function getItemDetails(req, res, next) {
     try {
         const item = await getItemDetail(req.params.id)
         var specs = []
+
         var quotes = await getQuotes(req.params.id)
+        if (quotes.length > 0 && item.state < deviceState.HAS_QUOTE && item.state !== deviceState.IN_REVIEW) {
+            item.state = deviceState.HAS_QUOTE;
+            await item.save()
+        }
+
         if (item.model != null) {
             const specProp = item.model.properties.find(property => property.name === 'specifications')?.value;
             if (specProp != null) {
@@ -167,18 +175,23 @@ async function getItemDetails(req, res, next) {
             item.brand = {name: brand}
             item.model = {name: model}
         }
+
         // Add a QR code to each quote
         for (let quote of quotes) {
             const qr = await generateQR(quote._id);
             quote.qr_code = qr;
         }
 
+        const deviceReviewHistory = await getHistoryByDevice(req.params.id, [historyType.REVIEW_REQUESTED, historyType.REVIEW_REJECTED, historyType.REVIEW_ACCEPTED]);
+        const deviceVisibilityHistory = await getHistoryByDevice(req.params.id, [historyType.ITEM_HIDDEN, historyType.ITEM_UNHIDDEN]);
+
+
         let retrievalData = null;
         if (item.state === deviceState.DATA_RECOVERY) {
             retrievalData = await getRetrievalObjectByDeviceId(item._id);
         }
         renderUserLayout(req, res, '../marketplace/item_details', {
-            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, retrievalData, retrievalState
+            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, retrievalData, retrievalState,deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes
         })
         // res.render('marketplace/item_details', {
         //     item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user,
@@ -195,7 +208,7 @@ async function postUpdateQuote(req, res) {
     try {
         const state = req.body.state
         const value = quoteState[state]
-        const device_state = deviceState['HAS_QUOTE']
+        const device_state = deviceState.HAS_QUOTE
         const updated_quote = await updateQuoteState(req.params.id, value)
         await updateDeviceState(req.params.id, device_state)
     } catch (err) {
@@ -272,8 +285,7 @@ async function confirmQuote(req, res, next) {
     //Get the quote id from the request
     const {id} = req.params;
 
-    //TODO: get the quote from the database
-    const quote = getMockQuote();
+    const quote = await getQuoteById(id);
 
     //If the quote is in a final state, this endpoint should reject the request as
     // the quote is no longer active and is effectively closed and is therefore read-only
@@ -291,8 +303,6 @@ async function confirmQuote(req, res, next) {
 
     try {
         //Update the quote in the database
-        //TODO: update to update the quote in the database once quotes are implemented
-
         //const success = true;
         const success = await updateQuote(id, {
             state: CONVERTED, confirmation_details: {
@@ -301,6 +311,10 @@ async function confirmQuote(req, res, next) {
                 }
             }
         });
+
+        const device = await getDevice(quote.device?._id);
+        device.state = deviceState.SOLD;
+        await device.save();
 
         if (!success) {
             res.status(500).send("Failed to update quote");
