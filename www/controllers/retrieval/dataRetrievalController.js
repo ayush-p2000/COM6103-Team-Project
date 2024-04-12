@@ -57,18 +57,8 @@ async function getItemDataRetrieval(req, res, next) {
  */
 async function getRetrievalDownload(req, res, next) {
     try {
-        //Get the retrieval ID from the request
-        const retrieval_id = req.params.id;
-
-        //Get the retrieval object from the database
-        const retrievalObject = await getRetrieval(retrieval_id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404);
-            next({message: "Item not available for retrieval", status: 404});
-            return;
-        }
+        //Get the retrieval object from the request
+        const retrievalObject = req.retrieval;
 
         //If the retrieval object is expired, or there are no files to download, then don't proceed further
         if (retrievalState.isExpiredState(retrievalObject.retrieval_state) || retrievalObject.data.length === 0) {
@@ -140,19 +130,12 @@ async function getRetrievalDownload(req, res, next) {
  * @author Benjamin Lister
  */
 async function getFilePage(req, res, next) {
-    //Get the retrieval ID and file ID from the request
-    const {retrieval_id, file_id} = req.params;
+    //Get the file ID from the request
+    const {file_id} = req.params;
 
     try {
-        //Get the retrieval object from the database
-        const retrievalObject = await getRetrieval(retrieval_id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404);
-            next({message: "Item not available for retrieval", status: 404});
-            return;
-        }
+        //Get the retrieval object from the request
+        const retrievalObject = req.retrieval;
 
         //Find the file in the retrieval object's data array
         const file = retrievalObject.data.find(file => file._id.toString() === file_id);
@@ -189,18 +172,11 @@ async function getFilePage(req, res, next) {
  */
 async function getFileDownload(req, res, next) {
     try {
-        //Get the retrieval ID and file ID from the request
-        const {retrieval_id, file_id} = req.params;
+        //Get the  file ID from the request
+        const {file_id} = req.params;
 
-        //Get the retrieval object from the database
-        const retrievalObject = await getRetrieval(retrieval_id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404);
-            next({message: "Item not available for retrieval", status: 404});
-            return;
-        }
+        //Get the retrieval object from the request
+        const retrievalObject = req.retrieval;
 
         //Find the file in the retrieval object's data array
         const file = retrievalObject.data.find(file => file._id.toString() === file_id);
@@ -232,17 +208,8 @@ async function getFileDownload(req, res, next) {
  */
 async function deleteDataRetrieval(req, res, next) {
     try {
-        //Get the retrieval ID from the request
-        const {id} = req.params;
-
-        //Get the retrieval object from the database
-        const retrievalObject = await getRetrieval(id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404).send('Item not available for retrieval');
-            return;
-        }
+        //Get the retrieval object from the request
+        const retrievalObject = req.retrieval;
 
         //Delete the retrieval object
         await deleteRetrieval(id);
@@ -269,15 +236,8 @@ async function getRetrievalEditPage(req, res, next) {
         //Get the item from the database
         const item = await getItemDetail(id);
 
-        //Get the retrieval object from the database
-        const retrievalObject = await getRetrievalObjectByDeviceId(id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404);
-            next({message: "Item not available for retrieval", status: 404});
-            return;
-        }
+        //Get the retrieval object from the request
+        const retrievalObject = req.retrieval;
 
         res.render('retrieval/data_retrieval_staff', {
             device: item,
@@ -303,17 +263,8 @@ async function getRetrievalEditPage(req, res, next) {
  */
 async function promoteRetrieval(req, res, next) {
     try {
-        //Get the retrieval ID from the request
-        const {id} = req.params;
-
-        //Get the retrieval object from the database
-        const retrievalObject = await getRetrieval(id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404).send('Item not available for retrieval');
-            return;
-        }
+        //Get the retrieval object from the request
+        const retrievalObject = req.retrieval;
 
         //Promote the retrieval object
         const newValue = retrievalState.getNextTypicalState(retrievalObject.retrieval_state)
@@ -339,17 +290,8 @@ async function promoteRetrieval(req, res, next) {
  */
 async function demoteRetrieval(req, res, next) {
     try {
-        //Get the retrieval ID from the request
-        const {id} = req.params;
-
-        //Get the retrieval object from the database
-        const retrievalObject = await getRetrieval(id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404).send('Item not available for retrieval');
-            return;
-        }
+        //Get the retrieval object from the request
+        const retrievalObject = req.retrieval;
 
         //Demote the retrieval object
         const newValue = retrievalState.getPreviousTypicalState(retrievalObject.retrieval_state)
@@ -377,9 +319,7 @@ async function demoteRetrieval(req, res, next) {
  */
 async function errorStateHandler(req, res, next) {
     try {
-        //Get the retrieval ID and the state from the request
-        const {id} = req.params;
-
+        //Get the state from the request
         const state = req.body.state;
 
         //Check if the state exists in the body
@@ -388,14 +328,8 @@ async function errorStateHandler(req, res, next) {
             return;
         }
 
-        //Get the retrieval object from the database
+        //Get the retrieval object from the request
         const retrievalObject = await getRetrieval(id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404).send('Item not available for retrieval');
-            return;
-        }
 
         //Check if the state is a valid state
         if (!retrievalState.isValidStateValue(state)) {
@@ -424,9 +358,7 @@ async function errorStateHandler(req, res, next) {
  */
 async function postURL(req, res, next) {
     try {
-        //Get the retrieval ID from the request
-        const {id} = req.params;
-
+        //Get the URL and name from the request
         const url = req.body.url;
         const name = req.body.name;
 
@@ -442,14 +374,8 @@ async function postURL(req, res, next) {
             return;
         }
 
-        //Get the retrieval object from the database
-        const retrievalObject = await getRetrieval(id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404).send('Item not available for retrieval');
-            return;
-        }
+        //Get the retrieval object from the request
+        const retrievalObject = req.retrieval;
 
         //If the retrieval object is expired, then don't proceed further
         if (retrievalState.isExpiredState(retrievalObject.retrieval_state)) {
@@ -484,9 +410,7 @@ async function postURL(req, res, next) {
  */
 async function postFiles(req, res, next) {
     try {
-        //Get the retrieval ID from the request
-        const {id} = req.params;
-
+        //Get the files from the request
         const files = req.files;
 
         //Check if the files exist in the body
@@ -495,14 +419,8 @@ async function postFiles(req, res, next) {
             return;
         }
 
-        //Get the retrieval object from the database
-        const retrievalObject = await getRetrieval(id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404).send('Item not available for retrieval');
-            return;
-        }
+        //Get the retrieval object from the request
+        const retrievalObject = req.retrieval;
 
         //If the retrieval object is expired, then don't proceed further
         if (retrievalState.isExpiredState(retrievalObject.retrieval_state)) {
@@ -539,17 +457,11 @@ async function postFiles(req, res, next) {
  */
 async function deleteFile(req, res, next) {
     try {
-        //Get the retrieval ID and file ID from the request
-        const {retrieval_id, file_id} = req.params;
+        //Get the file ID from the request
+        const {file_id} = req.params;
 
-        //Get the retrieval object from the database
-        const retrievalObject = await getRetrieval(retrieval_id);
-
-        //If the retrieval object is not found, then the item is not available for retrieval
-        if (typeof (retrievalObject) === 'undefined' || retrievalObject === null) {
-            res.status(404).send('Item not available for retrieval');
-            return;
-        }
+        //Get the retrieval object from the request
+        const retrievalObject = req.retrieval;
 
         //Find the file in the retrieval object's data array
         const fileIndex = retrievalObject.data.findIndex(file => file._id.toString() === file_id);

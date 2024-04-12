@@ -21,37 +21,8 @@ exports.verifyRetrievalExpiry = async (req, res, next) => {
     // If it is expired, call the deleteRetrieval function in mongodb.js and continue on
     // If it is not expired, continue on
 
-    //Get the retrieval ID from the request parameters
-    let retrievalID = req.params.id;
-
-    //If the retrieval ID is undefined or null, check for the parameter retrieval_id
-    if (typeof (retrievalID) === 'undefined' || retrievalID === null) {
-        retrievalID = req.params.retrieval_id;
-    }
-
-    //If the retrieval ID is still undefined or null, check the body for the retrieval_id
-    if (typeof (retrievalID) === 'undefined' || retrievalID === null) {
-        retrievalID = req.body.retrieval_id;
-    }
-
-    //If the retrieval ID is still undefined or null, check the parameters for a device_id
-    if (typeof (retrievalID) === 'undefined' || retrievalID === null) {
-        const deviceID = req.params.device_id;
-        if (typeof (deviceID) !== 'undefined' && deviceID !== null) {
-            const retrieval = await getRetrievalObjectByDeviceId(deviceID);
-            if (retrieval !== null) {
-                retrievalID = retrieval._id;
-            }
-        }
-    }
-
-    //If the retrieval ID is still undefined or null, skip the check
-    if (typeof (retrievalID) === 'undefined' || retrievalID === null) {
-        return next();
-    }
-
-    //Get the retrieval from the database
-    const retrieval = await getRetrieval(retrievalID);
+    //Get the retrieval from the request
+    const retrieval = req.retrieval;
 
     //If the retrieval is null, skip the check
     if (retrieval === null) {
@@ -145,6 +116,32 @@ exports.isValidRetrievalUser = async (req, res, next) => {
     // If they are a staff member, continue on
     // If they are not the owner of the retrieval, send a 403 status code
 
+    //Get the retrieval object from the request
+    const retrieval = req.retrieval;
+
+    //If the retrieval ID is still undefined or null, skip the check
+    if (typeof (retrieval) === 'undefined' || retrieval === null) {
+        return next();
+    }
+
+    //Get the user from the request
+    const user = req.user;
+
+    //If the user is null, reject the request as anonymous users cannot access retrievals
+    if (user === null) {
+        return res.render("error/401", {auth: req.isLoggedIn, user: req.user, message: "You do not have permission to access this resource", status: 401});
+    }
+
+    //If the user is the owner of the retrieval, continue on
+    if (retrieval.device?.listing_user?._id.toString() === user.id.toString() || user.role >= roleTypes.STAFF) {
+        return next();
+    }
+
+    //If the user is not the owner of the retrieval, send a 403 status code
+    res.render("error/403", {auth: req.isLoggedIn, user: req.user, message: "You do not have permission to access this retrieval", status: 403});
+}
+
+exports.populateRetrievalObject = async (req, res, next) => {
     //Get the retrieval ID from the request parameters
     let retrievalID = req.params.id;
 
@@ -177,24 +174,11 @@ exports.isValidRetrievalUser = async (req, res, next) => {
     //Get the retrieval from the database
     const retrieval = await getRetrieval(retrievalID);
 
-    //If the retrieval is null, skip the check
+    //If the retrieval is, return a 404 error
     if (retrieval === null) {
-        return next();
+        return res.render("error/404", {auth: req.isLoggedIn, user: req.user, message: "This item is not available for retrieval", status: 404});
     }
 
-    //Get the user from the request
-    const user = req.user;
-
-    //If the user is null, reject the request as anonymous users cannot access retrievals
-    if (user === null) {
-        return res.render("error/401", {auth: req.isLoggedIn, user: req.user, message: "You do not have permission to access this resource", status: 401});
-    }
-
-    //If the user is the owner of the retrieval, continue on
-    if (retrieval.device?.listing_user?._id.toString() === user.id.toString() || user.role >= roleTypes.STAFF) {
-        return next();
-    }
-
-    //If the user is not the owner of the retrieval, send a 403 status code
-    res.render("error/403", {auth: req.isLoggedIn, user: req.user, message: "You do not have permission to access this retrieval", status: 403});
+    req.retrieval = retrieval;
+    return next();
 }

@@ -17,7 +17,7 @@ const {getItemDetail, getAllDeviceType, getAllBrand, updateDeviceDetails, getMod
     getAllModelsOfType,
     deleteType,
     deleteModel,
-    deleteBrand
+    deleteBrand,
     getAllDevices,
     getAllRetrievalDevices
 } = require("../../model/mongodb")

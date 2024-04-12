@@ -13,7 +13,7 @@ const {getMarketplace, getMyItems} = require("../controllers/marketplace/marketp
 
 const {upload} = require("../middlewares/multer")
 const {getItemDataRetrieval} = require("../controllers/retrieval/dataRetrievalController");
-const {verifyRetrievalExpiry, isValidRetrievalUser} = require("../middlewares/retrieval");
+const {verifyRetrievalExpiry, isValidRetrievalUser, populateRetrievalObject} = require("../middlewares/retrieval");
 
 
 router.get('/marketplace/:page?', getMarketplace);
@@ -22,7 +22,7 @@ router.get('/item/:id', getItemDetails);
 
 router.get('/item/:id/qr', getItemQrCodeView);
 
-router.get('/item/:device_id/retrieval', isValidRetrievalUser, verifyRetrievalExpiry, getItemDataRetrieval);
+router.get('/item/:device_id/retrieval', populateRetrievalObject, isValidRetrievalUser, verifyRetrievalExpiry, getItemDataRetrieval);
 
 router.get('/list-item/:id?', getListItem);
 
