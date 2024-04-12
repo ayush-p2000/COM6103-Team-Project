@@ -15,11 +15,13 @@ const deviceCategory = require("../../model/enum/deviceCategory")
 
 /**
  * Get user dashboard, here the user's items and marketplace items can be viewed from the dashboard
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> and Ayush Prajapati <aprajapati1@sheffield.ac.uk>
  */
 async function getUserDashboard(req, res, next) {
     try {
         const userData = await User.findById({_id: req.user.id});
+        const firstName = userData.first_name
+        console.log(firstName)
         var userItems = await getUserItems(req.user.id)
         userItems = await getUnknownDevices(userItems)
         var marketplaceDevices = await getAllDevices()
@@ -34,7 +36,7 @@ async function getUserDashboard(req, res, next) {
                 marketDevices.push(device)
             }
         }
-        renderUserLayout(req, res, '../marketplace/userHome', {user: userData,devices: userItems, marketDevices: marketDevices, deviceCategory, auth: req.isLoggedIn})
+        renderUserLayout(req, res, '../marketplace/userHome', {user: userData, firstName: firstName,devices: userItems, marketDevices: marketDevices, deviceCategory, auth: req.isLoggedIn})
     }catch (err) {
         console.log(err)
     }
