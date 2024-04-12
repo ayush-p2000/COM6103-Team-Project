@@ -94,12 +94,15 @@ async function getMyItems(req, res, next) {
                 item.model = {name: model}
             }
 
-            let quotes = await getQuotes(item._id)
-            if (quotes.length === 0) {
-                console.log('No quotes available')
-                quotes = await getDeviceQuotation(item, providers)
+            //Quotes are not available for items in review
+            if (item.state > deviceState.IN_REVIEW) {
+                let quotes = await getQuotes(item._id)
+                if (quotes.length === 0) {
+                    console.log('No quotes available')
+                    quotes = await getDeviceQuotation(item, providers)
+                }
+                quotations.push(quotes)
             }
-            quotations.push(quotes)
         }
         // console.log(quotations)
         renderUserLayout(req, res, '../marketplace/my_items', {

@@ -20,6 +20,19 @@ const roleTypes = {
         }
     },
 
+    roleTypeToColour: function (rank, prefix = "") {
+        switch (rank) {
+            case USER:
+                return prefix + "success";
+            case STAFF:
+                return prefix + "warning";
+            case ADMIN:
+                return prefix + "primary";
+            default:
+                return prefix + "secondary";
+        }
+    },
+
     roleTypeToRGB: function (status, border = false) {
         switch (status) {
             case USER:
