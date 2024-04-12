@@ -1,0 +1,9 @@
+<div>
+    <canvas id="sales_chart"></canvas>
+    <script src="/javascripts/reports/charts/sales.js"></script>
+    <script>
+        const sales_labels = <%- JSON.stringify(labels) %>;
+        const sales_count_data = <%- JSON.stringify(datasets[0]) %>;
+        const sales_value_data = <%- JSON.stringify(datasets[1]) %>;
+    </script>
+</div>

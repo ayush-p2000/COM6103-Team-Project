@@ -3,9 +3,7 @@
         <div class="col-md-12">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <div>
-                        <canvas id="sales_chart"></canvas>
-                    </div>
+                    <%- include('charts/sales') %>
                 </div>
             </div>
         </div>
@@ -22,8 +20,8 @@
                                 <th>Date</th>
                                 <th>User</th>
                                 <th>Product</th>
+                                <th>Purchase Type</th>
                                 <th>Value</th>
-                                <th>Referral Amount</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -31,17 +29,17 @@
                                 <tr>
                                     <td><%= item.date %></td>
                                     <td>
-                                        <a href="/admin/users/<%= item.user.id %>">
-                                            <%= item.user.name %>
+                                        <a href="/admin/users/<%= item.user._id %>">
+                                            <%= item.user?.first_name %> <%= item.user?.last_name %>
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="/admin/products/<%= item.device.id %>">
-                                            <%= item.device.name %>
+                                        <a href="/admin/devices/<%= item.product._id %>">
+                                            <%= item.product?.brand?.name %> <%= item.product?.model?.name %>
                                         </a>
                                     </td>
-                                    <td><%= item.price %></td>
-                                    <td><%= item.referral %></td>
+                                    <td><%= item.purchase_type == 1 ? 'Data Extension' : 'Retrieval' %></td>
+                                    <td><%= item.sale_value %></td>
                                 </tr>
                             <% }); %>
                             </tbody>
