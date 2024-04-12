@@ -3,6 +3,7 @@
  */
 
 const mockData = require('../../util/mock/mockData')
+const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const {getPaginatedResults} = require("../../model/utils/utils")
 const {Device} = require("../../model/schema/device")
 const {
@@ -52,7 +53,7 @@ const getMarketplace = async (req, res, next) => {
     } catch (e) {
         console.log(e)
     }
-    res.render('marketplace/marketplace', {
+    renderUserLayout(req, res, '../marketplace/marketplace', {
         deviceTypes,
         devices,
         items,
@@ -135,7 +136,7 @@ async function getMyItems(req, res, next) {
             quotations.push(updatedQuotes)
         }
         // console.log(quotations)
-        res.render('marketplace/my_items', {
+        renderUserLayout(req, res, '../marketplace/my_items', {
             deviceTypes,
             items,
             quotations,
@@ -143,12 +144,23 @@ async function getMyItems(req, res, next) {
             deviceCategory,
             auth: req.isLoggedIn,
             user: req.user,
-            role: 'user'
-        })
+            role: 'user'}
+        )
+        // res.render('marketplace/my_items', {
+        //     deviceTypes,
+        //     items,
+        //     quotations,
+        //     deviceState,
+        //     deviceCategory,
+        //     auth: req.isLoggedIn,
+        //     user: req.user,
+        //     role: 'user'
+        // })
     } catch (e) {
         console.log(e)
     }
 }
+
 
 
 module.exports = {

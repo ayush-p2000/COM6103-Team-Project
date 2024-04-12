@@ -30,6 +30,7 @@ const dataService = require("../../model/enum/dataService")
 const {generateQR} = require("../../util/qr/qrcodeGenerator");
 const cheerio = require('cheerio')
 const axios = require('axios')
+const {renderUserLayout} = require("../../util/layout/layoutUtils");
 
 /**
  * Handling Request to post item base on the info in request body
@@ -73,9 +74,13 @@ async function getListItem(req, res) {
         try {
             let deviceTypes = await getAllDeviceType();
             let brands = await getAllBrand();
-            res.render('marketplace/list_item', {
+
+            renderUserLayout(req, res, '../marketplace/list_item', {
                 auth: req.isLoggedIn, user: req.user, deviceTypes: deviceTypes, brands: brands
-            });
+            })
+            // res.render('marketplace/list_item', {
+            //     auth: req.isLoggedIn, user: req.user, deviceTypes: deviceTypes, brands: brands
+            // });
         } catch (err) {
             console.log(err)
         }
@@ -94,9 +99,12 @@ async function getListItem(req, res) {
                     }
                 });
             }
-            res.render('marketplace/edit_item', {
+            renderUserLayout(req, res, '../marketplace/edit_item', {
                 auth: req.isLoggedIn, user: req.user, device: device[0]
-            });
+            })
+            // res.render('marketplace/edit_item', {
+            //     auth: req.isLoggedIn, user: req.user, device: device[0]
+            // });
         } catch (err) {
             console.log(err)
         }
@@ -157,10 +165,12 @@ async function getItemDetails(req, res, next) {
             const qr = await generateQR(quote._id);
             quote.qr_code = qr;
         }
-
-        res.render('marketplace/item_details', {
+        renderUserLayout(req, res, '../marketplace/item_details', {
             item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user,
         })
+        // res.render('marketplace/item_details', {
+        //     item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user,
+        // })
     } catch (e) {
         console.log(e)
         res.status(500);

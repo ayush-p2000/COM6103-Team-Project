@@ -4,6 +4,7 @@
  */
 
 const {STAFF, ADMIN} = require("../model/enum/roleTypes")
+const {User} = require("../model/schema/user");
 const isAuthenticated = (req, res, next) => {
     req.isLoggedIn = false;
     if(req.isAuthenticated() && req.user){
@@ -34,9 +35,32 @@ const isSuperAdmin = (req,res,next) => {
     next();
 }
 
+const validateVerification = async (req, res,next) => {
+    const checkValidation = await User.findOne({email: req.body.email})
+    const verifyMessage = ['Please verify your email']
+    const registerUserMessage = ['User do not exist. Please register before you can access']
+    if(checkValidation) {
+        if (checkValidation.verified === false) {
+            res.render("authentication/login", {
+                auth: req.isLoggedIn, user: req.user, messages: verifyMessage,
+                hasMessages: verifyMessage.length > 0,
+            })
+        } else {
+            next();
+        }
+    }
+    else
+    {
+        res.render("authentication/register", {auth: req.isLoggedIn, user: req.user, messages: registerUserMessage,
+            hasMessages: verifyMessage.length > 0})
+    }
+}
+
+
 module.exports = {
     isAuthenticated,
     isStaff,
     isSuperAdmin,
-    authInfo
+    authInfo,
+    validateVerification
 }

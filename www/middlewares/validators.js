@@ -40,6 +40,13 @@ exports.validateRegistration = [
 
 exports.validateLogin = [
     body("email").trim().normalizeEmail().isEmail().notEmpty(),
-    body("password").trim().escape()
+    body("password").trim().escape(),
 ]
 
+exports.validateDeviceTypeEdit = [
+    check("name", "Name cannot be empty!").trim().notEmpty(),
+    check("description", "Description cannot be empty!").trim().escape().optional().notEmpty(),
+    check("modelType", "Model type cannot be empty!").trim().escape().optional().notEmpty(),
+    check("modelBrand", "Model brand cannot be empty!").trim().escape().optional().notEmpty(),
+    errorsToSession
+]
