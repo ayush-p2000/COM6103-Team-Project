@@ -7,14 +7,8 @@
         <form class="card-body" method="POST">
             <h3 class="card-title text-center">Your details</h3>
             <div>
-                <h5 class="text-dark"> Device Id : <span class="text-muted"><%= id %></span>  </h5>
                 <h5 class="text-dark"> Model Name : <span class="text-muted"><%= model %></span> </h5>
                 <h5 class="text-dark"> Total Amount to Pay :<span class="text-muted"> <%= total %></span> </h5>
-                <% if (extension > 0) { %>
-                    <h5 class="text-dark"> Type of payment :<span class="text-muted"> Retrieval Extension </span> </h5>
-                <% } else { %>
-                    <h5 class="text-dark"> Type of payment :<span class="text-muted"> Retrieval Payment </span> </h5>
-                <% } %>
             </div>
             <h3 class="text-center">Payment providers</h3>
             <div class="d-flex justify-content-center align-items-center w-75 me-auto ms-auto mb-3">

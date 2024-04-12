@@ -16,7 +16,7 @@ router.get('/checkout/complete?', getCheckoutCompleted);
 
 router.get('/checkout/paypal', getPaypal);
 
-router.post('/checkout/paypal/pay', payProduct);
+router.post('/checkout/paypal/pay?', payProduct);
 
 router.get('/checkout/paypal/success', paypalSuccess);
 
@@ -26,7 +26,7 @@ router.get('/checkout/stripe/cancelled?', cancelPayment);
 
 router.get('/checkout/stripe?', getStripe);
 
-router.post('/create-checkout-session', stripePayment)
+router.post('/create-checkout-session?', stripePayment)
 
 //TODO: Add function to handle /payment route
 router.get('/payment', function (req, res, next) {

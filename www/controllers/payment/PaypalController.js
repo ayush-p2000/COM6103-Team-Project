@@ -18,42 +18,58 @@ let data = {}
 var extension = 0
 
 function getPaypal (req, res, next) {
-    data = {
-        deviceId: req.query.deviceId,
+
+    let extension = 0
+    let data = {} = {
+        id: req.query.deviceId,
         model: req.query.model,
         total: req.query.total
     }
     if (req.query.extension) {
         extension = req.query.extension
     }
-    res.render('payment/paypalGateway', {});
+    let queryString = Object.keys(data).map(key => key + '='+ encodeURIComponent(data[key])).join('&')
+    res.render('payment/paypalGateway', {data:queryString, extension: extension});
 }
 
 const payProduct = async(req,res)=>{
 
     try {
-
+        let id = req.query.id
+        let model = req.query.model
+        let total = req.query.total
+        let extension = req.query.extension
+        let sku
+        switch (extension) {
+            case 0: sku = 1
+                break
+            case 3: sku = 2
+                break
+            case 6: sku = 3
+                break
+        }
         const create_payment_json = {
             "intent": "sale",
             "payer": {
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete?id=${data.deviceId}&type=paypal&total=${data.total}`,
-                "cancel_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/paypal/cancelled`
+                "return_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete?id=${id}&type=paypal&total=${total}&extension=${extension}`,
+                "cancel_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/paypal/cancelled?id=${id}&type=paypal&total=${total}&extension=${extension}`
             },
             "transactions": [{
                 "item_list": {
                     "items": [{
-                        "name": `${data.model}`,
-                        "price": `${data.total}`,
+                        "name": `${model}`,
+                        "price": `${total}`,
                         "currency": "GBP",
-                        "quantity": 1
+                        "quantity": 1,
+                        "sku": `${sku}`
                     }]
                 },
                 "amount": {
                     "currency": "GBP",
-                    "total": `${data.total}`
+                    "total": `${total}`
                 },
                 "description": "Anything"
             }]
@@ -68,7 +84,6 @@ const payProduct = async(req,res)=>{
                         res.redirect(payment.links[i].href);
                     }
                 }
-                console.log(payment)
             }
         });
 
@@ -115,22 +130,15 @@ const paypalSuccess = async(req,res)=>{
 const cancelPayment = async(req,res)=>{
 
     try {
-        let transaction
+        let transaction = {
+            deviceId: req.query.id,
+            value: req.query.total,
+            state: transactionState['PAYMENT_CANCELLED'],
+            paymentMethod: req.query.type,
+        }
         if (req.query.extension > 0) {
-            console.log(req.query.extension)
             transaction = {
-                deviceId: req.query.id,
-                value: 0,
-                state: transactionState['PAYMENT_CANCELLED'],
-                paymentMethod: req.query.type,
                 extension: req.query.extension
-            }
-        } else {
-             transaction = {
-                deviceId: req.query.id,
-                value: 0,
-                state: transactionState['PAYMENT_CANCELLED'],
-                paymentMethod: req.query.type
             }
         }
         await updateTransaction(transaction)

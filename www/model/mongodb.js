@@ -21,6 +21,7 @@ const {HAS_QUOTE} = require("./enum/deviceState")
 const {quoteState} = require("./enum/quoteState");
 const historyType = require("./enum/historyType");
 const transactionState = require('./enum/transactionState')
+const retrievalState = require('./enum/retrievalState')
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -980,6 +981,7 @@ async function addTransaction(transactionDetails) {
         const retrieval = new Retrieval({
             device: transactionDetails.deviceId,
             expiry: getDate(),
+            retrieval_state: retrievalState.AWAITING_DEVICE,
             transaction: {
                 value: transactionDetails.value,
                 transaction_state: transactionDetails.state
@@ -993,13 +995,13 @@ async function addTransaction(transactionDetails) {
 
 function getDate(extension) {
     const currentDate = new Date()
-
+    const extension_default_length = 3
     let currentMonth = currentDate.getMonth()
     let currentYear = currentDate.getFullYear();
     if (extension) {
         currentMonth += extension
     } else {
-        currentMonth += 3;
+        currentMonth += extension_default_length;
     }
 
     if (currentMonth > 11) {

@@ -9,42 +9,46 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const {getItemDetail, addTransaction, updateTransaction, getTransactionByDevice, getTransactionById} = require("../../model/mongodb")
 const transactionState = require('../../model/enum/transactionState')
 
-let deviceId = ''
-let model = ''
-let total = ''
-let type = ''
-let extension
+
 
 async function getCheckout(req, res, next) {
-    type = req.query.type
-    if (type === 'payment_retrieval') {
-        deviceId = req.query.device
-        model = req.query.model
-        total = req.query.total
-        const transactionDetails = {
-            deviceId: deviceId,
-            value: total,
-            state: transactionState['AWAITING_PAYMENT']
-        }
-        const transaction = await getTransactionByDevice(deviceId)
-        if (!transaction) {
-            await addTransaction(transactionDetails)
-        }
-    } else {
-        const transaction = await getTransactionById(req.query.retrieval_id)
-        deviceId = transaction.device
-        console.log(deviceId)
-        const device = await getItemDetail(deviceId)
-        model = device.model.name
-        total = req.query.total
-        extension = req.query.extension
-        const transactionDetails = {
-            deviceId: deviceId,
-            value: total,
-            extension: extension,
-            state: transactionState['AWAITING_PAYMENT']
-        }
-        await updateTransaction(transactionDetails)
+    let deviceId
+    let model
+    let total
+    let extension = 0
+    let type = req.query.type
+    let transactionDetails
+    let transaction
+    switch (type) {
+        case 'payment_retrieval':
+            deviceId = req.query.device
+            model = req.query.model
+            total = req.query.total
+            transactionDetails = {
+                deviceId: deviceId,
+                value: total,
+                state: transactionState['AWAITING_PAYMENT']
+            }
+            transaction = await getTransactionByDevice(deviceId)
+            if (!transaction) {
+                await addTransaction(transactionDetails)
+            }
+            break
+        case 'retrieval_extension':
+            transaction = await getTransactionById(req.query.retrieval_id)
+            deviceId = transaction.device._id
+            const device = await getItemDetail(deviceId)
+            model = device.model.name
+            total = req.query.total
+            extension = req.query.extension
+            transactionDetails = {
+                deviceId: deviceId,
+                value: total,
+                extension: extension,
+                state: transactionState['AWAITING_PAYMENT']
+            }
+            await updateTransaction(transactionDetails)
+            break
     }
 
     res.render('payment/checkout', {id: deviceId, model: model, total: total, extension: extension})
@@ -53,6 +57,11 @@ async function getCheckout(req, res, next) {
 function fetchMethod(req, res, next){
     method = req.body.paymentProvider;
     let data
+    let type = req.query.type
+    let deviceId = req.query.device
+    let model = req.query.model
+    let total = req.query.total
+    let extension = req.query.extension
     if (type === 'payment_retrieval') {
          data = {
             deviceId: deviceId,
@@ -83,7 +92,9 @@ async function getCheckoutCompleted(req, res, next) {
     var sessionId
     var session
     let order = {}
-    const deviceId = req.query.id
+    let deviceId = req.query.id
+    let total = req.query.total
+    let extension = req.query.extension
     let device
     try {
         device = await getItemDetail(deviceId)

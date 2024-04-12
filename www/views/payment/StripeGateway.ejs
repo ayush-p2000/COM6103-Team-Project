@@ -1,6 +1,8 @@
 <%- include("../components/header") %>
 
 <h2 class="mt-2 mx-5"> Stripe Payment Gateway </h2>
-<form action="/create-checkout-session" method="POST">
+<form action="/create-checkout-session?<%= data %>&<%= extension %>" method="POST">
     <button type="submit" class="btn btn-primary mt-4 mx-5">Proceed to pay</button>
 </form>
+
+
