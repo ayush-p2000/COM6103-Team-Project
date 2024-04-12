@@ -519,6 +519,65 @@ const getAccountsCountByType = async () => {
     ])
 }
 
+async function addTransaction(transactionDetails) {
+    try {
+        const retrieval = new Retrieval({
+            device: transactionDetails.deviceId,
+            expiry: getDate(),
+            transaction: {
+                value: transactionDetails.value,
+                transaction_state: transactionDetails.state
+            }
+        })
+        return await retrieval.save()
+    }catch (err) {
+        console.log(err)
+    }
+}
+
+function getDate() {
+    const currentDate = new Date()
+
+    let currentMonth = currentDate.getMonth()
+    let currentYear = currentDate.getFullYear();
+    currentMonth += 3;
+
+    if (currentMonth > 11) {
+        currentMonth -= 12;
+        currentYear += 1;
+    }
+
+    return new Date(currentYear, currentMonth, currentDate.getDate())
+}
+
+async function updateTransaction(transactionDetails) {
+
+    try {
+        const filter = { device: transactionDetails.deviceId }
+        const update = {
+            $set: {
+                transaction: {
+                    value: transactionDetails.value,
+                    transaction_state: transactionDetails.state
+                },
+                payment_method: transactionDetails.paymentMethod
+            }
+        };
+        console.log(filter)
+        return await Retrieval.updateOne(filter, update);
+    }catch (err) {
+        console.log(err)
+    }
+}
+
+async function getTransaction(deviceId) {
+    try {
+        return await Retrieval.findOne({device: deviceId})
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 
 module.exports = {
     getAllUsers,
@@ -557,5 +616,8 @@ module.exports = {
     getDevicesGroupByState,
     getDevicesGroupByType,
     getAccountsCountByStatus,
-    getAccountsCountByType
+    getAccountsCountByType,
+    addTransaction,
+    updateTransaction,
+    getTransaction
 }

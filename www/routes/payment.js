@@ -22,7 +22,7 @@ router.get('/checkout/paypal/success', paypalSuccess);
 
 router.get('/checkout/paypal/cancelled', cancelPayment);
 
-router.get('/checkout/stripe/cancelled', cancelPayment);
+router.get('/checkout/stripe/cancelled?', cancelPayment);
 
 router.get('/checkout/stripe?', getStripe);
 

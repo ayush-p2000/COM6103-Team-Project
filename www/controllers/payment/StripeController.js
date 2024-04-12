@@ -30,7 +30,7 @@ const stripePayment = async (req, res) => {
         ],
         mode: 'payment',
         success_url: `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete?sessionId={CHECKOUT_SESSION_ID}&id=${data.deviceId}&type=stripe`,
-        cancel_url: `${process.env.BASE_URL}:${process.env.PORT}/checkout/stripe/cancelled`
+        cancel_url: `${process.env.BASE_URL}:${process.env.PORT}/checkout/stripe/cancelled?id=${data.deviceId}&type=stripe`
     });
 
     res.redirect(303, session.url)

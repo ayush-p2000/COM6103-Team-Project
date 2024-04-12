@@ -10,20 +10,21 @@ const retrievalSchema = new mongoose.Schema({
             {
                 name: {
                     type: String,
-                    required: true
+                    required: false
                 },
                 value: {
                     type: String,
-                    required: true
+                    required: false
                 },
                 data_type: {
                     type: Number,
-                    required: true
+                    required: false
                 }
             }
         ],
         retrieval_state: {
             type: Number,
+            default: 0,
             required: true
         },
         expiry: {
@@ -39,6 +40,28 @@ const retrievalSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
+        },
+        extension_transaction : {
+            value : {
+                type: Number,
+            },
+            transaction_state: {
+                type: Number
+            },
+            payment_date: {
+                type: Date
+            },
+            length: {
+                type: Number
+            }
+        },
+        is_extended: {
+                type: Boolean,
+                default: false,
+                required: true
+        },
+        payment_method: {
+            type:String
         }
     },
     {

@@ -6,17 +6,27 @@
 const {getMockPurchaseData} = require("../../util/mock/mockData");
 const {request} = require("express");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const {getItemDetail} = require("../../model/mongodb")
+const {getItemDetail, addTransaction, updateTransaction, getTransaction} = require("../../model/mongodb")
+const transactionState = require('../../model/enum/transactionState')
 
 let deviceId = ''
 let model = ''
 let total = ''
 
-function getCheckout(req, res, next) {
+async function getCheckout(req, res, next) {
     console.log(req.query.total)
     deviceId = req.query.device
     model = req.query.model
     total = req.query.total
+    const transactionDetails = {
+        deviceId: deviceId,
+        value: total,
+        state: transactionState['AWAITING_PAYMENT']
+    }
+    const transaction = await getTransaction(deviceId)
+    if (!transaction) {
+        await addTransaction(transactionDetails)
+    }
     res.render('payment/checkout', {id: deviceId, model: model, total: total})
 }
 
@@ -29,7 +39,8 @@ function fetchMethod(req, res, next){
     }
     if(method === 'paypal')
     {
-        res.redirect('/checkout/paypal')
+        let queryString = Object.keys(data).map(key => key + '='+ encodeURIComponent(data[key])).join('&')
+        res.redirect('/checkout/paypal?'+queryString)
     }
     else
     {
@@ -39,10 +50,9 @@ function fetchMethod(req, res, next){
 }
 
 async function getCheckoutCompleted(req, res, next) {
-    const sessionId = req.query.sessionId
-    const session = await stripe.checkout.sessions.retrieve(sessionId)
-    //amount_total,
-    console.log(session)
+    var sessionId
+    var session
+    let order = {}
     const deviceId = req.query.id
     let device
     try {
@@ -50,18 +60,39 @@ async function getCheckoutCompleted(req, res, next) {
     } catch (err) {
         console.log(err)
     }
-    console.log(device.model)
-    const order = {
-        id : sessionId,
-        amount: session.amount_total / 100,
+    if (req.query.type === 'stripe') {
+        sessionId = req.query.sessionId
+        session = await stripe.checkout.sessions.retrieve(sessionId)
+        //amount_total,
+        console.log(session)
+        order = setTransactionDetails(sessionId, session.amount_total/100, req.query.type, device.model.name)
+    } else {
+        sessionId = req.query.paymentId
+        console.log(sessionId)
+        order = setTransactionDetails(sessionId, req.query.total, req.query.type, device.model.name)
+    }
+
+    const transactionDetails = {
+        deviceId: deviceId,
+        value: total,
+        state: transactionState['PAYMENT_RECEIVED'],
+        paymentMethod: req.query.type
+    }
+    await updateTransaction(transactionDetails)
+
+    res.render('payment/checkout_complete', {title: 'Payment Completed', order: order});
+}
+
+function setTransactionDetails(sessionId, amount, paymentMethod, product) {
+    return {
+        id: sessionId,
+        amount: amount,
         date: new Date(),
         currency: "£",
-        paymentMethod: req.query.type,
-        product: device.model.name,
-        data_retrieval: session.amount_total !== 0
-
+        paymentMethod: paymentMethod,
+        product: product,
+        data_retrieval: amount !== 0
     }
-    res.render('payment/checkout_complete', {title: 'Payment Completed', order: order});
 }
 
 

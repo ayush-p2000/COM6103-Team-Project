@@ -11,8 +11,17 @@ paypal.configure({
 let method = "";
 
 const {request} = require("express");
+const {updateTransaction} = require('../../model/mongodb')
+const transactionState = require('../../model/enum/transactionState')
+
+let data = {}
 
 function getPaypal (req, res, next) {
+    data = {
+        deviceId: req.query.deviceId,
+        model: req.query.model,
+        total: req.query.total
+    }
     res.render('payment/paypalGateway', {});
 }
 
@@ -26,22 +35,21 @@ const payProduct = async(req,res)=>{
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete`,
+                "return_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete?id=${data.deviceId}&type=paypal&total=${data.total}`,
                 "cancel_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/paypal/cancelled`
             },
             "transactions": [{
                 "item_list": {
                     "items": [{
-                        "name": "Book",
-                        "sku": "001",
-                        "price": "50.00",
+                        "name": `${data.model}`,
+                        "price": `${data.total}`,
                         "currency": "GBP",
                         "quantity": 1
                     }]
                 },
                 "amount": {
                     "currency": "GBP",
-                    "total": "50.00"
+                    "total": `${data.total}`
                 },
                 "description": "Anything"
             }]
@@ -56,8 +64,10 @@ const payProduct = async(req,res)=>{
                         res.redirect(payment.links[i].href);
                     }
                 }
+                console.log(payment)
             }
         });
+
 
     } catch (error) {
         console.log(error.message);
@@ -101,7 +111,13 @@ const paypalSuccess = async(req,res)=>{
 const cancelPayment = async(req,res)=>{
 
     try {
-
+        const transaction = {
+            deviceId: req.query.id,
+            value: 0,
+            state: transactionState['PAYMENT_CANCELLED'],
+            paymentMethod: req.query.type
+        }
+        await updateTransaction(transaction)
         res.render('payment/cancel');
 
     } catch (error) {
