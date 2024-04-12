@@ -27,9 +27,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title text-center">Total Sales</h5>
 
-                                    <div>
-                                        <canvas class="my-4 w-100" id="sales_chart"></canvas>
-                                    </div>
+                                    <%- include('charts/sales', sales) %>
 
                                     <div class="d-flex justify-content-end">
                                         <a class="btn btn-outline-primary" href="/admin/reports/sales">View Details</a>
@@ -45,9 +43,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title text-center">Total Referrals</h5>
 
-                                    <div>
-                                        <canvas class="my-4 w-100" id="referrals_chart"></canvas>
-                                    </div>
+                                    <%- include("charts/referrals", referrals) %>
 
                                     <div class="d-flex justify-content-end">
                                         <a class="btn btn-outline-primary" href="/admin/reports/referrals">View

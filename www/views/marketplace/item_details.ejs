@@ -10,7 +10,7 @@
                         <% if(item.photos?.length > 0) { %>
                             <% item.photos.forEach((photo, index) => { %>
                                 <div class="carousel-item d-flex justify-content-center <%= index === 0 ? 'active' : '' %>">
-                                    <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data).toString('base64') %>"
+                                    <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data ?? "").toString('base64') %>"
                                          class="img-fluid h-100 mx-auto"
                                          alt="...">
                                 </div>
@@ -55,8 +55,141 @@
 
             <p class="lead text-muted"><%= deviceCategory.deviceCategoryToString(item.category) %></p>
 
-            <% if(item.state !== deviceState.LISTED && item.listing_user._id.toString() === user.id) { %>
-                <a href="/list-item/<%= item._id %>" class="btn btn-primary">Edit Details</a>
+            <% if (user.id === item.listing_user._id.toString()) { %>
+                <div class="alert <%= deviceState.deviceStateToColour(item.state, "alert-") %> mt-3" role="alert">
+                    <p class="fw-bold m-0"><%= deviceState.deviceStateToNextStepString(item.state) %></p>
+                </div>
+                <% if (!item.visible) { %>
+                    <% if (deviceVisibilityHistory?.length > 0 && deviceVisibilityHistory?.at(0).history_type === historyType.ITEM_HIDDEN) { %>
+                        <div class="alert alert-danger mt-3 text-center" role="alert">
+                            <p>
+                                <i class="fa-solid fa-eye-slash fa-2x"></i>
+                            </p>
+                            <p class="fw-bold m-0"> This device has been hidden from the marketplace by our team. If you
+                                believe this is an error, please contact us.</p>
+                        </div>
+                    <% } else { %>
+                        <div class="alert alert-info mt-3 text-center" role="alert">
+                            <p>
+                                <i class="fa-solid fa-eye-slash fa-2x"></i>
+                            </p>
+                            <p class="fw-bold m-0">This device is currently hidden from the marketplace. If you would
+                                like to make it visible, please ensure that all details are correct, so that our team
+                                can review it before making it visible.</p>
+                        </div>
+                    <% } %>
+                <% } %>
+                <% if (deviceReviewHistory?.length > 0 && deviceReviewHistory?.at(0).history_type !== historyType.REVIEW_ACCEPTED) { %>
+                    <% const history = deviceReviewHistory[0]; %>
+                    <div class="alert alert-warning mt-3" role="alert">
+                        <p class="fw-bold m-0">This device has been reviewed by our team. Please see the latest review
+                            below.</p>
+
+                        <% if (history.history_type === historyType.REVIEW_REQUESTED) { %>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body p-1">
+                                            <div class="row justify-content-between">
+                                                <div class="col-md-4 align-content-center">
+                                                    <div class="alert <%= historyType.historyTypeToColour(history.history_type, "alert-") %> p-1 my-auto"
+                                                         role="alert">
+                                                        <p class="fw-bold m-0 text-center"><%= historyType.historyTypeToString(history.history_type) %></p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="border border-secondary w-100 p-1 rounded 1">
+                                                        <div class="d-inline-flex justify-content-between w-100">
+                                                            <img src="<%= history.actioned_by?.avatar %>"
+                                                                 class="img-fluid rounded-circle"
+                                                                 alt="Avatar"
+                                                                 style="max-width: 35px;">
+
+                                                            <p class="my-auto mx-2 text-center ">
+                                                                <%= history.actioned_by?.first_name + " " + history.actioned_by?.last_name %>
+                                                            </p>
+
+                                                            <div class="alert <%= roleTypes.roleTypeToColour(history.actioned_by?.role, 'alert-') %> my-auto p-1"
+                                                                 role="alert">
+                                                                <i class="fas fa-user<%= history.actioned_by?.role === roleTypes.ADMIN ? "-cog" : (history.actioned_by?.role === roleTypes.STAFF ? "-shield" : "") %>"></i>
+                                                                <%= roleTypes.roleTypeToString(history.actioned_by?.role) %>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-2">
+                                                <div class="col-12">
+                                                    <div class="alert alert-secondary p-0 m-0 text-center"
+                                                         style="max-height: 200px;">
+                                                        <p class="fw-bold m-0">Reasoning:</p>
+                                                        <p class="m-0 fst-italic small">"<%= history.data[0].value %>
+                                                            "</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } else if (history.history_type === historyType.REVIEW_REJECTED) { %>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body p-1">
+                                            <div class="row justify-content-between">
+                                                <div class="col-md-4 align-content-center">
+                                                    <div class="alert <%= historyType.historyTypeToColour(history.history_type, "alert-") %> p-1 my-auto"
+                                                         role="alert">
+                                                        <p class="fw-bold m-0 text-center"><%= historyType.historyTypeToString(history.history_type) %></p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="border border-secondary w-100 p-1 rounded 1">
+                                                        <div class="d-inline-flex justify-content-between w-100">
+                                                            <img src="<%= history.actioned_by?.avatar %>"
+                                                                 class="img-fluid rounded-circle"
+                                                                 alt="Avatar"
+                                                                 style="max-width: 35px;">
+
+                                                            <p class="my-auto mx-2 text-center ">
+                                                                <%= history.actioned_by?.first_name + " " + history.actioned_by?.last_name %>
+                                                            </p>
+
+                                                            <div class="alert <%= roleTypes.roleTypeToColour(history.actioned_by?.role, 'alert-') %> my-auto p-1"
+                                                                 role="alert">
+                                                                <i class="fas fa-user<%= history.actioned_by?.role === roleTypes.ADMIN ? "-cog" : (history.actioned_by?.role === roleTypes.STAFF ? "-shield" : "") %>"></i>
+                                                                <%= roleTypes.roleTypeToString(history.actioned_by?.role) %>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-2">
+                                                <div class="col-12">
+                                                    <div class="alert alert-secondary p-0 m-0 text-center"
+                                                         style="max-height: 200px;">
+                                                        <p>We're sorry, but your device has been rejected. If you
+                                                            believe this is an error, please contact us.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <% } %>
+                    </div>
+                <% } %>
+                <% if(item.state <= deviceState.LISTED) { %>
+                    <a href="/list-item/<%= item._id %>" class="btn btn-primary">Edit Details</a>
+                <% } %>
             <% } %>
 
             <hr class="my-4">
@@ -69,7 +202,8 @@
                         <% if (['Announced', 'Status', 'Dimensions', 'Size', 'OS', 'USB'].includes(spec)) { %>
                             <p><span class="fw-bold"><%= spec %>:</span> <%= specs[spec] %></p>
                     <% }}) %>
-                    <p><span class="fw-bold">Device Condition:</span> <%= item.good_condition ? 'Good' : 'Poor' %></p>
+                    <p><span class="fw-bold">Device Condition:</span> <%= item.good_condition ? 'Good' : 'Poor' %>
+                    </p>
                 </div>
                 <h5 class="fw-bold mb-4">Condition: </h5>
                 <div class="col-6">
@@ -119,11 +253,13 @@
                                         <div class="col-md-7 d-flex flex-column align-content-between">
                                             <div class="row mb-auto">
                                                 <h5 class="card-title">Price: £<%= quote.value %></h5>
-                                                <p class="card-text">Quotation from <%= quote.provider.name %> for the
+                                                <p class="card-text">Quotation from <%= quote.provider.name %> for
+                                                    the
                                                     same product or similar products.</p>
                                                 <p class="card-text"><small>Fetched from <%= quote.provider.name %>
                                                         site</small></p>
-                                                <p id="quoteState" class="quote-state" data-quote-id="<%= quote._id %>">
+                                                <p id="quoteState" class="quote-state"
+                                                   data-quote-id="<%= quote._id %>">
                                                     <%= Object.keys(quoteState).find(key => quoteState[key] === quote.state) %>
                                                 </p>
                                             </div>
@@ -135,7 +271,8 @@
                                                         <a href="<%= quote.url %>" target="_blank"
                                                            class="btn btn-primary mx-2 my-2">Visit <%= quote.provider.name.toUpperCase() %></a>
                                                         <button class="btn btn-warning mx-2 my-2 star-quote"
-                                                                data-quote-id="<%= quote._id %>" id="star-quote">Star
+                                                                data-quote-id="<%= quote._id %>" id="star-quote">
+                                                            Star
                                                             Quote
                                                         </button>
                                                         <button class="btn btn-primary mx-2 my-2 accept-quote"
@@ -158,7 +295,8 @@
                                                 <div class="card-body">
                                                     <div class="row justify-content-center align-items-center">
                                                         <div class="col-12">
-                                                            <p class="fs-6 fst-italic text-center">Click the QR code to
+                                                            <p class="fs-6 fst-italic text-center">Click the QR code
+                                                                to
                                                                 see a larger version</p>
                                                         </div>
                                                     </div>
