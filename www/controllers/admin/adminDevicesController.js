@@ -362,17 +362,8 @@ const updateUserDeviceDetailsPage = async (req, res) => {
 
 const postDevicePromotion = async (req, res) => {
     try {
-        //Get the device ID from the request
-        const {id} = req.params;
-
-        //Get the device object from the database
+        //Get the device object from the request
         const item = await getItemDetail(id);
-
-        //If the device object is not found, then the item is not available
-        if (typeof (item) === 'undefined' || item === null) {
-            res.status(404).send('Item not found');
-            return;
-        }
 
         //Promote the device
         const newValue = deviceState.getNextTypicalState(item.state)
@@ -429,17 +420,8 @@ const postDevicePromotion = async (req, res) => {
 
 const postDeviceDemotion = async (req, res) => {
     try {
-        //Get the device ID from the request
-        const {id} = req.params;
-
-        //Get the device object from the database
-        const item = await getItemDetail(id);
-
-        //If the device object is not found, then the item is not available
-        if (typeof (item) === 'undefined' || item === null) {
-            res.status(404).send('Item not found');
-            return;
-        }
+        //Get the device object from the request
+        const item = req.device;
 
         //Demote the device
         const newValue = deviceState.getPreviousTypicalState(item.state)
@@ -496,18 +478,11 @@ const postDeviceDemotion = async (req, res) => {
 
 const postDeviceStateOverride = async (req, res) => {
     try {
-        //Get the device ID and the new state from the request
-        const {id} = req.params;
+        //Get the new state from the request
         const newState = parseInt(req.body.state);
 
-        //Get the device object from the database
-        const item = await getItemDetail(id);
-
-        //If the device object is not found, then the item is not available
-        if (typeof (item) === 'undefined' || item === null) {
-            res.status(404).send('Item not found');
-            return;
-        }
+        //Get the device object from the request
+        const item = req.device;
 
         if (!newState || isNaN(newState)) {
             res.status(400).send('Invalid state value');
@@ -568,18 +543,11 @@ const postDeviceStateOverride = async (req, res) => {
 
 const postDeviceChangeRequest = async (req, res) => {
     try {
-        //Get the device ID and the changes requested from the request
-        const {id} = req.params;
+        //Get the changes requested from the request
         const reason = req.body.reason;
 
-        //Get the device object from the database
-        const item = await getItemDetail(id);
-
-        //If the device object is not found, then the item is not available
-        if (typeof (item) === 'undefined' || item === null) {
-            res.status(404).send('Item not found');
-            return;
-        }
+        //Get the device object from the request
+        const item = req.device;
 
         if (!reason || reason === "") {
             res.status(400).send('Invalid reason');
@@ -624,18 +592,11 @@ const postDeviceChangeRequest = async (req, res) => {
 
 const postDeviceVisibility = async (req, res) => {
     try {
-        //Get the device ID and the visibility value from the request
-        const {id} = req.params;
+        //Get  the visibility value from the request
         let visible = req.body.visible;
 
-        //Get the device object from the database
-        const item = await getItemDetail(id);
-
-        //If the device object is not found, then the item is not available
-        if (typeof (item) === 'undefined' || item === null) {
-            res.status(404).send('Item not found');
-            return;
-        }
+        //Get the device object from the request
+        const item = req.device;
 
         if (!visible) {
             res.status(400).send('Invalid visibility value');

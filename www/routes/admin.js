@@ -20,6 +20,7 @@ const {validateDeviceTypeEdit} = require("../middlewares/validators")
 const {upload} = require('../middlewares/multer')
 const {validateRegistration} = require("../middlewares/validators");
 const {insertStaffDetails} = require("../controllers/admin/adminController");
+const {populateDeviceObject} = require("../middlewares/devices");
 
 /* GET home page. */
 router.get("/", getAdminDashboard)
@@ -39,11 +40,11 @@ router.post('/devices/postNewModel', upload.none(), postNewModel);
 
 router.get('/devices/:id', getUserDeviceDetailsPage);
 router.post('/devices/:id',upload.none(), updateUserDeviceDetailsPage)
-router.post('/devices/:id/promote',upload.none(), postDevicePromotion)
-router.post('/devices/:id/demote',upload.none(), postDeviceDemotion)
-router.post('/devices/:id/state',upload.none(), postDeviceStateOverride)
-router.post('/devices/:id/changes',upload.none(), postDeviceChangeRequest)
-router.post('/devices/:id/visibility',upload.none(), postDeviceVisibility)
+router.post('/devices/:id/promote',upload.none(), populateDeviceObject, postDevicePromotion)
+router.post('/devices/:id/demote',upload.none(), populateDeviceObject, postDeviceDemotion)
+router.post('/devices/:id/state',upload.none(), populateDeviceObject, postDeviceStateOverride)
+router.post('/devices/:id/changes',upload.none(), populateDeviceObject, postDeviceChangeRequest)
+router.post('/devices/:id/visibility',upload.none(), populateDeviceObject, postDeviceVisibility)
 
 router.get('/moderation', getModerationDashboard);
 
