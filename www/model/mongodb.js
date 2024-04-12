@@ -147,6 +147,19 @@ async function updateQuoteState(id, state) {
     }
 }
 
+
+/**
+ * Delete method to delete the quote from the database if the expiry date is passed
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function deleteQuote(id) {
+    try {
+        return await Quote.deleteOne({_id: id})
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 /**
  * Update method to save the device state to the database
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
@@ -758,6 +771,7 @@ module.exports = {
     addModel,
     getDevice,
     getQuotes,
+    deleteQuote,
     getProviders,
     addQuote,
     updateQuoteState,
