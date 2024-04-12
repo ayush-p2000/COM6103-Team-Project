@@ -74,13 +74,25 @@ const registerUser = async (req, res, next) => {
             return res.redirect("/register")
         }
 
-        await user.save()
+        const userData = await user.save()
 
-        req.login(user, err => {
-            if (err)
-                return next(err)
-            res.redirect("/dashboard")
-        })
+        if(userData)
+        {
+            const messages = ['Verification link has been sent to your email. Please verify email.']
+            sendVerifyEmail(req.body.firstName, req.body.email, userData._id)
+            console.log(userData._id)
+
+            req.login(user, err => {
+                    if (err)
+                        return next(err)
+                res.render("authentication/login", {auth: req.isLoggedIn, user:req.user, messages: messages,
+                    hasMessages: messages.length > 0,})
+                })
+        }
+        else
+        {
+            res.send("Error in registering")
+        }
     } catch (err) {
         return next(err)
     }
@@ -98,7 +110,6 @@ const logoutUser = (req, res, next) => {
     });
 };
 
-
 //---------------------------------------------------- Rendering Login Page ----------------------------------------------------------------------------//
 
 function getLoginPage(req, res, next) {
@@ -112,6 +123,29 @@ function getRegisterPage(req, res, next) {
     res.render("authentication/register", {auth: req.isLoggedIn, user:req.user})
 }
 
+//---------------------------------------------------- Email Verification ----------------------------------------------------------------------//
+
+const sendVerifyEmail = (name, userEmail, user_id) => {
+    const subject = "ePanda Verification"
+    const message = `<p>Dear ${name},<br><br> Please click <a href="${process.env.BASE_URL}:${process.env.PORT}/verify?id=${user_id}">here</a> to verify your email. <br><br> Regards,<br><p style="color: #2E8B57">Team Panda</p></p>`
+    email(userEmail, subject, message)
+}
+
+const verifyEmail = async(req, res) => {
+    try {
+        const updateInfo = await User.updateOne({_id: req.query.id},
+            {
+                $set:{verified:true}
+            })
+        console.log(updateInfo)
+        res.render("authentication/verify")
+    }
+    catch (err){
+        console.log(err)
+    }
+}
+
+//-------------------------------------------------- Forgot password flow methods --------------------------------------------------------------//
 
 function getForgotPassword(req, res, next){
     res.render('authentication/forgot-password', {auth: req.isLoggedIn, user:req.user})
@@ -123,7 +157,7 @@ function getResetPasswordPage(req, res, next) {
 }
 
 
-
+//-------------------------------------------------- Finding user to send reset password link via email --------------------------------------------------------------//
 async function getForgotUser(req, res, next) {
     const { resetEmail } = req.body;
     token = generateRandomToken();
@@ -154,10 +188,12 @@ async function getForgotUser(req, res, next) {
     }
 }
 
+//--------------------------------------------------- Creating a token for the reset session --------------------------------------------------------------//
 const generateRandomToken = (length = 32) => {
     return randomBytes(length).toString('hex');
 };
 
+//--------------------------------------------------- Generating a reset password link --------------------------------------------------------------//
 const resetPasswordLink = (token) => {
     const {BASE_URL, PORT} = process.env
     // Assuming your application is running on localhost:3000, adjust accordingly if not
@@ -165,6 +201,7 @@ const resetPasswordLink = (token) => {
     return `${baseUrl}/reset-password?token=${token}`;
 };
 
+//--------------------------------------------------- resetting  password --------------------------------------------------------------//
 const resetPassword = async (req, res, next) => {
     try {
         const { password, confirmPassword } = req.body;
@@ -199,6 +236,8 @@ const resetPassword = async (req, res, next) => {
     }
 };
 
+//--------------------------------------------------- 3rd Party Authentication methods --------------------------------------------------------------//
+
 const googleAuth = passport.authenticate('google', {scope: ['profile', 'email'] })
 
 const googleAuthCallback = passport.authenticate('google', { failureRedirect: '/login'})
@@ -221,7 +260,8 @@ module.exports = {
     googleAuth,
     googleAuthCallback,
     facebookAuth,
-    facebookAuthCallback
+    facebookAuthCallback,
+    verifyEmail,
 }
 
 //------------------------------------------------------------------ End of File ----------------------------------------------------------------------------//

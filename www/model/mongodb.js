@@ -164,7 +164,7 @@ async function updateDeviceState(id, state) {
  */
 const getAllDeviceType = async () => {
     try {
-        return await DeviceType.find();
+        return await DeviceType.find({is_deleted: false});
     } catch (error) {
         console.error("An error occurred while get All DeviceType:", error);
         throw error;
@@ -177,13 +177,24 @@ const getAllDeviceType = async () => {
  */
 const getAllBrand = async () => {
     try {
-        return await Brand.find();
+        return await Brand.find({is_deleted: false});
     } catch (error) {
         console.error("An error occurred while get All Brand:", error);
         throw error;
     }
 }
 
+/**
+ * Get Brand by ID
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+
+const getBrandById = async (id) => {
+    return await Brand.findById(id).populate({
+        path: "models", populate: [{path: "deviceType"}, {path: "category"}
+        ]
+    })
+}
 
 /**
  * Get a List of Models Base on Specific Brand and Type
@@ -200,7 +211,41 @@ const getModels = async (brandId, deviceTypeId) => {
         throw error;
     }
 }
+/**
+ * Get All models
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const getAllModels = async () => {
+    return await Model.find({is_deleted: false}).populate("deviceType").populate("brand")
+}
 
+/**
+ * Get All models of a type
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const getAllModelsOfType = async (type) => {
+    return await Model.find({deviceType: type, is_deleted: false}).populate("deviceType").populate("brand")
+}
+
+/**
+ * Get Model By ID
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const getModelById = async (id) => {
+    return await Model.findById(id)
+}
+
+/**
+ * Update Model Details
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const updateModelDetails = async (id, name, modelBrand, modelType) => {
+    const model = await getModelById(id)
+    model.name = name
+    model.brand = modelBrand
+    model.deviceType = modelType
+    await model.save()
+}
 /**
  * Adding a Device to the Database
  * If User Input Custom Model,Create a History Link To The Device
@@ -259,6 +304,35 @@ const getAllUnknownDevices = async () => {
 }
 
 /**
+ * Get Device Type By ID
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const getDeviceTypeById = async (id) => {
+    return await DeviceType.findById(id)
+}
+/**
+ * Update device type details
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const updateDeviceTypeDetails = async (id, name, description) => {
+    const deviceType = await DeviceType.findById(id)
+    deviceType.name = name
+    deviceType.description = description
+
+    await deviceType.save()
+}
+
+/**
+ * Delete device type
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const deleteType = async id => {
+    const type = await getDeviceTypeById(id)
+    type.is_deleted = true
+    type.name = "Deleted device type"
+    await type.save()
+}
+/**
  * Add a New DeviceType to db
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
@@ -283,6 +357,28 @@ const addBrand = async (name) => {
 }
 
 /**
+ * Update device type details
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const updateBrandDetails = async (id, name) => {
+    const brand = await Brand.findById(id)
+    brand.name = name
+
+    await brand.save()
+}
+
+/**
+ * Delete brand
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const deleteBrand = async id => {
+    const brand = await getBrandById(id)
+    brand.is_deleted = true
+    brand.name = "Deleted brand"
+    await brand.save()
+}
+
+/**
  * Add a New Model to db
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
@@ -295,6 +391,17 @@ const addModel = async (modelData, properties, category) => {
         category: category,
     });
     return await newModel.save()
+}
+
+/**
+ * Delete model
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
+const deleteModel = async id => {
+    const model = await getModelById(id)
+    model.is_deleted = true
+    model.name = "Deleted model"
+    await model.save()
 }
 
 /**
@@ -366,11 +473,17 @@ const getAllDevices = async (filter = {}) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getCarouselDevices = async (imgPerCarousel) => {
-    const devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE}).populate("model").select({model:1,photos:1, listing_user:0, brand:0, device_type:0}).limit(imgPerCarousel * 3)
+    const devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE}).populate("model").select({
+        model: 1,
+        photos: 1,
+        listing_user: 0,
+        brand: 0,
+        device_type: 0
+    }).limit(imgPerCarousel * 3)
     // devices = Array.from(devices)
     for (let i = 0; i < devices.length; i++) {
         const quotes = await getQuotes(devices[i]._id);
-        devices[i] = {...devices[i]._doc, quote: quotes.length ? quotes[0]:null}
+        devices[i] = {...devices[i]._doc, quote: quotes.length ? quotes[0] : null}
     }
     console.log(devices[0])
     return devices
@@ -381,7 +494,7 @@ const getCarouselDevices = async (imgPerCarousel) => {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getAllDeviceTypes() {
-    return await DeviceType.find();
+    return await DeviceType.find({is_deleted: false});
 }
 
 /**
@@ -389,7 +502,7 @@ async function getAllDeviceTypes() {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getAllBrands() {
-    return await Brand.find();
+    return await Brand.find({is_deleted:false});
 }
 
 /**
@@ -660,6 +773,17 @@ module.exports = {
     getDevicesGroupByCategory,
     getDevicesGroupByState,
     getDevicesGroupByType,
+    getAllModels,
+    getDeviceTypeById,
+    getBrandById,
+    getModelById,
+    updateDeviceTypeDetails,
+    updateBrandDetails,
+    updateModelDetails,
+    getAllModelsOfType,
+    deleteModel,
+    deleteBrand,
+    deleteType,
     getAccountsCountByStatus,
     getAccountsCountByType,
     addTransaction,

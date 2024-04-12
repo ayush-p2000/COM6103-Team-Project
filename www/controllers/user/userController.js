@@ -5,15 +5,71 @@
 //const {getMockUser} = require("../../util/mock/mockData");
 const {User} = require("../../model/schema/user");
 const {email} = require("../../public/javascripts/Emailing/emailing");
+const {renderUserLayout} = require("../../util/layout/layoutUtils");
+const {getAllUsers, getUserItems, getUnknownDeviceHistoryByDevice, getAllDevices} = require("../../model/mongodb");
+const deviceCategory = require("../../model/enum/deviceCategory")
 
-const {getAllUsers} = require("../../model/mongodb");
 
 //------------------------------------------------ Rendering user Database -------------------------------------------------------------------------//
 
 
+/**
+ * Get user dashboard, here the user's items and marketplace items can be viewed from the dashboard
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> and Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 async function getUserDashboard(req, res, next) {
-    const userData = await User.findById({_id: req.user.id});
-    res.render("user/dashboard", {user: userData, auth: req.isLoggedIn})
+    try {
+        const userData = await User.findById({_id: req.user.id});
+        const firstName = userData.first_name
+        console.log(firstName)
+        var userItems = await getUserItems(req.user.id)
+        userItems = await getUnknownDevices(userItems)
+        var marketplaceDevices = await getAllDevices()
+        marketplaceDevices = await getUnknownDevices(marketplaceDevices)
+        let marketDevices = []
+        for (const device of marketplaceDevices) {
+            let listedByCurrentUser = false
+            if (device.listing_user._id.equals(req.user.id)) {
+                listedByCurrentUser = true
+            }
+            if (!listedByCurrentUser) {
+                marketDevices.push(device)
+            }
+        }
+        renderUserLayout(req, res, '../marketplace/userHome', {user: userData, firstName: firstName,devices: userItems, marketDevices: marketDevices, deviceCategory, auth: req.isLoggedIn})
+    }catch (err) {
+        console.log(err)
+    }
+    // res.render("user/dashboard", {user: userData, auth: req.isLoggedIn})
+
+}
+
+/**
+ * Get method to retrieve unknown devices from the database needed to be displayed in the web page
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getUnknownDevices(items) {
+    for (const item of items) {
+        if (item.model == null) {
+            var deviceType = ""
+            var brand = ""
+            var model = ""
+            const customModel = await getUnknownDeviceHistoryByDevice(item._id)
+            customModel[0].data.forEach(data => {
+                if (data.name === "device_type") {
+                    deviceType = data.value
+                } else if (data.name === "brand") {
+                    brand = data.value
+                } else if (data.name === "model") {
+                    model = data.value
+                }
+            });
+            item.device_type = {name: deviceType}
+            item.brand = {name: brand}
+            item.model = {name: model}
+        }
+    }
+    return items
 }
 
 //------------------------------------------------ Get User Data from Database -------------------------------------------------------------------------//
@@ -23,7 +79,8 @@ async function getUserProfile(req, res, next) {
     try {
         const userData = await User.findById({_id: req.user.id});
         console.log(userData)
-        res.render("user/user_profile", {user: userData, auth: req.isLoggedIn})
+        renderUserLayout(req, res, 'user_profile', {user: userData, auth: req.isLoggedIn})
+        // res.render("user/user_profile", {user: userData, auth: req.isLoggedIn})
 
     } catch (err) {
         res.send('No user found')
@@ -88,12 +145,18 @@ async function updateUserDetails(req, res, next){
         if (!updatedUser) {
             return res.status(404).send('Server Error');
         }
-        res.render("user/user_profile", {
+        renderUserLayout(req, res, 'user_profile', {
             messages: messages,
             hasMessages: messages.length > 0,
             user: updatedUser,
             auth: req.isLoggedIn
-        });
+        })
+        // res.render("user/user_profile", {
+        //     messages: messages,
+        //     hasMessages: messages.length > 0,
+        //     user: updatedUser,
+        //     auth: req.isLoggedIn
+        // });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
