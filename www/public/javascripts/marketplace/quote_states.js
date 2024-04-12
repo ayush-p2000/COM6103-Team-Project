@@ -1,3 +1,9 @@
+/**
+ * quote_states.js
+ * This file is used to change the states of a quote according to what the user needs
+ * Also used to select if a user wants to recycle the device, and they can go to checkout
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 document.addEventListener("DOMContentLoaded", function () {
 
     const acceptButtons = document.querySelectorAll('.accept-quote')

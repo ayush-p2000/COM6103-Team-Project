@@ -11,6 +11,7 @@ const {
     getQuotes,
     getProviders,
     addQuote,
+    deleteQuote,
     getAllDevices, getAllDeviceType,
     getUnknownDeviceHistoryByDevice
 } = require('../../model/mongodb')
@@ -19,6 +20,7 @@ const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
 const {getDeviceQuotation} = require("../../util/web-scrape/getDeviceQuotation")
 const cheerio = require("cheerio");
+const {quoteState} = require("../../model/enum/quoteState");
 
 /**
  * Get All Users Devices
@@ -72,7 +74,7 @@ async function getMyItems(req, res, next) {
     try {
         const deviceTypes = await getAllDeviceType()
         const items = await getUserItems(req.user.id)
-        const providers = await getProviders()
+        let providers = await getProviders()
         let quotations = []
         for (const item of items) {
             if (item.model == null) {
@@ -94,15 +96,49 @@ async function getMyItems(req, res, next) {
                 item.model = {name: model}
             }
 
-            //Quotes are not available for items in review
-            if (item.state > deviceState.IN_REVIEW) {
+
+            // Get quotes only if the device is listed or the device already has quotes
+            if (item.state === deviceState.LISTED || item.state === deviceState.HAS_QUOTE) {
                 let quotes = await getQuotes(item._id)
+                // Check if there are no quotes available for that device
                 if (quotes.length === 0) {
                     console.log('No quotes available')
                     quotes = await getDeviceQuotation(item, providers)
+                } else if(quotes.length < providers.length) {
+                    // Check for if only one quote is available for the device, if only one quote then scrape the website for other quote
+                    let one_provider = []
+                    let new_quote
+                    providers.forEach(provider => {
+                        if (!quotes.find(quote => quote.provider.name === provider.name)) {
+                            one_provider.push(provider)
+                        }
+                    })
+                    new_quote = await getDeviceQuotation(item, one_provider)
+                    quotes.push(new_quote)
                 }
-                quotations.push(quotes)
+
+                //Check if the quote expiry date has passed, if yes then delete the quote and get a new quote from the web page
+                let updatedQuotes = []
+                for (const quote of quotes) {
+                    const currentDate = new Date()
+
+                    if (item.state === quoteState.NEW || item.state === quoteState.ACCEPTED || item.state === quoteState.EXPIRED) {
+                        if(quote.expiry < currentDate) {
+                            let one_provider = []
+                            let new_quote
+                            one_provider.push(quote.provider)
+                            console.log('quote expired')
+                            const deleted_quote = await deleteQuote(quote._id)
+                            new_quote =  await getDeviceQuotation(item, one_provider)
+                            updatedQuotes.push(new_quote)
+                        } else {
+                            updatedQuotes.push(quote)
+                        }
+                    }
+                }
+                quotations.push(updatedQuotes)
             }
+
         }
         // console.log(quotations)
         renderUserLayout(req, res, '../marketplace/my_items', {
