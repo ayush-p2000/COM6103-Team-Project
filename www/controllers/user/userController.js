@@ -36,7 +36,7 @@ async function getUserDashboard(req, res, next) {
                 marketDevices.push(device)
             }
         }
-        renderUserLayout(req, res, '../marketplace/userHome', {user: userData, firstName: firstName,devices: userItems, marketDevices: marketDevices, deviceCategory, auth: req.isLoggedIn})
+        renderUserLayout(req, res, '../marketplace/user_home', {user: userData, firstName: firstName,devices: userItems, marketDevices: marketDevices, deviceCategory, auth: req.isLoggedIn})
     }catch (err) {
         console.log(err)
     }
