@@ -3,6 +3,7 @@
  */
 
 const mockData = require('../../util/mock/mockData')
+const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const {getPaginatedResults} = require("../../model/utils/utils")
 const {Device} = require("../../model/schema/device")
 const {
@@ -51,7 +52,7 @@ const getMarketplace = async (req, res, next) => {
     } catch (e) {
         console.log(e)
     }
-    res.render('marketplace/marketplace', {
+    renderUserLayout(req, res, '../marketplace/marketplace', {
         deviceTypes,
         devices,
         items,
@@ -101,7 +102,7 @@ async function getMyItems(req, res, next) {
             quotations.push(quotes)
         }
         // console.log(quotations)
-        res.render('marketplace/my_items', {
+        renderUserLayout(req, res, '../marketplace/my_items', {
             deviceTypes,
             items,
             quotations,
@@ -109,63 +110,23 @@ async function getMyItems(req, res, next) {
             deviceCategory,
             auth: req.isLoggedIn,
             user: req.user,
-            role: 'user'
-        })
+            role: 'user'}
+        )
+        // res.render('marketplace/my_items', {
+        //     deviceTypes,
+        //     items,
+        //     quotations,
+        //     deviceState,
+        //     deviceCategory,
+        //     auth: req.isLoggedIn,
+        //     user: req.user,
+        //     role: 'user'
+        // })
     } catch (e) {
         console.log(e)
     }
 }
 
-// async function getDeviceQuotation(item, provider) {
-//     let url
-//     let searchItem
-//     let quote_data = []
-//     try {
-//         const url = 'https://www.ebay.co.uk/sch/i.html?_nkw=';
-//         const searchItem = item.model.name.replace(' ', '+');
-//
-//         fetch(url + searchItem)
-//             .then(response => {
-//                 if (!response.ok) {
-//                     throw new Error("No response from eBay");
-//                 }
-//                 return response.text();
-//             })
-//             .then(async html => {
-//                 const cheerio = require('cheerio'); // Import cheerio library
-//                 const $ = cheerio.load(html);
-//                 const quote_data = []; // Initialize quote_data array
-//                 const data = $('.s-item__wrapper');
-//                 data.each(() => { // Use parameters index and element in each loop
-//                     const price = $('.s-item__price').text(); // Find price within each element
-//                     quote_data.push(price);
-//                 });
-//                 let quote = quote_data[0].split(' ')[0].replace('$20.00', '').split('£')[1];
-//                 console.log(quote)
-//                 const providerId = provider[1]._id;
-//                 const today = new Date();
-//                 const expiryDate = new Date(today);
-//                 expiryDate.setDate(today.getDate() + 3);
-//                 const quoteDetails = {
-//                     device: item._id,
-//                     provider: providerId,
-//                     value: parseFloat(quote),
-//                     state: false,
-//                     expiry: expiryDate
-//                 };
-//                 // return await addQuote(quoteDetails);
-//             })
-//             .then(result => {
-//                 console.log("Quote added successfully:", result);
-//             })
-//             .catch(error => {
-//                 console.error("Error:", error);
-//             });
-//
-//     } catch (err){
-//         console.log(err)
-//     }
-// }
 
 
 module.exports = {
