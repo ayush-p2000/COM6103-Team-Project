@@ -100,11 +100,17 @@ async function updateUserDetails(req, res, next){
     }
 }
 
+async function getTermsAndCondition(req, res, next) {
+    const userData = await User.findById({_id: req.user.id});
+    res.render("user/T&C.ejs", {user: userData,auth: req.isLoggedIn})
+}
+
 
 
 
 module.exports = {
     getUserProfile,
     getUserDashboard,
-    updateUserDetails
+    updateUserDetails,
+    getTermsAndCondition
 }

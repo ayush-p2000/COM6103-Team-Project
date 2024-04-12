@@ -1,0 +1,34 @@
+<%- include("../components/header.ejs") %>
+
+<%- include("../components/navbar.ejs") %>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header"><h2>Terms and Conditions</h2></div>
+
+                <div class="card-body">
+                    <ul>
+                        <li>Standard account registration and login</li>
+                        <li>Optionally common third-party accounts may be used, e.g. Google, Microsoft, etc. You should have previous experience if you wish to use third-party authentication.</li>
+                        <li>Admin role can upgrade accounts for staff.</li>
+                        <li>Accept details of devices and identify whether they are ‘current’ (currently popular), ‘recycle’, ‘rare’ or ‘unknown’.</li>
+                        <li>Current devices will have listings for expected value according to third parties, such as CeX, etc. with a focus on local places to trade in by physically handing in. Owner to be given a QRCode that offers a bonus (e.g. voucher) which also identifies the eWaste Hub for a (potential) referral fee and simplifies them handing in a device (since they will have entered data already). Data wiping is guaranteed by the third party.</li>
+                        <li>‘Recycle’ devices are offered for recycling with data retrieval (at a fee) and data wiping (at no cost). Data retrieval devices are accepted by the eWaste Hub themselves for retrieving data which is then hosted in the cloud and a secure link emailed to the owner for a limited time (valid for 3 months, can be retrieved from 3-6 months with a further fee payment, then deleted). Data wiping will be handled by a third party who recycle the device.</li>
+                        <li>Rare devices are handled in a similar manner to current devices but the third parties may include eBay, etc.</li>
+                        <li>Unknown devices are flagged for employees to update the device database and contact the owner.</li>
+                        <li>Expected roles will include (device) owner, admin and staff (employee).</li>
+                        <li>For staff, creation of (new) devices details. This should be initially populated from an offered device (by an owner). Draft details should be saved (but not visible).</li>
+                        <li>Devices can be made visible or hidden, e.g. in case of incomplete/incorrect details.</li>
+                        <li>Devices can be moved between classifications, which include current/recycle/rare/unwanted as well as device types, i.e. console/phone/tablet/laptop, etc. At least two device types should be shown working.</li>
+                        <li>When a device is current, details for at least one third party should be shown, e.g. in a new/pop out window.</li>
+                        <li>Payments for data transfer should be via PayPal and Stripe (sandbox only).</li>
+                        <li>An Admin dashboard will need to be available for managing users accounts.</li>
+                        <li>Relevant reports should be available for staff, e.g. payments for data wiping, device processing (e.g. received, transferring, wiping, dispatch to this party), QR Code generation by third party, referral fees.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
