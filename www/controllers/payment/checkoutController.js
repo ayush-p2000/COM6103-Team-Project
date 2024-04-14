@@ -2,7 +2,6 @@
  * This controller should handle any operations related to the checkout process or payment processing
  */
 
- let method = "";
 const {getMockPurchaseData} = require("../../util/mock/mockData");
 const {request} = require("express");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -10,39 +9,44 @@ const {getItemDetail, addTransaction, updateTransaction, getTransactionByDevice,
 const transactionState = require('../../model/enum/transactionState')
 
 
-
+/**
+ * Get method used to display the product information before checking out for payment
+ * here the method checks if the transaction is for data retrieval or for extension
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 async function getCheckout(req, res, next) {
-    let deviceId
-    let model
-    let total
+    let id = req.query.id
+    let model = req.query.model
+    let total = req.query.total
     let extension = 0
     let type = req.query.type
+    let product = ''
     let transactionDetails
     let transaction
+    //Check to determine if the payment is for retrieval or for extending the retrieval time
     switch (type) {
         case 'payment_retrieval':
-            deviceId = req.query.device
-            model = req.query.model
-            total = req.query.total
-            transactionDetails = {
-                deviceId: deviceId,
-                value: total,
-                state: transactionState['AWAITING_PAYMENT']
-            }
-            transaction = await getTransactionByDevice(deviceId)
+            product = 'Data Retrieval'
+            transaction = await getTransactionByDevice(id)
             if (!transaction) {
-                await addTransaction(transactionDetails)
-            }
+                transactionDetails = {
+                    deviceId: id,
+                    value: total,
+                    state: transactionState['AWAITING_PAYMENT']
+                }
+                const newTransaction = await addTransaction(transactionDetails)
+                id = newTransaction._id
+            } else id =  transaction._id
+
             break
         case 'retrieval_extension':
-            transaction = await getTransactionById(req.query.retrieval_id)
-            deviceId = transaction.device._id
+            product = 'Data Retrieval Extension'
+            transaction = await getTransactionById(id)
+            const deviceId = transaction.device._id
             const device = await getItemDetail(deviceId)
-            model = device.model.name
-            total = req.query.total
             extension = req.query.extension
             transactionDetails = {
-                deviceId: deviceId,
+                id: id,
                 value: total,
                 extension: extension,
                 state: transactionState['AWAITING_PAYMENT']
@@ -51,91 +55,86 @@ async function getCheckout(req, res, next) {
             break
     }
 
-    res.render('payment/checkout', {id: deviceId, model: model, total: total, extension: extension})
+    res.render('payment/checkout', {id: id, model: model, total: total, extension: extension, product: product})
 }
 
-function fetchMethod(req, res, next){
-    method = req.body.paymentProvider;
-    let data
+/**
+ * Method used to redirect to the payment page based on the payment method checked
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
+function checkoutToProvider(req, res, next){
+    let method = req.body.paymentProvider;
     let type = req.query.type
-    let deviceId = req.query.device
-    let model = req.query.model
+    let id = req.body.transactionId
     let total = req.query.total
     let extension = req.query.extension
-    if (type === 'payment_retrieval') {
-         data = {
-            deviceId: deviceId,
-            model: model,
-            total: total
-        }
-    } else {
-        data = {
-            deviceId: deviceId,
-            model: model,
-            total: total,
-            extension: extension
-        }
+    let product = 'Data Retrieval'
+
+    let data = {
+        id: id,
+        model: product,
+        total: total
     }
-    if(method === 'paypal')
-    {
-        let queryString = Object.keys(data).map(key => key + '='+ encodeURIComponent(data[key])).join('&')
-        res.redirect('/checkout/paypal?'+queryString)
+
+    if (type === 'retrieval_extension') {
+        data.extension = extension
+        data.model = 'Data Retrieval Extension'
     }
-    else
-    {
-        let queryString = Object.keys(data).map(key => key + '='+ encodeURIComponent(data[key])).join('&')
-        res.redirect('/checkout/stripe?'+queryString)
-    }
+
+    let queryString = Object.keys(data).map(key => key + '='+ encodeURIComponent(data[key])).join('&')
+    res.redirect(`/checkout/${method}?${queryString}`)
+
 }
 
+/**
+ * Get method used to display the payment success page
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 async function getCheckoutCompleted(req, res, next) {
     var sessionId
-    var session
     let order = {}
-    let deviceId = req.query.id
-    let total = req.query.total
+    let id = req.query.id
+    let total = 0
     let extension = req.query.extension
-    let device
-    try {
-        device = await getItemDetail(deviceId)
-    } catch (err) {
-        console.log(err)
+    let product = 'Data Retrieval'
+
+    //Check if the payment is done through stripe or paypal and  get the payment id for the same
+    switch (req.query.type) {
+        case 'stripe':
+            sessionId = req.query.sessionId
+            let session = await stripe.checkout.sessions.retrieve(sessionId)
+            total = session.amount_total / 100
+            break
+        case 'paypal':
+            sessionId = req.query.paymentId
+            total = parseFloat(req.query.total)
+            break
+        default:
+            sessionId = 0
+            total = 0
     }
-    if (req.query.type === 'stripe') {
-        sessionId = req.query.sessionId
-        session = await stripe.checkout.sessions.retrieve(sessionId)
-        //amount_total,
-        console.log(session)
-        order = setTransactionDetails(sessionId, session.amount_total/100, req.query.type, device.model.name)
-    } else {
-        sessionId = req.query.paymentId
-        console.log(sessionId)
-        order = setTransactionDetails(sessionId, req.query.total, req.query.type, device.model.name)
+    let transactionDetails = {
+        id: id,
+        value: total,
+        state: transactionState['PAYMENT_RECEIVED'],
+        paymentMethod: req.query.type
     }
-    let transactionDetails
     if (extension > 0) {
-        console.log(extension)
-        transactionDetails = {
-            deviceId: deviceId,
-            value: total,
-            state: transactionState['PAYMENT_RECEIVED'],
-            paymentMethod: req.query.type,
-            extension: extension
-        }
-    } else {
-        transactionDetails = {
-            deviceId: deviceId,
-            value: total,
-            state: transactionState['PAYMENT_RECEIVED'],
-            paymentMethod: req.query.type
-        }
+        product = 'Data Retrieval Extension'
+        transactionDetails.extension = extension
     }
+    order = setTransactionDetails(sessionId, total, req.query.type, product, extension)
+
     await updateTransaction(transactionDetails)
 
     res.render('payment/checkout_complete', {title: 'Payment Completed', order: order, extension: extension});
 }
 
-function setTransactionDetails(sessionId, amount, paymentMethod, product) {
+/**
+ * Set method used to intilialize the transaction details
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+function setTransactionDetails(sessionId, amount, paymentMethod, product, extension) {
     return {
         id: sessionId,
         amount: amount,
@@ -143,7 +142,7 @@ function setTransactionDetails(sessionId, amount, paymentMethod, product) {
         currency: "£",
         paymentMethod: paymentMethod,
         product: product,
-        data_retrieval: amount !== 0
+        data_retrieval: extension === 0
     }
 }
 
@@ -151,5 +150,5 @@ function setTransactionDetails(sessionId, amount, paymentMethod, product) {
 module.exports = {
     getCheckout,
     getCheckoutCompleted,
-    fetchMethod
+    checkoutToProvider
 }

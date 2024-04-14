@@ -976,23 +976,28 @@ const getAllReferralsOrderedByDate = async (prevMonths) => {
     }).sort({"confirmation_details.receipt_date": 1});
 }
 
+
+/**
+ * Method to add a new transaction
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function addTransaction(transactionDetails) {
-    try {
-        const retrieval = new Retrieval({
-            device: transactionDetails.deviceId,
-            expiry: getDate(),
-            retrieval_state: retrievalState.AWAITING_DEVICE,
-            transaction: {
-                value: transactionDetails.value,
-                transaction_state: transactionDetails.state
-            }
-        })
-        return await retrieval.save()
-    }catch (err) {
-        console.log(err)
-    }
+    const retrieval = new Retrieval({
+        device: transactionDetails.deviceId,
+        expiry: getDate(),
+        retrieval_state: retrievalState.AWAITING_DEVICE,
+        transaction: {
+            value: transactionDetails.value,
+            transaction_state: transactionDetails.state
+        }
+    })
+    return retrieval.save()
 }
 
+/**
+ * Get method used to set the expiry date based on extension i.e. number of months(3 or 6)
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 function getDate(extension) {
     const currentDate = new Date()
     const extension_default_length = 3
@@ -1012,40 +1017,40 @@ function getDate(extension) {
     return new Date(currentYear, currentMonth, currentDate.getDate())
 }
 
+/**
+ * Method used to update the transaction based on the type of service i.e. retrieval or extension
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function updateTransaction(transactionDetails) {
+        const filter = { _id: transactionDetails.id }
+        let update
+        if (transactionDetails.extension > 0) {
+            let extension_details = {
+                        value: transactionDetails.value,
+                        transaction_state: transactionDetails.state,
+                        payment_date: new Date(),
+                        length: transactionDetails.extension,
+                        payment_method: transactionDetails.paymentMethod
+            };
 
-    try {
-        const filter = { device: transactionDetails.deviceId }
-        var update
-        if (transactionDetails.extension) {
-            if (transactionState.PAYMENT_CANCELLED === transactionState[transactionDetails.state]) {
-                update = {
-                    $set: {
-                        extension_transaction: {
-                            value: transactionDetails.value,
-                            transaction_state: transactionDetails.state,
-                            payment_date: new Date(),
-                            length: transactionDetails.extension,
-                            payment_method: transactionDetails.paymentMethod
-                        },
-
+            switch (transactionDetails.state) {
+                case transactionState.PAYMENT_CANCELLED:
+                    update = {
+                        $set: {
+                            extension_transaction: extension_details
+                        }
                     }
-                };
-            } else {
-                const date = getDate(transactionDetails.extension)
-                update = {
-                    $set: {
-                        expiry: date,
-                        extension_transaction: {
-                            value: transactionDetails.value,
-                            transaction_state: transactionDetails.state,
-                            payment_date: new Date(),
-                            length: transactionDetails.extension,
-                            payment_method: transactionDetails.paymentMethod
-                        },
-                        is_extended: true,
-                    }
-                };
+                    break
+                case transactionState.PAYMENT_RECEIVED:
+                    const date = getDate(transactionDetails.extension)
+                    update = {
+                        $set: {
+                            expiry: date,
+                            extension_transaction: extension_details,
+                            is_extended: true,
+                        }
+                    };
+                    break
             }
         } else {
             update = {
@@ -1053,33 +1058,29 @@ async function updateTransaction(transactionDetails) {
                     transaction: {
                         value: transactionDetails.value,
                         transaction_state: transactionDetails.state,
-                        payment_method: transactionDetails.paymentMethod
+                        payment_method: transactionDetails.paymentMethod,
+                        payment_date: new Date()
                     },
-
                 }
             };
         }
-        console.log(filter)
-        return await Retrieval.updateOne(filter, update);
-    }catch (err) {
-        console.log(err)
-    }
+        return Retrieval.updateOne(filter, update);
 }
 
+/**
+ * get method to retrieve the transaction details by device id
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function getTransactionByDevice(deviceId) {
-    try {
-        return await Retrieval.findOne({device: deviceId})
-    } catch (err) {
-        console.log(err)
-    }
+    return Retrieval.findOne({device: deviceId});
 }
 
+/**
+ * get method to retrieve the transaction details by transaction id
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function getTransactionById(id) {
-    try{
-        return await Retrieval.findOne({_id: id})
-    } catch (err) {
-        console.log(err)
-    }
+    return Retrieval.findOne({_id: id});
 }
 
 

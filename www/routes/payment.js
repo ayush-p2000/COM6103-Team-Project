@@ -1,5 +1,5 @@
 const express = require('express');
-const {getCheckout, getCheckoutCompleted, fetchMethod,
+const {getCheckout, getCheckoutCompleted, checkoutToProvider,
 } = require("../controllers/payment/checkoutController");
 const {getPaypal, payProduct,
     paypalSuccess, Cancel, cancelPayment
@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/checkout', getCheckout);
 
-router.post('/checkout', fetchMethod);
+router.post('/checkout', checkoutToProvider);
 
 router.get('/checkout/complete?', getCheckoutCompleted);
 

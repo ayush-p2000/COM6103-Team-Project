@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
             deviceStateBadge.parentNode.removeChild(deviceStateBadge)
 
             const formData = new FormData()
-            formData.append('device', id)
+            formData.append('id', id)
             formData.append('model', model.innerText)
             formData.append('total', total)
             formData.append('type', 'payment_retrieval')

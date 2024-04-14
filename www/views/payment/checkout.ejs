@@ -7,7 +7,8 @@
         <form class="card-body" method="POST">
             <h3 class="card-title text-center">Your details</h3>
             <div>
-                <h5 class="text-dark"> Model Name : <span class="text-muted"><%= model %></span> </h5>
+                <input type="hidden" name="transactionId" value="<%= id %>">
+                <h5 class="text-dark"> Service : <span class="text-muted"><%= product %></span> </h5>
                 <h5 class="text-dark"> Total Amount to Pay :<span class="text-muted"> <%= total %></span> </h5>
             </div>
             <h3 class="text-center">Payment providers</h3>

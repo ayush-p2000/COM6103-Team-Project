@@ -14,14 +14,17 @@ const {request} = require("express");
 const {updateTransaction} = require('../../model/mongodb')
 const transactionState = require('../../model/enum/transactionState')
 
-let data = {}
-var extension = 0
 
+
+/**
+ * Get method used to display the gateway to paypal
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 function getPaypal (req, res, next) {
 
     let extension = 0
     let data = {} = {
-        id: req.query.deviceId,
+        id: req.query.id,
         model: req.query.model,
         total: req.query.total
     }
@@ -32,6 +35,11 @@ function getPaypal (req, res, next) {
     res.render('payment/paypalGateway', {data:queryString, extension: extension});
 }
 
+
+/**
+ * Method used to create a payment session
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 const payProduct = async(req,res)=>{
 
     try {
@@ -100,13 +108,14 @@ const paypalSuccess = async(req,res)=>{
 
         const payerId = req.query.PayerID;
         const paymentId = req.query.paymentId;
+        const total = req.query.total
 
         const execute_payment_json = {
             "payer_id": payerId,
             "transactions": [{
                 "amount": {
                     "currency": "GBP",
-                    "total": `${data.total}`
+                    "total": `${total}`
                 }
             }]
         };
@@ -127,6 +136,10 @@ const paypalSuccess = async(req,res)=>{
 
 }
 
+/**
+ * Method used to display the cancel payment page and update the transaction in the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 const cancelPayment = async(req,res)=>{
 
     try {
