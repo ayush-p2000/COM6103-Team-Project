@@ -180,7 +180,7 @@ async function updateDeviceState(id, state) {
  */
 const getAllDeviceType = async () => {
     try {
-        return await DeviceType.find({is_deleted: false});
+        return await DeviceType.find({is_deleted: {$ne: true}});
     } catch (error) {
         console.error("An error occurred while get All DeviceType:", error);
         throw error;
@@ -193,7 +193,7 @@ const getAllDeviceType = async () => {
  */
 const getAllBrand = async () => {
     try {
-        return await Brand.find({is_deleted: false});
+        return await Brand.find({is_deleted: {$ne: true}});
     } catch (error) {
         console.error("An error occurred while get All Brand:", error);
         throw error;
@@ -232,7 +232,7 @@ const getModels = async (brandId, deviceTypeId) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getAllModels = async () => {
-    return await Model.find({is_deleted: false}).populate("deviceType").populate("brand")
+    return await Model.find({is_deleted: {$ne: true}}).populate("deviceType").populate("brand")
 }
 
 /**
@@ -542,7 +542,7 @@ const getCarouselDevices = async (imgPerCarousel) => {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getAllDeviceTypes() {
-    return await DeviceType.find({is_deleted: false});
+    return await DeviceType.find({is_deleted: {$ne: true}});
 }
 
 /**
@@ -550,7 +550,7 @@ async function getAllDeviceTypes() {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getAllBrands() {
-    return await Brand.find({is_deleted: false});
+    return await Brand.find({is_deleted: {$ne: true}});
 }
 
 /**
@@ -655,6 +655,11 @@ const getDevicesGroupByType = async () => {
             }
         }
     ]);
+}
+
+const getTotalAccountsCount = async () => {
+    //Return the total number of accounts in the database
+    return User.countDocuments();
 }
 
 const getAccountsCountByStatus = async () => {
@@ -1135,14 +1140,15 @@ module.exports = {
     deleteModel,
     deleteBrand,
     deleteType,
+    getTotalAccountsCount,
     getAccountsCountByStatus,
-    getAccountsCountByType,
-    getReferralCountByMonth,
-    getReferralValueByMonth,
-    getAllReferralsOrderedByDate,
     getSalesCountByMonth,
     getSalesValueByMonth,
     getAllSalesOrderedByDate,
+    getAccountsCountByType,
+    getReferralCountByMonth,
+    getReferralValueByMonth,
+    getAllReferralsOrderedByDate
     getAccountsCountByType,
     addTransaction,
     updateTransaction,

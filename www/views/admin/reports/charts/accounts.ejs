@@ -1,10 +1,8 @@
-<div>
-    <canvas id="accounts_chart"></canvas>
-    <script src="/javascripts/reports/charts/accounts.js"></script>
-    <script>
-        const accounts_labels = <%- JSON.stringify(labels) %>;
-        const accounts_data = <%- JSON.stringify(datasets[0]) %>;
-        const statuses_backgrounds =  <%- JSON.stringify(accountStatus.getList().map(status => accountStatus.accountStatusToRGB(status))) %>;
-        const statuses_borderColors =  <%- JSON.stringify(accountStatus.getList().map(status => accountStatus.accountStatusToRGB(status, true))) %>;
-    </script>
-</div>
+<canvas id="accounts_chart"></canvas>
+<script src="/javascripts/reports/charts/accounts.js"></script>
+<script>
+    const accounts_labels = <%- JSON.stringify(labels) %>;
+    const accounts_data = <%- JSON.stringify(datasets[0]) %>;
+    const statuses_backgrounds =  <%- JSON.stringify(accountStatus.getList().map(status => accountStatus.accountStatusToRGB(status))) %>;
+    const statuses_borderColors =  <%- JSON.stringify(accountStatus.getList().map(status => accountStatus.accountStatusToRGB(status, true))) %>;
+</script>

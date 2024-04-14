@@ -1,6 +1,11 @@
 <nav class="navbar navbar-expand-lg nav-bg shadow sticky-top bg-white">
     <div class="container-fluid px-5">
-        <a class="navbar-brand fs-3 fw-bold primary text-decoration-none" href="/">ePanda</a>
+        <a class="navbar-brand fs-3 fw-bold primary text-decoration-none" href="/">
+            ePanda
+            <% if (locals.isAdminRoute ?? false) { %>
+                <span class="fs-6 fw-normal text-muted">Admin</span>
+            <% } %>
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -8,12 +13,15 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ms-auto fw-medium">
                 <% if(auth) { %>
-                    <!-- TODO: Change the href to user dashboard once it's done -->
-                    <a class="nav-link active me-3"  href="/dashboard">Dashboard</a>
-                    <% if (user.role === "user") { %> <!-- TODO: The role needs to be later refactored to ranking system -->
+                    <% if (user.role >= 1) { %>
+                        <a class="nav-link" href="/admin">Admin Panel</a>
+                        <div class="vr mx-2 d-none d-lg-block"></div>
+                        <hr class="d-lg-none">
+                    <% } %>
+                    <a class="nav-link me-3" href="/dashboard"><%= (locals.isAdminRoute ?? false ? "User" : "") %>
+                        Dashboard</a>
                     <a class="nav-link me-3" href="/marketplace">Marketplace</a>
                     <a class="nav-link me-3" href="/my-items">My Items</a>
-                    <% } %>
                     <a class="nav-link me-3" href="/profile">Profile</a>
                     <form action="/logout" method="POST" class="m-0">
                         <button class="nav-link me-3" type="submit">Logout</button>

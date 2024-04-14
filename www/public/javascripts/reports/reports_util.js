@@ -24,8 +24,8 @@ function createChart(id, labels, datasets, type, options = null) {
             interaction: {
                 mode: 'index',
                 intersect: false,
-            }
-
+            },
+            maintainAspectRatio: false,
         },
     };
 
