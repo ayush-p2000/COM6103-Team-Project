@@ -1,5 +1,7 @@
+/* globals Chart:false */
+
 document.addEventListener('DOMContentLoaded', function () {
-    $('#account_types_table').DataTable({
+    $('#cases_table').DataTable({
 
     });
 });

@@ -4,37 +4,40 @@
         <h4>Welcome, <%= admin.name + " " + admin.lastName %></h4>
     </div>
     <div class="row mb-3">
-        <div class="col-md-4 ">
+        <div class="col-lg-6 col-xl-4 mb-2 mb-xl-0">
             <div class="card h-100 bg-danger">
                 <div class="card-body d-flex align-content-center justify-content-around">
                     <p class="h3 text-center text-white m-0 align-self-center"><%= numOfUsers %><br>Users</p>
-                    <img src="/assets/user.svg" alt="">
+                    <i class="fas fa-users fa-5x text-white my-auto"></i>
                 </div>
                 <div class="card-footer-login">
-                    <p class="text-white m-0 text-center">Total number of users</p>
+                    <p class="text-white m-0 text-center">Total Users</p>
                 </div>
             </div>
         </div>
-        <div class="col ">
-            <div class="card h-100 bg-primary">
-                <div class="card-body d-flex align-content-center justify-content-around ">
-                    <p class="h3 text-center text-white m-0 align-self-center"><%= numOfFinishedTransactions %><br>Sales
-                    </p>
-                    <img src="/assets/transaction.svg" alt="">
-                </div>
-                <div class="card-footer-login">
-                    <p class="text-white m-0 text-center">Finished transactions</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
+        <div class="col-lg-6 col-xl-4 mb-2 mb-xl-0">
             <div class="card h-100 bg-success">
                 <div class="card-body d-flex align-content-center justify-content-around">
                     <p class="h3 text-center text-white m-0 align-self-center"><%= savedCo2 %><br>Nkg</p>
-                    <img src="/assets/leaf.svg" alt="">
+                    <i class="fas fa-leaf fa-5x text-white my-auto"></i>
                 </div>
                 <div class="card-footer-login">
-                    <p class="text-white m-0 text-center">Saved Nkg of C02 because</p>
+                    <p class="text-white m-0 text-center">CO2 saved</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 mb-2 mb-xl-0">
+            <div class="card h-100 bg-primary">
+                <div class="card-body d-flex align-content-center justify-content-around ">
+                    <p class="h3 text-center text-white m-0 align-self-center"><%= numOfSales %><br>Sales</p>
+                    <div class="vr mx-2 text-white" style="width: 3px"></div>
+                    <p class="h3 text-center text-white m-0 align-self-center"><%= numOfReferrals %><br>Referrals</p>
+
+                    <i class="fas fa-shopping-cart fa-5x text-white my-auto"></i>
+                </div>
+                <div class="card-footer-login">
+                    <p class="text-white m-0 text-center">Completed Sales (Previous <%= previous_months %> months)</p>
                 </div>
             </div>
         </div>
@@ -42,28 +45,54 @@
     <div class="row  mb-3">
         <div class="col">
             <a class="d-block btn btn-lg btn-warning pt-3 pb-3 ms-auto me-auto h-100 d-flex justify-content-center align-items-center"
-               href="/admin/accounts">Manage Users</a>
+               href="/admin/accounts">List of Accounts</a>
         </div>
         <div class="col">
             <a class="d-block btn btn-lg btn-warning  pt-3 pb-3 ms-auto me-auto h-100 d-flex justify-content-center align-items-center"
-               href="/admin/reports">Show Reports</a>
+               href="/admin/reports">Reports</a>
         </div>
         <div class="col">
             <a class="d-block btn btn-lg btn-warning  pt-3 pb-3 ms-auto me-auto h-100 d-flex justify-content-center align-items-center"
-               href="/admin/devices">List of Items</a>
+               href="/admin/devices">List of Devices</a>
         </div>
     </div>
     <!--    Graph Placeholders -->
     <!--    TODO change to Report component once its finished -->
     <div class="row mb-3">
-        <div class="bg-body-secondary d-flex justify-content-around align-items-center col p-5">
-            <h3 class="p-5 text-muted">Graph Placeholder</h3>
+        <div class="col-12 p-2">
+            <a href="/admin/reports/sales" class="text-decoration-none text-body">
+                <div class="card shadow-sm hover-shadow">
+                    <div class="card-body" style="height: 350px">
+                        <h5 class="card-title text-center">Total Sales</h5>
+
+                        <%- include('reports/charts/sales', salesData) %>
+
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/sales">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
     <!--    TODO change to Report component once its finished -->
     <div class="row mb-3">
-        <div class="bg-body-secondary d-flex justify-content-around align-items-center col p-5">
-            <h3 class="p-5 text-muted">Graph Placeholder</h3>
+        <div class="col-12 p-2">
+            <a href="/admin/reports/referrals" class="text-decoration-none text-body">
+                <div class="card shadow-sm hover-shadow">
+                    <div class="card-body" style="height: 350px">
+                        <h5 class="card-title text-center">Total Referrals</h5>
+
+                        <%- include('reports/charts/referrals', referralsData) %>
+
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/referrals">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
+
+    <script src="/javascripts/reports/reports_util.js"></script>
 </div>
