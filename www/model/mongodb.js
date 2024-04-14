@@ -1148,8 +1148,7 @@ module.exports = {
     getAccountsCountByType,
     getReferralCountByMonth,
     getReferralValueByMonth,
-    getAllReferralsOrderedByDate
-    getAccountsCountByType,
+    getAllReferralsOrderedByDate,
     addTransaction,
     updateTransaction,
     getTransactionByDevice,
