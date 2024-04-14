@@ -54,10 +54,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isConfirmed) {
             const formData = new FormData();
             const userId = document.getElementById('userId').value;
-            const email = "";
 
             formData.append('id', userId);
-            formData.append('email',email);
 
             fetch(endpoint, {
                 method: 'POST',
