@@ -118,11 +118,12 @@ async function deleteUser(req,res,next){
     try {
         const userId = req.body.id;
         const user = {
-            email: null,
+            email: 'deleted@example.com',
             google_id: null,
             facebook_id: null,
             password:null,
             salt:null,
+            active:false,
             isDeleted:true
 
         };
