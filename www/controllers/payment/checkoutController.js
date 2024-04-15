@@ -5,8 +5,9 @@
 const {getMockPurchaseData} = require("../../util/mock/mockData");
 const {request} = require("express");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const {getItemDetail, addTransaction, updateTransaction, getTransactionByDevice, getTransactionById} = require("../../model/mongodb")
+const {getItemDetail, addTransaction, updateTransaction, getTransactionByDevice, getTransactionById, updateDeviceState} = require("../../model/mongodb")
 const transactionState = require('../../model/enum/transactionState')
+const deviceState = require('../../model/enum/deviceState')
 
 
 /**
@@ -23,39 +24,48 @@ async function getCheckout(req, res, next) {
     let product = ''
     let transactionDetails
     let transaction
-    //Check to determine if the payment is for retrieval or for extending the retrieval time
-    switch (type) {
-        case 'payment_retrieval':
-            product = 'Data Retrieval'
-            transaction = await getTransactionByDevice(id)
-            if (!transaction) {
+    //Check if the device is for recycling
+    if (total === '0') {
+        const state = deviceState.RECYCLED
+        await updateDeviceState(id, state)
+        const order = setTransactionDetails(id, total, 'Not Available', model, extension)
+        res.render('payment/checkout_complete', {title: 'Payment Completed', order: order, extension: extension})
+    } else {
+        //Check to determine if the payment is for retrieval or for extending the retrieval time
+        switch (type) {
+            case 'payment_retrieval':
+                product = 'Data Retrieval'
+                transaction = await getTransactionByDevice(id)
+                if (!transaction) {
+                    transactionDetails = {
+                        deviceId: id,
+                        value: total,
+                        state: transactionState['AWAITING_PAYMENT']
+                    }
+                    const newTransaction = await addTransaction(transactionDetails)
+                    id = newTransaction._id
+                } else id =  transaction._id
+
+                break
+            case 'retrieval_extension':
+                product = 'Data Retrieval Extension'
+                transaction = await getTransactionById(id)
+                const deviceId = transaction.device._id
+                const device = await getItemDetail(deviceId)
+                extension = req.query.extension
                 transactionDetails = {
-                    deviceId: id,
+                    id: id,
                     value: total,
+                    extension: extension,
                     state: transactionState['AWAITING_PAYMENT']
                 }
-                const newTransaction = await addTransaction(transactionDetails)
-                id = newTransaction._id
-            } else id =  transaction._id
+                await updateTransaction(transactionDetails)
+                break
+        }
 
-            break
-        case 'retrieval_extension':
-            product = 'Data Retrieval Extension'
-            transaction = await getTransactionById(id)
-            const deviceId = transaction.device._id
-            const device = await getItemDetail(deviceId)
-            extension = req.query.extension
-            transactionDetails = {
-                id: id,
-                value: total,
-                extension: extension,
-                state: transactionState['AWAITING_PAYMENT']
-            }
-            await updateTransaction(transactionDetails)
-            break
+        res.render('payment/checkout', {id: id, model: model, total: total, extension: extension, product: product})
     }
 
-    res.render('payment/checkout', {id: id, model: model, total: total, extension: extension, product: product})
 }
 
 /**
@@ -142,7 +152,7 @@ function setTransactionDetails(sessionId, amount, paymentMethod, product, extens
         currency: "£",
         paymentMethod: paymentMethod,
         product: product,
-        data_retrieval: extension === 0
+        data_retrieval: extension
     }
 }
 

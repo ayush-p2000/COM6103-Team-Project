@@ -63,16 +63,21 @@ document.addEventListener("DOMContentLoaded", function () {
         let total
         if (deviceRecycle.checked) {
             total = 0
-            if (dataService.checked) {
-                total += 8.99
-            }
-            deviceStateBadge.parentNode.removeChild(deviceStateBadge)
-
             const formData = new FormData()
             formData.append('id', id)
             formData.append('model', model.innerText)
+
+
+            //Check if the data service button is checked, if not the device is for recycling
+            if (dataService.checked) {
+                total += 8.99
+                formData.append('type', 'payment_retrieval')
+            } else {
+                formData.append('type', 'recycle')
+            }
+            deviceStateBadge.parentNode.removeChild(deviceStateBadge)
+
             formData.append('total', total)
-            formData.append('type', 'payment_retrieval')
 
             const form = document.createElement('form')
             form.method = 'GET';

@@ -39,6 +39,8 @@
                                                 <img src="/images/paypal.png" alt="PayPal" width="100">
                                             <% } else if (order.paymentMethod === "stripe") { %>
                                                 <img src="/images/stripe.png" alt="Stripe" width="100">
+                                            <% } else { %>
+                                                <h4 class="text-muted">Not applicable</h4>
                                             <% } %>
                                         </div>
 
@@ -84,8 +86,12 @@
                                     <p><strong><%= order.product %></strong></p>
                                     <p><strong>Price:</strong> <%= order.currency %><%= order.amount %></p>
                                     <div class="alert <%= (order.data_retrieval) ? "alert-success" : "alert-secondary" %> p-0 m-0 w-auto">
-                                        <% if(order.data_retrieval) { %>
-                                            <p class="p-0 m-0 text-center"><%= order.product +' '+ order.currency +' '+ order.amount %></p>
+                                        <% if(order.data_retrieval === 0) { %>
+                                            <% if(order.amount === '0') { %>
+                                                <p class="p-0 m-0 text-center"> Recycle <%= order.product %> </p>
+                                            <% } else { %>
+                                                <p class="p-0 m-0 text-center"><%= order.product +' '+ order.currency +' '+ order.amount %></p>
+                                            <% } %>
                                         <% } else { %>
                                             <p class="p-0 m-0 text-center"><%= order.product +' '+ order.currency +' '+ order.amount %> for <%= extension %> months</p>
                                         <% } %>

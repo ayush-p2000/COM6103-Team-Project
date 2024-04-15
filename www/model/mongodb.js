@@ -168,7 +168,15 @@ async function deleteQuote(id) {
  */
 async function updateDeviceState(id, state) {
     try {
-        return await Device.updateOne({device: id}, {state: state})
+        const filter = {
+            _id: id
+        }
+        const update = {
+            $set : {
+                state: state
+            }
+        }
+        return await Device.updateOne(filter, update)
     } catch (err) {
         console.log(err)
     }
