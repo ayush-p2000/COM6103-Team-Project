@@ -21,7 +21,6 @@ async function getUserDashboard(req, res, next) {
     try {
         const userData = await User.findById({_id: req.user.id});
         const firstName = userData.first_name
-        console.log(firstName)
         var userItems = await getUserItems(req.user.id)
         userItems = await getUnknownDevices(userItems)
         var marketplaceDevices = await getAllDevices()
@@ -36,11 +35,17 @@ async function getUserDashboard(req, res, next) {
                 marketDevices.push(device)
             }
         }
-        renderUserLayout(req, res, '../marketplace/user_home', {user: userData, firstName: firstName,devices: userItems, marketDevices: marketDevices, deviceCategory, auth: req.isLoggedIn})
-    }catch (err) {
+        renderUserLayout(req, res, '../marketplace/user_home', {
+            user: userData,
+            firstName: firstName,
+            devices: userItems,
+            marketDevices: marketDevices,
+            deviceCategory,
+            auth: req.isLoggedIn
+        })
+    } catch (err) {
         console.log(err)
     }
-    // res.render("user/dashboard", {user: userData, auth: req.isLoggedIn})
 
 }
 
@@ -75,25 +80,20 @@ async function getUnknownDevices(items) {
 //------------------------------------------------ Get User Data from Database -------------------------------------------------------------------------//
 
 async function getUserProfile(req, res, next) {
-    // TODO Fetch Full data of the user from the database
     try {
         const userData = await User.findById({_id: req.user.id});
-        console.log(userData)
-        renderUserLayout(req, res, 'user_profile', {user: userData, auth: req.isLoggedIn})
-        // res.render("user/user_profile", {user: userData, auth: req.isLoggedIn})
-
+        renderUserLayout(req, res, 'user_profile', {userData});
     } catch (err) {
-        res.send('No user found')
+        res.send('No user found');
     }
-
 }
 
 //------------------------------------------------ Get User Data from Database -------------------------------------------------------------------------//
 
 
-async function updateUserDetails(req, res, next){
+async function updateUserDetails(req, res, next) {
     let messages;
-    let checkUser = await User.findOne({_id: req.user.id})
+    let checkUser = await User.findOne({_id: req.user.id});
     try {
 
         const {firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country} = req.body; // Assuming these fields can be updated
@@ -102,15 +102,14 @@ async function updateUserDetails(req, res, next){
 
         if (firstName) {
             updateFields.first_name = firstName; // Update first name
-            if( checkUser.google_id == null && checkUser.facebook_id == null ){
+            if (checkUser.google_id == null && checkUser.facebook_id == null) {
                 updateFields.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName)}+${encodeURIComponent(lastName || req.user.last_name)}`;
             }
         }
 
-
         if (lastName) {
             updateFields.last_name = lastName; // Update last name
-            if( checkUser.google_id == null && checkUser.facebook_id == null ) {
+            if (checkUser.google_id == null && checkUser.facebook_id == null) {
                 updateFields.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName || req.user.first_name)}+${encodeURIComponent(lastName)}`;
             }
         }
@@ -151,19 +150,11 @@ async function updateUserDetails(req, res, next){
             user: updatedUser,
             auth: req.isLoggedIn
         })
-        // res.render("user/user_profile", {
-        //     messages: messages,
-        //     hasMessages: messages.length > 0,
-        //     user: updatedUser,
-        //     auth: req.isLoggedIn
-        // });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
     }
 }
-
-
 
 
 module.exports = {

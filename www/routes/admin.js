@@ -12,7 +12,7 @@ const {getReportsPage, getReportPage} = require("../controllers/admin/adminRepor
 const {
     getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage,
     getUserDeviceDetailsPage, updateUserDeviceDetailsPage, getModelsFromTypeAndBrand,postNewDeviceType,
-    postNewBrand, postNewModel, updateDeviceType, deleteDeviceType, postDeviceStateOverride, postDeviceDemotion, postDevicePromotion,
+    postNewBrand, postNewModel, getRetrievalDevicesPage, updateDeviceType, deleteDeviceType, postDeviceStateOverride, postDeviceDemotion, postDevicePromotion,
     postDeviceChangeRequest, postDeviceVisibility
 } = require("../controllers/admin/adminDevicesController");
 
@@ -36,6 +36,7 @@ router.get('/accounts/:id/edit', getEditAccountPage);
 router.get('/devices', getDevicesPage);
 
 router.get('/devices/flagged', getFlaggedDevicesPage);
+router.get('/devices/retrievals', getRetrievalDevicesPage);
 router.post('/devices/postNewDeviceType', upload.none(), postNewDeviceType);
 router.post('/devices/postNewBrand', upload.none(), postNewBrand);
 router.post('/devices/postNewModel', upload.none(), postNewModel);

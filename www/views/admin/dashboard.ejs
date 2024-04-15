@@ -1,7 +1,7 @@
 <div class="container-fluid h-100 pt-5">
     <div class="row mb-3">
         <h3 class="fw-bold">Admin Dashboard</h3>
-        <h4>Welcome, <%= admin.name + " " + admin.lastName %></h4>
+        <h4>Welcome, <%= admin.first_name + " " + admin.last_name %></h4>
     </div>
     <div class="row mb-3">
         <div class="col-lg-6 col-xl-4 mb-2 mb-xl-0">
@@ -56,8 +56,6 @@
                href="/admin/devices">List of Devices</a>
         </div>
     </div>
-    <!--    Graph Placeholders -->
-    <!--    TODO change to Report component once its finished -->
     <div class="row mb-3">
         <div class="col-12 p-2">
             <a href="/admin/reports/sales" class="text-decoration-none text-body">
@@ -75,7 +73,6 @@
             </a>
         </div>
     </div>
-    <!--    TODO change to Report component once its finished -->
     <div class="row mb-3">
         <div class="col-12 p-2">
             <a href="/admin/reports/referrals" class="text-decoration-none text-body">

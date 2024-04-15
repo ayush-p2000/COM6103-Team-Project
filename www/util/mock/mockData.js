@@ -143,7 +143,6 @@ const getMockItems = () => {
     ];
 }
 
-//TODO: Remove these once real retrieval is available
 function getMockPurchaseData() {
     const {faker} = require('@faker-js/faker');
 
@@ -183,7 +182,6 @@ function getMockPurchaseData() {
     return order;
 }
 
-//TODO: Remove these once real retrieval is available
 function getMockSalesData() {
     const {faker} = require('@faker-js/faker');
 

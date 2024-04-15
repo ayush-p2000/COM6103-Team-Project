@@ -4,6 +4,7 @@
 
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
 const {User} = require("../../model/schema/user");
+const roleTypes = require("../../model/enum/roleTypes");
 
 const {getAllUsers, searchUserAndPopulate, getUserById, getTotalAccountsCount, getSalesCountByMonth,
     getReferralCountByMonth
@@ -83,6 +84,10 @@ async function insertStaffDetails(req,res,next){
 
         if(role){
             updateFields.role = role;
+        }
+
+        if (req.user.role > roleTypes.USER && req.body.role <= req.user.role) {
+            return res.status(403).send('You do not have the required permissions to perform this action');
         }
 
         const userDetails = await User.findByIdAndUpdate(user, updateFields, {new: true});
