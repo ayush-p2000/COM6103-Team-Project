@@ -23,10 +23,11 @@ const transactionState = require('../../model/enum/transactionState')
 function getPaypal (req, res, next) {
 
     let extension = 0
-    let data = {} = {
+    let data = {
         id: req.query.id,
-        model: req.query.model,
-        total: req.query.total
+        product: req.query.product,
+        total: req.query.total,
+        type: req.query.type
     }
     if (req.query.extension) {
         extension = req.query.extension
@@ -44,9 +45,10 @@ const payProduct = async(req,res)=>{
 
     try {
         let id = req.query.id
-        let model = req.query.model
+        let product = req.query.product
         let total = req.query.total
         let extension = req.query.extension
+        let type = req.query.type
         let sku
         switch (extension) {
             case 0: sku = 1
@@ -62,13 +64,13 @@ const payProduct = async(req,res)=>{
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete?id=${id}&type=paypal&total=${total}&extension=${extension}`,
-                "cancel_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/paypal/cancelled?id=${id}&type=paypal&total=${total}&extension=${extension}`
+                "return_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete?id=${id}&method=paypal&total=${total}&extension=${extension}&type=${type}`,
+                "cancel_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/paypal/cancelled?id=${id}&method=paypal&total=${total}&extension=${extension}&type=${type}`
             },
             "transactions": [{
                 "item_list": {
                     "items": [{
-                        "name": `${model}`,
+                        "name": `${product}`,
                         "price": `${total}`,
                         "currency": "GBP",
                         "quantity": 1,
@@ -126,7 +128,7 @@ const paypalSuccess = async(req,res)=>{
                 throw error;
             } else {
                 console.log(JSON.stringify(payment));
-                res.render('payment/checkout_complete');
+                // res.render('payment/checkout_complete');
             }
         });
 
@@ -149,10 +151,8 @@ const cancelPayment = async(req,res)=>{
             state: transactionState['PAYMENT_CANCELLED'],
             paymentMethod: req.query.type,
         }
-        if (req.query.extension > 0) {
-            transaction = {
-                extension: req.query.extension
-            }
+        if (req.query.type === 'retrieval_extension') {
+            transaction.extension = req.query.extension
         }
         await updateTransaction(transaction)
         res.render('payment/cancel');

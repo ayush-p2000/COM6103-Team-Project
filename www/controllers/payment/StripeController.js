@@ -11,8 +11,9 @@ function getStripe (req, res, next) {
     let extension = 0
     let data = {
         id: req.query.id,
-        model: req.query.model,
-        total: req.query.total
+        product: req.query.product,
+        total: req.query.total,
+        type: req.query.type
     }
     if (req.query.extension) {
         extension = req.query.extension
@@ -27,16 +28,17 @@ function getStripe (req, res, next) {
  */
 const stripePayment = async (req, res) => {
     let id = req.query.id
-    let model = req.query.model
+    let product = req.query.product
     let total = req.query.total
     let extension = req.query.extension
+    let type = req.query.type
     const session = await stripe.checkout.sessions.create({
         line_items: [
             {
                 price_data: {
                     currency: 'gbp',
                     product_data: {
-                        name: model,
+                        name: product,
                     },
                     unit_amount: total*100,
                 },
@@ -44,8 +46,8 @@ const stripePayment = async (req, res) => {
             },
         ],
         mode: 'payment',
-        success_url: `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete?sessionId={CHECKOUT_SESSION_ID}&id=${id}&type=stripe&extension=${extension}`,
-        cancel_url: `${process.env.BASE_URL}:${process.env.PORT}/checkout/stripe/cancelled?id=${id}&total=${total}&type=stripe&extension=${extension}`
+        success_url: `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete?sessionId={CHECKOUT_SESSION_ID}&id=${id}&method=stripe&extension=${extension}&type=${type}`,
+        cancel_url: `${process.env.BASE_URL}:${process.env.PORT}/checkout/stripe/cancelled?id=${id}&total=${total}&method=stripe&extension=${extension}&type=${type}`
     });
 
     res.redirect(303, session.url)

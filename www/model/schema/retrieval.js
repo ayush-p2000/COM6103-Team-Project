@@ -45,7 +45,7 @@ const retrievalSchema = new mongoose.Schema({
                 required: false
             },
             payment_method: {
-                type:String
+                type:Number
             }
         },
         extension_transaction: {
@@ -66,7 +66,7 @@ const retrievalSchema = new mongoose.Schema({
                 required: false
             },
             payment_method: {
-                type:String
+                type:Number
             }
         },
         is_extended: {

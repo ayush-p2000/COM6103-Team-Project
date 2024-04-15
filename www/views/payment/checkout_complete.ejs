@@ -86,7 +86,7 @@
                                     <p><strong><%= order.product %></strong></p>
                                     <p><strong>Price:</strong> <%= order.currency %><%= order.amount %></p>
                                     <div class="alert <%= (order.data_retrieval) ? "alert-success" : "alert-secondary" %> p-0 m-0 w-auto">
-                                        <% if(order.data_retrieval === 0) { %>
+                                        <% if(order.data_retrieval === '0') { %>
                                             <% if(order.amount === '0') { %>
                                                 <p class="p-0 m-0 text-center"> Recycle <%= order.product %> </p>
                                             <% } else { %>

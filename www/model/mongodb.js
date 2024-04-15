@@ -1007,19 +1007,21 @@ async function addTransaction(transactionDetails) {
     return retrieval.save()
 }
 
+
+const DEFAULT_EXTENSION_LENGTH = 3
 /**
  * Get method used to set the expiry date based on extension i.e. number of months(3 or 6)
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 function getDate(extension) {
     const currentDate = new Date()
-    const extension_default_length = 3
+
     let currentMonth = currentDate.getMonth()
     let currentYear = currentDate.getFullYear();
     if (extension) {
         currentMonth += extension
     } else {
-        currentMonth += extension_default_length;
+        currentMonth += DEFAULT_EXTENSION_LENGTH;
     }
 
     if (currentMonth > 11) {
@@ -1063,6 +1065,13 @@ async function updateTransaction(transactionDetails) {
                             is_extended: true,
                         }
                     };
+                    break
+                case transactionState.AWAITING_PAYMENT:
+                    update = {
+                        $set: {
+                            extension_transaction: extension_details
+                        }
+                    }
                     break
             }
         } else {

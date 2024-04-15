@@ -8,6 +8,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const {getItemDetail, addTransaction, updateTransaction, getTransactionByDevice, getTransactionById, updateDeviceState} = require("../../model/mongodb")
 const transactionState = require('../../model/enum/transactionState')
 const deviceState = require('../../model/enum/deviceState')
+const paymentMethod = require('../../model/enum/paymentMethod')
 
 
 /**
@@ -17,15 +18,15 @@ const deviceState = require('../../model/enum/deviceState')
  */
 async function getCheckout(req, res, next) {
     let id = req.query.id
-    let model = req.query.model
     let total = req.query.total
     let extension = 0
-    let type = req.query.type
+    let type = req.query.type.toLowerCase()
     let product = ''
     let transactionDetails
     let transaction
     //Check if the device is for recycling
     if (total === '0') {
+        let model = req.query.model
         const state = deviceState.RECYCLED
         await updateDeviceState(id, state)
         const order = setTransactionDetails(id, total, 'Not Available', model, extension)
@@ -44,7 +45,9 @@ async function getCheckout(req, res, next) {
                     }
                     const newTransaction = await addTransaction(transactionDetails)
                     id = newTransaction._id
-                } else id =  transaction._id
+                } else {
+                    id =  transaction._id
+                }
 
                 break
             case 'retrieval_extension':
@@ -54,7 +57,7 @@ async function getCheckout(req, res, next) {
                 const device = await getItemDetail(deviceId)
                 extension = req.query.extension
                 transactionDetails = {
-                    id: id,
+                    id: transaction._id,
                     value: total,
                     extension: extension,
                     state: transactionState['AWAITING_PAYMENT']
@@ -63,7 +66,7 @@ async function getCheckout(req, res, next) {
                 break
         }
 
-        res.render('payment/checkout', {id: id, model: model, total: total, extension: extension, product: product})
+        res.render('payment/checkout', {id: id, total: total, extension: extension, product: product})
     }
 
 }
@@ -74,7 +77,7 @@ async function getCheckout(req, res, next) {
  */
 function checkoutToProvider(req, res, next){
     let method = req.body.paymentProvider;
-    let type = req.query.type
+    let type = req.query.type.toLowerCase()
     let id = req.body.transactionId
     let total = req.query.total
     let extension = req.query.extension
@@ -82,13 +85,14 @@ function checkoutToProvider(req, res, next){
 
     let data = {
         id: id,
-        model: product,
-        total: total
+        product: product,
+        total: total,
+        type: type
     }
 
     if (type === 'retrieval_extension') {
         data.extension = extension
-        data.model = 'Data Retrieval Extension'
+        data.product = 'Data Retrieval Extension'
     }
 
     let queryString = Object.keys(data).map(key => key + '='+ encodeURIComponent(data[key])).join('&')
@@ -107,9 +111,10 @@ async function getCheckoutCompleted(req, res, next) {
     let total = 0
     let extension = req.query.extension
     let product = 'Data Retrieval'
+    let type = req.query.type
 
     //Check if the payment is done through stripe or paypal and  get the payment id for the same
-    switch (req.query.type) {
+    switch (req.query.method) {
         case 'stripe':
             sessionId = req.query.sessionId
             let session = await stripe.checkout.sessions.retrieve(sessionId)
@@ -127,13 +132,13 @@ async function getCheckoutCompleted(req, res, next) {
         id: id,
         value: total,
         state: transactionState['PAYMENT_RECEIVED'],
-        paymentMethod: req.query.type
+        paymentMethod: paymentMethod[req.query.method.toUpperCase()]
     }
-    if (extension > 0) {
+    if (type === 'retrieval_extension') {
         product = 'Data Retrieval Extension'
         transactionDetails.extension = extension
     }
-    order = setTransactionDetails(sessionId, total, req.query.type, product, extension)
+    order = setTransactionDetails(sessionId, total, req.query.method, product, extension)
 
     await updateTransaction(transactionDetails)
 
