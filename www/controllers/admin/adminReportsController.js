@@ -472,7 +472,8 @@ async function prepareQuotesData() {
 
     quotes.forEach(quote => {
         table.push({
-            name: `${quote.device?.model?.name ?? "Unknown Model"} ${quote.provider?.name.toUpperCase() ?? "Unknown provider"}`,
+            name: `${quote.device?.model?.name ?? "Unknown Model"}`,
+            provider: `${quote.provider?.name ?? "Unknown provider"}`,
             state: quote.state,
             date_added: quote.createdAt?.toLocaleDateString("en-GB", {
                 day: "numeric",

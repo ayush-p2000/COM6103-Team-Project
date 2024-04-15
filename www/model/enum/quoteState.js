@@ -55,17 +55,17 @@ const quoteState = {
     quoteStateToRGB: (state, border = false) => {
         switch (state) {
             case NEW:
-                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+                return border ? 'rgb(0, 191, 255)' : 'rgba(0, 191, 255, 0.2)';
             case SAVED:
-                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+                return border ? 'rgb(255, 165, 0)' : 'rgba(255, 165, 0, 0.2)';
             case REJECTED:
-                return border ? 'rgb(0, 0, 255)' : 'rgba(0, 0, 255, 0.2)';
+                return border ? 'rgb(255, 0, 0)' : 'rgba(255, 0, 0, 0.2)';
             case ACCEPTED:
                 return border ? 'rgb(0, 128, 0)' : 'rgba(0, 128, 0, 0.2)';
             case CONVERTED:
-                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+                return border ? 'rgb(255, 99, 132)' : 'rgba(255, 99, 132, 0.2)';
             case EXPIRED:
-                return border ? 'rgb(0, 128, 0)' : 'rgba(0, 128, 0, 0.2)';
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
             default:
                 return border ? 'rgb(255, 165, 0)' : 'rgba(255, 165, 0, 0.2)';
         }
