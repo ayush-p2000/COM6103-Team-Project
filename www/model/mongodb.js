@@ -19,7 +19,6 @@ const {UNKNOWN_DEVICE} = require("./enum/historyType");
 const {UNKNOWN} = require("./enum/deviceCategory")
 const {HAS_QUOTE} = require("./enum/deviceState")
 const deviceState = require("./enum/deviceState");
-const retrievalState = require("./enum/retrievalState");
 const {quoteState} = require("./enum/quoteState");
 const historyType = require("./enum/historyType");
 const transactionState = require('./enum/transactionState')
@@ -1074,7 +1073,7 @@ function getDate(extension) {
     let currentMonth = currentDate.getMonth()
     let currentYear = currentDate.getFullYear();
     if (extension) {
-        currentMonth += extension
+        currentMonth += parseInt(extension);
     } else {
         currentMonth += DEFAULT_EXTENSION_LENGTH;
     }
@@ -1084,7 +1083,8 @@ function getDate(extension) {
         currentYear += 1;
     }
 
-    return new Date(currentYear, currentMonth, currentDate.getDate())
+    //Include the current time
+    return new Date(currentYear, currentMonth, currentDate.getDate(), currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
 }
 
 /**

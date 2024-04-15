@@ -2,7 +2,7 @@ const THREE_MONTH_COST = 6.99;
 const SIX_MONTH_COST = 9.99;
 const THREE_MONTH_EXTENSION = 3;
 const SIX_MONTH_EXTENSION = 6;
-const EXTENSION_TYPE = 'RETRIEVAL_EXTENSION';
+const EXTENSION_TYPE = 'retrieval_extension';
 
 document.addEventListener('DOMContentLoaded', function () {
     const file_table = $('#file_table');
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = new FormData();
 
-        formData.append('retrieval_id', retrievalID);
+        formData.append('id', retrievalID);
         formData.append('type', EXTENSION_TYPE);
         formData.append('extension', THREE_MONTH_EXTENSION);
         formData.append('total', THREE_MONTH_COST);
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = new FormData();
 
-        formData.append('retrieval_id', retrievalID);
+        formData.append('id', retrievalID);
         formData.append('type', EXTENSION_TYPE);
         formData.append('extension', SIX_MONTH_EXTENSION);
         formData.append('total', SIX_MONTH_COST);

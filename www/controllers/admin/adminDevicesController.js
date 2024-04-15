@@ -369,7 +369,6 @@ async function getModelsFromTypeAndBrand(req, res) {
 const updateUserDeviceDetailsPage = async (req, res) => {
     try {
         const item_id = req.params.id;
-        console.log(req.body)
         const updatedItem = await updateDeviceDetails(item_id, req.body)
         res.status(200).send(updatedItem._id)
     } catch (err) {
@@ -380,7 +379,7 @@ const updateUserDeviceDetailsPage = async (req, res) => {
 const postDevicePromotion = async (req, res) => {
     try {
         //Get the device object from the request
-        const item = await getItemDetail(id);
+        const item = req.device;
 
         //Promote the device
         const newValue = deviceState.getNextTypicalState(item.state)
@@ -405,7 +404,7 @@ const postDevicePromotion = async (req, res) => {
                 await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
 
                 const reviewHistory = await getReviewHistory(item._id);
-                if (reviewHistory.length > 0 && reviewHistory[0].history_type === historyType.REVIEW_REQUESTED || reviewHistory[0].history_type === historyType.REVIEW_REJECTED) {
+                if (reviewHistory?.length > 0 && reviewHistory[0]?.history_type === historyType.REVIEW_REQUESTED || reviewHistory[0]?.history_type === historyType.REVIEW_REJECTED) {
                     //Add another history item approving the review
                     const newHistoryObject = {
                         device: item._id,
