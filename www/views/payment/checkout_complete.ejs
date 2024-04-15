@@ -35,10 +35,12 @@
                                     <div class="text-center">
                                         <p>Paid via:</p>
                                         <div class="border border-2 rounded p-2">
-                                            <% if (order.paymentMethod === "PayPal") { %>
+                                            <% if (order.paymentMethod === "paypal") { %>
                                                 <img src="/images/paypal.png" alt="PayPal" width="100">
-                                            <% } else if (order.paymentMethod === "Stripe") { %>
+                                            <% } else if (order.paymentMethod === "stripe") { %>
                                                 <img src="/images/stripe.png" alt="Stripe" width="100">
+                                            <% } else { %>
+                                                <h4 class="text-muted">Not applicable</h4>
                                             <% } %>
                                         </div>
 
@@ -80,14 +82,21 @@
                             <div class="card h-100">
                                 <div class="card-body">
                                     <h3 class="fw-bold">Product Details</h3>
-                                    <% order.products.forEach(product => { %>
-                                        <hr>
-                                        <p><strong><%= product.name %></strong></p>
-                                        <p><strong>Price:</strong> <%= order.currency %><%= product.price %></p>
-                                        <div class="alert <%= (product.data_retrieval) ? "alert-success" : "alert-secondary" %> p-0 m-0 w-auto">
-                                            <p class="p-0 m-0 text-center"><%= (product.data_retrieval) ? "Data Retrieval (+ £4.99)" : "No Data Retrieval" %></p>
-                                        </div>
-                                    <% }) %>
+                                    <hr>
+                                    <p><strong><%= order.product %></strong></p>
+                                    <p><strong>Price:</strong> <%= order.currency %><%= order.amount %></p>
+                                    <div class="alert <%= (order.data_retrieval) ? "alert-success" : "alert-secondary" %> p-0 m-0 w-auto">
+                                        <% if(order.data_retrieval === '0') { %>
+                                            <% if(order.amount === '0') { %>
+                                                <p class="p-0 m-0 text-center"> Recycle <%= order.product %> </p>
+                                            <% } else { %>
+                                                <p class="p-0 m-0 text-center"><%= order.product +' '+ order.currency +' '+ order.amount %></p>
+                                            <% } %>
+                                        <% } else { %>
+                                            <p class="p-0 m-0 text-center"><%= order.product +' '+ order.currency +' '+ order.amount %> for <%= extension %> months</p>
+                                        <% } %>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>

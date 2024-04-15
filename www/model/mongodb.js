@@ -20,6 +20,8 @@ const {UNKNOWN} = require("./enum/deviceCategory")
 const {HAS_QUOTE} = require("./enum/deviceState")
 const {quoteState} = require("./enum/quoteState");
 const historyType = require("./enum/historyType");
+const transactionState = require('./enum/transactionState')
+const retrievalState = require('./enum/retrievalState')
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -166,7 +168,15 @@ async function deleteQuote(id) {
  */
 async function updateDeviceState(id, state) {
     try {
-        return await Device.updateOne({device: id}, {state: state})
+        const filter = {
+            _id: id
+        }
+        const update = {
+            $set : {
+                state: state
+            }
+        }
+        return await Device.updateOne(filter, update)
     } catch (err) {
         console.log(err)
     }
@@ -980,6 +990,122 @@ const getAllReferralsOrderedByDate = async (prevMonths) => {
 }
 
 
+/**
+ * Method to add a new transaction
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function addTransaction(transactionDetails) {
+    const retrieval = new Retrieval({
+        device: transactionDetails.deviceId,
+        expiry: getDate(),
+        retrieval_state: retrievalState.AWAITING_DEVICE,
+        transaction: {
+            value: transactionDetails.value,
+            transaction_state: transactionDetails.state
+        }
+    })
+    return retrieval.save()
+}
+
+
+const DEFAULT_EXTENSION_LENGTH = 3
+/**
+ * Get method used to set the expiry date based on extension i.e. number of months(3 or 6)
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+function getDate(extension) {
+    const currentDate = new Date()
+
+    let currentMonth = currentDate.getMonth()
+    let currentYear = currentDate.getFullYear();
+    if (extension) {
+        currentMonth += extension
+    } else {
+        currentMonth += DEFAULT_EXTENSION_LENGTH;
+    }
+
+    if (currentMonth > 11) {
+        currentMonth -= 12;
+        currentYear += 1;
+    }
+
+    return new Date(currentYear, currentMonth, currentDate.getDate())
+}
+
+/**
+ * Method used to update the transaction based on the type of service i.e. retrieval or extension
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateTransaction(transactionDetails) {
+        const filter = { _id: transactionDetails.id }
+        let update
+        if (transactionDetails.extension > 0) {
+            let extension_details = {
+                        value: transactionDetails.value,
+                        transaction_state: transactionDetails.state,
+                        payment_date: new Date(),
+                        length: transactionDetails.extension,
+                        payment_method: transactionDetails.paymentMethod
+            };
+
+            switch (transactionDetails.state) {
+                case transactionState.PAYMENT_CANCELLED:
+                    update = {
+                        $set: {
+                            extension_transaction: extension_details
+                        }
+                    }
+                    break
+                case transactionState.PAYMENT_RECEIVED:
+                    const date = getDate(transactionDetails.extension)
+                    update = {
+                        $set: {
+                            expiry: date,
+                            extension_transaction: extension_details,
+                            is_extended: true,
+                        }
+                    };
+                    break
+                case transactionState.AWAITING_PAYMENT:
+                    update = {
+                        $set: {
+                            extension_transaction: extension_details
+                        }
+                    }
+                    break
+            }
+        } else {
+            update = {
+                $set: {
+                    transaction: {
+                        value: transactionDetails.value,
+                        transaction_state: transactionDetails.state,
+                        payment_method: transactionDetails.paymentMethod,
+                        payment_date: new Date()
+                    },
+                }
+            };
+        }
+        return Retrieval.updateOne(filter, update);
+}
+
+/**
+ * get method to retrieve the transaction details by device id
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getTransactionByDevice(deviceId) {
+    return Retrieval.findOne({device: deviceId});
+}
+
+/**
+ * get method to retrieve the transaction details by transaction id
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getTransactionById(id) {
+    return Retrieval.findOne({_id: id});
+}
+
+
 module.exports = {
     getAllUsers,
     getUserById,
@@ -1039,5 +1165,9 @@ module.exports = {
     getAccountsCountByType,
     getReferralCountByMonth,
     getReferralValueByMonth,
-    getAllReferralsOrderedByDate
+    getAllReferralsOrderedByDate,
+    addTransaction,
+    updateTransaction,
+    getTransactionByDevice,
+    getTransactionById
 }
