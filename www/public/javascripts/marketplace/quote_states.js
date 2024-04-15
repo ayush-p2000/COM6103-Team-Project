@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
     })
 
-    checkoutButton.addEventListener('click', () => {
+    checkoutButton?.addEventListener('click', () => {
         let total
         if (deviceRecycle.checked) {
             total = 0

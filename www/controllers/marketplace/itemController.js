@@ -7,7 +7,12 @@ const multer = require('multer');
 const {getMockItem, getMockQuote} = require("../../util/mock/mockData");
 const fixedToCurrency = require("../../util/currency/fixedToCurrency");
 const {ACCEPTED, REJECTED, CONVERTED, EXPIRED, stateToString, stateToColour} = require("../../model/enum/quoteState");
-const {updateQuote, getQuoteById, getUnknownDeviceHistoryByDevice} = require("../../model/mongodb");
+const {
+    updateQuote,
+    getQuoteById,
+    getUnknownDeviceHistoryByDevice,
+    getRetrievalObjectByDeviceId
+} = require("../../model/mongodb");
 const mongoose = require("mongoose");
 const QRCode = require('qrcode');
 const {
@@ -31,6 +36,8 @@ const {generateQR} = require("../../util/qr/qrcodeGenerator");
 const cheerio = require('cheerio')
 const axios = require('axios')
 const {renderUserLayout} = require("../../util/layout/layoutUtils");
+const retrievalState = require("../../model/enum/retrievalState");
+const dataTypes = require("../../model/enum/dataTypes");
 const historyType = require("../../model/enum/historyType");
 const roleTypes = require("../../model/enum/roleTypes");
 
@@ -48,7 +55,7 @@ const postListItem = async (req, res) => {
 
             const image_data = Buffer.from(files[i].buffer, 'base64');
             const image_type = files[i].mimetype;
-            const base64Data = {img_data:image_data,img_type:image_type}
+            const base64Data = {img_data: image_data, img_type: image_type}
 
             filesBase64.push(base64Data);
         }
@@ -178,8 +185,13 @@ async function getItemDetails(req, res, next) {
         const deviceReviewHistory = await getHistoryByDevice(req.params.id, [historyType.REVIEW_REQUESTED, historyType.REVIEW_REJECTED, historyType.REVIEW_ACCEPTED]);
         const deviceVisibilityHistory = await getHistoryByDevice(req.params.id, [historyType.ITEM_HIDDEN, historyType.ITEM_UNHIDDEN]);
 
+
+        let retrievalData = null;
+        if (item.state === deviceState.DATA_RECOVERY) {
+            retrievalData = await getRetrievalObjectByDeviceId(item._id);
+        }
         renderUserLayout(req, res, '../marketplace/item_details', {
-            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes
+            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, retrievalData, retrievalState,deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes
         })
         // res.render('marketplace/item_details', {
         //     item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user,

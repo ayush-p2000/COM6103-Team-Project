@@ -6,7 +6,6 @@
  * @author Benjamin Lister
  */
 function renderAdminLayout(req, res, page, data) {
-    //TODO:Change auth, user, role once the admin login is done
     res.render('admin/admin_layout', {currentRoute: page, ...data, placeholder: null, auth: req.isLoggedIn, user:req.user, isAdminRoute: true});
 }
 

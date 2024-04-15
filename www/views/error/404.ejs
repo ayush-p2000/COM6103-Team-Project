@@ -1,0 +1,26 @@
+<%- include('../components/header') %>
+
+<%- include('../components/navbar') %>
+
+<div class="container-fluid mt-2">
+    <div class="row justify-content-center mb-2">
+        <div class="col-12 col-md-8 col-lg-6">
+            <h1 class="text-center">Sorry!</h1>
+            <h2 class="text-center">We couldn't find the page you were looking for.</h2>
+            <div class="d-flex justify-content-center">
+                <span class="fa-stack fa-5x text-center">
+                    <i class="fa-stack-1x fa-solid fa-signs-post text-light-emphasis"></i>
+                    <i class="fa-stack-2x fa-regular fa-circle text-danger"></i>
+                    <i class="fa-stack-1x fa-solid fa-question text-warning" style="font-size: 20%; position: relative; top: -32%;"></i>
+                </span>
+            </div>
+
+            <div class="border border-2 border-danger-subtle rounded-3 p-3 mt-3">
+
+                <p class="text-center p-0 m-0"><%= message %></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../components/footer') %>

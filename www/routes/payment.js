@@ -28,9 +28,4 @@ router.get('/checkout/stripe?', getStripe);
 
 router.post('/create-checkout-session?', stripePayment)
 
-//TODO: Add function to handle /payment route
-router.get('/payment', function (req, res, next) {
-    res.send('[Payment Route Here, will be for callbacks from payment processor, etc.]')
-});
-
 module.exports = router;

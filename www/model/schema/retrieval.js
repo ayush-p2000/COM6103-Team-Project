@@ -1,27 +1,36 @@
 const mongoose = require('mongoose');
 
+const fileSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    value: {
+        type: String,
+        required: false
+    },
+    buffer: {
+        type: Buffer,
+        required: false
+    },
+    use_buffer: {
+        type: Boolean,
+        required: false
+    },
+    data_type: {
+        type: Number,
+        required: false
+    }
+});
+
 const retrievalSchema = new mongoose.Schema({
         device: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Device',
-            required: true
+            required: true,
+            autopopulate: true
         },
-        data: [
-            {
-                name: {
-                    type: String,
-                    required: false
-                },
-                value: {
-                    type: String,
-                    required: false
-                },
-                data_type: {
-                    type: Number,
-                    required: false
-                }
-            }
-        ],
+        data: [fileSchema],
         retrieval_state: {
             type: Number,
             default: 0,
@@ -74,11 +83,18 @@ const retrievalSchema = new mongoose.Schema({
             required: true,
             default: false
         },
+        locked: {
+            type: Boolean,
+            required: true,
+            default: false
         },
-        {
-            timestamps: true
-        }
+    },
+    {
+        timestamps: true
+    }
 );
+
+retrievalSchema.plugin(require('mongoose-autopopulate'));
 
 module.exports = {
     Retrieval: mongoose.model('Retrieval', retrievalSchema)
