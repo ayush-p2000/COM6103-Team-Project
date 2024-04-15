@@ -461,7 +461,6 @@ async function prepareQuotesData() {
     const quoteStatesIntegers = quoteState.getList();
     const labels = [];
     quoteStatesIntegers.forEach(value => labels.push(quoteState.stateToString(value)));
-
     const data = Array(labels.length).fill(0);
 
     quoteGroups.forEach(group => {
@@ -473,21 +472,20 @@ async function prepareQuotesData() {
 
     quotes.forEach(quote => {
         table.push({
-            name: `${quote.device.model.name ?? "Unknown Model"} ${quote.provider.name.toUpperCase() ?? "Unknown provider"}`,
+            name: `${quote.device?.model?.name ?? "Unknown Model"} ${quote.provider?.name.toUpperCase() ?? "Unknown provider"}`,
             state: quote.state,
-            date_added: quote.createdAt.toLocaleDateString("en-GB", {
+            date_added: quote.createdAt?.toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
                 year: "numeric",
                 hour: "numeric",
                 minute: "numeric"
             }),
-            user: quote.device.listing_user,
+            user: quote.device?.listing_user,
             quote_id: quote._id,
         });
     });
 
-    console.log(data)
     return {labels: labels, datasets: [data], table: table};
 }
 

@@ -28,8 +28,8 @@
                                 <tr>
                                     <td><%= item.date_added %></td>
                                     <td>
-                                        <a href="/admin/users/<%= item.user._id %>">
-                                            <%= `${item.user.first_name} ${item.user.last_name}` %>
+                                        <a href="/admin/users/<%= item.user?._id %>">
+                                            <%= `${item.user?.first_name} ${item.user?.last_name}` %>
                                         </a>
                                     </td>
                                     <td>
