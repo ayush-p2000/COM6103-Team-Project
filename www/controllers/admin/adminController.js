@@ -4,17 +4,31 @@
 
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
 const {User} = require("../../model/schema/user");
-const {getAllUsers, searchUserAndPopulate, updateUser} = require("../../model/mongodb");
 
-function getAdminDashboard(req, res, next) {
+const {getAllUsers, searchUserAndPopulate, getUserById, getTotalAccountsCount, getSalesCountByMonth,
+    getReferralCountByMonth
+} = require("../../model/mongodb");
+const {prepareSalesData, prepareReferralsData} = require("./adminReportsController");
+
+
+const PREVIOUS_MONTHS = 6;
+
+async function getAdminDashboard(req, res, next) {
     const route = req.params.contentRoute ?? "dashboard";
 
-    const admin = {
-        name: "Chuck",
-        lastName: "Norris"
-    }
+    const admin = await getUserById(req.user.id);
 
-    renderAdminLayout(req, res, "dashboard",{admin, numOfUsers: 11, savedCo2:124.3, numOfFinishedTransactions: 1121})
+    const userCount = await getTotalAccountsCount();
+    const salesCounts = await getSalesCountByMonth(PREVIOUS_MONTHS);
+    const referralsCount = await getReferralCountByMonth(PREVIOUS_MONTHS);
+
+    const salesCount = salesCounts.reduce((acc, curr) => acc + curr.total, 0);
+    const referralCount = referralsCount.reduce((acc, curr) => acc + curr.total, 0);
+
+    const salesData = await prepareSalesData();
+    const referralsData = await prepareReferralsData()
+
+    renderAdminLayout(req, res, "dashboard", {admin, numOfUsers: userCount, savedCo2: 124.3, numOfSales: salesCount, numOfReferrals: referralCount, previous_months: PREVIOUS_MONTHS, salesData, referralsData});
 }
 
 async function insertStaffDetails(req,res,next){

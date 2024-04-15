@@ -106,4 +106,7 @@ a {
     width: 5%;
 }
 
+.height-500 {
+    max-height: 500px;
+}
 

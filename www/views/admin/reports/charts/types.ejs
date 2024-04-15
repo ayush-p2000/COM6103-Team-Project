@@ -1,11 +1,9 @@
-<div>
-    <canvas id="types_chart"></canvas>
-    <script src="/javascripts/reports/charts/types.js"></script>
-    <script>
-        const types_labels = <%- JSON.stringify(labels) %>;
-        const types_data = <%- JSON.stringify(datasets[0]) %>;
-        const types_labels_colours = types_labels.map(label => pickRandomColour(label))
-        const types_backgrounds = types_labels_colours.map(colour => colour.background);
-        const types_border_colours = types_labels_colours.map(colour => colour.border);
-    </script>
-</div>
+<canvas id="types_chart"></canvas>
+<script src="/javascripts/reports/charts/types.js"></script>
+<script>
+    const types_labels = <%- JSON.stringify(labels) %>;
+    const types_data = <%- JSON.stringify(datasets[0]) %>;
+    const types_labels_colours = types_labels.map(label => pickRandomColour(label))
+    const types_backgrounds = types_labels_colours.map(colour => colour.background);
+    const types_border_colours = types_labels_colours.map(colour => colour.border);
+</script>
