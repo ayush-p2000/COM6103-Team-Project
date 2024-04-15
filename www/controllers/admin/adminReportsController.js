@@ -11,7 +11,7 @@ const {
     getDevicesGroupByType,
     getAllDeviceTypes, getAccountsCountByStatus, getAllUsers, getAccountsCountByType, getAllSalesOrderedByDate,
     getSalesCountByMonth, getSalesValueByMonth,
-    getReferralValueByMonth, getAllReferralsOrderedByDate
+    getReferralValueByMonth, getAllReferralsOrderedByDate, getReferralCountByMonth
 } = require("../../model/mongodb");
 const deviceCategory = require("../../model/enum/deviceCategory");
 const deviceState = require("../../model/enum/deviceState");
@@ -48,7 +48,10 @@ async function getReportsPage(req, res, next) {
 
 async function getReportPage(req, res, next) {
     const type = req.params.report_type;
-    const title = type.charAt(0).toUpperCase() + type.slice(1);
+
+    //Create the title by removing underscores and capitalising the first letter of each word
+    const title = type.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+
     let data;
 
     switch (type) {
@@ -66,6 +69,12 @@ async function getReportPage(req, res, next) {
             break;
         case "account_types":
             data = await prepareAccountTypesData();
+            break;
+        case "referrals":
+            data = await prepareReferralsData();
+            break;
+        case "sales":
+            data = await prepareSalesData();
             break;
         case "sales":
             data = await prepareSalesData();
@@ -440,5 +449,7 @@ const prepareReferralsData = async () => {
 
 module.exports = {
     getReportsPage,
-    getReportPage
+    getReportPage,
+    prepareSalesData,
+    prepareReferralsData,
 }

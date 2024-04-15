@@ -22,6 +22,8 @@ const deviceState = require("./enum/deviceState");
 const retrievalState = require("./enum/retrievalState");
 const {quoteState} = require("./enum/quoteState");
 const historyType = require("./enum/historyType");
+const transactionState = require('./enum/transactionState')
+const retrievalState = require('./enum/retrievalState')
 
 /* Connection Properties */
 const MONGO_HOST = process.env.MONGO_HOST || "localhost";
@@ -168,7 +170,15 @@ async function deleteQuote(id) {
  */
 async function updateDeviceState(id, state) {
     try {
-        return await Device.updateOne({device: id}, {state: state})
+        const filter = {
+            _id: id
+        }
+        const update = {
+            $set : {
+                state: state
+            }
+        }
+        return await Device.updateOne(filter, update)
     } catch (err) {
         console.log(err)
     }
@@ -180,7 +190,7 @@ async function updateDeviceState(id, state) {
  */
 const getAllDeviceType = async () => {
     try {
-        return await DeviceType.find({is_deleted: false});
+        return await DeviceType.find({is_deleted: {$ne: true}});
     } catch (error) {
         console.error("An error occurred while get All DeviceType:", error);
         throw error;
@@ -193,7 +203,7 @@ const getAllDeviceType = async () => {
  */
 const getAllBrand = async () => {
     try {
-        return await Brand.find({is_deleted: false});
+        return await Brand.find({is_deleted: {$ne: true}});
     } catch (error) {
         console.error("An error occurred while get All Brand:", error);
         throw error;
@@ -232,7 +242,7 @@ const getModels = async (brandId, deviceTypeId) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getAllModels = async () => {
-    return await Model.find({is_deleted: false}).populate("deviceType").populate("brand")
+    return await Model.find({is_deleted: {$ne: true}}).populate("deviceType").populate("brand")
 }
 
 /**
@@ -546,7 +556,7 @@ const getCarouselDevices = async (imgPerCarousel) => {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getAllDeviceTypes() {
-    return await DeviceType.find({is_deleted: false});
+    return await DeviceType.find({is_deleted: {$ne: true}});
 }
 
 /**
@@ -554,7 +564,7 @@ async function getAllDeviceTypes() {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getAllBrands() {
-    return await Brand.find({is_deleted: false});
+    return await Brand.find({is_deleted: {$ne: true}});
 }
 
 /**
@@ -708,6 +718,11 @@ const getDevicesGroupByType = async () => {
             }
         }
     ]);
+}
+
+const getTotalAccountsCount = async () => {
+    //Return the total number of accounts in the database
+    return User.countDocuments();
 }
 
 const getAccountsCountByStatus = async () => {
@@ -1030,6 +1045,122 @@ const getAllReferralsOrderedByDate = async (prevMonths) => {
 }
 
 
+/**
+ * Method to add a new transaction
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function addTransaction(transactionDetails) {
+    const retrieval = new Retrieval({
+        device: transactionDetails.deviceId,
+        expiry: getDate(),
+        retrieval_state: retrievalState.AWAITING_DEVICE,
+        transaction: {
+            value: transactionDetails.value,
+            transaction_state: transactionDetails.state
+        }
+    })
+    return retrieval.save()
+}
+
+
+const DEFAULT_EXTENSION_LENGTH = 3
+/**
+ * Get method used to set the expiry date based on extension i.e. number of months(3 or 6)
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+function getDate(extension) {
+    const currentDate = new Date()
+
+    let currentMonth = currentDate.getMonth()
+    let currentYear = currentDate.getFullYear();
+    if (extension) {
+        currentMonth += extension
+    } else {
+        currentMonth += DEFAULT_EXTENSION_LENGTH;
+    }
+
+    if (currentMonth > 11) {
+        currentMonth -= 12;
+        currentYear += 1;
+    }
+
+    return new Date(currentYear, currentMonth, currentDate.getDate())
+}
+
+/**
+ * Method used to update the transaction based on the type of service i.e. retrieval or extension
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateTransaction(transactionDetails) {
+        const filter = { _id: transactionDetails.id }
+        let update
+        if (transactionDetails.extension > 0) {
+            let extension_details = {
+                        value: transactionDetails.value,
+                        transaction_state: transactionDetails.state,
+                        payment_date: new Date(),
+                        length: transactionDetails.extension,
+                        payment_method: transactionDetails.paymentMethod
+            };
+
+            switch (transactionDetails.state) {
+                case transactionState.PAYMENT_CANCELLED:
+                    update = {
+                        $set: {
+                            extension_transaction: extension_details
+                        }
+                    }
+                    break
+                case transactionState.PAYMENT_RECEIVED:
+                    const date = getDate(transactionDetails.extension)
+                    update = {
+                        $set: {
+                            expiry: date,
+                            extension_transaction: extension_details,
+                            is_extended: true,
+                        }
+                    };
+                    break
+                case transactionState.AWAITING_PAYMENT:
+                    update = {
+                        $set: {
+                            extension_transaction: extension_details
+                        }
+                    }
+                    break
+            }
+        } else {
+            update = {
+                $set: {
+                    transaction: {
+                        value: transactionDetails.value,
+                        transaction_state: transactionDetails.state,
+                        payment_method: transactionDetails.paymentMethod,
+                        payment_date: new Date()
+                    },
+                }
+            };
+        }
+        return Retrieval.updateOne(filter, update);
+}
+
+/**
+ * get method to retrieve the transaction details by device id
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getTransactionByDevice(deviceId) {
+    return Retrieval.findOne({device: deviceId});
+}
+
+/**
+ * get method to retrieve the transaction details by transaction id
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getTransactionById(id) {
+    return Retrieval.findOne({_id: id});
+}
+
+
 module.exports = {
     getAllUsers,
     getUserById,
@@ -1085,12 +1216,17 @@ module.exports = {
     deleteModel,
     deleteBrand,
     deleteType,
+    getTotalAccountsCount,
     getAccountsCountByStatus,
+    getSalesCountByMonth,
+    getSalesValueByMonth,
+    getAllSalesOrderedByDate,
     getAccountsCountByType,
     getReferralCountByMonth,
     getReferralValueByMonth,
     getAllReferralsOrderedByDate,
-    getSalesCountByMonth,
-    getSalesValueByMonth,
-    getAllSalesOrderedByDate,
+    addTransaction,
+    updateTransaction,
+    getTransactionByDevice,
+    getTransactionById
 }

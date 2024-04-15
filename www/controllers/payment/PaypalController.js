@@ -11,37 +11,75 @@ paypal.configure({
 let method = "";
 
 const {request} = require("express");
+const {updateTransaction} = require('../../model/mongodb')
+const transactionState = require('../../model/enum/transactionState')
 
+
+
+/**
+ * Get method used to display the gateway to paypal
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 function getPaypal (req, res, next) {
-    res.render('payment/paypalGateway', {});
+
+    let extension = 0
+    let data = {
+        id: req.query.id,
+        product: req.query.product,
+        total: req.query.total,
+        type: req.query.type
+    }
+    if (req.query.extension) {
+        extension = req.query.extension
+    }
+    let queryString = Object.keys(data).map(key => key + '='+ encodeURIComponent(data[key])).join('&')
+    res.render('payment/paypalGateway', {data:queryString, extension: extension});
 }
 
+
+/**
+ * Method used to create a payment session
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 const payProduct = async(req,res)=>{
 
     try {
-
+        let id = req.query.id
+        let product = req.query.product
+        let total = req.query.total
+        let extension = req.query.extension
+        let type = req.query.type
+        let sku
+        switch (extension) {
+            case 0: sku = 1
+                break
+            case 3: sku = 2
+                break
+            case 6: sku = 3
+                break
+        }
         const create_payment_json = {
             "intent": "sale",
             "payer": {
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete`,
-                "cancel_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/paypal/cancelled`
+                "return_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete?id=${id}&method=paypal&total=${total}&extension=${extension}&type=${type}`,
+                "cancel_url": `${process.env.BASE_URL}:${process.env.PORT}/checkout/paypal/cancelled?id=${id}&method=paypal&total=${total}&extension=${extension}&type=${type}`
             },
             "transactions": [{
                 "item_list": {
                     "items": [{
-                        "name": "Book",
-                        "sku": "001",
-                        "price": "50.00",
+                        "name": `${product}`,
+                        "price": `${total}`,
                         "currency": "GBP",
-                        "quantity": 1
+                        "quantity": 1,
+                        "sku": `${sku}`
                     }]
                 },
                 "amount": {
                     "currency": "GBP",
-                    "total": "50.00"
+                    "total": `${total}`
                 },
                 "description": "Anything"
             }]
@@ -59,6 +97,7 @@ const payProduct = async(req,res)=>{
             }
         });
 
+
     } catch (error) {
         console.log(error.message);
     }
@@ -71,13 +110,14 @@ const paypalSuccess = async(req,res)=>{
 
         const payerId = req.query.PayerID;
         const paymentId = req.query.paymentId;
+        const total = req.query.total
 
         const execute_payment_json = {
             "payer_id": payerId,
             "transactions": [{
                 "amount": {
                     "currency": "GBP",
-                    "total": "50.00"
+                    "total": `${total}`
                 }
             }]
         };
@@ -88,7 +128,7 @@ const paypalSuccess = async(req,res)=>{
                 throw error;
             } else {
                 console.log(JSON.stringify(payment));
-                res.render('payment/checkout_complete');
+                // res.render('payment/checkout_complete');
             }
         });
 
@@ -98,10 +138,23 @@ const paypalSuccess = async(req,res)=>{
 
 }
 
+/**
+ * Method used to display the cancel payment page and update the transaction in the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 const cancelPayment = async(req,res)=>{
 
     try {
-
+        let transaction = {
+            deviceId: req.query.id,
+            value: req.query.total,
+            state: transactionState['PAYMENT_CANCELLED'],
+            paymentMethod: req.query.type,
+        }
+        if (req.query.type === 'retrieval_extension') {
+            transaction.extension = req.query.extension
+        }
+        await updateTransaction(transaction)
         res.render('payment/cancel');
 
     } catch (error) {

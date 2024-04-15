@@ -2,59 +2,53 @@ const {request} = require("express");
 const {getMockPurchaseData} = require("../../util/mock/mockData");
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
+
+/**
+ * Get method used to display the stripe gateway
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 function getStripe (req, res, next) {
-    res.render('payment/StripeGateway', {key:process.env.STRIPE_PUBLISHABLE_KEY});
+    let extension = 0
+    let data = {
+        id: req.query.id,
+        product: req.query.product,
+        total: req.query.total,
+        type: req.query.type
+    }
+    if (req.query.extension) {
+        extension = req.query.extension
+    }
+    let queryString = Object.keys(data).map(key => key + '='+ encodeURIComponent(data[key])).join('&')
+    res.render('payment/StripeGateway', {key:process.env.STRIPE_PUBLISHABLE_KEY, data: queryString, extension: extension});
 }
 
-// function stripePayment(req, res, next){
-//     stripe.customers.create({
-//         email:req.body.stripeEmail,
-//         source:req.body.stripeToken,
-//         name:'Anonymous',
-//         address:{
-//             line1:"I live here",
-//             postal_code:'S3 7BY',
-//             city:'Sheffield',
-//             state:'South Yorkshire',
-//             country:'England'
-//         }
-//     })
-//         .then((customer) => {
-//             return stripe.charges.create({
-//                 amount:'7000',
-//                 description:'Buy item',
-//                 currency:'GBP',
-//                 customer:customer.id
-//             })
-//         })
-//         .then((charge) => {
-//             console.log(charge)
-//             res.render('payment/checkout_complete', {order: getMockPurchaseData()})
-//         })
-//         .catch((err) => {
-//             res.send(err)
-//         })
-// }
-
+/**
+ * Method used to create a stripe payment session
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 const stripePayment = async (req, res) => {
+    let id = req.query.id
+    let product = req.query.product
+    let total = req.query.total
+    let extension = req.query.extension
+    let type = req.query.type
     const session = await stripe.checkout.sessions.create({
         line_items: [
             {
                 price_data: {
-                    currency: 'usd',
+                    currency: 'gbp',
                     product_data: {
-                        name: 'T-shirt',
+                        name: product,
                     },
-                    unit_amount: 2000,
+                    unit_amount: total*100,
                 },
                 quantity: 1,
             },
         ],
         mode: 'payment',
-        success_url: `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete`,
-        cancel_url: `${process.env.BASE_URL}:${process.env.PORT}/checkout/stripe/cancelled`
+        success_url: `${process.env.BASE_URL}:${process.env.PORT}/checkout/complete?sessionId={CHECKOUT_SESSION_ID}&id=${id}&method=stripe&extension=${extension}&type=${type}`,
+        cancel_url: `${process.env.BASE_URL}:${process.env.PORT}/checkout/stripe/cancelled?id=${id}&total=${total}&method=stripe&extension=${extension}&type=${type}`
     });
-    console.log(session)
 
     res.redirect(303, session.url)
 }
