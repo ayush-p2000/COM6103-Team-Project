@@ -1,0 +1,8 @@
+<canvas id="quotes_chart"></canvas>
+<script src="/javascripts/reports/charts/quotes.js"></script>
+<script>
+    const quotes_labels = <%- JSON.stringify(labels) %>;
+    const quotes_data = <%- JSON.stringify(datasets[0]) %>;
+    const quotes_backgrounds = <%- JSON.stringify(quoteState.getList().map(category => quoteState.quoteStateToRGB(category))) %>;
+    const quotes_borderColours = <%- JSON.stringify(quoteState.getList().map(category => quoteState.quoteStateToRGB(category, true))) %>;
+</script>

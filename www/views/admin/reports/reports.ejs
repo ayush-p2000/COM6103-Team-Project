@@ -143,6 +143,22 @@
                             </div>
                         </a>
                     </div>
+
+                    <div class="col-md-6 mt-4">
+                        <a href="/admin/reports/quotes" class="text-decoration-none text-body">
+                            <div class="card shadow-sm hover-shadow h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Quotes Per State</h5>
+
+                                    <%- include("charts/quotes", quotes) %>
+
+                                    <div class="d-flex justify-content-end">
+                                        <a class="btn btn-outline-primary" href="/admin/reports/quotes">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

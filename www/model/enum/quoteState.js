@@ -11,56 +11,77 @@ const quoteState = {
     REJECTED,
     ACCEPTED,
     CONVERTED,
-    EXPIRED
+    EXPIRED,
+
+
+    stateToString: (state) => {
+        switch (state) {
+            case NEW:
+                return "New";
+            case SAVED:
+                return "Saved";
+            case REJECTED:
+                return "Rejected";
+            case ACCEPTED:
+                return "Accepted";
+            case CONVERTED:
+                return "Converted";
+            case EXPIRED:
+                return "Expired";
+            default:
+                return "Invalid state";
+        }
+    },
+
+    stateToColour: (state, prefix="") => {
+        switch (state) {
+            case NEW:
+                return prefix + "primary";
+            case SAVED:
+                return prefix + "info";
+            case REJECTED:
+                return prefix + "danger";
+            case ACCEPTED:
+                return prefix + "warning";
+            case CONVERTED:
+                return prefix + "success";
+            case EXPIRED:
+                return prefix + "secondary";
+            default:
+                return prefix + "light";
+        }
+    },
+
+    quoteStateToRGB: (state, border = false) => {
+        switch (state) {
+            case NEW:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case SAVED:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case REJECTED:
+                return border ? 'rgb(0, 0, 255)' : 'rgba(0, 0, 255, 0.2)';
+            case ACCEPTED:
+                return border ? 'rgb(0, 128, 0)' : 'rgba(0, 128, 0, 0.2)';
+            case CONVERTED:
+                return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
+            case EXPIRED:
+                return border ? 'rgb(0, 128, 0)' : 'rgba(0, 128, 0, 0.2)';
+            default:
+                return border ? 'rgb(255, 165, 0)' : 'rgba(255, 165, 0, 0.2)';
+        }
+    },
+
+    getList: () => Object.values(quoteState).filter(value => typeof value === 'number')
 };
 
-function stateToString(state) {
-    switch (state) {
-        case NEW:
-            return "New";
-        case SAVED:
-            return "Saved";
-        case REJECTED:
-            return "Rejected";
-        case ACCEPTED:
-            return "Accepted";
-        case CONVERTED:
-            return "Converted";
-        case EXPIRED:
-            return "Expired";
-        default:
-            return "Invalid state";
-    }
-}
-
-function stateToColour(state, prefix="") {
-    switch (state) {
-        case NEW:
-            return prefix + "primary";
-        case SAVED:
-            return prefix + "info";
-        case REJECTED:
-            return prefix + "danger";
-        case ACCEPTED:
-            return prefix + "warning";
-        case CONVERTED:
-            return prefix + "success";
-        case EXPIRED:
-            return prefix + "secondary";
-        default:
-            return prefix + "light";
-    }
-}
 
 module.exports = {
     quoteState,
-    stateToString,
-    stateToColour,
     NEW,
     SAVED,
     REJECTED,
     ACCEPTED,
     CONVERTED,
-    EXPIRED
+    EXPIRED,
 
 }

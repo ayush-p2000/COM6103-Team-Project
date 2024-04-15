@@ -632,6 +632,8 @@ const getDevicesGroupByState = async () => {
     ]);
 }
 
+
+
 /**
  * Returns a count of devices grouped by device type
  * Includes the device type name and the total count of devices of that type
@@ -990,6 +992,21 @@ const getAllReferralsOrderedByDate = async (prevMonths) => {
 }
 
 
+async function getQuotesGroupByState() {
+    return Quote.aggregate([
+        {
+            $group: {
+                _id: '$state',
+                total: {$sum:1}
+            }
+        }
+    ])
+}
+
+async function getAllQuotes() {
+    return Quote.find().populate('device').populate('provider')
+}
+
 /**
  * Method to add a new transaction
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
@@ -1169,5 +1186,7 @@ module.exports = {
     addTransaction,
     updateTransaction,
     getTransactionByDevice,
-    getTransactionById
+    getTransactionById,
+    getQuotesGroupByState,
+    getAllQuotes
 }
