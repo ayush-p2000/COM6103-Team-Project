@@ -4,10 +4,12 @@
 
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
 const {User} = require("../../model/schema/user");
+
 const {getAllUsers, searchUserAndPopulate, getUserById, getTotalAccountsCount, getSalesCountByMonth,
     getReferralCountByMonth
 } = require("../../model/mongodb");
 const {prepareSalesData, prepareReferralsData} = require("./adminReportsController");
+
 
 const PREVIOUS_MONTHS = 6;
 
@@ -127,9 +129,7 @@ async function activateUser(req,res,next){
 
 }
 
-async function error(req,res,next){
 
-}
 
 module.exports = {
     getAdminDashboard,
