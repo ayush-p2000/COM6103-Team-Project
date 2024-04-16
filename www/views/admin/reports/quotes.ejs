@@ -39,12 +39,10 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <% if(item.provider === 'ebay') { %>
-                                            <img src="/assets/ebay.png" class="img-fluid w-auto h-auto" style="max-width: 100px; max-height: 75px">
-                                        <% } else if (item.provider === 'cex') { %>
-                                            <img src="/assets/cex.png" class="img-fluid w-auto h-auto" style="max-width: 100px; max-height: 75px">
+                                        <% if (item.provider !== 'Unknown provider') { %>
+                                            <img src="<%= item.logo %>" class="img-fluid w-auto h-auto" style="max-width: 100px; max-height: 75px">
                                         <% } else { %>
-                                            <p class="text-muted"> <%= item.provider %> </p>
+                                            <p class="text-muted"><%= item.provider %></p>
                                         <% } %>
                                     </td>
 

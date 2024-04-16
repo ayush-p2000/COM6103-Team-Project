@@ -475,6 +475,7 @@ async function prepareQuotesData() {
             name: `${quote.device?.model?.name ?? "Unknown Model"}`,
             provider: `${quote.provider?.name ?? "Unknown provider"}`,
             state: quote.state,
+            logo: quote.provider?.logo,
             date_added: quote.createdAt?.toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
