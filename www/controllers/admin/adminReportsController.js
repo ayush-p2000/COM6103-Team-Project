@@ -11,13 +11,13 @@ const {
     getDevicesGroupByType,
     getAllDeviceTypes, getAccountsCountByStatus, getAllUsers, getAccountsCountByType, getAllSalesOrderedByDate,
     getSalesCountByMonth, getSalesValueByMonth,
-    getReferralValueByMonth, getAllReferralsOrderedByDate, getReferralCountByMonth
+    getReferralValueByMonth, getAllReferralsOrderedByDate, getReferralCountByMonth, getQuotesGroupByState, getAllQuotes
 } = require("../../model/mongodb");
 const deviceCategory = require("../../model/enum/deviceCategory");
 const deviceState = require("../../model/enum/deviceState");
 const accountStatus = require("../../model/enum/accountStatus")
 const roleTypes = require("../../model/enum/roleTypes")
-const {quoteState, stateToColour, stateToString} = require("../../model/enum/quoteState");
+const {quoteState, stateToColour, stateToString, getList,quoteStateToRGB} = require("../../model/enum/quoteState");
 
 async function getReportsPage(req, res, next) {
     const classes = await prepareClassesData();
@@ -27,6 +27,7 @@ async function getReportsPage(req, res, next) {
     const account_types = await prepareAccountTypesData()
     const sales = await prepareSalesData();
     const referrals = await prepareReferralsData();
+    const quotes = await prepareQuotesData();
     renderAdminLayout(req, res, "reports/reports",
         {
             classes: classes,
@@ -36,12 +37,12 @@ async function getReportsPage(req, res, next) {
             account_types,
             sales,
             referrals,
+            quotes,
             deviceCategory,
             deviceState,
             accountStatus,
             roleTypes,
-            quoteStateToString: stateToString,
-            quoteStateToColour: stateToColour
+            quoteState,
         }
     );
 }
@@ -82,6 +83,9 @@ async function getReportPage(req, res, next) {
         case "referrals":
             data = await prepareReferralsData();
             break;
+        case "quotes":
+            data = await prepareQuotesData();
+            break;
         default:
             data = {...getMockGraphData(), table: getMockSalesData()}
     }
@@ -94,8 +98,7 @@ async function getReportPage(req, res, next) {
         deviceState,
         accountStatus,
         roleTypes,
-        quoteStateToString: stateToString,
-        quoteStateToColour: stateToColour
+        quoteState,
     });
 }
 
@@ -445,6 +448,47 @@ const prepareReferralsData = async () => {
     });
 
     return {labels, datasets: [referrals_count_data, referrals_value_data], table};
+}
+
+
+/**
+ * Prepare the data for the quotes per state report
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function prepareQuotesData() {
+    const quoteGroups = await getQuotesGroupByState();
+    const quotes = await getAllQuotes();
+    const quoteStatesIntegers = quoteState.getList();
+    const labels = [];
+    quoteStatesIntegers.forEach(value => labels.push(quoteState.stateToString(value)));
+    const data = Array(labels.length).fill(0);
+
+    quoteGroups.forEach(group => {
+        const index = quoteStatesIntegers.indexOf(group._id);
+        data[index] = group.total;
+    });
+
+    const table = [];
+
+    quotes.forEach(quote => {
+        table.push({
+            name: `${quote.device?.model?.name ?? "Unknown Model"}`,
+            provider: `${quote.provider?.name ?? "Unknown provider"}`,
+            state: quote.state,
+            logo: quote.provider?.logo,
+            date_added: quote.createdAt?.toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric"
+            }),
+            user: quote.device?.listing_user,
+            quote_id: quote._id,
+        });
+    });
+
+    return {labels: labels, datasets: [data], table: table};
 }
 
 module.exports = {
