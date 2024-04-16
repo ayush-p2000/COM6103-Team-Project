@@ -55,9 +55,9 @@ const quoteState = {
     quoteStateToRGB: (state, border = false) => {
         switch (state) {
             case NEW:
-                return border ? 'rgb(0, 191, 255)' : 'rgba(0, 191, 255, 0.2)';
+                return border ? 'rgb(13, 110, 253)' : 'rgba(13, 110, 253, 0.2)';
             case SAVED:
-                return border ? 'rgb(0, 255, 255)' : 'rgba(0, 255, 255, 0.2)';
+                return border ? 'rgb(0, 191, 255)' : 'rgba(0, 191, 255, 0.2)';
             case REJECTED:
                 return border ? 'rgb(255, 0, 0)' : 'rgba(255, 0, 0, 0.2)';
             case ACCEPTED:

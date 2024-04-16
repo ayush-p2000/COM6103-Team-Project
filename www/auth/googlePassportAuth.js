@@ -14,7 +14,8 @@ module.exports = function (passport) {
                     first_name: profile.name.givenName,
                     last_name: profile.name.familyName,
                     email: profile.emails[0].value,
-                    avatar: profile.photos[0].value
+                    avatar: profile.photos[0].value,
+                    verified: true
                 }
 
                 try
