@@ -131,21 +131,21 @@
                     </tr>
                     </thead>
                     <tbody>
-
                     <% users.forEach(user => { %>
                         <% if (user.isDeleted === false) { %>
-                        <tr>
                             <% if (user.active) { %>
-                            <td><%= user.email %></td>
+                            <tr>
                                 <% } else { %>
-                                    <td style="color: red;"><%= user.email %></td>
+                            <tr style="background-color: #AFEEEE;"> <!-- Apply pale blue background to inactive users -->
                                 <% } %>
-                            <td><%= user.first_name + " " + user.last_name %></td>
-                            <td><%= user.role %></td>
-                            <td><a href="/admin/accounts/<%= user._id %>">view</a></td>
-                        </tr>
+                                <td><%= user.email %></td>
+                                <td><%= user.first_name + " " + user.last_name %></td>
+                                <td><%= user.role %></td>
+                                <td><a href="/admin/accounts/<%= user._id %>">view</a></td>
+                            </tr>
                         <% } %>
                     <% }) %>
+
                     </tbody>
                 </table>
             <% } %>
