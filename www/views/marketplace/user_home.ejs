@@ -1,10 +1,10 @@
-<div class="items m-5">
+<div class="items user-home m-5">
     <h2 class="my-5">Welcome <%= firstName %> </h2>
     <div class="row my-5">
-        <h4>Marketplace</h4>
+        <h4>Marketplace <a href="/marketplace/" class="btn btn-primary btn-sm">View All</a></h4>
         <% displayDevices = marketDevices.length <= 5 ? marketDevices : marketDevices.slice(0,5) %>
         <% displayDevices.forEach(device => { if(device.visible){ %>
-            <div class="col-12 col-sm-6 col-md-4 col-xl-2 item">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 item mb-2">
                 <div class="card h-100">
                     <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>" class="card-img-top img-fluid item-img" alt="...">
                     <div class="card-body">
@@ -18,13 +18,13 @@
                 </div>
             </div>
         <% }}) %>
-        <a href="/marketplace/" class="btn btn-primary w-auto h-25 my-auto">View All</a>
+
     </div>
-    <h4>My Items</h4>
+    <h4>My Items <a href="/my-items/" class="btn btn-primary btn-sm">View All</a></h4>
     <div class="row mt-5">
         <% var displayDevices = devices.length <= 5 ? devices : devices.slice(0,5) %>
         <% displayDevices.forEach(device => { %>
-            <div class="col-12 col-sm-6 col-md-4 col-xl-2 item">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 item mb-2">
                 <div class="card h-100">
                     <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>" class="card-img-top img-fluid item-img" alt="...">
                     <div class="card-body">
@@ -37,7 +37,6 @@
                 </div>
             </div>
         <% }) %>
-        <a href="/my-items/" class="btn btn-primary w-auto h-25 my-auto">View All</a>
     </div>
 
 </div>
