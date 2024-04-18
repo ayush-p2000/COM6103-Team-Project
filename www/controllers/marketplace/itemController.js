@@ -48,7 +48,6 @@ const roleTypes = require("../../model/enum/roleTypes");
  * @author Zhicong Jiang
  */
 const postListItem = async (req, res) => {
-    console.log(1)
     var id = req.params.id;
     try {
         const files = req.files;
