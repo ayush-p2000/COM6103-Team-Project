@@ -25,22 +25,23 @@ async function getUserDashboard(req, res, next) {
         userItems = await getUnknownDevices(userItems)
         var marketplaceDevices = await getAllDevices()
         marketplaceDevices = await getUnknownDevices(marketplaceDevices)
+
+        const userItemsContainsDevices = userItems.length > 0
         let marketDevices = []
-        for (const device of marketplaceDevices) {
-            let listedByCurrentUser = false
-            if (device.listing_user._id.equals(req.user.id)) {
-                listedByCurrentUser = true
+        marketplaceDevices.forEach(devices => {
+            if (devices.visible) {
+                marketDevices.push(devices)
             }
-            if (!listedByCurrentUser) {
-                marketDevices.push(device)
-            }
-        }
+        })
+        const marketContainsDevices = marketDevices.length > 0
         renderUserLayout(req, res, '../marketplace/user_home', {
             user: userData,
             firstName: firstName,
             devices: userItems,
             marketDevices: marketDevices,
             deviceCategory,
+            marketContains: marketContainsDevices,
+            userContains: userItemsContainsDevices,
             auth: req.isLoggedIn
         })
     } catch (err) {
@@ -60,7 +61,7 @@ async function getUnknownDevices(items) {
             var brand = ""
             var model = ""
             const customModel = await getUnknownDeviceHistoryByDevice(item._id)
-            customModel[0].data.forEach(data => {
+            customModel[0]?.data.forEach(data => {
                 if (data.name === "device_type") {
                     deviceType = data.value
                 } else if (data.name === "brand") {
