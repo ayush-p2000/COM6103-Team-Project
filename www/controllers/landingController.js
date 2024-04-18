@@ -2,8 +2,6 @@
  * This controller should be used to handle the landing page of the application.
  */
 
-
-const {getMockItems, getMockLandingCarousel} = require("../util/mock/mockData");
 const {getAllDevices, getCarouselDevices} = require("../model/mongodb");
 
 async function getLandingPage(req, res, next) {

@@ -4,12 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require("passport")
-const session = require("express-session")
-const axios = require("axios");
 const bodyParser = require('body-parser');
 const fs = require('fs');
-
-const mongo = require('./model/mongodb')
 
 //Load routers
 const indexRouter = require('./routes/index');

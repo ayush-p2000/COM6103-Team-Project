@@ -2,8 +2,6 @@
  * This controller should handle any operations related to the checkout process or payment processing
  */
 
-const {getMockPurchaseData} = require("../../util/mock/mockData");
-const {request} = require("express");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const {getItemDetail, addTransaction, updateTransaction, getTransactionByDevice, getTransactionById, updateDeviceState,
     getRetrieval
