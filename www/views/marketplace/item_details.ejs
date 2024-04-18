@@ -235,7 +235,7 @@
                 </div>
             </div>
 
-            <% if (item.state === deviceState.DATA_RECOVERY) { %>
+            <% if (user.id === item.listing_user._id.toString() && item.state === deviceState.DATA_RECOVERY) { %>
                 <div class="row">
                     <div class="col-12">
                         <div class="border border-1 rounded-2 border-info m-2 p-2">
@@ -258,7 +258,7 @@
         </div>
     </div>
 
-    <% if (item.state <= deviceState.HAS_QUOTE) { %>
+    <% if (user.id === item.listing_user._id.toString() && item.state <= deviceState.HAS_QUOTE) { %>
         <div class="row bg-light text-dark p-4 mt-4">
             <div class="col-md-12">
                 <h5 class="fw-bold mt-4">Quotes</h5>
