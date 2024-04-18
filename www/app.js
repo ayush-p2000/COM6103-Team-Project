@@ -18,11 +18,13 @@ const qrRouter = require('./routes/qr');
 const userRouter = require('./routes/user');
 
 const debugRouter = require('./routes/debug');
+
 const {
     passportStrategy,
     passportSerializeUser,
     passportDeserializeUser, passportSessionErrorHandler, sessionErrorHandler, sessionSetup
 } = require("./auth/passportAuth");
+
 const { isAuthenticated, authInfo, isStaff} = require("./middlewares/auth")
 
 const app = express();

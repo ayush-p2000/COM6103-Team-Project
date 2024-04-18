@@ -78,6 +78,13 @@ if (process.env.ENVIRONMENT !== 'test') {
         resave: true,
         saveUninitialized: false,
     })
+} else {
+    sessionSetup = session({
+        secret: process.env.SESSION_SECRET || "secret",
+        secure: true,
+        resave: true,
+        saveUninitialized: false,
+    })
 }
 
 // Determines what data is stored in session after the user is authenticated (after login form is submitted).
