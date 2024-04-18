@@ -60,5 +60,39 @@ describe('Test Landing Page', () => {
             expect(res.render.calledWith('index', {title: 'Express', auth: req.isLoggedIn, user: req.user, items, imgPerCarousel})).to.be.true;
             expect(next.calledOnce).to.be.false;
         });
+
+        it("should call res.status with 500 and next with an error message", async () => {
+            // Arrange
+            const items = [
+
+            ]
+            const user = mock_user;
+
+            const req = {
+                isLoggedIn: true,
+                user: user
+            };
+
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis()
+            };
+
+            const next = sandbox.spy();
+
+            const error = new Error("Internal Server Error");
+
+            getCarouselDevices.throws(error);
+
+            // Act
+            await landingController.getLandingPage(req, res, next);
+
+            // Assert
+
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.calledWith(500)).to.be.true;
+            expect(next.calledOnce).to.be.true;
+            expect(next.calledWith({message: "Internal Server Error", state: 500})).to.be.true;
+        });
     });
 });
