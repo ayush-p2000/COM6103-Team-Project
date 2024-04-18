@@ -202,14 +202,16 @@
                         <% if (['Announced', 'Status', 'Dimensions', 'Size', 'OS', 'USB'].includes(spec)) { %>
                             <p><span class="fw-bold"><%= spec %>:</span> <%= specs[spec] %></p>
                     <% }}) %>
-                    <p><span class="fw-bold">Device Condition:</span> <%= item.good_condition ? 'Good' : 'Poor' %>
+                    <p><span class="fw-bold">Color: </span> <%= item.color %></p>
+                    <p><span class="fw-bold">Capacity: </span> <%= item.capacity %></p>
+                    <p><span class="fw-bold">Years Used: </span> <%= item.years_used %> Years</p>
                     </p>
                 </div>
-                <h5 class="fw-bold mb-4">Condition: </h5>
+                <h5 class="fw-bold mt-2 mb-2">Condition: <%= item.good_condition ? 'Good' : 'Poor' %></h5>
                 <div class="col-6">
                     <% item.details.slice(0, Math.ceil(item.details.length / 2)).forEach(detail => { %>
                         <p>
-                            <span class="fw-bold"><%= detail.name.charAt(0).toUpperCase() + detail.name.slice(1) %>:</span> <%= detail.value %>
+                            <span class="fw-bold"><%= detail.name.charAt(0).toUpperCase() + detail.name.slice(1) %>:</span> <%= /^\d+$/.test(detail.value) ? detail.value + " out of 5" : detail.value ; %>
                         </p>
                     <% }) %>
 
@@ -217,7 +219,7 @@
                 <div class="col-6">
                     <% item.details.slice(Math.ceil(item.details.length / 2)).forEach(detail => { %>
                         <p>
-                            <span class="fw-bold"><%= detail.name.charAt(0).toUpperCase() + detail.name.slice(1) %>:</span> <%= detail.value %>
+                            <span class="fw-bold"><%= detail.name.charAt(0).toUpperCase() + detail.name.slice(1) %>:</span> <%= /^\d+$/.test(detail.value) ? detail.value + " out of 5" : detail.value ; %>
                         </p>
                     <% }) %>
 

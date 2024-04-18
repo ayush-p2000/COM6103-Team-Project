@@ -20,6 +20,18 @@ const deviceSchema = new mongoose.Schema({
             required: true,
             autopopulate: true
         },
+        color: {
+            type: String,
+            required: true
+        },
+        capacity: {
+            type: String,
+            required: true
+        },
+        years_used: {
+            type: String,
+            required: true
+        },
         details: [
             {
                 name: {
