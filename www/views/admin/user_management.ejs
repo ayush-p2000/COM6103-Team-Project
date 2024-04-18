@@ -24,7 +24,7 @@
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="userModalLabel">Modal title</h1>
                     <div class="alert alert-danger d-none error-message" role="alert">
-                       You donot have access to create user
+                       You do not have access to create user
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -124,6 +124,7 @@
                 <table class="table table-striped table-bordered" id="user_management">
                     <thead>
                     <tr>
+                        <th>Active/Disabled</th>
                         <th>Email</th>
                         <th>Name</th>
                         <th>Role</th>
@@ -135,9 +136,14 @@
                         <% if (user.isDeleted === false) { %>
                             <% if (user.active) { %>
                             <tr>
-                                <% } else { %>
-                            <tr style="background-color: #AFEEEE;"> <!-- Apply pale blue background to inactive users -->
+                            <% } else { %>
+                            <tr class="bg-danger-subtle">
                                 <% } %>
+                                <td>
+                                    <div class="badge bg-<%= (user.active) ? 'success' : 'danger' %>">
+                                        <%= (user.active) ? 'Active' : 'Disabled' %>
+                                    </div>
+                                </td>
                                 <td><%= user.email %></td>
                                 <td><%= user.first_name + " " + user.last_name %></td>
                                 <td><%= user.role %></td>
