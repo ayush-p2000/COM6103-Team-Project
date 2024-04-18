@@ -1,3 +1,7 @@
 node_modules/
 codestream.xml
 .env
+
+.nyc_output/
+
+coverage/
