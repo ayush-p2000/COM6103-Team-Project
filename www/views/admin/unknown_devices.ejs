@@ -122,11 +122,11 @@
                     <tbody>
                     <% devices.forEach(device => { %>
                         <tr>
-                            <td><%= device.device %></td>
+                            <td><%= device.device._id %></td>
                             <% device.data.forEach(info => { %>
                                 <td><%= info.value %></td>
                             <% }) %>
-                            <td><a href='/admin/devices/<%= device.device %>'>view</a></td>
+                            <td><a href='/admin/devices/<%= device.device._id %>'>view</a></td>
                         </tr>
                     <% }) %>
 
@@ -138,4 +138,3 @@
 </div>
 
 <script src="/javascripts/deviceManagement/unknown_devices.js"></script>
-<script src="/javascripts/userManagement/userManagement.js"></script>
