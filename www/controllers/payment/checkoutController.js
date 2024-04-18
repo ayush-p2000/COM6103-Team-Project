@@ -70,7 +70,7 @@ async function getCheckout(req, res, next) {
                 break
         }
 
-        res.render('payment/checkout', {id: id, total: total, extension: extension, product: product})
+        res.render('payment/checkout', {id: id, total: total, extension: extension, product: product, user: req.user, auth:req.isLoggedIn})
     }
 
 }
