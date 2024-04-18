@@ -32,6 +32,8 @@ const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
 const quoteState = require("../../model/enum/quoteState")
 const dataService = require("../../model/enum/dataService")
+const deviceColors = require("../../model/enum/deviceColors")
+const deviceCapacity = require("../../model/enum/deviceCapacity")
 const {generateQR} = require("../../util/qr/qrcodeGenerator");
 const cheerio = require('cheerio')
 const axios = require('axios')
@@ -46,6 +48,7 @@ const roleTypes = require("../../model/enum/roleTypes");
  * @author Zhicong Jiang
  */
 const postListItem = async (req, res) => {
+    console.log(1)
     var id = req.params.id;
     try {
         const files = req.files;
@@ -85,11 +88,9 @@ async function getListItem(req, res) {
             let brands = await getAllBrand();
 
             renderUserLayout(req, res, '../marketplace/list_item', {
-                auth: req.isLoggedIn, user: req.user, deviceTypes: deviceTypes, brands: brands
+                auth: req.isLoggedIn, user: req.user, deviceTypes: deviceTypes, brands: brands, colors: deviceColors, capacities: deviceCapacity
             })
-            // res.render('marketplace/list_item', {
-            //     auth: req.isLoggedIn, user: req.user, deviceTypes: deviceTypes, brands: brands
-            // });
+
         } catch (err) {
             console.log(err)
         }
@@ -109,11 +110,8 @@ async function getListItem(req, res) {
                 });
             }
             renderUserLayout(req, res, '../marketplace/edit_item', {
-                auth: req.isLoggedIn, user: req.user, device: device
+                auth: req.isLoggedIn, user: req.user, device: device, colors: deviceColors, capacities: deviceCapacity
             })
-            // res.render('marketplace/edit_item', {
-            //     auth: req.isLoggedIn, user: req.user, device: device
-            // });
         } catch (err) {
             console.log(err)
         }

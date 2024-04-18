@@ -79,10 +79,9 @@
                         <div class="row mt-2">
                             <div class="col-12 col-md-6">
                                 <div class="mb-3 row">
-                                    <label for="deviceColor" class="col-sm-6 col-lg-4 col-form-label fw-bold">Color</label>
+                                    <label for="deviceColors" class="col-sm-6 col-lg-4 col-form-label fw-bold">Color</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceColor">
-                                            <% const colors = ["Black","Silver","White","Red", "Orange", "Yellow", "Green", "Cyan", "Blue", "Violet", "Other"]; %>
                                             <% colors.forEach(color => { %>
                                                 <option value="<%= color %>" <% if (device.color === color) { %> selected <% } %>><%= color %></option>
                                             <% }); %>
@@ -93,7 +92,6 @@
                                     <label for="deviceCapacity" class="col-sm-6 col-lg-4 col-form-label fw-bold">Capacity</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceCapacity">
-                                            <% const capacities = ["Less Than 16 Gb", "16 Gb", "32 Gb", "64 Gb", "128 Gb", "256 Gb", "512 Gb", "1 Tb", "2 Tb", "Larger Than 2 Tb"]; %>
                                             <% capacities.forEach(capacity => { %>
                                                 <option value="<%= capacity %>" <% if (device.capacity === capacity) { %> selected <% } %>><%= capacity %></option>
                                             <% }); %>
