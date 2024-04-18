@@ -40,18 +40,20 @@
             <h3 class="display-4 fw-bold mb-3 d-flex align-content-center" id="modelName"><%= item.model.name %>
             </h3>
 
-            <p>
-                <span
-                        class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %> my-auto fs-6"
-                        id="stateBadge">
-                    <%= deviceState.deviceStateToString(item.state) %>
-                </span>
+            <% if (user.id === item.listing_user._id.toString()) { %>
+                <p>
+                    <span
+                            class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %> my-auto fs-6"
+                            id="stateBadge">
+                        <%= deviceState.deviceStateToString(item.state) %>
+                    </span>
 
-                <span
-                        class="badge <%= (!item.visible) ? "bg-danger" : "d-none" %> ms-2 fs-6">
-                    Hidden
-                </span>
-            </p>
+                    <span
+                            class="badge <%= (!item.visible) ? "bg-danger" : "d-none" %> ms-2 fs-6">
+                        Hidden
+                    </span>
+                </p>
+            <% } %>
 
             <p class="lead text-muted"><%= deviceCategory.deviceCategoryToString(item.category) %></p>
 
