@@ -13,57 +13,89 @@ document.addEventListener('DOMContentLoaded', function () {
     //const deviceState = document.getElementById('deviceState')
     //const deviceVisible = document.getElementById('visibleYes')
 
-    const displayYes = document.getElementById('displayYes')
-    const touchscreenYes = document.getElementById('touchscreenYes')
-    const bodyYes = document.getElementById('bodyYes')
-    const batteryYes = document.getElementById('batteryYes')
-    const cameraYes = document.getElementById('cameraYes')
-    const btnYes = document.getElementById('btnYes')
-    const functionalityYes = document.getElementById('functionalityYes')
 
-
-    conditionYes.addEventListener('change', () => {
-        // Show further condition term if yes
-        if (conditionYes.checked) {
-            displayYes.checked = true;
-            touchscreenYes.checked = true;
-            bodyYes.checked = true;
-            batteryYes.checked = true;
-            displayYes.checked = true;
-            cameraYes.checked = true;
-            btnYes.checked = true;
-            conditionList.classList.remove("d-block");
-            conditionList.classList.add("d-none")
-        }
-    });
-    conditionNo.addEventListener('change', () => {
-        // hide further condition term if no
-        if (conditionNo.checked) {
-            conditionList.classList.remove("d-none");
-            conditionList.classList.add("d-block");
-        }
-    });
-
+    const displayRadios = document.getElementsByName('displayRadio')
+    const touchscreenRadios = document.getElementsByName('touchscreenRadio')
+    const bodyRadios = document.getElementsByName('bodyRadio')
+    const batteryRadios = document.getElementsByName('batteryRadio')
+    const cameraRadios = document.getElementsByName('cameraRadio')
+    const btnRadios = document.getElementsByName('btnRadio')
+    const functionalityRadios = document.getElementsByName('functionalityRadio')
 
     saveBtn.addEventListener('click', () => {
         postUpdatedDataToServer()
     })
 
+    conditionYes.addEventListener('change', () => {
+        // Show further condition term if yes
+        if (conditionYes.checked) {
+            setConditionValues("5");
+        }
+    });
+
+    conditionNo.addEventListener('change', () => {
+        // Show further condition term if no
+        if (conditionNo.checked) {
+            setConditionValues("1");
+        }
+    });
+
+    /**
+     * Function to set All the Radio to a Value
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
+    function setConditionValues(value) {
+        setSelectedRadioValue("functionalityRadio", value);
+        setSelectedRadioValue("btnRadio", value);
+        setSelectedRadioValue("cameraRadio", value);
+        setSelectedRadioValue("batteryRadio", value);
+        setSelectedRadioValue("bodyRadio", value);
+        setSelectedRadioValue("touchscreenRadio", value);
+        setSelectedRadioValue("displayRadio", value);
+    }
+
+    /**
+     * Function to set the value of a Radio Element
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
+    function setSelectedRadioValue(radio,value) {
+        var radios = document.getElementsByName(radio);
+
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].value === value) {
+                radios[i].checked = true;
+                break;
+            }
+        }
+    }
+
+    /**
+     * Function to get the value of a Radio Element
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
+    function getSelectedRadioValue(radios) {
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                return radios[i].value;
+            }
+        }
+        return null;
+    }
+
     /**
      * Function to post the updated data to the mongodb database when the save button in triggered.
-     * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+     * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
-
     function postUpdatedDataToServer() {
 
         const details = [
-            {name: "functionality", value: functionalityYes.checked ? "Good" : "Bad"},
-            {name: "button", value: btnYes.checked ? "Good" : "Bad"},
-            {name: "camera", value: cameraYes.checked ? "Good" : "Bad"},
-            {name: "battery", value: batteryYes.checked ? "Good" : "Bad"},
-            {name: "body", value: bodyYes.checked ? "Good" : "Bad"},
-            {name: "touchscreen", value: touchscreenYes.checked ? "Good" : "Bad"},
-            {name: "display", value: displayYes.checked ? "Good" : "Bad"}
+            { name: "functionality",value: getSelectedRadioValue(functionalityRadios)},
+            { name: "button", value: getSelectedRadioValue(btnRadios)},
+            { name: "camera", value: getSelectedRadioValue(cameraRadios)},
+            { name: "battery", value: getSelectedRadioValue(batteryRadios)},
+            { name: "body", value: getSelectedRadioValue(bodyRadios)},
+            { name: "touchscreen", value: getSelectedRadioValue(touchscreenRadios) },
+            { name: "display", value: getSelectedRadioValue(displayRadios)},
         ];
 
         var formData = new FormData();
