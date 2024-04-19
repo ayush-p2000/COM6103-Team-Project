@@ -35,7 +35,7 @@ async function getUserDashboard(req, res, next) {
         })
         const marketContainsDevices = marketDevices.length > 0
         renderUserLayout(req, res, '../marketplace/user_home', {
-            user: userData,
+            userData: userData,
             firstName: firstName,
             devices: userItems,
             marketDevices: marketDevices,
