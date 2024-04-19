@@ -35,10 +35,10 @@ router.post('/reset-password', resetPassword);
 
 // Google Authentication Routes
 router.get('/auth/google', googleAuth)
-router.get('/auth/google/callback', googleAuthCallback, getUserDashboard)
+router.get('/auth/google/callback', googleAuthCallback, isAuthenticated, getUserDashboard)
 
 // Facebook Authentication Routes
 router.get('/auth/facebook/', facebookAuth)
-router.get('/auth/facebook/callback', facebookAuthCallback, getUserDashboard)
+router.get('/auth/facebook/callback', facebookAuthCallback, isAuthenticated, getUserDashboard)
 
 module.exports = router;
