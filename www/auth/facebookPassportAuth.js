@@ -1,3 +1,8 @@
+/**
+ * Facebook Login Strategy
+ * @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
+
 const FacebookStrategy = require('passport-facebook').Strategy
 const {User} = require("../model/schema/user");
 
@@ -14,7 +19,8 @@ module.exports = function (passport) {
                 first_name: profile.name.givenName,
                 last_name: profile.name.familyName,
                 email: profile.username,
-                avatar: profile.profileUrl
+                avatar: profile.profileUrl,
+                verified: true
             }
 
             try
