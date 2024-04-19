@@ -45,9 +45,10 @@ async function getUserDashboard(req, res, next) {
             auth: req.isLoggedIn
         })
     } catch (err) {
-        console.log(err)
+        console.log(err);
+        res.status(500);
+        next({message: err, status: 500});
     }
-
 }
 
 /**
@@ -61,29 +62,44 @@ async function getUnknownDevices(items) {
             var brand = ""
             var model = ""
             const customModel = await getUnknownDeviceHistoryByDevice(item._id)
-            customModel[0]?.data.forEach(data => {
-                if (data.name === "device_type") {
-                    deviceType = data.value
-                } else if (data.name === "brand") {
-                    brand = data.value
-                } else if (data.name === "model") {
-                    model = data.value
-                }
-            });
+            if (customModel.length > 0 && customModel[0].data) {
+                customModel[0].data.forEach(data => {
+                    if (data.name === "device_type") {
+                        deviceType = data.value
+                    } else if (data.name === "brand") {
+                        brand = data.value
+                    } else if (data.name === "model") {
+                        model = data.value
+                    }
+                });
+            }
+            else
+            {
+                deviceType = "MISSING TYPE"
+                brand = "MISSING BRAND"
+                model = "MISSING MODEL"
+            }
             item.device_type = {name: deviceType}
-            item.brand = {name: brand}
-            item.model = {name: model}
+            item.brand = {name: brand }
+            item.model = {name: model }
         }
     }
     return items
 }
+
+/**
+ * Methods for rendering and updating user views
+ * @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
 
 //------------------------------------------------ Get User Data from Database -------------------------------------------------------------------------//
 
 async function getUserProfile(req, res, next) {
     try {
         const userData = await User.findById({_id: req.user.id});
-        renderUserLayout(req, res, 'user_profile', {userData});
+        // Determine if the user has logged in with Google authentication
+        const isGoogleAuthenticated = userData.google_id !== null;
+        renderUserLayout(req, res, 'user_profile', {userData, isGoogleAuthenticated: isGoogleAuthenticated});
     } catch (err) {
         res.send('No user found');
     }
