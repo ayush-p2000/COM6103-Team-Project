@@ -134,11 +134,8 @@
                     <tbody>
                     <% users.forEach(user => { %>
                         <% if (user.isDeleted === false) { %>
-                            <% if (user.active) { %>
-                            <tr>
-                            <% } else { %>
-                            <tr class="bg-danger-subtle">
-                                <% } %>
+
+                            <tr class="<%= (user.active) ? "" : "bg-danger-subtle" %>">
                                 <td>
                                     <div class="badge bg-<%= (user.active) ? 'success' : 'danger' %>">
                                         <%= (user.active) ? 'Active' : 'Disabled' %>
