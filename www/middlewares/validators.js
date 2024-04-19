@@ -24,7 +24,7 @@ const checkAge = (value, {req}) => {
 exports.validateRegistration = [
     check("firstName","Incorrect First Name").trim().escape().notEmpty().isAlpha(),
     check("lastName","Incorrect Last Name").isAlpha().trim().escape().notEmpty(),
-    check("email","Invalid email address").trim().normalizeEmail().isEmail().notEmpty(),
+    check("email","Invalid email address").trim().isEmail().notEmpty().escape(),
     check("phone", "Invalid phone number. Please provide a UK phone number.").trim().notEmpty().isMobilePhone("en-GB"),
     check("dateOfBirth","Invalid Date Of Birth").trim().escape().isDate({format:"YYYY-MM-DD"}).custom(checkAge).withMessage("You need to be at least 13 years old"),
     check("address_1", "Invalid address 1").trim().escape().notEmpty(),
@@ -39,7 +39,7 @@ exports.validateRegistration = [
 ]
 
 exports.validateLogin = [
-    body("email").trim().normalizeEmail().isEmail().notEmpty(),
+    body("email").trim().isEmail().notEmpty().escape(),
     body("password").trim().escape(),
 ]
 
