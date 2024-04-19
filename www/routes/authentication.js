@@ -18,7 +18,10 @@ const {getUserDashboard} = require("../controllers/user/userController");
 
 // Local Authentication Routes
 router.get('/login', getLoginPage);
-router.post('/login', validateCaptcha, validateLogin, validateVerification, passportAuthenticate);
+router.post('/login', validateCaptcha, validateLogin,(req,res) => {
+    console.log(req.body.email)
+    res.status(200)
+}, validateVerification, passportAuthenticate);
 router.post('/logout', isAuthenticated, logoutUser);
 
 // Registration Routes
