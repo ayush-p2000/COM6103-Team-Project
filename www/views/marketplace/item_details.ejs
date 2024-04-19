@@ -40,18 +40,20 @@
             <h3 class="display-4 fw-bold mb-3 d-flex align-content-center" id="modelName"><%= item.model.name %>
             </h3>
 
-            <p>
-                <span
-                        class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %> my-auto fs-6"
-                        id="stateBadge">
-                    <%= deviceState.deviceStateToString(item.state) %>
-                </span>
+            <% if (user.id === item.listing_user._id.toString()) { %>
+                <p>
+                    <span
+                            class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %> my-auto fs-6"
+                            id="stateBadge">
+                        <%= deviceState.deviceStateToString(item.state) %>
+                    </span>
 
-                <span
-                        class="badge <%= (!item.visible) ? "bg-danger" : "d-none" %> ms-2 fs-6">
-                    Hidden
-                </span>
-            </p>
+                    <span
+                            class="badge <%= (!item.visible) ? "bg-danger" : "d-none" %> ms-2 fs-6">
+                        Hidden
+                    </span>
+                </p>
+            <% } %>
 
             <p class="lead text-muted"><%= deviceCategory.deviceCategoryToString(item.category) %></p>
 
@@ -235,7 +237,7 @@
                 </div>
             </div>
 
-            <% if (item.state === deviceState.DATA_RECOVERY) { %>
+            <% if (user.id === item.listing_user._id.toString() && item.state === deviceState.DATA_RECOVERY) { %>
                 <div class="row">
                     <div class="col-12">
                         <div class="border border-1 rounded-2 border-info m-2 p-2">
@@ -258,7 +260,7 @@
         </div>
     </div>
 
-    <% if (item.state <= deviceState.HAS_QUOTE) { %>
+    <% if (user.id === item.listing_user._id.toString() && item.state <= deviceState.HAS_QUOTE) { %>
         <div class="row bg-light text-dark p-4 mt-4">
             <div class="col-md-12">
                 <h5 class="fw-bold mt-4">Quotes</h5>
