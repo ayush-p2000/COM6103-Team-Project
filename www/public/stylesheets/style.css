@@ -109,4 +109,9 @@ a {
 .height-500 {
     max-height: 500px;
 }
+.footer-bottom {
+    position:absolute;
+    left: 0;
+    bottom: 0;
+}
 
