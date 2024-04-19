@@ -249,7 +249,7 @@ const getAllModels = async () => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getAllModelsOfType = async (type) => {
-    return await Model.find({deviceType: type, is_deleted: false}).populate("deviceType").populate("brand")
+    return await Model.find({deviceType: type, is_deleted: {$ne: true}}).populate("deviceType").populate("brand")
 }
 
 /**

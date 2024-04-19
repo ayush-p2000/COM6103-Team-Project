@@ -1,68 +1,102 @@
-<div class="col-6 ms-auto me-auto">
-    <h3>Model Details Page</h3>
-    <% if (hasMessages) { %>
-        <section>
-            <ol class="mb-0 list-group list-group-numbered m-1">
-                <% messages.forEach(function(message) { %>
-                    <li class="border border-danger border-1 bg-danger-subtle pt-2 pb-2 rounded-1 mb-1 list-group-item"><%= message %></li>
-                <% }); %>
-            </ol>
-        </section>
-    <% } %>
-    <form method="POST">
-        <div class="form-group mt-3">
-            <label for="name">Model Name</label>
-            <input type="text" class="form-control mt-1" name="name" id="name" value="<%= item.name %>">
-        </div>
-        <div class="form-group mt-3">
-            <label for="modelBrand" class="form-label">Brand:</label>
-            <select class="form-select" id="modelBrand" name="modelBrand">
-                <% brands.forEach(function(brand) { %>
-                    <option <%= brand.id == item.brand ? "selected" : "" %>
-                            value="<%= brand.id %>"><%= brand.name %></option>
-                <% }); %>
-            </select>
-        </div>
-        <div class="form-group mt-3">
-            <label for="modelType" class="form-label">Device Type</label>
-            <select class="form-select" name="modelType" id="modelType">
-                <% deviceTypes.forEach(function(type) { %>
-                    <option <%= type.id == item.deviceType ? "selected" : "" %>
-                            value="<%= type.id %>"><%= type.name %></option>
-                <% }); %>
-            </select>
-        </div>
-        <div class="d-flex justify-content-between">
+<div class="row justify-content-center mb-3">
+    <div class="col-12">
+        <h2 class="fw-semibold">
+            <span>
+                <a href="/admin/types/brands" class="text-decoration-none">
+                    <i class="fa-solid fa-arrow-left text-dark"></i>
+                </a>
+            </span>
+            <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square"></i>
+                    <i class="fa-solid fa-stack-1x fa-magnifying-glass text-white"></i>
+            </span>
+            Model Details
+        </h2>
+    </div>
+</div>
 
-            <button type="submit" class="btn btn-primary mt-3">Save</button>
-            <button type="button" class="btn btn-danger mt-3" data-bs-toggle="modal"
-                    data-bs-target="#form-confirmation-modal">Delete
-            </button>
-        </div>
+<div class="row justify-content-center mb-3">
+    <div class="col-md-8">
+        <% if (hasMessages) { %>
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body">
 
-    </form>
-
-
-    <form method="POST" action="/admin/types/models/<%= item.id %>/delete">
-        <input type="hidden" name="id" value="<%= item.id %>">
-        <div class="modal" tabindex="-1" id="form-confirmation-modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Are you sure?</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <h4 class="text-danger">Warning!</h4>
-                        <p>Be aware that this model will be completely removed from the
-                            system.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Delete permamently</button>
-                    </div>
+                    <section>
+                        <ol class="mb-0 list-group list-group-numbered m-1">
+                            <% messages.forEach(function(message) { %>
+                                <li class="border border-danger border-1 bg-danger-subtle pt-2 pb-2 rounded-1 mb-1 list-group-item"><%= message %></li>
+                            <% }); %>
+                        </ol>
+                    </section>
                 </div>
             </div>
+        <% } %>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-3">
+    <div class="col-md-8">
+        <div class="card rounded-4 shadow-sm">
+            <div class="card-body">
+                <form method="POST">
+                    <div class="form-group mt-3">
+                        <label for="name">Model Name</label>
+                        <input type="text" class="form-control mt-1" name="name" id="name" value="<%= item.name %>">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="modelBrand" class="form-label">Brand:</label>
+                        <select class="form-select" id="modelBrand" name="modelBrand">
+                            <% brands.forEach(function(brand) { %>
+                                <option <%= brand.id == item.brand ? "selected" : "" %>
+                                        value="<%= brand.id %>"><%= brand.name %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="modelType" class="form-label">Device Type</label>
+                        <select class="form-select" name="modelType" id="modelType">
+                            <% deviceTypes.forEach(function(type) { %>
+                                <option <%= type.id == item.deviceType ? "selected" : "" %>
+                                        value="<%= type.id %>"><%= type.name %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+
+                        <button type="submit" class="btn btn-primary w-100 me-1">Save</button>
+                        <button type="button" class="btn btn-danger w-100 ms-1" data-bs-toggle="modal"
+                                data-bs-target="#form-confirmation-modal">Delete
+                        </button>
+                    </div>
+
+                </form>
+
+
+                <form method="POST" action="/admin/types/models/<%= item.id %>/delete">
+                    <input type="hidden" name="id" value="<%= item.id %>">
+                    <div class="modal fade" tabindex="-1" id="form-confirmation-modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Are you sure?</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <h4 class="text-danger">Warning!</h4>
+                                    <p>Be aware that this model will be completely removed from the
+                                        system.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+                                    <button type="submit" class="btn btn-danger">Delete permamently</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-    </form>
+    </div>
 </div>

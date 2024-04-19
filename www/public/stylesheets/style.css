@@ -107,6 +107,7 @@ a {
 }
 
 .height-500 {
+    height: 500px;
     max-height: 500px;
 }
 

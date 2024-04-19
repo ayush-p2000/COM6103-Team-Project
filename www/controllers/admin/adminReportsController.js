@@ -77,12 +77,6 @@ async function getReportPage(req, res, next) {
         case "sales":
             data = await prepareSalesData();
             break;
-        case "sales":
-            data = await prepareSalesData();
-            break;
-        case "referrals":
-            data = await prepareReferralsData();
-            break;
         case "quotes":
             data = await prepareQuotesData();
             break;

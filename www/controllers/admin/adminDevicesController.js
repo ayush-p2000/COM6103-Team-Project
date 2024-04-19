@@ -54,7 +54,7 @@ async function getDevicesPage(req, res, next) {
             var brand = ""
             var model = ""
             const customModel = await getUnknownDeviceHistoryByDevice(device._id)
-            customModel[0].data.forEach(data => {
+            customModel[0]?.data.forEach(data => {
                 if (data.name === "device_type") {
                     deviceType = data.value
                 } else if (data.name === "brand") {
@@ -202,7 +202,7 @@ async function getDeviceTypeDetailsPage(req, res, next) {
                 break;
             case "device-types":
                 item = await getDeviceTypeById(id)
-                typeModels = await getAllModelsOfType(item.id)
+                typeModels = await getAllModelsOfType(item._id)
                 break;
             default:
                 res.redirect("/admin/types")

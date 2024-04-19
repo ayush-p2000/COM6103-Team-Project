@@ -120,4 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         }
     })
+
+    $('#unknown_devices_table').DataTable({
+
+    });
 })

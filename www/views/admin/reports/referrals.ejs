@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <div class="row p-4">
+    <div class="row">
         <div class="col-md-12">
             <div class="card shadow-sm">
                 <div class="card-body height-500">
@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <div class="row p-4">
+    <div class="row pt-4">
         <div class="col-md-12">
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -40,8 +40,8 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <p class="badge <%= quoteStateToColour(item.state, "bg-") %>">
-                                            <%= quoteStateToString(item.state) %>
+                                        <p class="badge <%= quoteState.stateToColour(item.state, "bg-") %>">
+                                            <%= quoteState.stateToString(item.state) %>
                                         </p>
                                     </td>
                                     <td>£<%= item.referral_amount %></td>
