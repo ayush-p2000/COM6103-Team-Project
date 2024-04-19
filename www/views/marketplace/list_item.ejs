@@ -95,14 +95,9 @@
                                     <label for="deviceColor" class="col-sm-6 col-lg-4 col-form-label fw-bold">Color</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceColor">
-                                            <option value="Red">Red</option>
-                                            <option value="Orange">Orange</option>
-                                            <option value="Yellow">Yellow</option>
-                                            <option value="Green">Green</option>
-                                            <option value="Cyan">Cyan</option>
-                                            <option value="Blue">Blue</option>
-                                            <option value="Violet">Violet</option>
-                                            <option value="Other">Other</option>
+                                            <% colors.forEach(color => { %>
+                                                <option value="<%= color %>"><%= color %></option>
+                                            <% }); %>
                                         </select>
                                     </div>
                                 </div>
@@ -110,16 +105,9 @@
                                     <label for="deviceCapacity" class="col-sm-6 col-lg-4 col-form-label fw-bold">Capacity</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceCapacity">
-                                            <option value="Less Than 16 Gb">Less Than 16 Gb</option>
-                                            <option value="16 Gb">16 Gb</option>
-                                            <option value="32 Gb">32 Gb</option>
-                                            <option value="64 Gb">64 Gb</option>
-                                            <option value="128 Gb">128 Gb</option>
-                                            <option value="256 Gb">256 Gb</option>
-                                            <option value="512 Gb">512 Gb</option>
-                                            <option value="1 Tb">1 Tb</option>
-                                            <option value="2 Tb">2 Tb</option>
-                                            <option value="Larger Than 2 Tb">Larger Than 2 Tb</option>
+                                            <% capacities.forEach(capacity => { %>
+                                                <option value="<%= capacity %>"><%= capacity %></option>
+                                            <% }); %>
                                         </select>
                                     </div>
                                 </div>
@@ -322,28 +310,6 @@
                             </div>
                         </div>
                     </div>
-
-
-<!--                    Service add-on-->
-<!--                    <div class="my-3">-->
-<!--                        <p class="fw-bold fs-5">Service add-on</p>-->
-<!--                        <div>-->
-<!--                            <label for="dataService" class="col-sm-2 col-form-label fw-bold">Data Service</label>-->
-<!--                            <div class="btn-group btn-group-sm" role="group" aria-label="Data Service Choose">-->
-<!--                                <input type="radio" class="btn-check" name="dataRadio" id="dataNone" autocomplete="off" checked>-->
-<!--                                <label class="btn btn-outline-primary" for="dataNone">None</label>-->
-
-<!--                                <input type="radio" class="btn-check" name="dataRadio" id="dataWiping" autocomplete="off">-->
-<!--                                <label class="btn btn-outline-primary" for="dataWiping">Wiping by third party</label>-->
-
-<!--                                <input type="radio" class="btn-check" name="dataRadio" id="dataRetrieval" autocomplete="off">-->
-<!--                                <label class="btn btn-outline-primary" for="dataRetrieval">Data retrieval (+ £8.99)</label>-->
-
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-
 
 <!--                    Additional Information-->
                     <div class="my-3">

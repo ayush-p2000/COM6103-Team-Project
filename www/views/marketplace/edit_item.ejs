@@ -82,9 +82,8 @@
                                     <label for="deviceColor" class="col-sm-6 col-lg-4 col-form-label fw-bold">Color</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceColor">
-                                            <% const colors = ["Red", "Orange", "Yellow", "Green", "Cyan", "Blue", "Violet", "Other"]; %>
                                             <% colors.forEach(color => { %>
-                                                <option value="<%= color %>" <% if (device.details[7]?.value === color) { %> selected <% } %>><%= color %></option>
+                                                <option value="<%= color %>" <% if (device.color === color) { %> selected <% } %>><%= color %></option>
                                             <% }); %>
                                         </select>
                                     </div>
@@ -93,9 +92,8 @@
                                     <label for="deviceCapacity" class="col-sm-6 col-lg-4 col-form-label fw-bold">Capacity</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceCapacity">
-                                            <% const capacities = ["Less Than 16 Gb", "16 Gb", "32 Gb", "64 Gb", "128 Gb", "256 Gb", "512 Gb", "1 Tb", "2 Tb", "Larger Than 2 Tb"]; %>
                                             <% capacities.forEach(capacity => { %>
-                                                <option value="<%= capacity %>" <% if (device.details[8]?.value === capacity) { %> selected <% } %>><%= capacity %></option>
+                                                <option value="<%= capacity %>" <% if (device.capacity === capacity) { %> selected <% } %>><%= capacity %></option>
                                             <% }); %>
                                         </select>
 
@@ -104,7 +102,7 @@
                                 <div class="mb-3">
                                     <label for="deviceYear" class="col-form-label fw-bold">It has been in use for how many years?</label>
                                     <div>
-                                        <input type="number" class="form-control" id="deviceYear" name="deviceYear" min="0" value="<%= device.details[9]?.value ? device.details[9].value : '0' %>" >
+                                        <input type="number" class="form-control" id="deviceYear" name="deviceYear" min="0" value="<%= device.years_used %>" >
                                     </div>
                                 </div>
                             </div>

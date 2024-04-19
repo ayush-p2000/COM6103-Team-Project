@@ -40,7 +40,7 @@
         <!--items list-->
         <div class="row g-2 mt-2">
             <% devices.forEach(device => { if(device.visible){%>
-                <div class="col-12 col-sm-6 col-md-4 col-xl-2 item">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 item mb-2">
                     <div class="card h-100">
                         <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>" class="card-img-top img-fluid item-img" alt="...">
                         <div class="card-body">

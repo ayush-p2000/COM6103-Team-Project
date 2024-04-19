@@ -10,7 +10,7 @@
         <div class="row mt-3">
             <% var displayDevices = marketDevices.length <= 6 ? marketDevices : marketDevices.slice(0, 6) %>
             <% displayDevices.forEach(device => { %>
-                <div class="col-12 col-sm-6 col-md-4 col-xl-2 item">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 item mb-2">
                     <div class="card h-100">
                         <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>"
                              class="card-img-top img-fluid item-img" alt="...">
@@ -29,17 +29,18 @@
                 </div>
             <% }) %>
         </div>
-        <a href="/marketplace/" class="btn btn-primary w-auto h-25 my-3">View All</a>
+
     <% } else { %>
         <p class="text-muted">Marketplace has no devices listed</p>
-    <% } %>
+    <% } %></div>
 
-    <h4>My Items</h4>
+<div class="row mt-3">
+        <h4>My Items <a href="/my-items/" class="btn btn-primary btn-sm">View All</a></h4>
     <% if (userContains) { %>
-        <div class="row mt-3">
+
             <% displayDevices = devices.length <= 6 ? devices : devices.slice(0, 6) %>
             <% displayDevices.forEach(device => { %>
-                <div class="col-12 col-sm-6 col-md-4 col-xl-2 item">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 item mb-2">
                     <div class="card h-100">
                         <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>"
                              class="card-img-top img-fluid item-img" alt="...">
@@ -51,13 +52,13 @@
                                 <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
                         </div>
                         <a class="btn btn-primary btn-sm mb-1 mx-2" href="/item/<%= device._id %>"> View</a>
-                    </div>
+
                 </div>
-            <% }) %>
+
         </div>
-        <a href="/my-items/" class="btn btn-primary w-auto h-25 my-3">View All</a>
+        <% }) %>
     <% } else { %>
         <p class="text-muted">You have no devices listed here</p>
     <% } %>
-
+</div>
 </div>
