@@ -112,10 +112,13 @@
                         <div class="col-sm-5">
 
                             <select class="form-select" id="deviceCategory" name="deviceCategory">
-                                <% Object.keys(deviceCategory).forEach(key => { %>
-                                    <option <%= deviceCategory[key] === item.category ? 'selected' : '' %>
-                                            value="<%= deviceCategory[key] %>"><%= key %></option>
+
+
+                                <% deviceCategory.getList().forEach(category => { %>
+                                        <option <%= category === item.category ? 'selected' : '' %>
+                                                value="<%= category %>"><%= deviceCategory.deviceCategoryToString(category) %></option>
                                 <% }) %>
+
                             </select>
                         </div>
                     </div>
