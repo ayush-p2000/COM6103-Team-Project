@@ -141,7 +141,15 @@
                                     <td style="color: red;"><%= user.email %></td>
                                 <% } %>
                             <td><%= user.first_name + " " + user.last_name %></td>
-                            <td><%= user.role %></td>
+                            <td>
+                                <% if (user.role === 2) { %>
+                                    Admin
+                                <% } else if (user.role === 0) { %>
+                                    User
+                                <% } else if (user.role === 1) { %>
+                                    Staff
+                                <% } %>
+                            </td>
                             <td><a href="/admin/accounts/<%= user._id %>">view</a></td>
                         </tr>
                         <% } %>

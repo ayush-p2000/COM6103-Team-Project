@@ -63,6 +63,14 @@
                     <label for="email" class="d-inline-block w-25">Email: </label>
                     <input name="email" id="email" class="d-inline-block w-50 form-control bg-dark-subtle" readonly
                            value="<%= userData?.email %>"/>
+                    <% if (isGoogleAuthenticated) { %>
+                        <!-- Render Google logo -->
+                        <span class="input-group-append mx-2">
+                    <i class="fab fa-google"></i>&nbsp;
+                            <small>Google Account</small>
+                </span>
+                    <% } %>
+
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div>
