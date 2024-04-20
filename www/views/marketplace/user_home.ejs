@@ -23,8 +23,8 @@
                             <% var displayDevices = marketDevices.length <= 6 ? marketDevices : marketDevices.slice(0, 6) %>
 
                             <% displayDevices.forEach(device => { %>
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 item mb-2 d-flex px-2">
-                                    <div class="card rounded-4 shadow-sm w-100 h-100">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-auto item mb-2 d-flex px-2">
+                                    <div class="card rounded-4 shadow-sm w-100 h-100" style="max-width: 350px;">
                                         <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>"
                                              class="img-fluid d-block h-100 mx-auto rounded-top-4" alt="..."
                                              style="max-height: 200px;">
@@ -37,9 +37,9 @@
                                             <p class="m-0">By: <span
                                                         class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span>
                                             </p>
+
+                                            <a class="btn btn-primary btn-sm mt-1  w-100" href="/item/<%= device._id %>"> View</a>
                                         </div>
-                                        <a class="btn btn-primary btn-sm mb-1 mx-2" href="/item/<%= device._id %>">
-                                            View</a>
                                     </div>
                                 </div>
                             <% }) %>
@@ -83,9 +83,10 @@
                                                     Type: </small><%= device.device_type.name %></p>
                                             <p class="m-0 p-0 text-muted category">
                                                 <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
+                                            </p>
+                                            <a class="btn btn-primary btn-sm mt-1  w-100"
+                                               href="/item/<%= device._id %>"> View</a>
                                         </div>
-                                        <a class="btn btn-primary btn-sm mb-1 mx-2" href="/item/<%= device._id %>">
-                                            View</a>
 
                                     </div>
 
