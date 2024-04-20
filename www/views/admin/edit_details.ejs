@@ -121,6 +121,37 @@
                     </div>
 
                     <div class="mb-3 row">
+                        <label for="deviceColor" class="col-sm-3 col-lg-2 col-form-label">Color</label>
+                        <div class="col-sm-5">
+                            <select class="form-select" id="deviceColor">
+                                <% colors.forEach(color => { %>
+                                    <option value="<%= color %>" <% if (item.color === color) { %> selected <% } %>><%= color %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="deviceCapacity" class="col-sm-3 col-lg-2 col-form-label">Capacity</label>
+                        <div class="col-sm-5">
+                            <select class="form-select" id="deviceCapacity">
+                                <% capacities.forEach(capacity => { %>
+                                    <option value="<%= capacity %>" <% if (item.capacity === capacity) { %> selected <% } %>><%= capacity %></option>
+                                <% }); %>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="deviceYear" class="col-form-label fw-bold">It has been in use for how many years?</label>
+                        <div>
+                            <input type="number" class="form-control" id="deviceYear" name="deviceYear" min="0"
+                                   value="<%= item.years_used %>" >
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3 row">
                         <h5 class="fw-bold mb-4">Specification: </h5>
                         <div class="col">
                             <% Object.keys(specs).forEach(spec => { %>

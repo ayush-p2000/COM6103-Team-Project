@@ -34,6 +34,8 @@ const {
 const dataService = require("../../model/enum/dataService")
 const deviceCategory = require("../../model/enum/deviceCategory")
 const deviceState = require("../../model/enum/deviceState")
+const deviceColor = require("../../model/enum/deviceColors")
+const deviceCapacity = require("../../model/enum/deviceCapacity")
 
 const {Device} = require("../../model/schema/device")
 const {getBrand} = require("gsmarena-api/src/services/catalog");
@@ -283,7 +285,7 @@ const deleteDeviceType = async (req,res,next) => {
 
 /**
  * Get method to retrieve the details of the device from the staff side, which is then used to update the details of the device
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 async function getUserDeviceDetailsPage(req, res, next) {
     try {
@@ -335,7 +337,9 @@ async function getUserDeviceDetailsPage(req, res, next) {
             historyType,
             dataService,
             deviceCategory,
-            deviceState
+            deviceState,
+            colors: deviceColor,
+            capacities: deviceCapacity
         }, "User Device Details page")
 
     } catch (err) {
@@ -363,9 +367,8 @@ async function getModelsFromTypeAndBrand(req, res) {
 
 /**
  * Update method to update the details of the device from the staff side, which is used when staff wants to change the device visibility, state etc.
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
-
 const updateUserDeviceDetailsPage = async (req, res) => {
     try {
         const item_id = req.params.id;

@@ -10,8 +10,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const saveBtn = document.getElementById('saveBtn')
     const additionalInfo = document.getElementById('additionalInfo')
 
-    //const deviceState = document.getElementById('deviceState')
-    //const deviceVisible = document.getElementById('visibleYes')
+    const deviceColor = document.getElementById('deviceColor')
+    const deviceCapacity = document.getElementById('deviceCapacity')
+    const deviceYear = document.getElementById('deviceYear')
 
 
     const displayRadios = document.getElementsByName('displayRadio')
@@ -99,13 +100,14 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
 
         var formData = new FormData();
+        formData.append('color', deviceColor.value);
+        formData.append('capacity', deviceCapacity.value);
+        formData.append('years_used', deviceYear.value);
         formData.append('model', deviceModel.value);
         formData.append('details', JSON.stringify(details));
         formData.append('category', deviceCategory.value);
         formData.append('good_condition', conditionYes.checked);
-        //formData.append('state', deviceState.value); // default to review when posted
         formData.append('additional_details', additionalInfo.value !== "" ? additionalInfo.value : "Not Provided");
-        //formData.append('visible', deviceVisible.checked);
 
 
         var url = window.location.href

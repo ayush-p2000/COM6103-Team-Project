@@ -582,6 +582,9 @@ async function updateDeviceDetails(id, deviceDetails) {
         const filter = {_id: id}
         const device = {
             $set: {
+                color: deviceDetails.color,
+                capacity: deviceDetails.capacity,
+                years_used: deviceDetails.years_used,
                 model: deviceDetails.model,
                 details: JSON.parse(deviceDetails.details),
                 category: deviceDetails.category,
