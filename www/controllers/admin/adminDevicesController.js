@@ -290,7 +290,7 @@ const deleteDeviceType = async (req,res,next) => {
 async function getUserDeviceDetailsPage(req, res, next) {
     try {
         const item = await getItemDetail(req.params.id)
-        const deviceType = await getAllDeviceType()
+        const deviceTypes = await getAllDeviceType()
         const brands = await getAllBrand()
         var models = []
         var specs = []
@@ -318,7 +318,7 @@ async function getUserDeviceDetailsPage(req, res, next) {
                 }
             });
             models = []
-            item.device_type = {name: deviceType}
+            item.device_type = {name: deviceTypes}
             item.brand = {name: brand}
             item.model = {name: model}
         }
@@ -328,7 +328,7 @@ async function getUserDeviceDetailsPage(req, res, next) {
 
         renderAdminLayout(req, res, "edit_details", {
             item,
-            deviceType,
+            deviceTypes,
             brands,
             models,
             specs,

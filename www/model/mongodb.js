@@ -586,6 +586,8 @@ async function updateDeviceDetails(id, deviceDetails) {
                 capacity: deviceDetails.capacity,
                 years_used: deviceDetails.years_used,
                 model: deviceDetails.model,
+                brand: deviceDetails.brand,
+                device_type: deviceDetails.device_type,
                 details: JSON.parse(deviceDetails.details),
                 category: deviceDetails.category,
                 good_condition: deviceDetails.good_condition,
