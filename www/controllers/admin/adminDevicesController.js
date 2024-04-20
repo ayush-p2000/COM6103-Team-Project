@@ -318,7 +318,7 @@ async function getUserDeviceDetailsPage(req, res, next) {
                 }
             });
             models = []
-            item.device_type = {name: deviceTypes}
+            item.device_type = {name: type}
             item.brand = {name: brand}
             item.model = {name: model}
         }

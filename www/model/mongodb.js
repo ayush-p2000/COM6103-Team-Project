@@ -574,11 +574,18 @@ async function getAllBrands() {
 
 /**
  * Update method to update the details of the device from the staff side to the mongodb database
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 async function updateDeviceDetails(id, deviceDetails) {
     try {
-        console.log(deviceDetails);
+
+        var category = deviceDetails.category
+
+        if (typeof deviceDetails.model !== 'undefined') {
+            var modelCategory = await Model.findOne({_id: deviceDetails.model})
+            category = modelCategory.category
+        }
+
         const filter = {_id: id}
         const device = {
             $set: {
@@ -589,7 +596,7 @@ async function updateDeviceDetails(id, deviceDetails) {
                 brand: deviceDetails.brand,
                 device_type: deviceDetails.device_type,
                 details: JSON.parse(deviceDetails.details),
-                category: deviceDetails.category,
+                category: category,
                 good_condition: deviceDetails.good_condition,
                 state: deviceDetails.state,
                 additional_details: deviceDetails.additional_details,
