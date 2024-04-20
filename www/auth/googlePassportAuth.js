@@ -23,7 +23,7 @@ module.exports = function (passport) {
                 }
 
             try {
-                let checkUser = await User.findOne({ google_id: profile.id });
+                let checkUser = await User.findOne({ google_id: profile.id, active:true });
 
                 if (checkUser) {
                     // If a user with Google ID exists, log in with that user
