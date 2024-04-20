@@ -164,8 +164,9 @@ async function updateUserDetails(req, res, next) {
         renderUserLayout(req, res, 'user_profile', {
             messages: messages,
             hasMessages: messages.length > 0,
-            user: updatedUser,
-            auth: req.isLoggedIn
+            userData: updatedUser,
+            auth: req.isLoggedIn,
+            isGoogleAuthenticated: updatedUser.google_id !== null
         })
     } catch (err) {
         console.error(err);

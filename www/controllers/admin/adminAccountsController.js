@@ -9,6 +9,7 @@ const {promisify} = require("node:util");
 const {pbkdf2, randomBytes} = require("node:crypto");
 const {User} = require("../../model/schema/user");
 const {USER} = require("../../model/enum/roleTypes");
+const roleTypes = require("../../model/enum/roleTypes");
 
 async function getAccountsPage(req, res, next) {
     let users = [];
@@ -24,7 +25,7 @@ async function getAccountsPage(req, res, next) {
 async function getAccountDetailsPage(req, res, next) {
     const user = await searchUserAndPopulate({_id: req.params.id});
     const isGoogleAuthenticated = user.google_id !== null;
-    renderAdminLayout(req, res, "user_details", {userDetails: user, isGoogleAuthenticated: isGoogleAuthenticated});
+    renderAdminLayout(req, res, "user_details", {userDetails: user, isGoogleAuthenticated: isGoogleAuthenticated, roleTypes});
 }
 
 function getEditAccountPage(req, res, next) {

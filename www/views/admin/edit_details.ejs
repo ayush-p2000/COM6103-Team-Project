@@ -85,14 +85,14 @@
                             <label for="user" class="col-sm-3 col-lg-2 col-form-label">Name: </label>
                             <div class="col-sm-5 align-content-center">
                                 <p id="user"
-                                   class="my-auto"><%= item.listing_user.first_name + " " + item.listing_user.last_name %></p>
+                                   class="my-auto"><%= (item.listing_user?.first_name ?? "Unknown") + " " + (item.listing_user?.last_name ?? "User") %></p>
                             </div>
                         </div>
 
                         <div class="mb-3 row">
                             <label for="userEmail" class="col-sm-3 col-lg-2 col-form-label">Email: </label>
                             <div class="col-sm-5 align-content-center">
-                                <p id="userEmail" class="my-auto"><%= item.listing_user.email %></p>
+                                <p id="userEmail" class="my-auto"><%= item.listing_user?.email ?? "No Registered Email" %></p>
                             </div>
                         </div>
                     </div>
