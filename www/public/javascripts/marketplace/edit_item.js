@@ -141,8 +141,6 @@ document.addEventListener("DOMContentLoaded", function() {
      * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
     function postUpdateDataToServer() {
-
-
         var details = [
             { name: "functionality",value: getSelectedRadioValue(functionalityRadios)},
             { name: "button", value: getSelectedRadioValue(btnRadios)},
@@ -151,13 +149,12 @@ document.addEventListener("DOMContentLoaded", function() {
             { name: "body", value: getSelectedRadioValue(bodyRadios)},
             { name: "touchscreen", value: getSelectedRadioValue(touchscreenRadios) },
             { name: "display", value: getSelectedRadioValue(displayRadios)},
-
-            { name: "color", value: deviceColor.value },
-            { name: "capacity", value: deviceCapacity.value },
-            { name: "years used", value: deviceYear.value }
         ];
 
         var formData = new FormData();
+        formData.append('color', deviceColor.value);
+        formData.append('capacity', deviceCapacity.value);
+        formData.append('years_used', deviceYear.value);
         formData.append('details', JSON.stringify(details));
         formData.append('good_condition', conditionYes.checked);
         formData.append('data_service', 0);

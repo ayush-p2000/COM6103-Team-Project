@@ -271,16 +271,15 @@ document.addEventListener("DOMContentLoaded", function() {
             { name: "body", value: getSelectedRadioValue(bodyRadios)},
             { name: "touchscreen", value: getSelectedRadioValue(touchscreenRadios) },
             { name: "display", value: getSelectedRadioValue(displayRadios)},
-
-            { name: "color", value: deviceColor.value },
-            { name: "capacity", value: deviceCapacity.value },
-            { name: "years used", value: deviceYear.value }
         ];
 
         var formData = new FormData();
         formData.append('device_type', selectedType);
         formData.append('brand', selectedBrand);
         formData.append('model', selectedModel);
+        formData.append('color', deviceColor.value);
+        formData.append('capacity', deviceCapacity.value);
+        formData.append('years_used', deviceYear.value);
         formData.append('details', JSON.stringify(details));
         formData.append('category', category);
         formData.append('good_condition', conditionYes.checked);

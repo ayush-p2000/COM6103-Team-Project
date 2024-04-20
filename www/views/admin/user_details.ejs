@@ -1,3 +1,10 @@
+<!---
+* User Detail Page Email and Date of Birth field refractors
+* @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+*/
+---->
+
+
 <div class="pt-4">
     <div class="border-1 border-black border p-5">
         <!--        <form method="POST" name="editUserDetails" class="w-100">-->
@@ -37,9 +44,18 @@
                            value="<%= userDetails.last_name %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-                <div class="row">
-                    <label for="email" class="d-inline-block w-25">Email: </label>
-                    <input name="email" id="email" class="d-inline-block w-50 form-control" value="<%= userDetails.email %>"/>
+                <div>
+                    <label for="date_of_birth" class="d-inline-block w-25">Date of Birth: </label>
+                    <%
+                    const dob = userDetails.date_of_birth instanceof Date ? userDetails.date_of_birth.toLocaleDateString('en-GB', {
+                        month: 'numeric',
+                        day: 'numeric',
+                        year: 'numeric'
+                    }) : userDetails.date_of_birth;
+                    %>
+                    <label for="date_of_birth"></label><input name="date_of_birth" id="date_of_birth"
+                                                              class="d-inline-block w-50 form-control"
+                                                              value="<%= dob %>"/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-1"/>
             </div>
@@ -48,10 +64,23 @@
         <div class="row">
             <h4 class="text-center mt-4 mb-3">Address & Contact Information</h4>
             <div class="d-flex w-100 shadow-lg flex-column ps-4 pe-4 pt-3 pb-1">
-                <div class="row">
+                <div>
                     <label for="email" class="d-inline-block w-25">Email: </label>
-                    <input name="email" id="email" class="d-inline-block w-50 form-control" value="<%= userDetails.email %>"/>
+                    <% if (isGoogleAuthenticated) { %>
+                        <!-- Render Google logo -->
+                        <input name="email" id="email" class="d-inline-block w-50 form-control bg-dark-subtle" readonly
+                               value="<%= userDetails?.email %>"/>
+                        <span class="input-group-append mx-2">
+                            <i class="fab fa-google"></i>
+                            <small>Google Account</small>
+                        </span>
+                    <% } else { %>
+                        <!-- Remove the readonly attribute -->
+                        <input name="email" id="email" class="d-inline-block w-50 form-control"
+                               value="<%= userDetails?.email %>"/>
+                    <% } %>
                 </div>
+
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
                 <div class="row">
                     <label for="phone" class="d-inline-block w-25">Telephone: </label>
