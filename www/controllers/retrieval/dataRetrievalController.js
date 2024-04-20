@@ -7,6 +7,7 @@ const archiver = require('archiver');
 const {getItemDetail, getRetrievalObjectByDeviceId, getRetrieval, deleteRetrieval} = require("../../model/mongodb");
 const retrievalState = require("../../model/enum/retrievalState");
 const dataTypes = require("../../model/enum/dataTypes");
+const {renderUserLayout, renderAdminLayout} = require("../../util/layout/layoutUtils");
 
 /**
  * Prepares and serves the data retrieval page for the user-side of the application
@@ -33,7 +34,7 @@ async function getItemDataRetrieval(req, res, next) {
             return;
         }
 
-        res.render('retrieval/data_retrieval_user', {
+        renderUserLayout(req, res, '../retrieval/data_retrieval_user', {
             device: item,
             retrieval: retrievalObject,
             auth: req.isLoggedIn,
@@ -239,7 +240,7 @@ async function getRetrievalEditPage(req, res, next) {
         //Get the retrieval object from the request
         const retrievalObject = req.retrieval;
 
-        res.render('retrieval/data_retrieval_staff', {
+        renderAdminLayout(req, res, '../retrieval/data_retrieval_staff', {
             device: item,
             retrieval: retrievalObject,
             auth: req.isLoggedIn,
@@ -329,7 +330,7 @@ async function errorStateHandler(req, res, next) {
         }
 
         //Get the retrieval object from the request
-        const retrievalObject = await getRetrieval(id);
+        const retrievalObject = req.retrieval;
 
         //Check if the state is a valid state
         if (!retrievalState.isValidStateValue(state)) {

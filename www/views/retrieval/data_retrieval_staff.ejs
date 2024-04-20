@@ -1,98 +1,131 @@
-<%- include('../components/header') %>
-
-<%- include('../components/navbar') %>
-
-<div class="container-fluid h-100">
-    <div class="row mt-2">
-        <div class="col-12 text-center">
-            <h1>Data Retrieval</h1>
-            <h2>For <span class="fst-italic"><%= device.brand?.name %> <%= device.model?.name %></span></h2>
+<div class="container-fluid h-100 mb-5">
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h2 class="fw-semibold">
+            <span>
+                <a href="/admin/devices/retrievals" class="text-decoration-none">
+                    <i class="fa-solid fa-arrow-left text-dark"></i>
+                </a>
+            </span>
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square text-success"></i>
+                    <i class="fa-solid fa-stack-1x fa-rotate-left text-white"></i>
+                </span>
+                Data Retrieval
+            </h2>
         </div>
     </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-4 text-center">
-            <div class="alert <%= retrievalState.retrievalStateToColor(retrieval.retrieval_state, "alert-") %> mb-0 rounded-bottom-0">
-                <div class="d-inline-flex justify-content-center">
-                    <h3><%= retrievalState.retrievalStateToString(retrieval.retrieval_state) %></h3>
-                    <div class="spinner-grow mx-2 d-none" role="status" id="promotionSpinner">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                <p class="p-0 m-0">Expires at: <span class="alert alert-secondary p-0 m-0 mx-1 px-2">
-                <%= new Intl.DateTimeFormat("en-GB", {
-                    year: "numeric",
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: false,
-                    timeZone: "Europe/London"
-                }).format(retrieval.expiry) %>
-                </span>
-                </p>
-
-                <% if (retrieval.is_extended) { %>
-                    <div class="my-1 alert alert-success">
-                        <p class="p-0 m-0">Client has extended the retrieval</p>
-                    </div>
-                <% } %>
-            </div>
-
-            <div class="d-inline-flex w-100">
-                <button class="btn btn-warning w-100 rounded-0 <%= (retrievalState.hasPreviousStep(retrieval.retrieval_state) && !retrieval.locked) ? "" : "disabled" %>"
-                        onclick="onDemotePressed('<%= retrieval._id %>')">
-                    <i class="fa-solid fa-arrow-left"></i> <%= retrievalState.retrievalStepToDemotionButtonString(retrieval.retrieval_state) %>
-                </button>
-                <button class="btn btn-success w-100 rounded-0 <%= (retrievalState.hasNextStep(retrieval.retrieval_state) && !retrieval.locked) ? "" : "disabled" %>"
-                        onclick="onPromotePressed('<%= retrieval._id %>')">
-                    <%= retrievalState.retrievalStepToPromotionButtonString(retrieval.retrieval_state) %> <i
-                            class="fa-solid fa-arrow-right"></i>
-                </button>
-            </div>
-
-            <div class="mb-2">
-                <button class="btn btn-outline-dark w-100 rounded-top-0 <%= (retrievalState.isFailedState(retrieval.retrieval_state) || retrieval.locked) ? "disabled" : "" %>"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#errorStatesCollapse">
-                    <i class="fa-solid fa-exclamation-triangle"></i> Error States
-                </button>
-
-                <div class="collapse" id="errorStatesCollapse">
-                    <button class="btn btn-danger w-100 rounded-bottom-0"
-                            onclick="onErrorStatePressed('<%= retrieval._id %>', 'fail')">
-                        <i class="fa-solid fa-exclamation-triangle"></i> Retrieval Failed
-                    </button>
-                    <button class="btn btn-outline-secondary w-100 rounded-top-0"
-                            onclick="onErrorStatePressed('<%= retrieval._id %>', 'cancel')">
-                        <i class="fa-solid fa-xmark"></i> Retrieval Cancelled
-                    </button>
+    <div class="row mt-2 mb-3">
+        <div class="col-12 text-center">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <h2>For <span class="fw-bold display-6"><%= device.brand?.name %> <%= device.model?.name %></span>
+                    </h2>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 text-center">
+            <div class="card rounded-4 shadow-sm <%= retrievalState.retrievalStateToColor(retrieval.retrieval_state, "bg-") %>-subtle rounded-bottom-0 mb-0">
+                <div class="card-body p-4">
+                    <div class="row justify-content-center">
+                        <div class="col-md-10 text-center">
+                            <div class="alert m-0">
+                                <div class="d-inline-flex justify-content-center">
+                                    <h3><%= retrievalState.retrievalStateToString(retrieval.retrieval_state) %></h3>
+                                    <div class="spinner-grow mx-2 d-none" role="status" id="promotionSpinner">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <p class="p-0 m-0">Expires at: <span class="alert alert-secondary p-0 m-0 mx-1 px-2">
+                                    <%= new Intl.DateTimeFormat("en-GB", {
+                                        year: "numeric",
+                                        month: '2-digit',
+                                        day: '2-digit',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        second: '2-digit',
+                                        hour12: false,
+                                        timeZone: "Europe/London"
+                                    }).format(retrieval.expiry) %>
+                                    </span>
+                                </p>
 
+                                <% if (retrieval.is_extended) { %>
+                                    <div class="mt-3 mb-0 alert alert-success">
+                                        <p class="p-0 m-0">Client has extended the retrieval</p>
+                                    </div>
+                                <% } %>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-4 shadow-sm rounded-0 my-0">
+                <div class="card-body p-0">
+                    <div class="d-inline-flex w-100">
+                        <button class="btn btn-warning border border-2 border-warning w-100 h-100 m-0 p-3 rounded-0 <%= (retrievalState.hasPreviousStep(retrieval.retrieval_state) && !retrieval.locked) ? "" : "disabled" %>"
+                                onclick="onDemotePressed('<%= retrieval._id %>')">
+                            <i class="fa-solid fa-arrow-left"></i> <%= retrievalState.retrievalStepToDemotionButtonString(retrieval.retrieval_state) %>
+                        </button>
+                        <button class="btn btn-success border border-2 border-success w-100 h-100 m-0 p-3 rounded-0 <%= (retrievalState.hasNextStep(retrieval.retrieval_state) && !retrieval.locked) ? "" : "disabled" %>"
+                                onclick="onPromotePressed('<%= retrieval._id %>')">
+                            <%= retrievalState.retrievalStepToPromotionButtonString(retrieval.retrieval_state) %>
+                            <i
+                                    class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <button class="btn btn-outline-dark rounded-4 w-100 h-100 m-0 p-3 rounded-top-0 <%= (retrievalState.isFailedState(retrieval.retrieval_state) || retrieval.locked) ? "disabled" : "" %>"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#errorStatesCollapse">
+                        <i class="fa-solid fa-exclamation-triangle"></i> Error States
+                    </button>
+
+                    <div class="collapse" id="errorStatesCollapse">
+                        <button class="btn btn-danger w-100 rounded-4 rounded-bottom-0"
+                                onclick="onErrorStatePressed('<%= retrieval._id %>', 'fail')">
+                            <i class="fa-solid fa-exclamation-triangle"></i> Retrieval Failed
+                        </button>
+                        <button class="btn btn-outline-secondary w-100 rounded-4 rounded-top-0"
+                                onclick="onErrorStatePressed('<%= retrieval._id %>', 'cancel')">
+                            <i class="fa-solid fa-xmark"></i> Retrieval Cancelled
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-12">
-            <div class="card">
-                <div class="card-body">
+            <div class="card rounded-4 shadow-sm
+                    <%# If the retrieval has expired or failed, apply the appropriate colour, or is awaiting device, apply the appropriate colour to the box %>
+                    <%= (retrievalState.isExpiredState(retrieval.retrieval_state) || retrievalState.isFailedState(retrieval.retrieval_state))
+                    ? retrievalState.retrievalStateToColor(retrieval.retrieval_state, "bg-")
+                    : (retrieval.retrieval_state !== retrievalState.AWAITING_DEVICE) ? "" : "bg-info" %>-subtle">
+                <div class="card-body p-4">
                     <% if (retrievalState.isExpiredState(retrieval.retrieval_state)) { %>
-                        <div class="alert alert-danger text-center">
+                        <div class="alert mb-0 text-center">
                             <h3>Retrieval Expired</h3>
                             <p>This retrieval has expired. It is no longer available</p>
                         </div>
                     <% } else if (retrievalState.isFailedState(retrieval.retrieval_state)) { %>
-                        <div class="alert alert-danger text-center">
+                        <div class="alert mb-0 text-center">
                             <h3>Retrieval Failed</h3>
                             <p>This retrieval has failed. Please check the error state for more information</p>
                         </div>
                     <% } else if (retrieval.retrieval_state !== retrievalState.AWAITING_DEVICE){ %>
                         <div class="row my-1 mb-2">
-                            <div class="col-md-4"></div>
-                            <div class="col-md-4">
-                                <h3 class="text-center">Retrieved Data</h3>
+                            <div class="col-md-8">
+                                <h3 class="fw-bold">
+                                    <i class="fa-solid fa-upload"></i>
+                                    Retrieved Data
+                                </h3>
                             </div>
                             <div class="col-md-2 text-end">
                                 <a class="btn btn-outline-dark w-100" onclick="onUploadPressed()">
@@ -137,7 +170,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <a href="<%= (file.data_type === dataTypes.URL) ? file.value : `/retrieval/${retrieval._id}/file/${file._id}` %>"
+                                                    <a target="_blank" href="<%= (file.data_type === dataTypes.URL) ? file.value : `/retrieval/${retrieval._id}/file/${file._id}` %>"
                                                        class="btn btn-primary w-100">View</a>
                                                 </td>
                                                 <td>
@@ -152,9 +185,9 @@
                             </div>
                         </div>
                     <% } else { %>
-                        <div class="alert alert-info text-center">
+                        <div class="alert mb-0 text-center">
                             <h3>Awaiting Arrival of Device</h3>
-                            <p>Please wait for the device to arrive before proceeding</p>
+                            <p class="m-0">Please wait for the device to arrive before proceeding</p>
                         </div>
                     <% } %>
                 </div>
@@ -168,7 +201,7 @@
 
 <section id="modals">
     <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteConfirmationModal">
+    <div class="modal fade rounded-4" id="deleteConfirmationModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body text-center">
@@ -275,4 +308,3 @@
         </div>
     </div>
 </section>
-<%- include('../components/footer') %>
