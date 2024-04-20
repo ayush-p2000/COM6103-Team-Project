@@ -1,30 +1,57 @@
 <%- include('../components/header') %>
 
-<div class="m-5">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card rounded shadow">
-                <div class="card-body p-4">
-                    <h1 class="fw-bold text-center">Listing an Item</h1>
-<!--                    Image of item-->
+<div class="container-fluid">
+    <div class="m-5">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h2 class="fw-semibold">
+                    <span class="fa-stack">
+                        <i class="fa-solid fa-stack-2x fa-square text-success"></i>
+                        <i class="fa-solid fa-stack-1x fa-upload text-white"></i>
+                    </span>
+                    List a Device
+                </h2>
+            </div>
+        </div>
 
-                    <div class="mb-3">
-                        <label for="itemImage" class="form-label">Pick images of the device</label>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <p class="fw-bold fs-5">
+                            <i class="fa-solid fa-camera"></i> Images
+                        </p>
+
+                        <!--                    Image of item-->
+                        <label for="itemImage" class="form-label">Upload images of your device</label>
                         <div id="imagePreview" class="row p-1"></div>
-                        <input class="form-control" type="file" id="itemImage" name="itemImage" accept="image/*"  multiple>
+                        <input class="form-control" type="file" id="itemImage" name="itemImage" accept="image/*"
+                               multiple>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
 
 
+                        <!--                    Device information-->
 
-<!--                    Device information-->
-                    <div class="my-3">
-                        <p class="fw-bold fs-5">Device information</p>
+                        <p class="fw-bold fs-5">
+                            <i class="fa-solid fa-mobile-screen"></i>
+                            Device information
+                        </p>
 
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <!--                        Type -->
                                 <div class="mb-3 row">
-                                    <label for="deviceType" class="col-sm-6 col-lg-4 col-form-label fw-bold">Device Type</label>
+                                    <label for="deviceType" class="col-sm-6 col-lg-4 col-form-label fw-bold">
+                                        Device Type
+                                    </label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceType">
                                             <% deviceTypes.forEach(function(device) { %>
@@ -35,7 +62,8 @@
                                 </div>
                                 <!--                        Brand -->
                                 <div class="mb-3 row">
-                                    <label for="deviceBrand" class="col-sm-6 col-lg-4 col-form-label fw-bold">Brand</label>
+                                    <label for="deviceBrand"
+                                           class="col-sm-6 col-lg-4 col-form-label fw-bold">Brand</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceBrand">
                                             <% brands.forEach(function(brand) { %>
@@ -46,53 +74,64 @@
                                 </div>
                                 <!--                        Model-->
                                 <div class="mb-3 row">
-                                    <label for="deviceModel" class="col-sm-6 col-lg-4 col-form-label fw-bold">Model</label>
+                                    <label for="deviceModel"
+                                           class="col-sm-6 col-lg-4 col-form-label fw-bold">Model</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceModel">
 
                                         </select>
                                     </div>
                                 </div>
-                                <p class="text-primary" data-bs-toggle="modal" data-bs-target="#model" >* Can't Find Your Model? Click and Add a New One.</p>
+                                <p class="text-primary" data-bs-toggle="modal" data-bs-target="#model">* Can't Find
+                                    Your Model? Click and Add a New One.</p>
                                 <!--                        Custom Model-->
-                                <div class="modal fade" id="model" tabindex="-1" aria-labelledby="model" aria-hidden="true">
+                                <div class="modal fade" id="model" tabindex="-1" aria-labelledby="model"
+                                     aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="model">New Model</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <form>
                                                     <div class="mb-3">
-                                                        <label for="custom-device-type" class="col-form-label">Device Type:</label>
-                                                        <input type="text" class="form-control" id="custom-device-type">
+                                                        <label for="custom-device-type" class="col-form-label">Device
+                                                            Type:</label>
+                                                        <input type="text" class="form-control"
+                                                               id="custom-device-type">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="custom-brand" class="col-form-label">Brand:</label>
+                                                        <label for="custom-brand"
+                                                               class="col-form-label">Brand:</label>
                                                         <input type="text" class="form-control" id="custom-brand">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="custom-model" class="col-form-label">Model:</label>
+                                                        <label for="custom-model"
+                                                               class="col-form-label">Model:</label>
                                                         <input type="text" class="form-control" id="custom-model">
                                                     </div>
                                                 </form>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-primary" id="custom-submit" data-bs-dismiss="modal">Submit</button>
+                                                <button type="button" class="btn btn-primary" id="custom-submit"
+                                                        data-bs-dismiss="modal">Submit
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                             </div>
-                            <div class="col-12 col-md-6 col-xl-4" id="selected-model-content"></div>
+                            <div class="col-12 col-md-6 col-xl-6" id="selected-model-content"></div>
                         </div>
 
                         <div class="row mt-2">
                             <div class="col-12 col-md-6">
                                 <div class="mb-3 row">
-                                    <label for="deviceColor" class="col-sm-6 col-lg-4 col-form-label fw-bold">Color</label>
+                                    <label for="deviceColor"
+                                           class="col-sm-6 col-lg-4 col-form-label fw-bold">Color</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceColor">
                                             <% colors.forEach(color => { %>
@@ -112,24 +151,38 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="deviceYear" class="col-form-label fw-bold">How many years have you had the device?</label>
+                                    <label for="deviceYear" class="col-form-label fw-bold">How many years have you
+                                        had the device?</label>
                                     <div>
-                                        <input type="number" class="form-control" id="deviceYear" name="deviceYear" min="0" value="0">
+                                        <input type="number" class="form-control" id="deviceYear" name="deviceYear"
+                                               min="0" value="0">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
 
-<!--                    Device Condition-->
-                    <div class="my-3">
-                        <p class="fw-bold fs-5">Device Condition</p>
-                        <label for="deviceCondition" class="col-sm-4 col-form-label fw-bold ">Is your device in good condition?</label>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+
+                        <!--                    Device Condition-->
+
+                        <p class="fw-bold fs-5">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                            Device Condition
+                        </p>
+                        <label for="deviceCondition" class="col-sm-4 col-form-label fw-bold ">Is your device in good
+                            condition?</label>
                         <div class="btn-group btn-group-sm" role="group" aria-label="Device Condition Choose">
                             <input type="radio" class="btn-check" name="conditionRadio" id="conditionYes" checked>
                             <label class="btn btn-outline-primary" for="conditionYes">Yes</label>
 
-                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionNo" >
+                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionNo">
                             <label class="btn btn-outline-primary" for="conditionNo">No</label>
                         </div>
                         <ul class="text-muted">
@@ -141,187 +194,225 @@
                             <li>The touchscreen and back glass are undamaged</li>
                             <li>The display is free of distortion, lines and black or white spots</li>
                         </ul>
+
+
+                        <div id="detail-condition" class="d-none">
+                            <div class="mb-3">
+                                <label for="functionalityRadio" class="d-block col-form-label fw-bold">1. How well would
+                                    you rate the overall functionality of the device?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+
+                                    <input type="radio" class="btn-check" name="functionalityRadio" id="functionality1"
+                                           value="1">
+                                    <label class="btn btn-outline-primary" for="functionality1">1</label>
+
+                                    <input type="radio" class="btn-check" name="functionalityRadio" id="functionality2"
+                                           value="2">
+                                    <label class="btn btn-outline-primary" for="functionality2">2</label>
+
+                                    <input type="radio" class="btn-check" name="functionalityRadio" id="functionality3"
+                                           value="3">
+                                    <label class="btn btn-outline-primary" for="functionality3">3</label>
+
+                                    <input type="radio" class="btn-check" name="functionalityRadio" id="functionality4"
+                                           value="4">
+                                    <label class="btn btn-outline-primary" for="functionality4">4</label>
+
+                                    <input type="radio" class="btn-check" name="functionalityRadio" id="functionality5"
+                                           value="5" checked>
+                                    <label class="btn btn-outline-primary" for="functionality5">5</label>
+
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="btnRadio" class="d-block col-form-label fw-bold">2. How well would you rate
+                                    the functionality of all the buttons?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+
+                                    <input type="radio" class="btn-check" name="btnRadio" id="btn1" value="1">
+                                    <label class="btn btn-outline-primary" for="btn1">1</label>
+
+                                    <input type="radio" class="btn-check" name="btnRadio" id="btn2" value="2">
+                                    <label class="btn btn-outline-primary" for="btn2">2</label>
+
+                                    <input type="radio" class="btn-check" name="btnRadio" id="btn3" value="3">
+                                    <label class="btn btn-outline-primary" for="btn3">3</label>
+
+                                    <input type="radio" class="btn-check" name="btnRadio" id="btn4" value="4">
+                                    <label class="btn btn-outline-primary" for="btn4">4</label>
+
+                                    <input type="radio" class="btn-check" name="btnRadio" id="btn5" value="5" checked>
+                                    <label class="btn btn-outline-primary" for="btn5">5</label>
+
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="cameraRadio" class="d-block col-form-label fw-bold">3. How well would you
+                                    rate the performance of the cameras and the condition of all lenses?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+
+                                    <input type="radio" class="btn-check" name="cameraRadio" id="camera1" value="1">
+                                    <label class="btn btn-outline-primary" for="camera1">1</label>
+
+                                    <input type="radio" class="btn-check" name="cameraRadio" id="camera2" value="2">
+                                    <label class="btn btn-outline-primary" for="camera2">2</label>
+
+                                    <input type="radio" class="btn-check" name="cameraRadio" id="camera3" value="3">
+                                    <label class="btn btn-outline-primary" for="camera3">3</label>
+
+                                    <input type="radio" class="btn-check" name="cameraRadio" id="camera4" value="4">
+                                    <label class="btn btn-outline-primary" for="camera4">4</label>
+
+                                    <input type="radio" class="btn-check" name="cameraRadio" id="camera5" value="5"
+                                           checked>
+                                    <label class="btn btn-outline-primary" for="camera5">5</label>
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="batteryRadio" class="d-block col-form-label fw-bold">4. How well would you
+                                    rate the battery's ability to remain charged and provide continuous use
+                                    time?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+
+                                    <input type="radio" class="btn-check" name="batteryRadio" id="battery1" value="1">
+                                    <label class="btn btn-outline-primary" for="battery1">1</label>
+
+                                    <input type="radio" class="btn-check" name="batteryRadio" id="battery2" value="2">
+                                    <label class="btn btn-outline-primary" for="battery2">2</label>
+
+                                    <input type="radio" class="btn-check" name="batteryRadio" id="battery3" value="3">
+                                    <label class="btn btn-outline-primary" for="battery3">3</label>
+
+                                    <input type="radio" class="btn-check" name="batteryRadio" id="battery4" value="4">
+                                    <label class="btn btn-outline-primary" for="battery4">4</label>
+
+                                    <input type="radio" class="btn-check" name="batteryRadio" id="battery5" value="5"
+                                           checked>
+                                    <label class="btn btn-outline-primary" for="battery5">5</label>
+
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="bodyRadio" class="d-block col-form-label fw-bold">5. How well would you rate
+                                    the condition of the device body in terms of dents and scratches?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+
+                                    <input type="radio" class="btn-check" name="bodyRadio" id="body1" value="1">
+                                    <label class="btn btn-outline-primary" for="body1">1</label>
+
+                                    <input type="radio" class="btn-check" name="bodyRadio" id="body2" value="2">
+                                    <label class="btn btn-outline-primary" for="body2">2</label>
+
+                                    <input type="radio" class="btn-check" name="bodyRadio" id="body3" value="3">
+                                    <label class="btn btn-outline-primary" for="body3">3</label>
+
+                                    <input type="radio" class="btn-check" name="bodyRadio" id="body4" value="4">
+                                    <label class="btn btn-outline-primary" for="body4">4</label>
+
+                                    <input type="radio" class="btn-check" name="bodyRadio" id="body5" value="5" checked>
+                                    <label class="btn btn-outline-primary" for="body5">5</label>
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="touchscreenRadio" class="d-block col-form-label fw-bold">6. How well would
+                                    you rate the condition of the touchscreen and back glass in terms of damage?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+
+                                    <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen1"
+                                           value="1">
+                                    <label class="btn btn-outline-primary" for="touchscreen1">1</label>
+
+                                    <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen2"
+                                           value="2">
+                                    <label class="btn btn-outline-primary" for="touchscreen2">2</label>
+
+                                    <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen3"
+                                           value="3">
+                                    <label class="btn btn-outline-primary" for="touchscreen3">3</label>
+
+                                    <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen4"
+                                           value="4">
+                                    <label class="btn btn-outline-primary" for="touchscreen4">4</label>
+
+                                    <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen5"
+                                           value="5" checked>
+                                    <label class="btn btn-outline-primary" for="touchscreen5">5</label>
+
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="displayRadio" class="d-block col-form-label fw-bold ">7. How well would you
+                                    rate the display in terms of distortion, lines, and the presence of black or white
+                                    spots?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2 ">Poor</span>
+
+                                    <input type="radio" class="btn-check" name="displayRadio" id="display1" value="1">
+                                    <label class="btn btn-outline-primary" for="display1">1</label>
+
+                                    <input type="radio" class="btn-check" name="displayRadio" id="display2" value="2">
+                                    <label class="btn btn-outline-primary" for="display2">2</label>
+
+                                    <input type="radio" class="btn-check" name="displayRadio" id="display3" value="3">
+                                    <label class="btn btn-outline-primary" for="display3">3</label>
+
+                                    <input type="radio" class="btn-check" name="displayRadio" id="display4" value="4">
+                                    <label class="btn btn-outline-primary" for="display4">4</label>
+
+                                    <input type="radio" class="btn-check" name="displayRadio" id="display5" value="5"
+                                           checked>
+                                    <label class="btn btn-outline-primary" for="display5">5</label>
+
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
 
-                    <div id="detail-condition" class="d-none">
-                        <div class="mb-3">
-                            <label for="functionalityRadio" class="d-block col-form-label fw-bold">1. How well would you rate the overall functionality of the device?</label>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <span class="me-2">Poor</span>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="row mb-3">
+                            <div class="col-12">
 
-                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionality1" value="1">
-                                <label class="btn btn-outline-primary" for="functionality1">1</label>
-
-                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionality2" value="2">
-                                <label class="btn btn-outline-primary" for="functionality2">2</label>
-
-                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionality3" value="3">
-                                <label class="btn btn-outline-primary" for="functionality3">3</label>
-
-                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionality4" value="4">
-                                <label class="btn btn-outline-primary" for="functionality4">4</label>
-
-                                <input type="radio" class="btn-check" name="functionalityRadio" id="functionality5" value="5" checked>
-                                <label class="btn btn-outline-primary" for="functionality5">5</label>
-
-                                <span class="ms-2">Excellent</span>
+                                <!--                    Additional Information-->
+                                <p class="fw-bold fs-5">
+                                    <i class="fa-solid fa-comment"></i>
+                                    Additional Information
+                                </p>
+                                <label for="additionalInfo" class="visually-hidden">Additional Information</label>
+                                <textarea class="form-control" id="additionalInfo" rows="3"
+                                          placeholder="Please provide any additional details or special requests regarding your device."></textarea>
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="btnRadio" class="d-block col-form-label fw-bold">2. How well would you rate the functionality of all the buttons?</label>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <span class="me-2">Poor</span>
-
-                                <input type="radio" class="btn-check" name="btnRadio" id="btn1" value="1">
-                                <label class="btn btn-outline-primary" for="btn1">1</label>
-
-                                <input type="radio" class="btn-check" name="btnRadio" id="btn2" value="2">
-                                <label class="btn btn-outline-primary" for="btn2">2</label>
-
-                                <input type="radio" class="btn-check" name="btnRadio" id="btn3" value="3">
-                                <label class="btn btn-outline-primary" for="btn3">3</label>
-
-                                <input type="radio" class="btn-check" name="btnRadio" id="btn4" value="4">
-                                <label class="btn btn-outline-primary" for="btn4">4</label>
-
-                                <input type="radio" class="btn-check" name="btnRadio" id="btn5" value="5" checked>
-                                <label class="btn btn-outline-primary" for="btn5">5</label>
-
-                                <span class="ms-2">Excellent</span>
+                        <!--                    Submit Button-->
+                        <div class="row justify-content-center">
+                            <div class="col-sm-6">
+                                <p class="btn btn-primary mb-3 d-block mx-auto" id="submitBtn">Submit for Approval</p>
                             </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="cameraRadio" class="d-block col-form-label fw-bold">3. How well would you rate the performance of the cameras and the condition of all lenses?</label>
-                            <div class="btn-group btn-group-sm" role="group" >
-                                <span class="me-2">Poor</span>
-
-                                <input type="radio" class="btn-check" name="cameraRadio" id="camera1" value="1">
-                                <label class="btn btn-outline-primary" for="camera1">1</label>
-
-                                <input type="radio" class="btn-check" name="cameraRadio" id="camera2" value="2">
-                                <label class="btn btn-outline-primary" for="camera2">2</label>
-
-                                <input type="radio" class="btn-check" name="cameraRadio" id="camera3" value="3">
-                                <label class="btn btn-outline-primary" for="camera3">3</label>
-
-                                <input type="radio" class="btn-check" name="cameraRadio" id="camera4" value="4">
-                                <label class="btn btn-outline-primary" for="camera4">4</label>
-
-                                <input type="radio" class="btn-check" name="cameraRadio" id="camera5" value="5" checked>
-                                <label class="btn btn-outline-primary" for="camera5">5</label>
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="batteryRadio" class="d-block col-form-label fw-bold">4. How well would you rate the battery's ability to remain charged and provide continuous use time?</label>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <span class="me-2">Poor</span>
-
-                                <input type="radio" class="btn-check" name="batteryRadio" id="battery1" value="1">
-                                <label class="btn btn-outline-primary" for="battery1">1</label>
-
-                                <input type="radio" class="btn-check" name="batteryRadio" id="battery2" value="2">
-                                <label class="btn btn-outline-primary" for="battery2">2</label>
-
-                                <input type="radio" class="btn-check" name="batteryRadio" id="battery3" value="3">
-                                <label class="btn btn-outline-primary" for="battery3">3</label>
-
-                                <input type="radio" class="btn-check" name="batteryRadio" id="battery4" value="4">
-                                <label class="btn btn-outline-primary" for="battery4">4</label>
-
-                                <input type="radio" class="btn-check" name="batteryRadio" id="battery5" value="5" checked>
-                                <label class="btn btn-outline-primary" for="battery5">5</label>
-
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="bodyRadio" class="d-block col-form-label fw-bold">5. How well would you rate the condition of the device body in terms of dents and scratches?</label>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <span class="me-2">Poor</span>
-
-                                <input type="radio" class="btn-check" name="bodyRadio" id="body1" value="1">
-                                <label class="btn btn-outline-primary" for="body1">1</label>
-
-                                <input type="radio" class="btn-check" name="bodyRadio" id="body2" value="2">
-                                <label class="btn btn-outline-primary" for="body2">2</label>
-
-                                <input type="radio" class="btn-check" name="bodyRadio" id="body3" value="3">
-                                <label class="btn btn-outline-primary" for="body3">3</label>
-
-                                <input type="radio" class="btn-check" name="bodyRadio" id="body4" value="4">
-                                <label class="btn btn-outline-primary" for="body4">4</label>
-
-                                <input type="radio" class="btn-check" name="bodyRadio" id="body5" value="5" checked>
-                                <label class="btn btn-outline-primary" for="body5">5</label>
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="touchscreenRadio" class="d-block col-form-label fw-bold">6. How well would you rate the condition of the touchscreen and back glass in terms of damage?</label>
-                            <div class="btn-group btn-group-sm" role="group" >
-                                <span class="me-2">Poor</span>
-
-                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen1" value="1">
-                                <label class="btn btn-outline-primary" for="touchscreen1">1</label>
-
-                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen2" value="2">
-                                <label class="btn btn-outline-primary" for="touchscreen2">2</label>
-
-                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen3" value="3">
-                                <label class="btn btn-outline-primary" for="touchscreen3">3</label>
-
-                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen4" value="4">
-                                <label class="btn btn-outline-primary" for="touchscreen4">4</label>
-
-                                <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen5" value="5" checked>
-                                <label class="btn btn-outline-primary" for="touchscreen5">5</label>
-
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="displayRadio" class="d-block col-form-label fw-bold ">7. How well would you rate the display in terms of distortion, lines, and the presence of black or white spots?</label>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <span class="me-2 ">Poor</span>
-
-                                <input type="radio" class="btn-check" name="displayRadio" id="display1" value="1">
-                                <label class="btn btn-outline-primary" for="display1">1</label>
-
-                                <input type="radio" class="btn-check" name="displayRadio" id="display2" value="2">
-                                <label class="btn btn-outline-primary" for="display2">2</label>
-
-                                <input type="radio" class="btn-check" name="displayRadio" id="display3" value="3">
-                                <label class="btn btn-outline-primary" for="display3">3</label>
-
-                                <input type="radio" class="btn-check" name="displayRadio" id="display4" value="4">
-                                <label class="btn btn-outline-primary" for="display4">4</label>
-
-                                <input type="radio" class="btn-check" name="displayRadio" id="display5" value="5" checked>
-                                <label class="btn btn-outline-primary" for="display5">5</label>
-
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
-                    </div>
-
-<!--                    Additional Information-->
-                    <div class="my-3">
-                        <p class="fw-bold fs-5">Additional Information</p>
-                        <textarea class="form-control" id="additionalInfo" rows="3" placeholder="Please provide any additional details or special requests regarding your device."></textarea>
-                    </div>
-
-
-<!--                    Submit Button-->
-                    <div class="row justify-content-center">
-                        <div class="col-sm-6">
-                            <p class="btn btn-primary mb-3 d-block mx-auto" id="submitBtn">Submit for Approval</p>
                         </div>
                     </div>
                 </div>

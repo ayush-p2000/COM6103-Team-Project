@@ -1,35 +1,69 @@
 <%- include('../components/header') %>
 
-<div class="m-5">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card rounded shadow">
-                <div class="card-body p-4">
-                    <h1 class="fw-bold text-center">Listing an Item</h1>
-                    <!--                    Image of item-->
-
-                    <div class="mb-3">
-                        <label for="itemImage" class="form-label">Pick images of the device</label>
-                        <div id="imagePreview" class="row p-1">
-                            <% device.photos.forEach(function(photo) { %>
-                                <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data ?? "").toString('base64') %>" class="img-thumbnail col-2">
-                            <% }); %>
+<div class="container-fluid">
+    <div class="m-5">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="fw-semibold">
+            <span>
+                <a href="/item/<%= device._id %>" class="text-decoration-none">
+                    <i class="fa-solid fa-arrow-left text-dark"></i>
+                </a>
+            </span>
+                    <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square text-success"></i>
+                    <i class="fa-solid fa-stack-1x fa-pencil text-white"></i>
+                </span>
+                    Edit Device
+                </h2>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <p class="fw-bold fs-5">
+                            <i class="fa-solid fa-camera"></i> Images
+                        </p>
+                        <!--                    Image of item-->
+                        <div id="imagePreview" class="mb-3">
+                            <div class="card rounded-4 shadow-sm px-1">
+                                <div class="card-body">
+                                    <% device.photos.forEach(function(photo) { %>
+                                        <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data ?? "").toString('base64') %>"
+                                             class="img-thumbnail img-fluid" style="width: 100px" alt="">
+                                    <% }); %>
+                                </div>
+                            </div>
                         </div>
-                        <input class="form-control" type="file" id="itemImage" name="itemImage" accept="image/*"  multiple>
+
+                        <label for="itemImage" class="form-label">Pick images of the device</label>
+                        <input class="form-control" type="file" id="itemImage" name="itemImage" accept="image/*"
+                               multiple>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
 
 
-
-                    <!--                    Device information-->
-                    <div class="my-3">
-                        <p class="fw-bold fs-5">Device information</p>
+                        <!--                    Device information-->
+                        <p class="fw-bold fs-5">
+                            <i class="fa-solid fa-mobile-screen"></i>
+                            Device information
+                        </p>
 
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="mb-3 row">
-                                    <label for="deviceType" class="col-sm-6 col-lg-4 col-form-label fw-bold">Device Type</label>
+                                    <label for="deviceType" class="col-sm-6 col-lg-4 col-form-label fw-bold">Device
+                                        Type</label>
                                     <div class="col-sm-6">
-                                        <select class="form-select" id="deviceType">
+                                        <select class="form-select" id="deviceType" disabled>
                                             <option value="-1"><%= device.device_type.name %></option>
                                         </select>
                                     </div>
@@ -37,9 +71,10 @@
 
                                 <!--                        Brand -->
                                 <div class="mb-3 row">
-                                    <label for="deviceBrand" class="col-sm-6 col-lg-4 col-form-label fw-bold">Brand</label>
+                                    <label for="deviceBrand"
+                                           class="col-sm-6 col-lg-4 col-form-label fw-bold">Brand</label>
                                     <div class="col-sm-6">
-                                        <select class="form-select" id="deviceBrand">
+                                        <select class="form-select" id="deviceBrand" disabled>
                                             <option value="<%= device.brand._id %>"><%= device.brand.name %>
                                         </select>
                                     </div>
@@ -47,43 +82,53 @@
 
                                 <!--                        Model-->
                                 <div class="mb-3 row">
-                                    <label for="deviceModel" class="col-sm-6 col-lg-4 col-form-label fw-bold">Model</label>
+                                    <label for="deviceModel"
+                                           class="col-sm-6 col-lg-4 col-form-label fw-bold">Model</label>
                                     <div class="col-sm-6">
-                                        <select class="form-select" id="deviceModel">
+                                        <select class="form-select" id="deviceModel" disabled>
                                             <option value="<%= device.model._id %>"><%= device.model.name %>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <% if (device.model.properties.length > 0){%>
-                                <div class="col-12 col-md-6 col-xl-4" id="selected-model-content">
+
+                            <% if (device.model.properties.length > 0){ %>
+                                <div class="col-12 col-md-6 col-xl-6" id="selected-model-content">
                                     <div class="card p-3 ">
                                         <div class="row" id="selected-model-content">
                                             <div class="col-3">
-                                                <img src="<%= device.model.properties[0].value %>" class="img-fluid rounded-start" >
+                                                <img src="<%= device.model.properties[0].value %>"
+                                                     class="img-fluid rounded-start" alt="">
                                             </div>
                                             <div class="col-9">
                                                 <div class="card-body p-0">
                                                     <h5 class="card-title"><%= device.model.name %></h5>
-                                                    <p class="card-text m-0"><small>Device Type:</small> <%= device.device_type.name %></p>
-                                                    <p class="card-text m-0"><small>Brand:</small> <%= device.brand.name %></p>
-                                                    <p class="card-text"><small class="text-muted">Release at <%= device.model.properties[2]?.value %></small></p>
+                                                    <p class="card-text m-0"><small>Device
+                                                            Type:</small> <%= device.device_type.name %></p>
+                                                    <p class="card-text m-0">
+                                                        <small>Brand:</small> <%= device.brand.name %></p>
+                                                    <p class="card-text"><small class="text-muted">Released
+                                                            <%= device.model.properties[2]?.value %></small></p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            <%}%>
+                            <% } %>
                         </div>
 
                         <div class="row mt-2">
                             <div class="col-12 col-md-6">
                                 <div class="mb-3 row">
-                                    <label for="deviceColor" class="col-sm-6 col-lg-4 col-form-label fw-bold">Color</label>
+                                    <label for="deviceColor"
+                                           class="col-sm-6 col-lg-4 col-form-label fw-bold">Color</label>
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceColor">
                                             <% colors.forEach(color => { %>
-                                                <option value="<%= color %>" <% if (device.color === color) { %> selected <% } %>><%= color %></option>
+                                                <option value="<%= color %>"
+                                                <% if (device.color === color) { %> selected
+                                                        <% } %>
+                                                ><%= color %></option>
                                             <% }); %>
                                         </select>
                                     </div>
@@ -93,32 +138,49 @@
                                     <div class="col-sm-6">
                                         <select class="form-select" id="deviceCapacity">
                                             <% capacities.forEach(capacity => { %>
-                                                <option value="<%= capacity %>" <% if (device.capacity === capacity) { %> selected <% } %>><%= capacity %></option>
+                                                <option value="<%= capacity %>"
+                                                <% if (device.capacity === capacity) { %> selected
+                                                        <% } %>
+                                                ><%= capacity %></option>
                                             <% }); %>
                                         </select>
 
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="deviceYear" class="col-form-label fw-bold">It has been in use for how many years?</label>
+                                    <label for="deviceYear" class="col-form-label fw-bold">It has been in use for
+                                        how many years?</label>
                                     <div>
-                                        <input type="number" class="form-control" id="deviceYear" name="deviceYear" min="0" value="<%= device.years_used %>" >
+                                        <input type="number" class="form-control" id="deviceYear" name="deviceYear"
+                                               min="0" value="<%= device.years_used %>">
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                     </div>
+                </div>
+            </div>
+        </div>
 
-                    <!--                    Device Condition-->
-                    <div class="my-3">
-                        <p class="fw-bold fs-5">Device Condition</p>
-                        <label for="deviceCondition" class="col-sm-4 col-form-label fw-bold ">Is your device in good condition?</label>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <!--                    Device Condition-->
+                        <p class="fw-bold fs-5">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                            Device Condition
+                        </p>
+                        <label for="deviceCondition" class="col-sm-4 col-form-label fw-bold ">Is your device in good
+                            condition?</label>
                         <div class="btn-group btn-group-sm" role="group" aria-label="Device Condition Choose">
-                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionYes"  <%= device.good_condition ? 'checked' : ''%>>
+                            <input type="radio" class="btn-check" name="conditionRadio"
+                                   id="conditionYes" <%= device.good_condition ? 'checked' : '' %>>
                             <label class="btn btn-outline-primary" for="conditionYes">Yes</label>
 
-                            <input type="radio" class="btn-check" name="conditionRadio" id="conditionNo"  <%= !device.good_condition ? 'checked' : ''%>>
+                            <input type="radio" class="btn-check" name="conditionRadio"
+                                   id="conditionNo" <%= !device.good_condition ? 'checked' : '' %>>
                             <label class="btn btn-outline-primary" for="conditionNo">No</label>
                         </div>
                         <ul class="text-muted">
@@ -130,116 +192,166 @@
                             <li>The touchscreen and back glass are undamaged</li>
                             <li>The display is free of distortion, lines and black or white spots</li>
                         </ul>
+
+                        <div id="detail-condition" class="<%= device.good_condition ? 'd-none' : 'd-block' %>">
+                            <div class="mb-3">
+                                <label for="functionalityRadio" class="d-block col-form-label fw-bold">1. How well would
+                                    you rate the overall functionality of the device?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <input type="radio" class="btn-check" name="functionalityRadio"
+                                               id="functionality<%= i %>" value="<%= i %>"
+                                        <% if (device.details[0]?.value === i.toString()) { %> checked
+                                                <% } %>
+                                        >
+                                        <label class="btn btn-outline-primary"
+                                               for="functionality<%= i %>"><%= i %></label>
+                                    <% } %>
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="btnRadio" class="d-block col-form-label fw-bold">2. How well would you rate
+                                    the functionality of all the buttons?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <input type="radio" class="btn-check" name="btnRadio" id="btn<%= i %>"
+                                               value="<%= i %>"
+                                        <% if (device.details[1]?.value === i.toString()) { %> checked
+                                                <% } %>
+                                        >
+                                        <label class="btn btn-outline-primary" for="btn<%= i %>"><%= i %></label>
+                                    <% } %>
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="cameraRadio" class="d-block col-form-label fw-bold">3. How well would you
+                                    rate the performance of the cameras and the condition of all lenses?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <input type="radio" class="btn-check" name="cameraRadio" id="camera<%= i %>"
+                                               value="<%= i %>"
+                                        <% if (device.details[2]?.value === i.toString()) { %> checked
+                                                <% } %>
+                                        >
+                                        <label class="btn btn-outline-primary" for="camera<%= i %>"><%= i %></label>
+                                    <% } %>
+
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="batteryRadio" class="d-block col-form-label fw-bold">4. How well would you
+                                    rate the battery's ability to remain charged and provide continuous use
+                                    time?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <input type="radio" class="btn-check" name="batteryRadio" id="battery<%= i %>"
+                                               value="<%= i %>"
+                                        <% if (device.details[3]?.value === i.toString()) { %> checked
+                                                <% } %>
+                                        >
+                                        <label class="btn btn-outline-primary" for="battery<%= i %>"><%= i %></label>
+                                    <% } %>
+
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="bodyRadio" class="d-block col-form-label fw-bold">5. How well would you rate
+                                    the condition of the device body in terms of dents and scratches?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <input type="radio" class="btn-check" name="bodyRadio" id="body<%= i %>"
+                                               value="<%= i %>"
+                                        <% if (device.details[4]?.value === i.toString()) { %> checked
+                                                <% } %>
+                                        >
+                                        <label class="btn btn-outline-primary" for="body<%= i %>"><%= i %></label>
+                                    <% } %>
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="touchscreenRadio" class="d-block col-form-label fw-bold">6. How well would
+                                    you rate the condition of the touchscreen and back glass in terms of damage?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2">Poor</span>
+
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <input type="radio" class="btn-check" name="touchscreenRadio"
+                                               id="touchscreen<%= i %>" value="<%= i %>"
+                                        <% if (device.details[5]?.value === i.toString()) { %> checked
+                                                <% } %>
+                                        >
+                                        <label class="btn btn-outline-primary"
+                                               for="touchscreen<%= i %>"><%= i %></label>
+                                    <% } %>
+
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="displayRadio" class="d-block col-form-label fw-bold ">7. How well would you
+                                    rate the display in terms of distortion, lines, and the presence of black or white
+                                    spots?</label>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <span class="me-2 ">Poor</span>
+
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <input type="radio" class="btn-check" name="displayRadio" id="display<%= i %>"
+                                               value="<%= i %>"
+                                        <% if (device.details[6]?.value === i.toString()) { %> checked
+                                                <% } %>
+                                        >
+                                        <label class="btn btn-outline-primary" for="display<%= i %>"><%= i %></label>
+                                    <% } %>
+
+                                    <span class="ms-2">Excellent</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
 
-                    <div id="detail-condition" class="<%= device.good_condition ? 'd-none' : 'd-block'%>">
-                        <div class="mb-3">
-                            <label for="functionalityRadio" class="d-block col-form-label fw-bold">1. How well would you rate the overall functionality of the device?</label>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <span class="me-2">Poor</span>
-                                <% for (let i = 1; i <= 5; i++) { %>
-                                    <input type="radio" class="btn-check" name="functionalityRadio" id="functionality<%= i %>" value="<%= i %>" <% if (device.details[0]?.value === i.toString()) { %> checked <% } %>>
-                                    <label class="btn btn-outline-primary" for="functionality<%= i %>"><%= i %></label>
-                                <% } %>
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
 
-                        <div class="mb-3">
-                            <label for="btnRadio" class="d-block col-form-label fw-bold">2. How well would you rate the functionality of all the buttons?</label>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <span class="me-2">Poor</span>
-
-                                <% for (let i = 1; i <= 5; i++) { %>
-                                    <input type="radio" class="btn-check" name="btnRadio" id="btn<%= i %>" value="<%= i %>" <% if (device.details[1]?.value === i.toString()) { %> checked <% } %>>
-                                    <label class="btn btn-outline-primary" for="btn<%= i %>"><%= i %></label>
-                                <% } %>
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="cameraRadio" class="d-block col-form-label fw-bold">3. How well would you rate the performance of the cameras and the condition of all lenses?</label>
-                            <div class="btn-group btn-group-sm" role="group" >
-                                <span class="me-2">Poor</span>
-
-                                <% for (let i = 1; i <= 5; i++) { %>
-                                    <input type="radio" class="btn-check" name="cameraRadio" id="camera<%= i %>" value="<%= i %>" <% if (device.details[2]?.value === i.toString()) { %> checked <% } %>>
-                                    <label class="btn btn-outline-primary" for="camera<%= i %>"><%= i %></label>
-                                <% } %>
-
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="batteryRadio" class="d-block col-form-label fw-bold">4. How well would you rate the battery's ability to remain charged and provide continuous use time?</label>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <span class="me-2">Poor</span>
-
-                                <% for (let i = 1; i <= 5; i++) { %>
-                                    <input type="radio" class="btn-check" name="batteryRadio" id="battery<%= i %>" value="<%= i %>" <% if (device.details[3]?.value === i.toString()) { %> checked <% } %>>
-                                    <label class="btn btn-outline-primary" for="battery<%= i %>"><%= i %></label>
-                                <% } %>
-
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="bodyRadio" class="d-block col-form-label fw-bold">5. How well would you rate the condition of the device body in terms of dents and scratches?</label>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <span class="me-2">Poor</span>
-
-                                <% for (let i = 1; i <= 5; i++) { %>
-                                    <input type="radio" class="btn-check" name="bodyRadio" id="body<%= i %>" value="<%= i %>" <% if (device.details[4]?.value === i.toString()) { %> checked <% } %>>
-                                    <label class="btn btn-outline-primary" for="body<%= i %>"><%= i %></label>
-                                <% } %>
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="touchscreenRadio" class="d-block col-form-label fw-bold">6. How well would you rate the condition of the touchscreen and back glass in terms of damage?</label>
-                            <div class="btn-group btn-group-sm" role="group" >
-                                <span class="me-2">Poor</span>
-
-                                <% for (let i = 1; i <= 5; i++) { %>
-                                    <input type="radio" class="btn-check" name="touchscreenRadio" id="touchscreen<%= i %>" value="<%= i %>" <% if (device.details[5]?.value === i.toString()) { %> checked <% } %>>
-                                    <label class="btn btn-outline-primary" for="touchscreen<%= i %>"><%= i %></label>
-                                <% } %>
-
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="displayRadio" class="d-block col-form-label fw-bold ">7. How well would you rate the display in terms of distortion, lines, and the presence of black or white spots?</label>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <span class="me-2 ">Poor</span>
-
-                                <% for (let i = 1; i <= 5; i++) { %>
-                                    <input type="radio" class="btn-check" name="displayRadio" id="display<%= i %>" value="<%= i %>" <% if (device.details[6]?.value === i.toString()) { %> checked <% } %>>
-                                    <label class="btn btn-outline-primary" for="display<%= i %>"><%= i %></label>
-                                <% } %>
-
-                                <span class="ms-2">Excellent</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--                    Additional Information-->
-                    <div class="my-3">
-                        <p class="fw-bold fs-5">Additional Information</p>
+                        <!--                    Additional Information-->
+                        <p class="fw-bold fs-5">
+                            <i class="fa-solid fa-comment"></i>
+                            Additional Information
+                        </p>
+                        <label for="additionalInfo" class="visually-hidden">Additional Details</label>
                         <textarea class="form-control" id="additionalInfo" rows="3"
                                   placeholder="Please provide any additional details or special requests regarding your device."><%= device.additional_details %></textarea>
-                    </div>
 
 
-                    <!--                    Submit Button-->
-                    <div class="row justify-content-center">
-                        <div class="col-sm-6">
-                            <p class="btn btn-primary mb-3 d-block mx-auto" id="submitBtn">Submit for Approval</p>
+                        <!--                    Submit Button-->
+                        <div class="row justify-content-center mt-3">
+                            <div class="col-sm-6">
+                                <p class="btn btn-primary mb-3 d-block mx-auto" id="submitBtn">Submit for Approval</p>
+                            </div>
                         </div>
                     </div>
                 </div>

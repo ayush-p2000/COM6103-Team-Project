@@ -81,7 +81,7 @@ async function getUserItems(id) {
     return Device.find({'listing_user': id}).populate({
         path: 'device_type brand model listing_user',
         options: {strictPopulate: false}
-    });
+    }).sort({createdAt: -1});
 }
 
 /**

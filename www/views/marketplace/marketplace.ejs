@@ -1,60 +1,99 @@
 <%- include("../components/header") %>
 
 
-<div class="container-fluid vh-100">
-    <div class="mx-4 marketplace">
-
-
-        <!--    Search Bar-->
-        <input type="search" class="form-control ds-input mt-3" id="search-input"
-               placeholder="Search items...">
-
-        <!--Filter and Sorter-->
-        <div class="row mt-4 mt-3">
-            <div class="row mb-1">
-                <p class="fw-bold col-6 col-sm-8 col-md-10 mb-0">Category: </p>
-                <button class="btn btn-primary btn-sm col-6 col-sm-4 col-md-2" id="clearFiltersBtn">Clear Filters</button>
-            </div>
-            <div class="btn-group btn-group-sm flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
-                <% deviceCategory.getList().forEach(category => { %>
-                    <input type="checkbox" class="btn-check category-filter" id="<%= deviceCategory.deviceCategoryToString(category) %>">
-                    <label class="btn btn-outline-primary" for="<%= deviceCategory.deviceCategoryToString(category) %>"><%= deviceCategory.deviceCategoryToString(category) %></label>
-                <% }) %>
-            </div>
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-12">
+            <h2 class="fw-semibold">
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square text-success"></i>
+                    <i class="fa-solid fa-stack-1x fa-store text-white"></i>
+                </span>
+                Marketplace
+            </h2>
         </div>
+    </div>
 
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body">
+                    <!--    Search Bar-->
+                    <input type="search" class="form-control ds-input" id="search-input"
+                           placeholder="Search items...">
 
-        <div class="row mt-2">
-            <p class="fw-bold">Device Type: </p>
-            <div class="btn-group btn-group-sm flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
-                <% deviceTypes.forEach(deviceType => { %>
-                    <input type="checkbox" class="btn-check deviceType-filter" id="<%= deviceType.name %>" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="<%= deviceType.name %>"><%= deviceType.name %></label>
-                <% }) %>
-            </div>
-        </div>
-
-
-
-
-        <!--items list-->
-        <div class="row g-2 mt-2">
-            <% devices.forEach(device => { if(device.visible){%>
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 item mb-2">
-                    <div class="card h-100">
-                        <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>" class="card-img-top img-fluid item-img" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title modelName"><%= device.model.name %></h5>
-                            <p class="m-0 p-0 text-muted deviceType"><small>Device Type: </small><%= device.device_type.name %></p>
-                            <p class="m-0 p-0 text-muted category">
-                                <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
-                            <p class="m-0">By: <span class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span></p>
+                    <div class="row justify-content-end mt-2">
+                        <div class="col-md-4">
+                            <button class="btn btn-primary btn-sm w-100" id="clearFiltersBtn">Clear
+                                Filters
+                            </button>
                         </div>
-                        <a class="btn btn-primary btn-sm mb-1 mx-2" href="/item/<%= device._id %>"> View</a>
+                    </div>
+
+
+                    <!--Filter and Sorter-->
+                    <div class="row">
+                        <div class="row mb-1">
+                            <p class="fw-bold col-6 col-sm-8 col-md-10 mb-0">Category: </p>
+                        </div>
+                        <div class="btn-group btn-group-sm flex-wrap" role="group"
+                             aria-label="Basic checkbox toggle button group">
+                            <% deviceCategory.getList().forEach(category => { %>
+                                <input type="checkbox" class="btn-check category-filter"
+                                       id="<%= deviceCategory.deviceCategoryToString(category) %>">
+                                <label class="btn btn-outline-primary"
+                                       for="<%= deviceCategory.deviceCategoryToString(category) %>"><%= deviceCategory.deviceCategoryToString(category) %></label>
+                            <% }) %>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <p class="fw-bold">Device Type: </p>
+                        <div class="btn-group btn-group-sm flex-wrap" role="group"
+                             aria-label="Basic checkbox toggle button group">
+                            <% deviceTypes.forEach(deviceType => { %>
+                                <input type="checkbox" class="btn-check deviceType-filter" id="<%= deviceType.name %>"
+                                       autocomplete="off">
+                                <label class="btn btn-outline-primary"
+                                       for="<%= deviceType.name %>"><%= deviceType.name %></label>
+                            <% }) %>
+                        </div>
                     </div>
                 </div>
-            <% }}) %>
-            <%- include("../components/pagination") %>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="marketplace">
+
+                <!--items list-->
+                <div class="row g-2">
+                    <% devices.forEach(device => { if(device.visible){ %>
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 item mb-2">
+                            <div class="card rounded-4 h-100 shadow-sm">
+                                <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>"
+                                     class="img-fluid d-block h-100 mx-auto rounded-top-4" alt="..."
+                                     style="max-height: 200px;">
+                                <div class="card-body">
+                                    <h5 class="card-title modelName"><%= device.model.name %></h5>
+                                    <p class="m-0 p-0 text-muted deviceType"><small>Device
+                                            Type: </small><%= device.device_type.name %></p>
+                                    <p class="m-0 p-0 text-muted category">
+                                        <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
+                                    <p class="m-0">By: <span
+                                                class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span>
+                                    </p>
+
+                                    <a class="btn btn-primary btn-sm mt-1  w-100" href="/item/<%= device._id %>"> View</a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }}) %>
+                    <%- include("../components/pagination") %>
+                </div>
+            </div>
         </div>
     </div>
 </div>

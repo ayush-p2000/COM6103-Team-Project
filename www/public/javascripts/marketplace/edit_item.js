@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const reader = new FileReader();
             // call back to append img
             reader.onload = function () {
-                var templateString = `<img src="${reader.result}" class="img-thumbnail col-2">`
+                var templateString = `<img src="${reader.result}" class="img-thumbnail" style="max-width: 100px;">`
                 imagePreview.innerHTML += templateString;
             }
             reader.readAsDataURL(file); // read file as url

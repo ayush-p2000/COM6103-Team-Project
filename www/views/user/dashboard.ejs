@@ -3,7 +3,7 @@
 
 <div class="container-fluid w-100">
     <div class="row">
-        <div class="col-md-3 col-lg-2 bg-success m-0 py-2 py-md-0 px-3 h-auto h-md-100 vh-md-100" style="opacity: 85%">
+        <div class="col-md-3 col-lg-2 bg-success m-0 py-2 py-md-0 px-3 h-md-100 vh-md-100" style="opacity: 85%">
             <nav id="sidebarMenu" class="d-none d-md-block sidebar text-light text-center text-md-start">
                 <div class="pt-3 position-sticky">
                     <a class="navbar-brand fs-4 fw-medium">
@@ -17,24 +17,24 @@
 
                     <ul class="nav flex-column">
 
-                        <li class="nav-item">
-                            <a class="nav-link text-white active" aria-current="page" href="/dashboard">
+                        <li class="nav-item <%= currentRoute.includes('home') ? "border rounded-2 bg-white" : ""%>">
+                            <a class="nav-link <%= currentRoute.includes('home') ? "text-dark fw-semibold" : "text-white" %>" aria-current="page" href="/dashboard">
                                 Dashboard
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/list-item">
+                        <li class="nav-item <%= currentRoute.includes('list') ? "border rounded-2 bg-white" : ""%>">
+                            <a class="nav-link <%= currentRoute.includes('list') ? "text-dark fw-semibold" : "text-white" %>" href="/list-item">
                                 Add Item
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/my-items">
+                        <li class="nav-item <%= currentRoute.includes('items') ? "border rounded-2 bg-white" : ""%>">
+                            <a class="nav-link <%= currentRoute.includes('items') ? "text-dark fw-semibold" : "text-white" %>" href="/my-items">
                                 My Items
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/marketplace">
+                        <li class="nav-item <%= currentRoute.includes('marketplace/marketplace') ? "border rounded-2 bg-white" : ""%>">
+                            <a class="nav-link <%= currentRoute.includes('marketplace/marketplace') ? "text-dark fw-semibold" : "text-white" %>" href="/marketplace">
                                 Marketplace
                             </a>
                         </li>

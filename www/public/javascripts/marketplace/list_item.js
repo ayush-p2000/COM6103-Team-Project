@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function() {
         showModelPreview()
         var selectedIndex = deviceModelElement.selectedIndex;
         var template = `
-            <div class="card p-3 ">
+            <div class="card rounded-4 shadow-sm p-3 rounded-bottom-0">
                 <div class="row" id="selected-model-content">
                     <div class="col-3">
                         <img src="${models[selectedIndex].properties[0].value}" class="img-fluid rounded-start" >
@@ -175,11 +175,17 @@ document.addEventListener("DOMContentLoaded", function() {
                             <h5 class="card-title">${models[selectedIndex].name}</h5>
                             <p class="card-text m-0"><small>Device Type:</small> ${deviceTypeElement.options[deviceTypeElement.selectedIndex].innerText}</p>
                             <p class="card-text m-0"><small>Brand:</small> ${deviceBrandElement.options[deviceBrandElement.selectedIndex].innerText}</p>
-                            <p class="card-text"><small class="text-muted">Release at ${models[selectedIndex].properties[2].value}</small></p>
+                            <p class="card-text"><small class="text-muted">Released ${models[selectedIndex].properties[2].value}</small></p>
                         </div>
                     </div>
                 </div>
-            </div>`
+            </div>
+            <div class="card rounded-4 shadow-sm rounded-top-0 bg-info-subtle">
+                <div class="card-body">
+                    <p class="p-0 m-0 small text-center">Is this the correct model you're selling?</p>
+                </div>
+            </div>
+            `
         document.getElementById('selected-model-content').innerHTML = template;
     }
 

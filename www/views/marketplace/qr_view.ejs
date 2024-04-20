@@ -4,197 +4,181 @@
 
 <script src="/javascripts/qr/qrView.js"></script>
 
-<div class="container-lg">
-    <div class="card bg-body-secondary mt-2 shadow-sm">
-        <div class="card-body">
+<div class="container-lg pb-3">
+    <div class="my-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="fw-semibold">
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square"></i>
+                    <i class="fa-solid fa-stack-1x fa-comment-dollar text-white"></i>
+                </span>
+                    Quotation
+                </h2>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+            <div class="col-md-10">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body">
 
-            <h1 class="text-center fs-3">Quotation from <%= quote.provider.name %></h1>
-
-            <hr class="px-2">
-
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card m-2">
-                        <div class="card-body">
-                            <% if (!quoteActive) { %>
-                                <div class="alert alert-<%= stateColourFunc(quote.state) %>">
-                                    <div class="d-inline-flex w-100">
-                                        <i class="fa-solid fa-circle-info fa-2x my-auto"></i>
-                                        <p class="text-center m-0 my-auto p-0 w-100">This quotation has
-                                            been <%= stateStringFunc(quote.state).toLowerCase() %></p>
-                                    </div>
-                                </div>
-                            <% } %>
-                            <div class="d-flex justify-content-between w-100">
-                                <img class="img-thumbnail h-100 my-auto" src="<%= quote.provider.logo %>" width="50"/>
-                                <div class="flex-column w-100">
-                                    <p class="text-center w-100 my-auto flex-column">
-                                        <span class="fw-semibold text-center fs-4"><%= toCurrencyFunc(quote.value, "£", 2) %></span>
-                                    </p>
-                                    <p class="text-center w-100 my-auto flex-column text-center">
-                                        <small class="text-center fst-italic">Expires: <span
-                                                    class="alert alert-secondary p-0 m-0 mx-1 px-2"><%= new Intl.DateTimeFormat("en-GB", {
-                                                    year: "numeric",
-                                                    month: '2-digit',
-                                                    day: '2-digit',
-                                                    hour: '2-digit',
-                                                    minute: '2-digit',
-                                                    second: '2-digit',
-                                                    hour12: false,
-                                                    timeZone: "Europe/London"
-                                                }).format(quote.expiry) %></span>
-                                        </small>
-                                    </p>
+                        <% if (!quoteActive) { %>
+                            <div class="alert alert-<%= quoteState.stateToColour(quote.state) %>">
+                                <div class="d-inline-flex w-100">
+                                    <i class="fa-solid fa-circle-info fa-2x my-auto"></i>
+                                    <p class="text-center m-0 my-auto p-0 w-100">This quotation has
+                                        been <%= quoteState.stateToString(quote.state).toLowerCase() %></p>
                                 </div>
                             </div>
+                        <% } %>
 
-                            <div class="row px-2">
-                                <div class="col-md-6">
-                                    <p>
-                                        <span class="fw-semibold">Created on:</span> <%= new Intl.DateTimeFormat("en-GB", {
-                                            year: "numeric",
-                                            month: '2-digit',
-                                            day: '2-digit',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            second: '2-digit',
-                                            hour12: false,
-                                            timeZone: "Europe/London"
-                                        }).format(quote.createdAt) %></p>
-                                </div>
-
-                                <div class="col-md-6">
-                                </div>
-                            </div>
-
-                            <hr class="px-2">
-
-                            <div class="row px-2">
-                                <div class="col-md-6">
-                                    <p>
-                                        <span class="fw-semibold">Product Line:</span> <%= quote.details?.product_line?.name ?? "N/A" %>
-                                    </p>
-                                    <p>
-                                        <span class="fw-semibold">Category:</span> <%= quote.details?.category?.name ?? "N/A" %>
-                                    </p>
-                                    <p>
-                                        <span class="fw-semibold">Box Name:</span> <%= quote.details?.box_name?.name ?? "N/A" %>
-                                    </p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>
-                                        <span class="fw-semibold">Buy (£):</span> <%= quote.details?.buy_price ?? "N/A" %>
-                                    </p>
-                                    <p>
-                                        <span class="fw-semibold">Sell (£):</span> <%= quote.details?.sell_price ?? "N/A" %>
-                                    </p>
-                                    <p>
-                                        <span class="fw-semibold">Exchange (£):</span> <%= quote.details?.exchange_price ?? "N/A" %>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="row px-2 justify-content-end">
-                                <div class="col-md-6 text-end">
-                                    <a href="/" class="hover-link text-decoration-none">View
-                                        on <%= quote.provider.name %> site</a>
-                                </div>
+                        <div class="d-flex justify-content-between w-100">
+                            <img class="img-thumbnail h-100 my-auto" src="<%= quote.provider.logo %>"
+                                 width="150" alt=""/>
+                            <div class="flex-column w-100">
+                                <p class="text-center w-100 my-auto flex-column">
+                                    <span class="fw-semibold text-center fs-4">£<%= quote.value %></span>
+                                </p>
+                                <p class="text-center w-100 my-auto flex-column text-center">
+                                    <small class="text-center fst-italic">Expires: <span
+                                                class="alert alert-secondary p-0 m-0 mx-1 px-2"><%= new Intl.DateTimeFormat("en-GB", {
+                                                year: "numeric",
+                                                month: '2-digit',
+                                                day: '2-digit',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                second: '2-digit',
+                                                hour12: false,
+                                                timeZone: "Europe/London"
+                                            }).format(quote.expiry) %></span>
+                                    </small>
+                                </p>
+                                <p class="text-center">
+                                    <span class="fw-semibold">Created on:</span> <%= new Intl.DateTimeFormat("en-GB", {
+                                        year: "numeric",
+                                        month: '2-digit',
+                                        day: '2-digit',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        second: '2-digit',
+                                        hour12: false,
+                                        timeZone: "Europe/London"
+                                    }).format(quote.createdAt) %></p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="card m-2">
-                        <div class="card-body px-3">
-                            <h2 class="fs-4 text-center">Device</h2>
-                            <p class="text-center fs-4">
-                                <span class="fw-semibold"><%= quote.device.brand.name %></span> <%= quote.device.model.name %>
-                            </p>
-
-                            <div class="text-center my-2">
-                                <% if (quote.device.photos.length <= 0 && false) { %>
-                                    <img src="https://placehold.co/600x400?text=No+Image" class="img-fluid w-50"
-                                         alt="Post Image"/>
-                                <% } else { %>
-                                    <div class="carousel slide carousel-dark" id="deviceImages">
-                                        <div class="carousel-indicators">
-                                            <% quote.device.photos.forEach((photo, index) => {
-                                            if (index === 0) { %>
-                                                <button type="button" data-bs-target="#deviceImages"
-                                                        data-bs-slide-to="<%= index %>"
-                                                        class="active" aria-current="true"
-                                                        aria-label="Slide <%= index + 1 %>"></button>
-                                            <% } else { %>
-                                                <button type="button" data-bs-target="#deviceImages"
-                                                        data-bs-slide-to="<%= index %>"
-                                                        aria-label="Slide <%= index + 1 %>"></button>
-                                            <% }
-                                            }) %>
-                                        </div>
-                                        <div class="carousel-inner">
-                                            <% quote.device.photos.forEach((photo, index) => { %>
-                                                <div class="carousel-item <%= index === 0 ? "active" : "" %>"
-                                                     data-bs-interval="false">
-                                                    <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data ?? "").toString('base64') %>"
-                                                         class="img-fluid w-50"
-                                                         alt="Post Image">
-                                                </div>
-                                            <% }) %>
-                                        </div>
-                                    </div>
-
-                                    <button class="carousel-control-prev" type="button"
-                                            data-bs-target="#deviceImages"
-                                            data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-
-                                    <button class="carousel-control-next" type="button"
-                                            data-bs-target="#deviceImages"
-                                            data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
-                            </div>
-                            <% } %>
-
-                            <div class="table-responsive">
-                                <table class="table table-striped-columns">
-                                    <tbody>
-                                    <% quote.device.details.forEach((detail) => { %>
-                                        <tr>
-                                            <td class="w-25"><%= detail.name %></td>
-                                            <td class="text-center w-75"><%= detail.value %></td>
-                                        </tr>
-                                    <% }) %>
-
-                                    <tr>
-                                        <td class="w-25">Good Condition</td>
-                                        <td class="text-center w-75">
-                                            <div class="alert alert-<%= (quote.device.good_condition ? "success" : "secondary") %> p-0 m-0">
-                                                <%= (quote.device.good_condition ? "Yes" : "No") %>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="border border-1 border-light-subtle rounded-3 p-2">
-                                <p>From the seller:</p>
-                                <p class="blockquote fs-6 fst-italic text-light-emphasis text-center">
-                                    "<%= quote.device.additional_details %>"</p>
+                        <div class="row px-2 justify-content-end">
+                            <div class="col-md-6 text-end">
+                                <a href="/" class="hover-link text-decoration-none">View
+                                    on <%= quote.provider.name %> site</a>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="card m-2">
+        <div class="row justify-content-center mb-3">
+            <div class="col-md-10">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="fs-4 fw-bold">
+                            <i class="fa-solid fa-mobile-screen"></i>
+                            Device
+                        </h2>
+                        <p class="text-center display-5 fw-bold">
+                            <span class="fw-semibold"><%= quote.device.brand.name %></span> <%= quote.device.model.name %>
+                        </p>
+
+                        <div class="text-center my-2">
+                            <% if (quote.device.photos.length <= 0 && false) { %>
+                                <img src="https://placehold.co/600x400?text=No+Image" class="img-fluid w-50"
+                                     alt="Post Image"/>
+                            <% } else { %>
+                                <div class="carousel slide carousel-dark" id="deviceImages">
+                                    <div class="carousel-indicators">
+                                        <% quote.device.photos.forEach((photo, index) => {
+                                        if (index === 0) { %>
+                                            <button type="button" data-bs-target="#deviceImages"
+                                                    data-bs-slide-to="<%= index %>"
+                                                    class="active" aria-current="true"
+                                                    aria-label="Slide <%= index + 1 %>"></button>
+                                        <% } else { %>
+                                            <button type="button" data-bs-target="#deviceImages"
+                                                    data-bs-slide-to="<%= index %>"
+                                                    aria-label="Slide <%= index + 1 %>"></button>
+                                        <% }
+                                        }) %>
+                                    </div>
+                                    <div class="carousel-inner">
+                                        <% quote.device.photos.forEach((photo, index) => { %>
+                                            <div class="carousel-item <%= index === 0 ? "active" : "" %>"
+                                                 data-bs-interval="false">
+                                                <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data ?? "").toString('base64') %>"
+                                                     class="img-fluid d-block h-100 mx-auto"
+                                                     style="max-height: 400px;"
+                                                     alt="Post Image">
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                </div>
+
+                                <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#deviceImages"
+                                        data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+
+                                <button class="carousel-control-next" type="button"
+                                        data-bs-target="#deviceImages"
+                                        data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                        </div>
+                        <% } %>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped-columns">
+                                <tbody>
+                                <tr>
+                                    <td class="w-25">Good Condition</td>
+                                    <td class="text-center w-75">
+                                        <div class="alert alert-<%= (quote.device.good_condition ? "success" : "secondary") %> p-0 m-0">
+                                            <%= (quote.device.good_condition ? "Yes" : "No") %>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <% quote.device.details.forEach((detail) => { %>
+                                    <tr>
+                                        <td class="w-25"><%= detail.name[0].toUpperCase() + detail.name.slice(1) %></td>
+                                        <td class="text-center w-75"><%= detail.value %>/5</td>
+                                    </tr>
+                                <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="border border-1 border-light-subtle rounded-3 p-2">
+                            <p>From the seller:</p>
+                            <p class="blockquote fs-6 fst-italic text-light-emphasis text-center">
+                                "<%= quote.device.additional_details %>"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mb-3">
+            <div class="col-md-10">
+                <div class="card rounded-4 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex justify-content-center">
                             <img class="rounded-5 my-auto mx-1"
                                  src="https://ui-avatars.com/api/?name=<%= quote.device.listing_user.first_name + " " + quote.device.listing_user.last_name %>"
-                                 width="50"/>
+                                 width="50" alt=""/>
                             <div class="flex-column w-100">
                                 <p class="text-center w-100 my-auto flex-column">
                                     <span class="fw-semibold text-center fs-4"><%= quote.device.listing_user.first_name + " " + quote.device.listing_user.last_name %></span>
@@ -212,7 +196,7 @@
                             <hr>
 
                             <div class="row px-2">
-                                <div class="col-md-12">
+                                <div class="col-md-12 justify-content-center">
                                     <p>
                                         <span class="fw-semibold">Final Sale Price:</span>
                                         £<%= quote.confirmation_details?.final_price %>
@@ -239,9 +223,11 @@
                                     <p>
                                         <span class="fw-semibold">Receipt Image:</span>
                                     </p>
+                                    <div class="d-flex justify-content-center w-100">
                                     <img src="data:<%= quote.confirmation_details?.receipt_image.img_type %>;base64,<%- Buffer.from(quote.confirmation_details?.receipt_image.img_data).toString('base64') %>"
                                          class="img-thumbnail" height="200"
                                          alt="Receipt Image"/>
+                                    </div>
 
                                 </div>
                             </div>
@@ -249,15 +235,22 @@
                         <% } %>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="card m-2">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+
+                <div class="card rounded-4 shadow-sm">
                     <div class="card-body">
                         <h2 class="fs-4 text-center">Actions</h2>
                         <% if (!quoteActive) { %>
-                            <p class="text-center fst-italic fs-6">No action can be taken on this quotation at this
+                            <p class="text-center fst-italic fs-6">No action can be taken on this quotation at
+                                this
                                 time.</p>
                         <% } else { %>
-                            <p class="text-center fst-italic fs-6">If you have completed the transaction with the
+                            <p class="text-center fst-italic fs-6">If you have completed the transaction with
+                                the
                                 seller, please
                                 mark the status of this quotation.</p>
                             <div class="d-flex justify-content-center">
@@ -274,7 +267,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <section id="modals">
@@ -411,3 +403,5 @@
         </div>
     </div>
 </section>
+
+<%- include("../components/footer") %>
