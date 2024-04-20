@@ -6,6 +6,7 @@
 
 const {request} = require("express");
 const {getMockPurchaseData} = require("../../util/mock/mockData");
+const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 
@@ -25,7 +26,7 @@ function getStripe (req, res, next) {
         extension = req.query.extension
     }
     let queryString = Object.keys(data).map(key => key + '='+ encodeURIComponent(data[key])).join('&')
-    res.render('payment/StripeGateway', {key:process.env.STRIPE_PUBLISHABLE_KEY, data: queryString, extension: extension});
+    renderUserLayout(req, res, '../payment/StripeGateway', {key:process.env.STRIPE_PUBLISHABLE_KEY, data: queryString, extension: extension});
 }
 
 /**

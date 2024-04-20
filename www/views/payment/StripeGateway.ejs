@@ -1,16 +1,35 @@
-<%- include("../components/header") %>
-
-<%- include("../components/navbar") %>
-
 <!---
 * Stripe Gateway Page frontend
 * @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
 */
 ---->
 
-<h2 class="mt-2 mx-5"> Stripe Payment Gateway </h2>
-<form action="/create-checkout-session?<%= data %>&extension=<%= extension %>" method="POST">
-    <button type="submit" class="btn btn-primary mt-4 mx-5">Proceed to pay</button>
-</form>
+<div class="container-fluid mb-5">
+    <div class="row mt-3">
+        <div class="col-12">
+            <h2 class="fw-semibold">
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square text-success"></i>
+                    <i class="fa-solid fa-stack-1x fa-credit-card text-white"></i>
+                </span>
+                Payment Gateway
+            </h2>
+        </div>
+    </div>
 
-<%- include("../components/footer") %>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="">
+                        <i class="fa-brands fa-stripe text-primary"></i>
+                        Stripe Payment Gateway </h2>
+                    <form action="/create-checkout-session?<%= data %>&extension=<%= extension %>" method="POST">
+                        <button type="submit" class="btn btn-primary w-100">Proceed to pay</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

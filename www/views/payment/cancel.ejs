@@ -4,11 +4,28 @@
 */
 ---->
 
-<div class="container mt-5">
+<div class="container my-5">
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <h2 class="fw-semibold">
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square text-success"></i>
+                    <i class="fa-solid fa-stack-1x fa-shopping-bag text-white"></i>
+                </span>
+                Checkout
+            </h2>
+        </div>
+    </div>
+
     <div class="row justify-content-center">
-        <div class="col-md-6 text-center">
-            <h1><i class="fas fa-hand-holding-gbp text-warning"></i> Payment Cancelled</h1>
-            <p>Redirecting to Login page in 5 seconds. If not redirected, please click <a href="/checkout">here</a> </p>
+        <div class="col-md-12 text-center">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <h1><i class="fa-solid fa-xmark text-danger"></i> Payment Cancelled</h1>
+                    <p>Redirecting to homepage page in 5 seconds. If not redirected, please click <a
+                                href="/dashboard">here</a></p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -18,6 +35,6 @@
 <script>
     // Set a timeout to redirect to /login after 5 seconds (5000 milliseconds)
     setTimeout(function() {
-        window.location.href = '/checkout';
+        window.location.href = '/dashboard';
     }, 5000);
 </script>
