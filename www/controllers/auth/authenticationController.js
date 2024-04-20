@@ -251,6 +251,21 @@ const facebookAuth = passport.authenticate('facebook', {scope: ['public_profile'
 
 const facebookAuthCallback = passport.authenticate('facebook', { failureRedirect: '/login'})
 
+function checkAgeGoogle(req, res, next) {
+    const {birthday} = req.body
+    const dateNow = new Date()
+    const inputDate = new Date(birthday)
+
+    // Milliseconds to years
+    const yearDiff = Math.abs(dateNow.getTime() - inputDate.getTime()) / (1000 * 3600 * 24 * 365.25)
+    if(yearDiff > 13) {
+        res.status(200).send('Valid DOB')
+    } else {
+        res.status(400).send('Invalid DOB')
+    }
+
+}
+
 module.exports = {
     getLoginPage,
     getRegisterPage,
@@ -267,6 +282,7 @@ module.exports = {
     facebookAuth,
     facebookAuthCallback,
     verifyEmail,
+    checkAgeGoogle
 }
 
 //------------------------------------------------------------------ End of File ----------------------------------------------------------------------------//

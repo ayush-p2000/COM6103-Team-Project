@@ -72,7 +72,7 @@
                             <br>
                             <div class="text-center fw-bolder mt-3">
                                 <span class="d-inline mx-2">
-                                    <a href="/auth/google" class="my-2 btn btn-danger btn"><i class="fa-brands fa-google"></i> &nbsp;Sign in via Google</a>
+                                    <a href="#" onclick="openBirthDateModal()" class="my-2 btn btn-danger btn"><i class="fa-brands fa-google"></i> &nbsp;Sign in via Google</a>
                                 </span>
                                 <span class="d-inline mx-2">
                                     <a href="/auth/facebook" class="my-2 btn btn-primary btn"><i class="fa-brands fa-facebook"></i>&nbsp;Sign in via Facebook</a>
@@ -86,8 +86,36 @@
     </div>
 </div>
 
+<div class="modal fade" id="birthDateModal" tabindex="-1" role="dialog" aria-labelledby="birthDateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h5 class="modal-title" id="birthDateModalLabel">Enter Birth Date</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="birthDateForm">
+                    <div class="form-group">
+                            <section id="ageWarning" class="d-none">
+                                <p class="border border-danger border-1 bg-danger-subtle pt-2 pb-2 rounded-1 mb-1 list-group-item">You must be at least 13 years old</p>
+                            </section>
+                        <label for="birthdate">Birth Date</label>
+                        <input type="date" class="form-control" id="birthdate" name="birthdate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitBirthDate()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.CAPTCHA_PUBLIC %>"></script>
 <script src="/javascripts/captcha/captcha.js"></script>
+<script src="/javascripts/marketplace/checkAge.js"></script>
 <script>
     executeCaptcha("<%= process.env.CAPTCHA_PUBLIC %>", "Login", <%= failedCaptcha %>)
 </script>
