@@ -2,6 +2,12 @@
 
 <%- include('../components/navbar') %>
 
+<!---
+* PayPal Gateway Page frontend
+* @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+*/
+---->
+
   <h2 class="mt-2 mx-5"> Paypal Payment Gateway </h2>
   <form action="/checkout/paypal/pay?<%= data %>&extension=<%= extension %>" method="post">
     <button type="submit" class="btn btn-primary mt-4 mx-5">Proceed to pay</button>

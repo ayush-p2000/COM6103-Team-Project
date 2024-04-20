@@ -23,7 +23,8 @@ async function getAccountsPage(req, res, next) {
 
 async function getAccountDetailsPage(req, res, next) {
     const user = await searchUserAndPopulate({_id: req.params.id});
-    renderAdminLayout(req, res, "user_details", {userDetails: user});
+    const isGoogleAuthenticated = user.google_id !== null;
+    renderAdminLayout(req, res, "user_details", {userDetails: user, isGoogleAuthenticated: isGoogleAuthenticated});
 }
 
 function getEditAccountPage(req, res, next) {
