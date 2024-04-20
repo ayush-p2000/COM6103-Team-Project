@@ -328,7 +328,7 @@ const listDevice = async (deviceData, photos, user) => {
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 const getAllUnknownDevices = async () => {
-    return History.find({history_type: UNKNOWN_DEVICE});
+    return History.find({history_type: UNKNOWN_DEVICE}).populate("device");
 }
 
 const addHistory = async (device, history_type, data, actioned_by) => {
