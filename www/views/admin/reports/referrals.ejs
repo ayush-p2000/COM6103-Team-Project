@@ -27,10 +27,10 @@
                             </thead>
                             <tbody>
                             <% table.forEach(function(item){ %>
-                                <tr class="text-center">
+                                <tr class="">
                                     <td><%= item.date_of_referral %></td>
                                     <td>
-                                        <a href="/admin/users/<%= item.user?._id %>">
+                                        <a href="/admin/accounts/<%= item.user?._id %>">
                                             <%= `${item.user?.first_name} ${item.user?.last_name}` %>
                                         </a>
                                     </td>
@@ -40,7 +40,7 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <p class="badge <%= quoteState.stateToColour(item.state, "bg-") %>">
+                                        <p class="w-100 badge <%= quoteState.stateToColour(item.state, "bg-") %>">
                                             <%= quoteState.stateToString(item.state) %>
                                         </p>
                                     </td>

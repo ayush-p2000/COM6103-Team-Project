@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //Create a bar chart with the given data
     const accounts_dataset = [
         {
-            label: 'Account Types',
+            label: 'User Count',
             data: accounts_types_data,
             backgroundColor: account_types_backgrounds,
             borderColor: account_types_borderColors,

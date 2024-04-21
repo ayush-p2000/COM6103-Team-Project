@@ -479,6 +479,7 @@ async function prepareQuotesData() {
             }),
             user: quote.device?.listing_user,
             quote_id: quote._id,
+            device_id: quote.device?._id,
         });
     });
 

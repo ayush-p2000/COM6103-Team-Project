@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //Create a bar chart with the given data
     const classes_dataset = [
         {
-            label: 'Classes',
+            label: 'Device Count',
             data: classes_data,
             backgroundColor: classes_backgrounds,
             borderColor: classes_borderColours,

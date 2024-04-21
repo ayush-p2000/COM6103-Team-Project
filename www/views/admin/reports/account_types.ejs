@@ -32,7 +32,7 @@
                                     <td><%= user.id %></td>
                                     <td><%= user.date_added %></td>
                                     <td>
-                                        <a href="/admin/users/<%= user._id %>">
+                                        <a href="/admin/accounts/<%= user.id %>">
                                             <%= user.name %>
                                         </a>
                                     </td>
@@ -40,10 +40,14 @@
                                         <%= user.email %>
                                     </td>
                                     <td>
-                                        <%= roleTypes.roleTypeToString(user.role) %>
+                                        <div class="w-100 badge <%= roleTypes.roleTypeToColour(user.role, "bg-") %>">
+                                            <%= roleTypes.roleTypeToString(user.role) %>
+                                        </div>
                                     </td>
                                     <td>
-                                        <%= user.active ? "Yes" : "No" %>
+                                        <div class="w-100 badge <%= user.active ? "bg-success" : "bg-danger" %>">
+                                            <%= user.active ? "Yes" : "No" %>
+                                        </div>
                                     </td>
                                 </tr>
                             <% }); %>

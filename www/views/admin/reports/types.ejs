@@ -30,12 +30,12 @@
                                 <tr>
                                     <td><%= item.date_added %></td>
                                     <td>
-                                        <a href="/admin/users/<%= item.user._id %>">
-                                            <%= `${item.user.first_name} ${item.user.last_name}` %>
+                                        <a href="/admin/accounts/<%= item.user?._id %>">
+                                            <%= `${item.user?.first_name} ${item.user?.last_name}` %>
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="/admin/products/<%= item.device_id %>">
+                                        <a href="/admin/devices/<%= item.device_id %>">
                                             <%= item.name %>
                                         </a>
                                     </td>
@@ -43,12 +43,12 @@
                                         <%= item.device_type %>
                                     </td>
                                     <td>
-                                        <p class="badge <%= deviceCategory.deviceCategoryToColour(item.category, "bg-") %>">
+                                        <p class="w-100 badge <%= deviceCategory.deviceCategoryToColour(item.category, "bg-") %>">
                                             <%= deviceCategory.deviceCategoryToString(item.category) %>
                                         </p>
                                     </td>
                                     <td>
-                                        <p class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %>">
+                                        <p class="w-100 badge <%= deviceState.deviceStateToColour(item.state, "bg-") %>">
                                             <%= deviceState.deviceStateToString(item.state) %>
                                         </p>
                                     </td>
