@@ -2,9 +2,6 @@
  * This controller should handle any operations related to specific items in the marketplace (e.g. adding, removing, updating, etc.)
  */
 
-const multer = require('multer');
-
-const {getMockItem, getMockQuote} = require("../../util/mock/mockData");
 const fixedToCurrency = require("../../util/currency/fixedToCurrency");
 const {ACCEPTED, REJECTED, CONVERTED, EXPIRED, stateToString, stateToColour} = require("../../model/enum/quoteState");
 const {
@@ -14,7 +11,6 @@ const {
     getRetrievalObjectByDeviceId
 } = require("../../model/mongodb");
 const mongoose = require("mongoose");
-const QRCode = require('qrcode');
 const {
     getItemDetail,
     getAllDeviceType,
@@ -31,15 +27,11 @@ const {
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
 const quoteState = require("../../model/enum/quoteState")
-const dataService = require("../../model/enum/dataService")
 const deviceColors = require("../../model/enum/deviceColors")
 const deviceCapacity = require("../../model/enum/deviceCapacity")
 const {generateQR} = require("../../util/qr/qrcodeGenerator");
-const cheerio = require('cheerio')
-const axios = require('axios')
 const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const retrievalState = require("../../model/enum/retrievalState");
-const dataTypes = require("../../model/enum/dataTypes");
 const historyType = require("../../model/enum/historyType");
 const roleTypes = require("../../model/enum/roleTypes");
 

@@ -35,9 +35,6 @@ const dataService = require("../../model/enum/dataService")
 const deviceCategory = require("../../model/enum/deviceCategory")
 const deviceState = require("../../model/enum/deviceState")
 
-const {Device} = require("../../model/schema/device")
-const {getBrand} = require("gsmarena-api/src/services/catalog");
-const {DeviceType} = require("../../model/schema/deviceType");
 const historyType = require("../../model/enum/historyType");
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const roleTypes = require("../../model/enum/roleTypes");

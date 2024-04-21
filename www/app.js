@@ -4,12 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require("passport")
-const session = require("express-session")
-const axios = require("axios");
 const bodyParser = require('body-parser');
 const fs = require('fs');
-
-const mongo = require('./model/mongodb')
 
 //Load routers
 const indexRouter = require('./routes/index');
@@ -22,11 +18,13 @@ const qrRouter = require('./routes/qr');
 const userRouter = require('./routes/user');
 
 const debugRouter = require('./routes/debug');
+
 const {
     passportStrategy,
     passportSerializeUser,
     passportDeserializeUser, passportSessionErrorHandler, sessionErrorHandler, sessionSetup
 } = require("./auth/passportAuth");
+
 const { isAuthenticated, authInfo, isStaff} = require("./middlewares/auth")
 
 const app = express();

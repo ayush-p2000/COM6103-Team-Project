@@ -2,13 +2,9 @@
  * This controller should handle any operations related to account management
  */
 
-const {getMockAccountsList, getMockUser} = require('../../util/mock/mockData')
 const {renderAdminLayout, renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
 const {getAllUsers, getUserById, searchUserAndPopulate} = require("../../model/mongodb");
-const {promisify} = require("node:util");
-const {pbkdf2, randomBytes} = require("node:crypto");
-const {User} = require("../../model/schema/user");
-const {USER} = require("../../model/enum/roleTypes");
+const {User} = require("../../model/models");
 const roleTypes = require("../../model/enum/roleTypes");
 
 async function getAccountsPage(req, res, next) {

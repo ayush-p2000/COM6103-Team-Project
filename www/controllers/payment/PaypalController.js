@@ -13,9 +13,6 @@ paypal.configure({
     'client_secret': PAYPAL_SECRET_KEY
 });
 
-let method = "";
-
-const {request} = require("express");
 const {updateTransaction} = require('../../model/mongodb')
 const transactionState = require('../../model/enum/transactionState')
 const {renderUserLayout} = require("../../util/layout/layoutUtils");

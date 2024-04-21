@@ -3,7 +3,7 @@
  */
 
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
-const {User} = require("../../model/schema/user");
+const {User} = require("../../model/models");
 const roleTypes = require("../../model/enum/roleTypes");
 
 const {getAllUsers, searchUserAndPopulate, getUserById, getTotalAccountsCount, getSalesCountByMonth,

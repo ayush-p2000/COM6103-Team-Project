@@ -4,11 +4,8 @@
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 
-const {request} = require("express");
-const {getMockPurchaseData} = require("../../util/mock/mockData");
 const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-
 
 /**
  * Get method used to display the stripe gateway

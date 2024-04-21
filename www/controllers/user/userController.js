@@ -2,8 +2,7 @@
  * This controller should handle any operations related to user dashboard and miscellaneous user operations
  */
 
-//const {getMockUser} = require("../../util/mock/mockData");
-const {User} = require("../../model/schema/user");
+const {User} = require("../../model/models");
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const {getAllUsers, getUserItems, getUnknownDeviceHistoryByDevice, getAllDevices} = require("../../model/mongodb");
