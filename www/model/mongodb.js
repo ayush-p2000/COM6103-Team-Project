@@ -1,4 +1,4 @@
-const {User, Device, DeviceType, Brand, Model, Provider, Quote, History} = require("./models");
+const {User, Device, DeviceType, Brand, Model, Provider, Quote, History, Retrieval} = require("./models");
 
 const {UNKNOWN_DEVICE} = require("./enum/historyType");
 
