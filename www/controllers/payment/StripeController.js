@@ -1,3 +1,9 @@
+/**
+ * Stripe integration method
+ * @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 /**

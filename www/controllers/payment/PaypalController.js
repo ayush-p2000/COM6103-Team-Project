@@ -1,3 +1,8 @@
+/**
+ * PayPal integration method
+ * @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
+
 const paypal = require('paypal-rest-sdk')
 
 const { PAYPAL_MODE, PAYPAL_CLIENT_KEY, PAYPAL_SECRET_KEY } = process.env;

@@ -21,7 +21,7 @@ async function getCheckout(req, res, next) {
     let id = req.query.id
     let total = req.query.total
     let extension = 0
-    let type = req.query.type.toLowerCase()
+    let type = req.query.type?.toLowerCase()
     let product = ''
     let transactionDetails
     let transaction

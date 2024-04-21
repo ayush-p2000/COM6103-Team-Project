@@ -1,1 +1,23 @@
-<h1>Your payment has been cancelled!</h1>
+<!---
+* Payment Cancelled Page frontend
+* @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+*/
+---->
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h1><i class="fas fa-hand-holding-gbp text-warning"></i> Payment Cancelled</h1>
+            <p>Redirecting to Login page in 5 seconds. If not redirected, please click <a href="/checkout">here</a> </p>
+        </div>
+    </div>
+</div>
+
+<!--   A timeout to redirect user to login page -->
+
+<script>
+    // Set a timeout to redirect to /login after 5 seconds (5000 milliseconds)
+    setTimeout(function() {
+        window.location.href = '/checkout';
+    }, 5000);
+</script>

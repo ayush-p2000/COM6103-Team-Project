@@ -245,6 +245,9 @@ const listDevice = async (deviceData, photos, user) => {
             device_type: mongoose.Types.ObjectId.isValid(deviceData.device_type) ? deviceData.device_type : new mongoose.Types.ObjectId(),
             brand: mongoose.Types.ObjectId.isValid(deviceData.brand) ? deviceData.brand : new mongoose.Types.ObjectId(),
             model: mongoose.Types.ObjectId.isValid(deviceData.model) ? deviceData.model : new mongoose.Types.ObjectId(),
+            color: deviceData.color,
+            capacity: deviceData.capacity,
+            years_used: deviceData.years_used,
             details: JSON.parse(deviceData.details),
             category: deviceData.category,
             good_condition: deviceData.good_condition,
@@ -437,6 +440,9 @@ const updateDevice = async (id, deviceData, photos) => {
         const filter = {_id: id}
         const update = {
             $set: {
+                color: deviceData.color,
+                capacity: deviceData.capacity,
+                years_used: deviceData.years_used,
                 details: JSON.parse(deviceData.details),
                 good_condition: deviceData.good_condition,
                 state: 1,

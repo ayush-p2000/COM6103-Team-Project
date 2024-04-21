@@ -1,6 +1,7 @@
 /**
  * An Authentication Middleware to secure routes
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ * @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
  */
 
 const {STAFF, ADMIN} = require("../model/enum/roleTypes")
@@ -36,25 +37,39 @@ const isSuperAdmin = (req,res,next) => {
 }
 
 const validateVerification = async (req, res,next) => {
-    const checkValidation = await User.findOne({email: req.body.email})
-    const verifyMessage = ['Please verify your email']
-    const registerUserMessage = ['User do not exist. Please register before you can access']
-    if(checkValidation) {
-        if (checkValidation.verified === false) {
-            res.render("authentication/login", {
-                auth: req.isLoggedIn, user: req.user, messages: verifyMessage,
-                hasMessages: verifyMessage.length > 0,
-            })
-        } else {
-            next();
+    const userFromEmail = await User.findOne({email: req.body.email})
+
+        const verifyMessage = ['Please verify your email']
+        const registerUserMessage = ['User does not exist. Please register before you can access']
+        if (userFromEmail) {
+            if(userFromEmail.google_id == null) {
+                if (userFromEmail.verified === false) {
+                    res.render("authentication/login", {
+                        auth: req.isLoggedIn, user: req.user, messages: verifyMessage,
+                        hasMessages: verifyMessage.length > 0,
+                    })
+                } else {
+                    next();
+                }
+            }
+            else
+                {
+                    const verifyMessage = ['This account was registered using Google Authentication. Please log in with Google to continue']
+                    res.render("authentication/login", {
+                        auth: req.isLoggedIn, user: req.user, messages: verifyMessage,
+                        hasMessages: verifyMessage.length > 0,
+                    })
+                }
         }
+        else {
+            res.render("authentication/register", {
+                auth: req.isLoggedIn, user: req.user, messages: registerUserMessage,
+                hasMessages: verifyMessage.length > 0
+            })
+
+        }
+
     }
-    else
-    {
-        res.render("authentication/register", {auth: req.isLoggedIn, user: req.user, messages: registerUserMessage,
-            hasMessages: verifyMessage.length > 0})
-    }
-}
 
 
 module.exports = {

@@ -144,6 +144,11 @@ const verifyEmail = async(req, res) => {
     }
 }
 
+/**
+ * Methods for authentication features
+ * @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
+
 //-------------------------------------------------- Forgot password flow methods --------------------------------------------------------------//
 
 function getForgotPassword(req, res, next){
