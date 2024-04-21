@@ -467,9 +467,6 @@ const updateUnknownDevices = async (type,brand,model) => {
         const modelName = modelData.name
         const brandName = modelData.brand.name
         const modelCategory = modelData.category
-        console.log(`brandName + ${brandName}`)
-        console.log(`modelName + ${modelName}`)
-        console.log(`modelCategory + ${modelCategory}`)
 
         var unknownDevices = await History.find({history_type: UNKNOWN_DEVICE}).populate("device")
 
@@ -485,19 +482,8 @@ const updateUnknownDevices = async (type,brand,model) => {
                         deviceModel = device.data[key].value;
                     }
                 }
-
-                console.log(`deviceModel + ${deviceModel}`)
-                console.log(`deviceBrand + ${deviceBrand}`)
-
                 const filter = {_id: device.device._id}
-                console.log(`device._id + ${device.device._id}`)
 
-                console.log(brandName.replace(/[^\w]/g, '').toLowerCase())
-                console.log(deviceBrand.replace(/[^\w]/g, '').toLowerCase())
-
-
-                console.log(modelName.replace(/[^\w]/g, '').toLowerCase())
-                console.log(deviceModel.replace(/[^\w]/g, '').toLowerCase())
                 if (brandName.replace(/[^\w]/g, '').toLowerCase() === deviceBrand.replace(/[^\w]/g, '').toLowerCase()
                     && modelName.replace(/[^\w]/g, '').toLowerCase() === deviceModel.replace(/[^\w]/g, '').toLowerCase()){
                     const device = {
@@ -509,7 +495,6 @@ const updateUnknownDevices = async (type,brand,model) => {
                         }
                     }
                     const updatedDevice = await Device.updateOne(filter, device)
-                    console.log(updatedDevice)
                 }
             }
         }
