@@ -9,6 +9,7 @@ const {quoteState} = require("./enum/quoteState");
 const historyType = require("./enum/historyType");
 const transactionState = require('./enum/transactionState')
 const retrievalState = require('./enum/retrievalState')
+const mongoose = require("mongoose");
 
 /* Functions */
 async function getAllUsers() {
