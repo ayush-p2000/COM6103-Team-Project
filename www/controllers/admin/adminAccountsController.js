@@ -15,7 +15,7 @@ async function getAccountsPage(req, res, next) {
     let users = [];
     try {
         users = await getAllUsers();
-        renderAdminLayout(req, res, "user_management", {users});
+        renderAdminLayout(req, res, "user_management", {users, roleTypes});
     } catch (e) {
         console.error(e);
         renderAdminLayout(req, res, "user_management", {users, error: "Failed to retrieve user data"});
