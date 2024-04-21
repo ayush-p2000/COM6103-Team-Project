@@ -4,8 +4,7 @@
  */
 
 const FacebookStrategy = require('passport-facebook').Strategy
-const {User} = require("../model/schema/user");
-
+const {User} = require("../model/models");
 
 module.exports = function (passport) {
     passport.use(new FacebookStrategy({
