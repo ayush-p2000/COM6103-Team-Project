@@ -1,6 +1,7 @@
 node_modules/
 codestream.xml
 .env
+.env.test
 
 .nyc_output/
 
