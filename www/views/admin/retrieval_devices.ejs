@@ -51,10 +51,10 @@
                                         <td><%= device.model?.name %></td>
                                         <td><%= deviceCategory.deviceCategoryToString(device.category) %></td>
                                         <td>
-                                            <span class="badge <%= deviceState.deviceStateToColour(device.state, "bg-") %> mx-auto"><%= deviceState.deviceStateToString(device.state) %></span>
+                                            <span class="w-100 badge <%= deviceState.deviceStateToColour(device.state, "bg-") %> mx-auto"><%= deviceState.deviceStateToString(device.state) %></span>
                                         </td>
                                         <td>
-                                            <span class="badge <%= (device.visible ? "bg-success" : "bg-danger") %>"><%= (device.visible) ? "Visible" : "Hidden" %></span>
+                                            <span class="w-100 badge <%= (device.visible ? "bg-success" : "bg-danger") %>"><%= (device.visible) ? "Visible" : "Hidden" %></span>
                                         </td>
                                         <td>
                                             <a href="/admin/accounts/<%= device.listing_user?._id %>"> <%= device.listing_user?._id ?? "Unknown User" %> </a>
