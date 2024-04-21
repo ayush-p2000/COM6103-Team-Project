@@ -224,9 +224,9 @@
                                         <span class="fw-semibold">Receipt Image:</span>
                                     </p>
                                     <div class="d-flex justify-content-center w-100">
-                                    <img src="data:<%= quote.confirmation_details?.receipt_image.img_type %>;base64,<%- Buffer.from(quote.confirmation_details?.receipt_image.img_data).toString('base64') %>"
-                                         class="img-thumbnail" height="200"
-                                         alt="Receipt Image"/>
+                                        <img src="data:<%= quote.confirmation_details?.receipt_image.img_type %>;base64,<%- Buffer.from(quote.confirmation_details?.receipt_image.img_data).toString('base64') %>"
+                                             class="img-thumbnail" height="200"
+                                             alt="Receipt Image"/>
                                     </div>
 
                                 </div>
@@ -273,15 +273,19 @@
     <!-- Completed Modal -->
     <div class="modal fade" id="completedModal" tabindex="-1" aria-labelledby="completedModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content rounded-4 bg-success-subtle">
                 <div class="modal-body">
-                    <div class="d-flex justify-content-between align-content-center">
-                        <h5 class="modal-title" id="completedModalLabel">Mark as Completed</h5>
+                    <div class="d-flex justify-content-between align-content-center mb-2">
+                        <h5 class="modal-title" id="completedModalLabel">
+                            <span class="fa-stack">
+                                <i class="fa-solid fa-stack-2x fa-square"></i>
+                                <i class="fa-solid fa-stack-1x fa-check text-white"></i>
+                            </span>
+                            Mark as Completed
+                        </h5>
                         <button type="button" class="btn-close my-auto" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                     </div>
-
-                    <hr>
 
                     <div class="alert alert-danger d-none" id="confirmErrorAlert">
                         <div class="d-inline-flex justify-content-between">
@@ -290,7 +294,7 @@
                         </div>
                     </div>
 
-                    <div class="alert alert-success">
+                    <div class="alert">
                         <div class="d-inline-flex justify-content-between">
                             <i class="fa-solid fa-leaf fa-2x my-auto"></i>
                             <p class="text-center m-0 p-0">Way to go! You've successfully repurposed your old device and
@@ -299,63 +303,68 @@
                         </div>
                     </div>
 
-                    <div class="border border-1 border-light-subtle rounded-3 p-2">
+                    <div class="card rounded-4 shadow-sm">
+                        <div class="card-body p-4">
 
-                        <p class="text-center fst-italic">For our records and to confirm this transaction, please
-                            provide
-                            the following details:</p>
+                            <p class="text-center fst-italic">For our records and to confirm this transaction, please
+                                provide
+                                the following details:</p>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <form id="acceptForm" novalidate>
-                                    <div class="form-floating mb-3">
-                                        <!-- Inputs for final sale price, receipt ID, date, and a picture of the receipt -->
-                                        <input type="number" class="form-control" id="finalSalePrice"
-                                               placeholder="0.00" step="0.01" required>
-                                        <label for="finalSalePrice">Final Sale Price (£)</label>
-                                        <div class="invalid-feedback">
-                                            Please provide the price that you sold the device for.
-                                        </div>
-                                    </div>
-
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="receiptID" placeholder="Receipt ID"
-                                               required>
-                                        <label for="receiptID">Receipt ID</label>
-                                        <div class="invalid-feedback">
-                                            Please provide the receipt ID for the transaction. This should be somewhere
-                                            on
-                                            the receipt.
-                                        </div>
-                                    </div>
-
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="receiptDate"
-                                               placeholder="Receipt Date"
-                                               required>
-                                        <label for="receiptDate">Receipt Date</label>
-                                        <div class="invalid-feedback">
-                                            Please provide the date of the transaction as it appears on the receipt.
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="receiptImage mb-1">Receipt Image</label>
-                                        <input type="file" class="form-control" id="receiptImage" name="receiptImage"
-                                               placeholder="Receipt Image" accept="image/*" required>
-                                        <div class="invalid-feedback">
-                                            Please provide a picture of the receipt for the transaction. The full
-                                            receipt
-                                            should be visible and legible.
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form id="acceptForm" novalidate>
+                                        <div class="form-floating mb-3">
+                                            <!-- Inputs for final sale price, receipt ID, date, and a picture of the receipt -->
+                                            <input type="number" class="form-control" id="finalSalePrice"
+                                                   placeholder="0.00" step="0.01" required>
+                                            <label for="finalSalePrice">Final Sale Price (£)</label>
+                                            <div class="invalid-feedback">
+                                                Please provide the price that you sold the device for.
+                                            </div>
                                         </div>
 
-                                    </div>
-                                </form>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="receiptID"
+                                                   placeholder="Receipt ID"
+                                                   required>
+                                            <label for="receiptID">Receipt ID</label>
+                                            <div class="invalid-feedback">
+                                                Please provide the receipt ID for the transaction. This should be
+                                                somewhere
+                                                on
+                                                the receipt.
+                                            </div>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="date" class="form-control" id="receiptDate"
+                                                   placeholder="Receipt Date"
+                                                   required>
+                                            <label for="receiptDate">Receipt Date</label>
+                                            <div class="invalid-feedback">
+                                                Please provide the date of the transaction as it appears on the receipt.
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="receiptImage mb-1">Receipt Image</label>
+                                            <input type="file" class="form-control" id="receiptImage"
+                                                   name="receiptImage"
+                                                   placeholder="Receipt Image" accept="image/*" required>
+                                            <div class="invalid-feedback">
+                                                Please provide a picture of the receipt for the transaction. The full
+                                                receipt
+                                                should be visible and legible.
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <button class="btn btn-success w-100 mt-2" onclick="confirmTransaction('<%= quote._id %>')">Confirm
+                    <button class="btn btn-success w-100 mt-2 rounded-4" onclick="confirmTransaction('<%= quote._id %>')">Confirm
                     </button>
                 </div>
             </div>
@@ -365,24 +374,24 @@
     <!-- Rejected Modal -->
     <div class="modal fade" id="rejectedModal" tabindex="-1" aria-labelledby="rejectedModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content rounded-4 bg-danger-subtle">
                 <div class="modal-body">
                     <div class="d-flex justify-content-between align-content-center">
-                        <h5 class="modal-title" id="rejectedModalLabel">Mark as Rejected</h5>
+                        <h5 class="modal-title" id="rejectedModalLabel">
+                            Mark as Rejected
+                        </h5>
                         <button type="button" class="btn-close my-auto" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                     </div>
 
-                    <hr>
-
-                    <div class="alert alert-danger d-none" id="rejectErrorAlert">
+                    <div class="alert alert-warning d-none" id="rejectErrorAlert">
                         <div class="d-inline-flex justify-content-between">
                             <i class="fa-solid fa-exclamation-circle fa-2x my-auto"></i>
                             <p class="text-center m-0 p-0">Unable to reject confirmation. Please try again later</p>
                         </div>
                     </div>
 
-                    <div class="alert alert-danger">
+                    <div class="alert">
                         <div class="d-inline-flex justify-content-between">
                             <i class="fa-solid fa-heart-crack fa-2x my-auto"></i>
                             <p class="text-center m-0 p-0">We're sorry to hear that you've been unable to go through
@@ -396,7 +405,8 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-success w-100 mt-2" onclick="rejectTransaction('<%= quote._id %>')">Confirm
+                    <button class="btn btn-success rounded-4 w-100 mt-2"
+                            onclick="rejectTransaction('<%= quote._id %>')">Confirm
                     </button>
                 </div>
             </div>

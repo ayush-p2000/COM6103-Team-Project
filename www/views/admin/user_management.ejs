@@ -18,7 +18,7 @@
                 <div class="col-md-6 pb-md-0 pb-2">
                     <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
                             data-bs-target="#userModal">
-                        Add Accounts
+                        Create New User
                     </button>
                 </div>
                 <div class="col-md-6 justify-content-center align-content-center">
@@ -94,10 +94,13 @@
         <div class="modal modal-lg fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel"
              aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content bg-secondary-subtle">
+                <div class="modal-content bg-secondary-subtle rounded-4">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="userModalLabel">
-                            <i class="fas fa-user-plus"></i>
+                            <span class="fa-stack">
+                                <i class="fa-solid fa-stack-2x fa-square"></i>
+                                <i class="fa-solid fa-stack-1x fa-user-plus text-white"></i>
+                            </span>
                             Add New User
                         </h1>
                         <div class="alert alert-danger d-none error-message" role="alert">
@@ -107,7 +110,7 @@
                                 aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="pt-4 pb-2 px-5">
+                        <div class="pt-2 pb-2 px-5">
                             <div class="row mb-4">
                                 <div class="col-md-12 p-0 px-1">
                                     <div class="card rounded-4 shadow-sm">
@@ -175,7 +178,7 @@
                                             <div class="row">
                                                 <div class="col-md-12 px-1">
                                                     <div class="form-floating">
-                                                        <select name="role" id="role" class="form-control">
+                                                        <select name="role" id="role" class="form-select">
                                                             <% roleTypes.getList()?.forEach((role) => { %>
                                                                 <option value="<%= role %>" <%= role === 0 ? "selected" : "" %>><%= roleTypes.roleTypeToString(role) %></option>
                                                             <% }) %>

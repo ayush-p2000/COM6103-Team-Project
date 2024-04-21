@@ -343,7 +343,7 @@
         </div>
     <% } %>
 
-    <% if (user.id === item.listing_user._id.toString() && item.state <= deviceState.HAS_QUOTE) { %>
+    <% if (user.id === item.listing_user._id.toString() && item.state <= deviceState.HAS_QUOTE && item.state > deviceState.IN_REVIEW) { %>
     <div class="row">
         <div class="col-md-12">
             <div class="card rounded-4 shadow-sm">
@@ -450,7 +450,7 @@
                     <% } %>
 
                     <!--     Show device if the category is rare    -->
-                    <% if(Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) === "RARE") { %>
+                    <% if(item.category === deviceCategory.RARE) { %>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card border-primary rounded-4 mt-3">
