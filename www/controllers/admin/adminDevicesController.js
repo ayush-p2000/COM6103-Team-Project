@@ -28,7 +28,8 @@ const {
     deleteType,
     deleteModel,
     deleteBrand,
-    getAllRetrievalDevices
+    getAllRetrievalDevices,
+    updateUnknownDevices
 } = require("../../model/mongodb")
 
 const dataService = require("../../model/enum/dataService")
@@ -165,6 +166,9 @@ async function postNewModel(req, res, next) {
         }
 
         const model = await addModel(req.body, properties, category)
+
+        const updatedUnknownDevices = await updateUnknownDevices(model.deviceType, model.brand, model._id)
+
         res.status(200).send("successfully")
     } catch (e) {
         console.log(e)

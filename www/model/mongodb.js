@@ -458,6 +458,68 @@ const addModel = async (modelData, properties, category) => {
 }
 
 /**
+ * Update Unknown Devices if there is a custom model match the brand and model name
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const updateUnknownDevices = async (type,brand,model) => {
+    try{
+        const modelData = await Model.findById(model).populate("brand")
+        const modelName = modelData.name
+        const brandName = modelData.brand.name
+        const modelCategory = modelData.category
+        console.log(`brandName + ${brandName}`)
+        console.log(`modelName + ${modelName}`)
+        console.log(`modelCategory + ${modelCategory}`)
+
+        var unknownDevices = await History.find({history_type: UNKNOWN_DEVICE}).populate("device")
+
+        for (let device of unknownDevices) {
+            if (device.device.category === UNKNOWN){
+                var deviceBrand = "";
+                var deviceModel = "";
+
+                for (let key in device.data) {
+                    if (device.data[key].name === "brand") {
+                        deviceBrand = device.data[key].value;
+                    } else if (device.data[key].name === "model") {
+                        deviceModel = device.data[key].value;
+                    }
+                }
+
+                console.log(`deviceModel + ${deviceModel}`)
+                console.log(`deviceBrand + ${deviceBrand}`)
+
+                const filter = {_id: device.device._id}
+                console.log(`device._id + ${device.device._id}`)
+
+                console.log(brandName.replace(/[^\w]/g, '').toLowerCase())
+                console.log(deviceBrand.replace(/[^\w]/g, '').toLowerCase())
+
+
+                console.log(modelName.replace(/[^\w]/g, '').toLowerCase())
+                console.log(deviceModel.replace(/[^\w]/g, '').toLowerCase())
+                if (brandName.replace(/[^\w]/g, '').toLowerCase() === deviceBrand.replace(/[^\w]/g, '').toLowerCase()
+                    && modelName.replace(/[^\w]/g, '').toLowerCase() === deviceModel.replace(/[^\w]/g, '').toLowerCase()){
+                    const device = {
+                        $set: {
+                            model: model,
+                            brand: brand,
+                            device_type: type,
+                            category: modelCategory
+                        }
+                    }
+                    const updatedDevice = await Device.updateOne(filter, device)
+                    console.log(updatedDevice)
+                }
+            }
+        }
+    }catch (e) {
+        console.log(e)
+    }
+
+}
+
+/**
  * Delete model
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
@@ -1265,5 +1327,6 @@ module.exports = {
     getTransactionByDevice,
     getTransactionById,
     getQuotesGroupByState,
-    getAllQuotes
+    getAllQuotes,
+    updateUnknownDevices
 }
