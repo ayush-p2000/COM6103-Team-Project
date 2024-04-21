@@ -127,9 +127,37 @@
                             <td><span class="badge mx-auto <%= device.device.category === 3? "bg-danger" : "bg-success" %>">
                                     <%= device.device.category === 3? "Need Update" : "Updated" %></span></td>
                             <td><%= device.device._id %></td>
-                            <% device.data.forEach(info => { %>
-                                <td><%= info.value %></td>
-                            <% }) %>
+
+                            <td>
+                                <div class="d-inline">
+                                    <span class=" <%= device.device.device_type? "text-decoration-line-through" : ""%>"><%= device.data[0].value %></span>
+                                    <% if (device.device.device_type) { %>
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                        <span class="text-success"><%= device.device.device_type.name %></span>
+                                    <% } %>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="d-inline">
+                                    <span class="<%= device.device.device_type? "text-decoration-line-through" : ""%>"><%= device.data[1].value %></span>
+                                    <% if (device.device.brand) { %>
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                        <span class="text-success"><%= device.device.brand.name %></span>
+                                    <% } %>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="d-inline">
+                                    <span class="<%= device.device.device_type? "text-decoration-line-through" : ""%>"><%= device.data[2].value %></span>
+                                    <% if (device.device.model) { %>
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                        <span class="text-success"><%= device.device.model.name %></span>
+                                    <% } %>
+                                </div>
+                            </td>
+
                             <td><a href='/admin/devices/<%= device.device._id %>'>view</a></td>
                         </tr>
                     <% }) %>
