@@ -61,7 +61,7 @@ document.getElementById('staffOnly').addEventListener('change', function() {
     const rows = document.querySelectorAll('#userTableBody tr');
     rows.forEach(row => {
         const roleCell = row.querySelector('td:nth-child(4)');
-        if (staffOnly && roleCell.textContent.trim() !== 'Staff') {
+        if (staffOnly && roleCell.textContent.trim() !== 'Staff' && roleCell.textContent.trim() !== 'Admin') {
             row.style.display = 'none';
         } else {
             row.style.display = '';
