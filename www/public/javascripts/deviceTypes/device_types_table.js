@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    $('#types_models_table').DataTable({
-
+    $("#device_types_table").DataTable({
+        processing: true
     });
 })
-
