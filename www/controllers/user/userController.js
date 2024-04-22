@@ -8,6 +8,7 @@ const {email} = require("../../public/javascripts/Emailing/emailing");
 const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const {getAllUsers, getUserItems, getUnknownDeviceHistoryByDevice, getAllDevices} = require("../../model/mongodb");
 const deviceCategory = require("../../model/enum/deviceCategory")
+const {isValid} = require('postcode')
 
 
 //------------------------------------------------ Rendering user Database -------------------------------------------------------------------------//
@@ -113,9 +114,15 @@ async function updateUserDetails(req, res, next) {
     let checkUser = await User.findOne({_id: req.user.id});
     try {
 
-        const {firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country} = req.body; // Assuming these fields can be updated
+        const {firstName, lastName, isGoogleAuthenticated, phone, addressFirst, addressSecond, postCode, city, county, country} = req.body; // Assuming these fields can be updated
         // Construct an object with the fields that need to be updated
-        const updateFields = {};
+        let updateFields = {};
+
+        console.log(req.session.messages.length)
+
+        if (req.session.messages.length > 0) {
+            return res.redirect("/profile")
+        }
 
         if (firstName) {
             updateFields.first_name = firstName; // Update first name
@@ -145,6 +152,7 @@ async function updateUserDetails(req, res, next) {
             };
         }
 
+
         // Message displayed after the successful profile update
         messages = ['Profile Successfully Updated.'];
 
@@ -164,7 +172,8 @@ async function updateUserDetails(req, res, next) {
         renderUserLayout(req, res, 'user_profile', {
             messages: messages,
             hasMessages: messages.length > 0,
-            user: updatedUser,
+            userData: updatedUser,
+            isGoogleAuthenticated: isGoogleAuthenticated,
             auth: req.isLoggedIn
         })
     } catch (err) {

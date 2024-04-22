@@ -4,10 +4,11 @@ const router = express.Router();
 
 const {getUserProfile, getUserDashboard, updateUserDetails} = require("../controllers/user/userController");
 const {getMyItems} = require("../controllers/marketplace/marketplaceController");
+const {validateProfileUpdate} = require('../middlewares/validators')
 
 router.get('/profile', getUserProfile)
 
-router.post('/profile', updateUserDetails)
+router.post('/profile',validateProfileUpdate, updateUserDetails)
 
 router.get('/dashboard', getUserDashboard);
 

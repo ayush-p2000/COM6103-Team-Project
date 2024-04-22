@@ -50,3 +50,15 @@ exports.validateDeviceTypeEdit = [
     check("modelBrand", "Model brand cannot be empty!").trim().escape().optional().notEmpty(),
     errorsToSession
 ]
+
+exports.validateProfileUpdate = [
+    check("phone", "Invalid phone number. Please provide a UK phone number.").trim().notEmpty().isMobilePhone("en-GB"),
+    check("addressFirst", "Invalid address 1").trim().escape().notEmpty(),
+    check("addressSecond", "Invalid address 2").trim().escape().notEmpty(),
+    check("city", "Invalid city").trim().escape().notEmpty(),
+    check("county", "Invalid county").trim().escape().notEmpty(),
+    check("country", "Invalid country").trim().escape().notEmpty(),
+    check("postcode", "Invalid postcode").trim().escape().notEmpty().isPostalCode("GB"),
+    errorsToSession
+]
+
