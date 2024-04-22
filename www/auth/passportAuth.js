@@ -27,7 +27,7 @@ const passportStrategy = new LocalStrategy({
                 // Passes error to the session error handler
                 return callback(null, false, {message: 'Incorrect email or password.'})
             }
-            if(user.active == false){
+            if (user.active == false) {
                 return callback(null, false, {message: 'Account has been deactivated'})
             }
             // Encrypt password from the form, with user's salt.
@@ -55,25 +55,37 @@ const passportAuthenticate = passport.authenticate('local', {
     }
 )
 
+let sessionSetup;
+let store;
+
+if (process.env.ENVIRONMENT !== 'test') {
 // Mongo Session Storage Setup
-const store = MongoStore.create({
-    client: db.getClient(),
-    dbName: process.env.MONGO_DBNAME,
-    collection: 'sessions',
-    crypto: {
-        secret: process.env.STORE_SECRET || "secret",
-    },
-    ttl: SEVEN_DAYS_S, // 7 days default session expiration
-})
+    store = MongoStore.create({
+        client: db.getClient(),
+        dbName: process.env.MONGO_DBNAME,
+        collection: 'sessions',
+        crypto: {
+            secret: process.env.STORE_SECRET || "secret",
+        },
+        ttl: SEVEN_DAYS_S, // 7 days default session expiration
+    })
 
 // Setup express sessions with MongoDB storage.
-const sessionSetup = session({
-    secret: process.env.SESSION_SECRET || "secret",
-    store,
-    secure: true,
-    resave: true,
-    saveUninitialized: false,
-})
+    sessionSetup = session({
+        secret: process.env.SESSION_SECRET || "secret",
+        store,
+        secure: true,
+        resave: true,
+        saveUninitialized: false,
+    })
+} else {
+    sessionSetup = session({
+        secret: process.env.SESSION_SECRET || "secret",
+        secure: true,
+        resave: true,
+        saveUninitialized: false,
+    })
+}
 
 // Determines what data is stored in session after the user is authenticated (after login form is submitted).
 const passportSerializeUser = (user, callback) => {
