@@ -8,6 +8,7 @@ const {promisify} = require('node:util')
 const { validationResult } = require("express-validator")
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const passport = require("passport");
+const {getUserById, updateUserDob} = require("../../model/mongodb");
 const pbkdf2Promise = promisify(pbkdf2)
 let token = ""
 
@@ -251,19 +252,26 @@ const facebookAuth = passport.authenticate('facebook', {scope: ['public_profile'
 
 const facebookAuthCallback = passport.authenticate('facebook', { failureRedirect: '/login'})
 
-function checkAgeGoogle(req, res, next) {
-    const {birthday} = req.body
-    const dateNow = new Date()
-    const inputDate = new Date(birthday)
+async function getAgeGoogle(req, res, next) {
+    const user = await getUserById(req.user._id)
 
-    // Milliseconds to years
-    const yearDiff = Math.abs(dateNow.getTime() - inputDate.getTime()) / (1000 * 3600 * 24 * 365.25)
-    if(yearDiff > 13) {
-        res.status(200).send('Valid DOB')
+    if (user.date_of_birth === null) {
+        res.render('authentication/dateOfBirth', {userId: req.user._id})
     } else {
-        res.status(400).send('Invalid DOB')
+        next()
     }
+}
 
+async function checkAgeGoogle(req, res, next) {
+    const {birthday, id} = req.body
+    console.log(birthday)
+    if (req.session.messages.length > 0) {
+        res.redirect('/login')
+    } else {
+        const user = await updateUserDob(id, birthday)
+        console.log(user)
+        res.redirect('/auth/google')
+    }
 }
 
 module.exports = {
@@ -282,6 +290,7 @@ module.exports = {
     facebookAuth,
     facebookAuthCallback,
     verifyEmail,
+    getAgeGoogle,
     checkAgeGoogle
 }
 

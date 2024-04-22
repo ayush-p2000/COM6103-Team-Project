@@ -62,3 +62,8 @@ exports.validateProfileUpdate = [
     errorsToSession
 ]
 
+exports.validateDob = [
+    check("birthday","Invalid Date Of Birth").trim().escape().isDate({format:"YYYY-MM-DD"}).custom(checkAge).withMessage("You need to be at least 13 years old"),
+    errorsToSession
+]
+

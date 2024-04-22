@@ -39,7 +39,10 @@ module.exports = function (passport) {
                     }
                     else {
                         checkUser = await User.create(newUser);
+
                         done(null, checkUser);
+
+
                     }
                 }
             } catch (err) {

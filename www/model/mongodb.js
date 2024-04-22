@@ -1183,6 +1183,16 @@ async function getTransactionById(id) {
     return Retrieval.findOne({_id: id});
 }
 
+async function updateUserDob(id, birthday) {
+    const update = {
+        $set: {
+            date_of_birth: birthday
+        }
+    }
+    return User.updateOne({_id: id}, update)
+}
+
+
 
 module.exports = {
     getAllUsers,
@@ -1253,5 +1263,6 @@ module.exports = {
     getTransactionByDevice,
     getTransactionById,
     getQuotesGroupByState,
-    getAllQuotes
+    getAllQuotes,
+    updateUserDob
 }

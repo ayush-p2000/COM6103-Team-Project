@@ -9,7 +9,8 @@ const {
     getForgotPassword,
     getForgotUser,
     resetPassword,
-    getResetPasswordPage, googleAuth, googleAuthCallback, facebookAuth, facebookAuthCallback, verifyEmail, checkAgeGoogle
+    getResetPasswordPage, googleAuth, googleAuthCallback, facebookAuth, facebookAuthCallback, verifyEmail,
+    getAgeGoogle
 } = require("../controllers/auth/authenticationController");
 const { validateRegistration, validateLogin,validateGoogleLogin } = require("../middlewares/validators");
 const { isAuthenticated, validateVerification} = require("../middlewares/auth");
@@ -34,9 +35,8 @@ router.get('/reset-password', getResetPasswordPage);
 router.post('/reset-password', resetPassword);
 
 // Google Authentication Routes
-router.post('/checkAge', checkAgeGoogle)
 router.get('/auth/google', googleAuth)
-router.get('/auth/google/callback', googleAuthCallback, isAuthenticated, getUserDashboard)
+router.get('/auth/google/callback', googleAuthCallback, getAgeGoogle, isAuthenticated, getUserDashboard)
 
 // Facebook Authentication Routes
 router.get('/auth/facebook/', facebookAuth)
