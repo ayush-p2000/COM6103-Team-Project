@@ -25,10 +25,10 @@ const {quoteState} = require("../../model/enum/quoteState");
  */
 const getMarketplace = async (req, res, next) => {
     const deviceTypes = await getAllDeviceType()
-    const {items, pagination} = await getPaginatedResults(Device, req.params.page, {}, {}, 10);
     try {
-        var devices = await getAllDevices()
-        for (const item of devices) {
+        let {items, pagination} = await getPaginatedResults(Device, req.params.page, {}, {}, 10);
+
+        for (const item of items) {
             if (item.model == null) {
                 var deviceType = ""
                 var brand = ""
@@ -56,19 +56,21 @@ const getMarketplace = async (req, res, next) => {
                 item.brand = {name: brand }
                 item.model = {name: model }
             }
+
+
         }
+        renderUserLayout(req, res, '../marketplace/marketplace', {
+            deviceTypes,
+            devices:items,
+            deviceCategory,
+            auth: req.isLoggedIn,
+            user: req.user,
+            pagination
+        })
     } catch (e) {
         console.log(e)
     }
-    renderUserLayout(req, res, '../marketplace/marketplace', {
-        deviceTypes,
-        devices,
-        items,
-        deviceCategory,
-        auth: req.isLoggedIn,
-        user: req.user,
-        pagination
-    })
+
 }
 
 /**
