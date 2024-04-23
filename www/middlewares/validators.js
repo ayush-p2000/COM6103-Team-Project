@@ -58,7 +58,7 @@ exports.validateProfileUpdate = [
     check("city", "Invalid city").trim().escape().notEmpty(),
     check("county", "Invalid county").trim().escape().notEmpty(),
     check("country", "Invalid country").trim().escape().notEmpty(),
-    check("postcode", "Invalid postcode").trim().escape().notEmpty().isPostalCode("GB"),
+    check("postCode", "Invalid postcode").trim().escape().notEmpty().isPostalCode("GB"),
     errorsToSession
 ]
 

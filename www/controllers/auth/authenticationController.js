@@ -252,6 +252,12 @@ const facebookAuth = passport.authenticate('facebook', {scope: ['public_profile'
 
 const facebookAuthCallback = passport.authenticate('facebook', { failureRedirect: '/login'})
 
+
+/**
+ * Get method to check if the user's date of birth exists
+ * If not then redirect to verify dob page for the user to enter their birthdate
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function getAgeGoogle(req, res, next) {
     const user = await getUserById(req.user._id)
 
@@ -262,14 +268,17 @@ async function getAgeGoogle(req, res, next) {
     }
 }
 
+
+/**
+ * Get method to update the date of birth in the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 async function checkAgeGoogle(req, res, next) {
     const {birthday, id} = req.body
-    console.log(birthday)
     if (req.session.messages.length > 0) {
         res.redirect('/login')
     } else {
-        const user = await updateUserDob(id, birthday)
-        console.log(user)
+        await updateUserDob(id, birthday)
         res.redirect('/auth/google')
     }
 }
