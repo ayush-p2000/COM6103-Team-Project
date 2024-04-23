@@ -34,6 +34,7 @@ const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const retrievalState = require("../../model/enum/retrievalState");
 const historyType = require("../../model/enum/historyType");
 const roleTypes = require("../../model/enum/roleTypes");
+const {handleMissingModels} = require("../../util/Devices/devices");
 
 /**
  * Handling Request to post item base on the info in request body
@@ -77,34 +78,24 @@ async function getListItem(req, res) {
         try {
             let deviceTypes = await getAllDeviceType();
             let brands = await getAllBrand();
-
             renderUserLayout(req, res, '../marketplace/list_item', {
                 auth: req.isLoggedIn, user: req.user, deviceTypes: deviceTypes, brands: brands, colors: deviceColors, capacities: deviceCapacity
             })
 
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     } else {
         try {
             let device = await getDevice(id);
             if (device.model == null) {
-                let customModel = await getUnknownDeviceHistoryByDevice(id)
-                customModel[0].data.forEach(data => {
-                    if (data.name === "device_type") {
-                        device.device_type = {name: data.value}
-                    } else if (data.name === "brand") {
-                        device.brand = {name: data.value}
-                    } else if (data.name === "model") {
-                        device.model = {name: data.value, properties: []}
-                    }
-                });
+                await handleMissingModels([device]);
             }
             renderUserLayout(req, res, '../marketplace/edit_item', {
                 auth: req.isLoggedIn, user: req.user, device: device, colors: deviceColors, capacities: deviceCapacity
             })
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     }
 }
@@ -147,22 +138,7 @@ async function getItemDetails(req, res, next) {
                 specs = []
             }
         } else {
-            var deviceType = ""
-            var brand = ""
-            var model = ""
-            const customModel = await getUnknownDeviceHistoryByDevice(item._id)
-            customModel[0].data.forEach(data => {
-                if (data.name === "device_type") {
-                    deviceType = data.value
-                } else if (data.name === "brand") {
-                    brand = data.value
-                } else if (data.name === "model") {
-                    model = data.value
-                }
-            });
-            item.device_type = {name: deviceType}
-            item.brand = {name: brand}
-            item.model = {name: model}
+            await handleMissingModels(item)
         }
 
         // Add a QR code to each quote
