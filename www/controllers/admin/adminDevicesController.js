@@ -38,12 +38,10 @@ const deviceState = require("../../model/enum/deviceState")
 const deviceColor = require("../../model/enum/deviceColors")
 const deviceCapacity = require("../../model/enum/deviceCapacity")
 
-const {Device} = require("../../model/schema/device")
-const {getBrand} = require("gsmarena-api/src/services/catalog");
-const {DeviceType} = require("../../model/schema/deviceType");
 const historyType = require("../../model/enum/historyType");
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const roleTypes = require("../../model/enum/roleTypes");
+const {handleMissingModels} = require("../../util/Devices/devices");
 
 /**
  * Get All Device with Specific Field Showing and Support Unknown Devices
@@ -51,28 +49,8 @@ const roleTypes = require("../../model/enum/roleTypes");
  */
 async function getDevicesPage(req, res, next) {
     const devices = await getAllDevices();
-    for (const device of devices) {
-        if (device.model == null) {
-            var deviceType = ""
-            var brand = ""
-            var model = ""
-            const customModel = await getUnknownDeviceHistoryByDevice(device._id)
-            customModel[0].data.forEach(data => {
-                if (data.name === "device_type") {
-                    deviceType = data.value
-                } else if (data.name === "brand") {
-                    brand = data.value
-                } else if (data.name === "model") {
-                    model = data.value
-                }
-            });
-            device.device_type = {name: deviceType}
-            device.brand = {name: brand}
-            device.model = {name: model}
-        }
-    }
-
-    renderAdminLayout(req, res, "devices", {devices: devices, deviceState, deviceCategory})
+    await handleMissingModels(devices);
+    renderAdminLayout(req, res, "devices", { devices: devices, deviceState, deviceCategory });
 }
 
 /**

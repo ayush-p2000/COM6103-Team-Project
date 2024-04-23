@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-
 const {getAdminDashboard,deactivateUser, activateUser} = require("../controllers/admin/adminController");
 
 const {
@@ -9,6 +8,7 @@ const {
 } = require("../controllers/admin/adminAccountsController");
 
 const {getReportsPage, getReportPage} = require("../controllers/admin/adminReportsController");
+
 const {
     getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage,
     getUserDeviceDetailsPage, updateUserDeviceDetailsPage, getModelsFromTypeAndBrand,postNewDeviceType,
@@ -17,11 +17,13 @@ const {
 } = require("../controllers/admin/adminDevicesController");
 
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
-const {validateDeviceTypeEdit} = require("../middlewares/validators")
+const {validateDeviceTypeEdit, validateProfileUpdate,
+    validateAdminProfileUpdate} = require("../middlewares/validators")
 
 const {upload} = require('../middlewares/multer')
-const {validateRegistration} = require("../middlewares/validators");
+
 const {insertStaffDetails} = require("../controllers/admin/adminController");
+
 const {populateDeviceObject} = require("../middlewares/devices");
 
 /* GET home page. */
@@ -65,7 +67,7 @@ router.get('/getModelFromBrandAndType', getModelsFromTypeAndBrand)
 
 
 router.post('/accounts/create', upload.none(), createStaff);
-router.post('/accounts/:id', insertStaffDetails);
+router.post('/accounts/:id', validateAdminProfileUpdate, insertStaffDetails);
 
 router.post('/deactivateUser', upload.none(), deactivateUser);
 

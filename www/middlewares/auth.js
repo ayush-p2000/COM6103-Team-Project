@@ -5,7 +5,7 @@
  */
 
 const {STAFF, ADMIN} = require("../model/enum/roleTypes")
-const {User} = require("../model/schema/user");
+const {User} = require("../model/models");
 const isAuthenticated = (req, res, next) => {
     req.isLoggedIn = false;
     if(req.isAuthenticated() && req.user){
