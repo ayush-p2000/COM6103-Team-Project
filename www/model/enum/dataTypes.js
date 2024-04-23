@@ -25,6 +25,11 @@ const dataTypes = {
     },
 
     dataTypeToColour: function (dataType, prefix = "") {
+        //Check if a prefix is a string, and not null, undefined, or true/false
+        if (typeof prefix !== 'string') {
+            prefix = "";
+        }
+
         switch (dataType) {
             case IMAGE:
                 return prefix + "dark";

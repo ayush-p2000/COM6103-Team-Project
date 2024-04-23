@@ -36,12 +36,14 @@ describe('Test Landing Page', () => {
 
             ]
             const user = mock_user;
+            const messages = [];
 
             getCarouselDevices.returns(items)
 
             const req = {
                 isLoggedIn: true,
-                user: user
+                user: user,
+                query: {}
             };
 
             const res = {
@@ -57,7 +59,7 @@ describe('Test Landing Page', () => {
             expect(getCarouselDevices.calledOnce).to.be.true;
             expect(getCarouselDevices.returns(items));
             expect(res.render.calledOnce).to.be.true;
-            expect(res.render.calledWith('index', {title: 'Express', auth: req.isLoggedIn, user: req.user, items, imgPerCarousel})).to.be.true;
+            expect(res.render.calledWith('index', {title: 'Express', auth: req.isLoggedIn, user: req.user, items, imgPerCarousel, messages})).to.be.true;
             expect(next.calledOnce).to.be.false;
         });
 
@@ -70,7 +72,8 @@ describe('Test Landing Page', () => {
 
             const req = {
                 isLoggedIn: true,
-                user: user
+                user: user,
+                query: {}
             };
 
             const res = {
