@@ -9,6 +9,18 @@
     <div class="border-1 border-black border p-5">
         <!--        <form method="POST" name="editUserDetails" class="w-100">-->
         <form method="POST" name="userPermissions" action="/admin/accounts/<%= userDetails._id %>" class="w-100">
+            <div>
+                <% if (hasMessages) { %>
+                    <section>
+                        <ol class="mb-0 list-group list-group-numbered m-1">
+                            <% messages.forEach(function(message) { %>
+                                <li class="border border-danger border-1 d-flex justify-content-center bg-danger-subtle pt-2 pb-2 rounded-1 mb-1"><%= message %></li>
+                            <% }); %>
+                        </ol>
+
+                    </section>
+                <% } %>
+            </div>
         <div class="row">
             <div class="col-md-12">
                 <h2>
@@ -55,7 +67,7 @@
                     %>
                     <label for="date_of_birth"></label><input name="date_of_birth" id="date_of_birth"
                                                               class="d-inline-block w-50 form-control"
-                                                              value="<%= dob %>"/>
+                                                              value="<%= dob %>" disabled/>
                 </div>
                 <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-1"/>
             </div>
