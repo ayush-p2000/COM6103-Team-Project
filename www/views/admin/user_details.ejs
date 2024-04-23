@@ -22,6 +22,31 @@
         </div>
     </div>
 
+    <% if (locals.hasMessages === true) { %>
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold fs-5 mb-3">
+                        <i class="fa-solid fa-flag"></i>
+                        Notices
+                    </h4>
+
+                    <% locals.messages?.forEach(message => { %>
+                    <div class="w-100 card bg-danger-subtle rounded-4 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="alert text-center mb-0">
+                                <p class="mb-0 pb-0"><%= message %></p>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+
     <form method="POST" name="userPermissions" action="/admin/accounts/<%= userDetails._id %>">
         <div class="row mb-3">
             <div class="col-md-12">
