@@ -169,22 +169,26 @@ async function getItemDetails(req, res, next) {
 
 }
 
+
+
+/**
+ * Update quote state method to update if it is starred, accepted or rejected
+ * Also checks if the quote is accepted then it'll update other quote states to rejected
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang
+ */
 async function postUpdateQuote(req, res) {
     try {
         const state = req.body.state
         const value = quoteState[state]
         const device_state = deviceState.HAS_QUOTE
         const id = req.body.id
-        const updateaQuote = await updateQuoteState(id, value)
+        const updateQuote = await updateQuoteState(id, value)
 
+        // Check if quote is accepted then update other device quotes to rejected
         if (value === quoteState.ACCEPTED) {
-            console.log('inside accept quote')
             const quotes = await getQuotes(req.params.id)
-            console.log(quotes)
             for (const quote of quotes) {
-                console.log(quote._id === updateQuote._id)
-                if(quote._id !== updateQuote._id) {
-                    console.log('inside reject quote')
+                if(quote._id.toString() !== id) {
                     await updateQuoteState(quote._id, quoteState.REJECTED)
                 }
             }
