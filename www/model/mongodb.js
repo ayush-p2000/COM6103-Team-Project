@@ -208,6 +208,10 @@ const getAllModels = async () => {
     return await Model.find({is_deleted: {$ne: true}}).populate("deviceType").populate("brand")
 }
 
+const getAllModelsTableData = async () => {
+    return await Model.find({is_deleted: {$ne: true}}).populate("deviceType","name").populate("brand","name").select({_id:1, name:1})
+}
+
 /**
  * Get All models of a type
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
@@ -1228,5 +1232,6 @@ module.exports = {
     getTransactionByDevice,
     getTransactionById,
     getQuotesGroupByState,
-    getAllQuotes
+    getAllQuotes,
+    getAllModelsTableData
 }

@@ -13,7 +13,7 @@ const {
     getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage,
     getUserDeviceDetailsPage, updateUserDeviceDetailsPage, getModelsFromTypeAndBrand,postNewDeviceType,
     postNewBrand, postNewModel, getRetrievalDevicesPage, updateDeviceType, deleteDeviceType, postDeviceStateOverride, postDeviceDemotion, postDevicePromotion,
-    postDeviceChangeRequest, postDeviceVisibility
+    postDeviceChangeRequest, postDeviceVisibility, fetchModelsJSON
 } = require("../controllers/admin/adminDevicesController");
 
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
@@ -75,5 +75,6 @@ router.post('/activateUser', upload.none(), activateUser);
 router.get('/error', upload.none(),)
 
 router.post('/deleteUser',upload.none(),deleteUser);
+
 
 module.exports = router;
