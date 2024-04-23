@@ -198,7 +198,23 @@ async function postUpdateQuote(req, res) {
         const state = req.body.state
         const value = quoteState[state]
         const device_state = deviceState.HAS_QUOTE
-        const updated_quote = await updateQuoteState(req.params.id, value)
+        const id = req.body.id
+        const updateaQuote = await updateQuoteState(id, value)
+
+        if (value === quoteState.ACCEPTED) {
+            console.log('inside accept quote')
+            const quotes = await getQuotes(req.params.id)
+            console.log(quotes)
+            for (const quote of quotes) {
+                console.log(quote._id === updateQuote._id)
+                if(quote._id !== updateQuote._id) {
+                    console.log('inside reject quote')
+                    await updateQuoteState(quote._id, quoteState.REJECTED)
+                }
+            }
+        }
+
+
         await updateDeviceState(req.params.id, device_state)
     } catch (err) {
         console.log(err)
