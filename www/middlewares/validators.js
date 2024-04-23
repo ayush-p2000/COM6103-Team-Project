@@ -62,6 +62,18 @@ exports.validateProfileUpdate = [
     errorsToSession
 ]
 
+exports.validateAdminProfileUpdate = [
+    check("firstName","Incorrect First Name").trim().escape().notEmpty(),
+    check("lastName","Incorrect Last Name").trim().escape().notEmpty(),
+    check("phone", "Invalid phone number. Please provide a UK phone number.").trim().notEmpty().isMobilePhone("en-GB"),
+    check("addressFirst", "Invalid address 1").trim().escape().notEmpty(),
+    check("addressSecond", "Invalid address 2").trim().escape().notEmpty(),
+    check("city", "Invalid city").trim().escape().notEmpty(),
+    check("country", "Invalid country").trim().escape().notEmpty(),
+    check("postCode", "Invalid postcode").trim().escape().notEmpty().isPostalCode("GB"),
+    errorsToSession
+]
+
 exports.validateDob = [
     check("birthday","Invalid Date Of Birth").trim().escape().isDate({format:"YYYY-MM-DD"}).custom(checkAge).withMessage("You need to be at least 13 years old"),
     errorsToSession
