@@ -268,29 +268,29 @@
                 <h5 class="fw-bold mt-4">Quotes</h5>
                 <!--     Show device if the category is current       -->
                 <% if(item.category === deviceCategory.CURRENT) { %>
-                    <% quotes.forEach( (quote, index) => { %>
+                    <% if(hasApprovedQuote) { %>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card border-primary mt-3">
                                     <div class="card-body">
                                         <div class="row justify-content-between">
                                             <div class="col-md-2 d-flex align-content-center">
-                                                <img src="<%= quote.provider.logo %>"
+                                                <img src="<%= approvedQuote.provider.logo %>"
                                                      class="img-fluid rounded-start my-auto"
                                                      alt="logo">
                                             </div>
 
                                             <div class="col-md-7 d-flex flex-column align-content-between">
                                                 <div class="row mb-auto">
-                                                    <h5 class="card-title">Price: £<%= quote.value %></h5>
-                                                    <p class="card-text">Quotation from <%= quote.provider.name %> for
+                                                    <h5 class="card-title">Price: £<%= approvedQuote.value %></h5>
+                                                    <p class="card-text">Quotation from <%= approvedQuote.provider.name %> for
                                                         the
                                                         same product or similar products.</p>
-                                                    <p class="card-text"><small>Fetched from <%= quote.provider.name %>
+                                                    <p class="card-text"><small>Fetched from <%= approvedQuote.provider.name %>
                                                             site</small></p>
                                                     <p id="quoteState" class="quote-state"
-                                                       data-quote-id="<%= quote._id %>">
-                                                        <%= Object.keys(quoteState).find(key => quoteState[key] === quote.state) %>
+                                                       data-quote-id="<%= approvedQuote._id %>">
+                                                        <%= Object.keys(quoteState).find(key => quoteState[key] === approvedQuote.state) %>
                                                     </p>
                                                 </div>
 
@@ -298,20 +298,20 @@
                                                 <div class="row">
                                                     <div class="col-md-12 mt-2 mx-auto">
                                                         <div class="d-flex justify-content-between align-items-center">
-                                                            <a href="<%= quote.url %>" target="_blank"
-                                                               class="btn btn-primary mx-2 my-2">Visit <%= quote.provider.name.toUpperCase() %></a>
+                                                            <a href="<%= approvedQuote.url %>" target="_blank"
+                                                               class="btn btn-primary mx-2 my-2">Visit <%= approvedQuote.provider.name.toUpperCase() %></a>
                                                             <button class="btn btn-warning mx-2 my-2 star-quote"
-                                                                    data-quote-id="<%= quote._id %>" id="star-quote">
+                                                                    data-quote-id="<%= approvedQuote._id %>" id="star-quote">
                                                                 Star
                                                                 Quote
                                                             </button>
                                                             <button class="btn btn-primary mx-2 my-2 accept-quote"
-                                                                    data-quote-id="<%= quote._id %>" id="accept-quote">
+                                                                    data-quote-id="<%= approvedQuote._id %>" id="accept-quote">
                                                                 Accept
                                                                 Quote
                                                             </button>
                                                             <button class="btn btn-danger mx-2 my-2 reject-quote"
-                                                                    data-quote-id="<%= quote._id %>" id="reject-quote">
+                                                                    data-quote-id="<%= approvedQuote._id %>" id="reject-quote">
                                                                 Reject
                                                                 Quote
                                                             </button>
@@ -333,13 +333,13 @@
 
                                                         <div class="row justify-content-between align-items-center">
                                                             <div class="col-9 d-flex justify-content-center">
-                                                                <a onclick="showQRModal('<%= quote._id %>')">
+                                                                <a onclick="showQRModal('<%= approvedQuote._id %>')">
                                                                     <img class="img-thumbnail h-100 hover-shadow mx-auto"
-                                                                         src="<%= quote.qr_code %>" alt="Quote QR Code">
+                                                                         src="<%= approvedQuote.qr_code %>" alt="Quote QR Code">
                                                                 </a>
                                                             </div>
                                                             <div class="col-2 d-flex justify-content-center align-content-center">
-                                                                <a href="/qr/<%= quote._id %>" class="hover-grow">
+                                                                <a href="/qr/<%= approvedQuote._id %>" class="hover-grow">
                                                                     <i class="fa-solid fa-chevron-right fa-5x my-auto"></i>
                                                                 </a>
                                                             </div>
@@ -352,7 +352,93 @@
                                 </div>
                             </div>
                         </div>
-                    <% }) %>
+                    <% } else { %>
+                        <% quotes.forEach( (quote, index) => { %>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card border-primary mt-3">
+                                        <div class="card-body">
+                                            <div class="row justify-content-between">
+                                                <div class="col-md-2 d-flex align-content-center">
+                                                    <img src="<%= quote.provider.logo %>"
+                                                         class="img-fluid rounded-start my-auto"
+                                                         alt="logo">
+                                                </div>
+
+                                                <div class="col-md-7 d-flex flex-column align-content-between">
+                                                    <div class="row mb-auto">
+                                                        <h5 class="card-title">Price: £<%= quote.value %></h5>
+                                                        <p class="card-text">Quotation from <%= quote.provider.name %> for
+                                                            the
+                                                            same product or similar products.</p>
+                                                        <p class="card-text"><small>Fetched from <%= quote.provider.name %>
+                                                                site</small></p>
+                                                        <p id="quoteState" class="quote-state"
+                                                           data-quote-id="<%= quote._id %>">
+                                                            <%= Object.keys(quoteState).find(key => quoteState[key] === quote.state) %>
+                                                        </p>
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="col-md-12 mt-2 mx-auto">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <a href="<%= quote.url %>" target="_blank"
+                                                                   class="btn btn-primary mx-2 my-2">Visit <%= quote.provider.name.toUpperCase() %></a>
+                                                                <button class="btn btn-warning mx-2 my-2 star-quote"
+                                                                        data-quote-id="<%= quote._id %>" id="star-quote">
+                                                                    Star
+                                                                    Quote
+                                                                </button>
+                                                                <button class="btn btn-primary mx-2 my-2 accept-quote"
+                                                                        data-quote-id="<%= quote._id %>" id="accept-quote">
+                                                                    Accept
+                                                                    Quote
+                                                                </button>
+                                                                <button class="btn btn-danger mx-2 my-2 reject-quote"
+                                                                        data-quote-id="<%= quote._id %>" id="reject-quote">
+                                                                    Reject
+                                                                    Quote
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="card h-100">
+                                                        <div class="card-body">
+                                                            <div class="row justify-content-center align-items-center">
+                                                                <div class="col-12">
+                                                                    <p class="fs-6 fst-italic text-center">Click the QR code
+                                                                        to
+                                                                        see a larger version</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row justify-content-between align-items-center">
+                                                                <div class="col-9 d-flex justify-content-center">
+                                                                    <a onclick="showQRModal('<%= quote._id %>')">
+                                                                        <img class="img-thumbnail h-100 hover-shadow mx-auto"
+                                                                             src="<%= quote.qr_code %>" alt="Quote QR Code">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-2 d-flex justify-content-center align-content-center">
+                                                                    <a href="/qr/<%= quote._id %>" class="hover-grow">
+                                                                        <i class="fa-solid fa-chevron-right fa-5x my-auto"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } %>
                 <% } %>
 
                 <!--     Show device if the category is rare    -->
