@@ -13,7 +13,7 @@ const {
     getResetPasswordPage, googleAuth, googleAuthCallback, facebookAuth, facebookAuthCallback, verifyEmail,
     getAgeGoogle
 } = require("../controllers/auth/authenticationController");
-const { validateRegistration, validateLogin,validateGoogleLogin } = require("../middlewares/validators");
+const { validateRegistration, validateLogin} = require("../middlewares/validators");
 const { isAuthenticated, validateVerification} = require("../middlewares/auth");
 const { validateCaptcha } = require("../middlewares/captcha");
 const {getUserDashboard} = require("../controllers/user/userController");
