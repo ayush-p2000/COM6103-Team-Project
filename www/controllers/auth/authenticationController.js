@@ -2,10 +2,9 @@
  * This controller should handle any operations related to auth such as login, logout, and registration
  */
 
-const {User} = require("../../model/schema/user")
+const {User} = require("../../model/models")
 const {randomBytes, pbkdf2} = require("node:crypto")
 const {promisify} = require('node:util')
-const { validationResult } = require("express-validator")
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const passport = require("passport");
 const {getUserById, updateUserDob} = require("../../model/mongodb");

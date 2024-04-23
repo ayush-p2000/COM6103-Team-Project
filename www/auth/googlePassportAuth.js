@@ -1,6 +1,5 @@
 const GoogleStrategy = require('passport-google-oauth20').Strategy
-const {User} = require("../model/schema/user");
-const {session} = require("express/lib/request");
+const {User} = require("../model/models");
 /**
  * Google Login Strategy
  * @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
