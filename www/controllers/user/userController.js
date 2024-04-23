@@ -144,7 +144,7 @@ async function updateUserDetails(req, res, next) {
             messages: messages,
             hasMessages: messages.length > 0,
             userData: updatedUser,
-            isGoogleAuthenticated: isGoogleAuthenticated,
+            isGoogleAuthenticated: req.user.google_id != null,
             auth: req.isLoggedIn
         })
     } catch (err) {
