@@ -1163,6 +1163,20 @@ async function getTransactionById(id) {
     return Retrieval.findOne({_id: id});
 }
 
+/**
+ * method to update the user's dob in the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateUserDob(id, birthday) {
+    const update = {
+        $set: {
+            date_of_birth: birthday
+        }
+    }
+    return User.updateOne({_id: id}, update)
+}
+
+
 
 module.exports = {
     getAllUsers,
@@ -1233,5 +1247,6 @@ module.exports = {
     getTransactionById,
     getQuotesGroupByState,
     getAllQuotes,
-    getAllModelsTableData
+    getAllModelsTableData,
+    updateUserDob
 }
