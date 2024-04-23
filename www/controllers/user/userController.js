@@ -90,7 +90,6 @@ async function updateUserDetails(req, res, next) {
         // Construct an object with the fields that need to be updated
         let updateFields = {};
 
-        console.log(req.session.messages.length)
 
         if (req.session.messages.length > 0) {
             return res.redirect("/profile")

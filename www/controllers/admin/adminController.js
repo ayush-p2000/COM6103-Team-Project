@@ -90,7 +90,6 @@ async function insertStaffDetails(req,res,next){
             return res.status(403).send('You do not have the required permissions to perform this action');
         }
 
-        console.log(req.session.messages)
         if (req.session.messages.length > 0) {
             return res.redirect(`/admin/accounts/${req.params.id}`)
         }
