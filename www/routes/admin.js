@@ -13,7 +13,7 @@ const {
     getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage,
     getUserDeviceDetailsPage, updateUserDeviceDetailsPage, getModelsFromTypeAndBrand,postNewDeviceType,
     postNewBrand, postNewModel, getRetrievalDevicesPage, updateDeviceType, deleteDeviceType, postDeviceStateOverride, postDeviceDemotion, postDevicePromotion,
-    postDeviceChangeRequest, postDeviceVisibility, fetchModelsJSON
+    postDeviceChangeRequest, postDeviceVisibility
 } = require("../controllers/admin/adminDevicesController");
 
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
