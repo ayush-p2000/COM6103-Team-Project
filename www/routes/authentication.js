@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { passportAuthenticate } = require("../auth/passportAuth");
+
 const {
     getLoginPage,
     getRegisterPage,
@@ -11,6 +12,7 @@ const {
     resetPassword,
     getResetPasswordPage, googleAuth, googleAuthCallback, facebookAuth, facebookAuthCallback, verifyEmail,
 } = require("../controllers/auth/authenticationController");
+
 const { validateRegistration, validateLogin } = require("../middlewares/validators");
 const { isAuthenticated, validateVerification} = require("../middlewares/auth");
 const { validateCaptcha } = require("../middlewares/captcha");

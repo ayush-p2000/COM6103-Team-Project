@@ -38,9 +38,6 @@ const deviceState = require("../../model/enum/deviceState")
 const deviceColor = require("../../model/enum/deviceColors")
 const deviceCapacity = require("../../model/enum/deviceCapacity")
 
-const {Device} = require("../../model/schema/device")
-const {getBrand} = require("gsmarena-api/src/services/catalog");
-const {DeviceType} = require("../../model/schema/deviceType");
 const historyType = require("../../model/enum/historyType");
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const roleTypes = require("../../model/enum/roleTypes");

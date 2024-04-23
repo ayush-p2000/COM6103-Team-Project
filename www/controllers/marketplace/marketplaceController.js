@@ -2,10 +2,9 @@
  * This controller should handle any operations related to the marketplace itself
  */
 
-const mockData = require('../../util/mock/mockData')
 const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const {getPaginatedResults} = require("../../model/utils/utils")
-const {Device} = require("../../model/schema/device")
+const {Device} = require("../../model/models")
 const {
     getUserItems,
     getQuotes,
@@ -15,11 +14,9 @@ const {
     getAllDevices, getAllDeviceType,
     getUnknownDeviceHistoryByDevice
 } = require('../../model/mongodb')
-const {join} = require("path");
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
 const {getDeviceQuotation} = require("../../util/web-scrape/getDeviceQuotation")
-const cheerio = require("cheerio");
 const {quoteState} = require("../../model/enum/quoteState");
 
 /**

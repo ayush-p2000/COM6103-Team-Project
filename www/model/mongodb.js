@@ -1,18 +1,4 @@
-/* Imports */
-const mongoose = require('mongoose');
-const regexEscape = require('regex-escape');
-const MongoStore = require('connect-mongo')
-
-/* Schemas */
-const {User} = require("./schema/user");
-const {Device} = require("./schema/device");
-const {DeviceType} = require("./schema/deviceType");
-const {Brand} = require("./schema/brand");
-const {Model} = require("./schema/model");
-const {Provider} = require("./schema/provider");
-const {Quote} = require("./schema/quote");
-const {Retrieval} = require("./schema/retrieval");
-const {History} = require("./schema/history");
+const {User, Device, DeviceType, Brand, Model, Provider, Quote, History, Retrieval} = require("./models");
 
 const {UNKNOWN_DEVICE} = require("./enum/historyType");
 
@@ -23,29 +9,7 @@ const {quoteState} = require("./enum/quoteState");
 const historyType = require("./enum/historyType");
 const transactionState = require('./enum/transactionState')
 const retrievalState = require('./enum/retrievalState')
-
-/* Connection Properties */
-const MONGO_HOST = process.env.MONGO_HOST || "localhost";
-const MONGO_USER = process.env.MONGO_USER || "admin";
-const MONGO_PASS = process.env.MONGO_PASS;
-const MONGO_DBNAME = process.env.MONGO_DBNAME || "test";
-const MONGO_CONNNAME = process.env.MONGO_CONNNAME || "mongodb";
-
-/* Connection String */
-const connectionString = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DBNAME}?retryWrites=true&w=majority`;
-
-/* Variables */
-let connected = false;
-let store;
-
-mongoose.connect(connectionString)
-
-const db = mongoose.connection;
-db.on('error', (error) => console.error(error));
-db.once('open', async () => {
-    console.log(`Connected to ${MONGO_CONNNAME}`);
-    connected = true;
-});
+const mongoose = require("mongoose");
 
 /* Functions */
 async function getAllUsers() {
@@ -844,8 +808,11 @@ const getSalesCountByMonth = async (numPrevMonths) => {
                     },
                     {
                         $group: {
-                            _id: { month: { $month: "$transaction.payment_date" }, year: { $year: "$transaction.payment_date" } },
-                            count: { $sum: 1 }
+                            _id: {
+                                month: {$month: "$transaction.payment_date"},
+                                year: {$year: "$transaction.payment_date"}
+                            },
+                            count: {$sum: 1}
                         }
                     }
                 ],
@@ -859,8 +826,11 @@ const getSalesCountByMonth = async (numPrevMonths) => {
                     },
                     {
                         $group: {
-                            _id: { month: { $month: "$extension_transaction.payment_date" }, year: { $year: "$extension_transaction.payment_date" } },
-                            count: { $sum: 1 }
+                            _id: {
+                                month: {$month: "$extension_transaction.payment_date"},
+                                year: {$year: "$extension_transaction.payment_date"}
+                            },
+                            count: {$sum: 1}
                         }
                     }
                 ]
@@ -873,15 +843,15 @@ const getSalesCountByMonth = async (numPrevMonths) => {
                 }
             }
         },
-        { $unwind: "$all_sales" },
-        { $replaceRoot: { newRoot: "$all_sales" } },
+        {$unwind: "$all_sales"},
+        {$replaceRoot: {newRoot: "$all_sales"}},
         {
             $group: {
-                _id: { month: "$_id.month", year: "$_id.year" },
-                total: { $sum: "$count" }
+                _id: {month: "$_id.month", year: "$_id.year"},
+                total: {$sum: "$count"}
             }
         },
-        { $sort: { "_id.year": 1, "_id.month": 1 } }
+        {$sort: {"_id.year": 1, "_id.month": 1}}
     ]);
 }
 
@@ -908,8 +878,11 @@ const getSalesValueByMonth = async (numPrevMonths) => {
                     },
                     {
                         $group: {
-                            _id: { month: { $month: "$transaction.payment_date" }, year: { $year: "$transaction.payment_date" } },
-                            value: { $sum: "$transaction.value" }
+                            _id: {
+                                month: {$month: "$transaction.payment_date"},
+                                year: {$year: "$transaction.payment_date"}
+                            },
+                            value: {$sum: "$transaction.value"}
                         }
                     }
                 ],
@@ -923,8 +896,11 @@ const getSalesValueByMonth = async (numPrevMonths) => {
                     },
                     {
                         $group: {
-                            _id: { month: { $month: "$extension_transaction.payment_date" }, year: { $year: "$extension_transaction.payment_date" } },
-                            value: { $sum: "$extension_transaction.value" }
+                            _id: {
+                                month: {$month: "$extension_transaction.payment_date"},
+                                year: {$year: "$extension_transaction.payment_date"}
+                            },
+                            value: {$sum: "$extension_transaction.value"}
                         }
                     }
                 ]
@@ -937,15 +913,15 @@ const getSalesValueByMonth = async (numPrevMonths) => {
                 }
             }
         },
-        { $unwind: "$all_sales" },
-        { $replaceRoot: { newRoot: "$all_sales" } },
+        {$unwind: "$all_sales"},
+        {$replaceRoot: {newRoot: "$all_sales"}},
         {
             $group: {
-                _id: { month: "$_id.month", year: "$_id.year" },
-                value: { $sum: "$value" }
+                _id: {month: "$_id.month", year: "$_id.year"},
+                value: {$sum: "$value"}
             }
         },
-        { $sort: { "_id.year": 1, "_id.month": 1 } }
+        {$sort: {"_id.year": 1, "_id.month": 1}}
     ]);
 }
 
@@ -973,7 +949,7 @@ const getAllSalesOrderedByDate = async (numPrevMonths) => {
                             device: 1,
                             value: "$transaction.value",
                             date: "$transaction.payment_date",
-                            purchase_type: { $literal: 0 }
+                            purchase_type: {$literal: 0}
                         }
                     }
                 ],
@@ -991,7 +967,7 @@ const getAllSalesOrderedByDate = async (numPrevMonths) => {
                             device: 1,
                             value: "$extension_transaction.value",
                             date: "$extension_transaction.payment_date",
-                            purchase_type: { $literal: 1 }
+                            purchase_type: {$literal: 1}
                         }
                     }
                 ]
@@ -1004,9 +980,9 @@ const getAllSalesOrderedByDate = async (numPrevMonths) => {
                 }
             }
         },
-        { $unwind: "$all_sales" },
-        { $replaceRoot: { newRoot: "$all_sales" } },
-        { $sort: { date: 1 } },
+        {$unwind: "$all_sales"},
+        {$replaceRoot: {newRoot: "$all_sales"}},
+        {$sort: {date: 1}},
         {
             $lookup: {
                 from: "devices",
@@ -1015,7 +991,7 @@ const getAllSalesOrderedByDate = async (numPrevMonths) => {
                 as: "device"
             }
         },
-        { $unwind: "$device" },
+        {$unwind: "$device"},
         {
             $lookup: {
                 from: "brands",
@@ -1024,7 +1000,7 @@ const getAllSalesOrderedByDate = async (numPrevMonths) => {
                 as: "device.brand"
             }
         },
-        { $unwind: "$device.brand" },
+        {$unwind: "$device.brand"},
         {
             $lookup: {
                 from: "models",
@@ -1033,7 +1009,7 @@ const getAllSalesOrderedByDate = async (numPrevMonths) => {
                 as: "device.model"
             }
         },
-        { $unwind: "$device.model" },
+        {$unwind: "$device.model"},
         {
             $lookup: {
                 from: "users",
@@ -1042,7 +1018,7 @@ const getAllSalesOrderedByDate = async (numPrevMonths) => {
                 as: "device.listing_user"
             }
         },
-        { $unwind: "$device.listing_user" }
+        {$unwind: "$device.listing_user"}
     ]);
 }
 /*
@@ -1254,7 +1230,6 @@ module.exports = {
     getItemDetail,
     getQuoteById,
     updateQuote,
-    store,
     getAllDeviceType,
     getAllBrand,
     getModels,
