@@ -88,7 +88,12 @@ async function updateUserDetails(req, res, next) {
 
         const {firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country} = req.body; // Assuming these fields can be updated
         // Construct an object with the fields that need to be updated
-        const updateFields = {};
+        let updateFields = {};
+
+
+        if (req.session.messages.length > 0) {
+            return res.redirect("/profile")
+        }
 
         if (firstName) {
             updateFields.first_name = firstName; // Update first name
@@ -118,6 +123,7 @@ async function updateUserDetails(req, res, next) {
             };
         }
 
+
         // Message displayed after the successful profile update
         messages = ['Profile Successfully Updated.'];
 
@@ -137,7 +143,8 @@ async function updateUserDetails(req, res, next) {
         renderUserLayout(req, res, 'user_profile', {
             messages: messages,
             hasMessages: messages.length > 0,
-            user: updatedUser,
+            userData: updatedUser,
+            isGoogleAuthenticated: req.user.google_id != null,
             auth: req.isLoggedIn
         })
     } catch (err) {
