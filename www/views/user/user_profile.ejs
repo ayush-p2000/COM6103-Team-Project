@@ -19,18 +19,16 @@
                 <div class="row mb-3">
                     <div class="col-12">
                         <% if (hasMessages) { %>
-                            <div class="card rounded-4 shadow-sm">
-                                <div class="card-body">
-                                    <section>
-                                        <ol class="mb-0 list-group list-group-numbered m-1">
-                                            <% messages.forEach(function(message) { %>
-                                                <li class="border border-success border-1 d-flex justify-content-center bg-success-subtle pt-2 pb-2 rounded-1 mb-1"><%= message %></li>
-                                            <% }); %>
-                                        </ol>
-
-                                    </section>
+                            <% messages.forEach(function(message) { %>
+                                <div class="card rounded-4 shadow-sm bg-info-subtle border-info mb-3">
+                                    <div class="card-body">
+                                        <div class="alert mb-0 text-center">
+                                            <i class="fas fa-info-circle"></i>
+                                            <%= message %>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            <% }); %>
 
                         <% } %>
                     </div>
@@ -119,8 +117,9 @@
                                                     <i class="fab fa-google"></i>&nbsp;
                                                             <small>Google Account</small>
                                                 </span><label>
-                            <input name="isGoogleAuthenticated" hidden="hidden" value="<% isGoogleAuthenticated %>"/>
-                        </label>
+                                                    <input name="isGoogleAuthenticated" hidden="hidden"
+                                                           value="<% isGoogleAuthenticated %>"/>
+                                                </label>
                                             <% } %>
                                         </div>
                                     </div>

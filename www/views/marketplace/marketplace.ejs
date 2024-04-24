@@ -75,7 +75,7 @@
                             <div class="card rounded-4 h-100 shadow-sm" style="max-width: 350px; ">
                                 <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>"
                                      class="img-fluid d-block mx-auto rounded-top-4" alt="..."
-                                     style="max-height: 200px;">
+                                     style="max-height: 200px; object-fit: cover">
                                 <div class="card-body">
                                     <h5 class="card-title modelName"><%= device.model.name %></h5>
                                     <p class="m-0 p-0 text-muted deviceType"><small>Device

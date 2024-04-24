@@ -504,7 +504,7 @@ const getAllDevices = async (filter = {}) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getCarouselDevices = async (imgPerCarousel) => {
-    const devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE}).populate("model").select({
+    const devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE, visible: true}).populate("model").select({
         model: 1,
         photos: 1,
         listing_user: 0,
@@ -512,11 +512,17 @@ const getCarouselDevices = async (imgPerCarousel) => {
         device_type: 0
     }).limit(imgPerCarousel * 3)
     // devices = Array.from(devices)
-    for (let i = 0; i < devices.length; i++) {
-        const quotes = await getQuotes(devices[i]._id);
-        devices[i] = {...devices[i]._doc, quote: quotes.length ? quotes[0] : null}
-    }
-    console.log(devices[0])
+    //Create an array of device IDs
+    const deviceIds = devices.map(device => device._id)
+
+    //Query the Quotes model for all quotes that match the device IDs
+    const quotes = await Quote.find({device: {$in: deviceIds}}).populate("provider");
+
+    //For each quote, add it to the device object
+    devices.forEach(device => {
+        device.quote = quotes.find(quote => quote.device._id.toString() === device._id.toString())
+    });
+
     return devices
 }
 
