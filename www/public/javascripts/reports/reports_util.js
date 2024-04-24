@@ -26,6 +26,7 @@ function createChart(id, labels, datasets, type, options = null) {
                 intersect: false,
             },
             maintainAspectRatio: false,
+            responsive: true,
         },
     };
 

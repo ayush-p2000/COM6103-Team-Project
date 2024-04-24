@@ -1,7 +1,19 @@
-<canvas id="sales_chart"></canvas>
+<div class="collapse show h-25" id="sales_loadingCollapse">
+    <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+</div>
+<div class="collapse" id="sales_chartCollapse" style="height: 100%">
+    <canvas id="sales_chart"></canvas>
+</div>
+<div class="collapse" id="sales_errorCollapse">
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error</h4>
+        <p>There was an error loading the chart.</p>
+        <hr>
+        <p class="mb-0">Please try again later.</p>
+    </div>
+</div>
 <script src="/javascripts/reports/charts/sales.js"></script>
-<script>
-    const sales_labels = <%- JSON.stringify(labels) %>;
-    const sales_count_data = <%- JSON.stringify(datasets[0]) %>;
-    const sales_value_data = <%- JSON.stringify(datasets[1]) %>;
-</script>
