@@ -130,6 +130,16 @@ async function getItemDetails(req, res, next) {
             await item.save()
         }
 
+        let hasApprovedQuote = false
+        let approvedQuote
+
+        quotes.forEach(quote => {
+            if (quote.state === quoteState.ACCEPTED) {
+                hasApprovedQuote = true
+                approvedQuote = quote
+            }
+        })
+
         if (item.model != null) {
             const specProp = item.model.properties.find(property => property.name === 'specifications')?.value;
             if (specProp != null) {
@@ -156,11 +166,8 @@ async function getItemDetails(req, res, next) {
             retrievalData = await getRetrievalObjectByDeviceId(item._id);
         }
         renderUserLayout(req, res, '../marketplace/item_details', {
-            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, retrievalData, retrievalState,deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes
+            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, retrievalData, retrievalState,deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes, approvedQuote, hasApprovedQuote
         })
-        // res.render('marketplace/item_details', {
-        //     item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user,
-        // })
     } catch (e) {
         console.log(e)
         res.status(500);
@@ -169,13 +176,34 @@ async function getItemDetails(req, res, next) {
 
 }
 
+
+
+/**
+ * Update quote state method to update if it is starred, accepted or rejected
+ * Also checks if the quote is accepted then it'll update other quote states to rejected
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang
+ */
 async function postUpdateQuote(req, res) {
     try {
         const state = req.body.state
         const value = quoteState[state]
         const device_state = deviceState.HAS_QUOTE
-        const updated_quote = await updateQuoteState(req.params.id, value)
+        const id = req.body.id
+        const updateQuote = await updateQuoteState(id, value)
+
+        // Check if quote is accepted then update other device quotes to rejected
+        if (value === quoteState.ACCEPTED) {
+            const quotes = await getQuotes(req.params.id)
+            for (const quote of quotes) {
+                if(quote._id.toString() !== id) {
+                    await updateQuoteState(quote._id, quoteState.REJECTED)
+                }
+            }
+        }
         await updateDeviceState(req.params.id, device_state)
+
+        res.status(200).send(req.params.id)
+
     } catch (err) {
         console.log(err)
     }
