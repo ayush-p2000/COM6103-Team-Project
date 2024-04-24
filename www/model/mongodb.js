@@ -108,7 +108,7 @@ async function addQuote(quoteDetails) {
  */
 async function updateQuoteState(id, state) {
     try {
-        return await Quote.updateOne({device: id}, {state: state})
+        return await Quote.updateOne({_id: id}, {state: state})
     } catch (err) {
         console.log(err)
     }
