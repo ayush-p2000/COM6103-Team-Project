@@ -7,6 +7,7 @@ const {email} = require("../../public/javascripts/Emailing/emailing");
 const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const {getAllUsers, getUserItems, getUnknownDeviceHistoryByDevice, getAllDevices} = require("../../model/mongodb");
 const deviceCategory = require("../../model/enum/deviceCategory")
+const {handleUserMissingModel, handleMissingModels} = require("../../util/Devices/devices");
 
 
 //------------------------------------------------ Rendering user Database -------------------------------------------------------------------------//
@@ -55,34 +56,7 @@ async function getUserDashboard(req, res, next) {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getUnknownDevices(items) {
-    for (const item of items) {
-        if (item.model == null) {
-            var deviceType = ""
-            var brand = ""
-            var model = ""
-            const customModel = await getUnknownDeviceHistoryByDevice(item._id)
-            if (customModel.length > 0 && customModel[0].data) {
-                customModel[0].data.forEach(data => {
-                    if (data.name === "device_type") {
-                        deviceType = data.value
-                    } else if (data.name === "brand") {
-                        brand = data.value
-                    } else if (data.name === "model") {
-                        model = data.value
-                    }
-                });
-            }
-            else
-            {
-                deviceType = "MISSING TYPE"
-                brand = "MISSING BRAND"
-                model = "MISSING MODEL"
-            }
-            item.device_type = {name: deviceType}
-            item.brand = {name: brand }
-            item.model = {name: model }
-        }
-    }
+     await handleMissingModels(items)
     return items
 }
 
@@ -114,7 +88,12 @@ async function updateUserDetails(req, res, next) {
 
         const {firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country} = req.body; // Assuming these fields can be updated
         // Construct an object with the fields that need to be updated
-        const updateFields = {};
+        let updateFields = {};
+
+
+        if (req.session.messages.length > 0) {
+            return res.redirect("/profile")
+        }
 
         if (firstName) {
             updateFields.first_name = firstName; // Update first name
@@ -144,6 +123,7 @@ async function updateUserDetails(req, res, next) {
             };
         }
 
+
         // Message displayed after the successful profile update
         messages = ['Profile Successfully Updated.'];
 
@@ -163,7 +143,8 @@ async function updateUserDetails(req, res, next) {
         renderUserLayout(req, res, 'user_profile', {
             messages: messages,
             hasMessages: messages.length > 0,
-            user: updatedUser,
+            userData: updatedUser,
+            isGoogleAuthenticated: req.user.google_id != null,
             auth: req.isLoggedIn
         })
     } catch (err) {

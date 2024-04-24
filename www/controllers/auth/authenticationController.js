@@ -7,6 +7,7 @@ const {randomBytes, pbkdf2} = require("node:crypto")
 const {promisify} = require('node:util')
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const passport = require("passport");
+const {getUserById, updateUserDob} = require("../../model/mongodb");
 const pbkdf2Promise = promisify(pbkdf2)
 let token = ""
 
@@ -250,6 +251,37 @@ const facebookAuth = passport.authenticate('facebook', {scope: ['public_profile'
 
 const facebookAuthCallback = passport.authenticate('facebook', { failureRedirect: '/login'})
 
+
+/**
+ * Get method to check if the user's date of birth exists
+ * If not then redirect to verify dob page for the user to enter their birthdate
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function getAgeGoogle(req, res, next) {
+    const user = await getUserById(req.user._id)
+
+    if (user.date_of_birth === null) {
+        res.render('authentication/dateOfBirth', {userId: req.user._id})
+    } else {
+        next()
+    }
+}
+
+
+/**
+ * Get method to update the date of birth in the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function checkAgeGoogle(req, res, next) {
+    const {birthday, id} = req.body
+    if (req.session.messages.length > 0) {
+        res.redirect('/login')
+    } else {
+        await updateUserDob(id, birthday)
+        res.redirect('/auth/google')
+    }
+}
+
 module.exports = {
     getLoginPage,
     getRegisterPage,
@@ -266,6 +298,8 @@ module.exports = {
     facebookAuth,
     facebookAuthCallback,
     verifyEmail,
+    getAgeGoogle,
+    checkAgeGoogle
 }
 
 //------------------------------------------------------------------ End of File ----------------------------------------------------------------------------//

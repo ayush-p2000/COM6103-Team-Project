@@ -17,7 +17,8 @@ const {
 } = require("../controllers/admin/adminDevicesController");
 
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
-const {validateDeviceTypeEdit} = require("../middlewares/validators")
+const {validateDeviceTypeEdit, validateProfileUpdate,
+    validateAdminProfileUpdate} = require("../middlewares/validators")
 
 const {upload} = require('../middlewares/multer')
 
@@ -66,7 +67,7 @@ router.get('/getModelFromBrandAndType', getModelsFromTypeAndBrand)
 
 
 router.post('/accounts/create', upload.none(), createStaff);
-router.post('/accounts/:id', insertStaffDetails);
+router.post('/accounts/:id', validateAdminProfileUpdate, insertStaffDetails);
 
 router.post('/deactivateUser', upload.none(), deactivateUser);
 
