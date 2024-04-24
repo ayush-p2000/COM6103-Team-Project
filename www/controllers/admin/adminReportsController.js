@@ -37,46 +37,16 @@ async function getReportPage(req, res, next) {
     //Create the title by removing underscores and capitalising the first letter of each word
     const title = type.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
 
-    let data;
-
-    switch (type) {
-        case "classes":
-            data = await prepareClassesData();
-            break;
-        case "cases":
-            data = await prepareCasesData();
-            break;
-        case "types":
-            data = await prepareTypesData();
-            break;
-        case "accounts":
-            data = await prepareActiveAccountsData();
-            break;
-        case "account_types":
-            data = await prepareAccountTypesData();
-            break;
-        case "referrals":
-            data = await prepareReferralsData();
-            break;
-        case "sales":
-            data = await prepareSalesData();
-            break;
-        case "quotes":
-            data = await prepareQuotesData();
-            break;
-        default:
-            data = {...getMockGraphData(), table: getMockSalesData()}
-    }
-
     renderAdminLayout(req, res, `reports/report`, {
         title: title,
         report: type,
-        data: {labels: data.labels, datasets: data.datasets, table: data.table},
         deviceCategory,
         deviceState,
         accountStatus,
         roleTypes,
         quoteState,
+        quoteStateToColour: quoteState.stateToColour,
+        quoteStateToString: quoteState.stateToString
     });
 }
 
@@ -132,32 +102,32 @@ async function getReportChartData(req, res, next) {
 async function getReportTableData(req, res, next) {
     const type = req.params.report_type;
 
-    let data;
+    let data = {};
 
     switch (type) {
         case "classes":
-            data = await prepareClassesTable();
+            data.table = await prepareClassesTable();
             break;
         case "cases":
-            data = await prepareCasesTable();
+            data.table = await prepareCasesTable();
             break;
         case "types":
-            data = await prepareTypesTable();
+            data.table = await prepareTypesTable();
             break;
         case "accounts":
-            data = await prepareActiveAccountsTable();
+            data.table = await prepareActiveAccountsTable();
             break;
         case "account_types":
-            data = await prepareAccountTypesTable();
+            data.table = await prepareAccountTypesTable();
             break;
         case "referrals":
-            data = await prepareReferralsTable();
+            data.table = await prepareReferralsTable();
             break;
         case "sales":
-            data = await prepareSalesTable();
+            data.table = await prepareSalesTable();
             break;
         case "quotes":
-            data = await prepareQuotesTable();
+            data.table = await prepareQuotesTable();
             break;
         default:
             return res.status(400).json({error: "Invalid report type"});
@@ -189,8 +159,15 @@ async function prepareClassesTable() {
     devices.forEach(device => {
         table.push({
             name: `${device.brand?.name ?? "Unbranded"} ${device.model?.name ?? "Unknown Model"}`,
+
             category: device.category,
+            category_string: deviceCategory.deviceCategoryToString(device.category),
+            category_colour: deviceCategory.deviceCategoryToColour(device.category),
+
             state: device.state,
+            state_string: deviceState.deviceStateToString(device.state),
+            state_colour: deviceState.deviceStateToColour(device.state),
+
             date_added: device.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
@@ -198,7 +175,9 @@ async function prepareClassesTable() {
                 hour: "numeric",
                 minute: "numeric"
             }),
-            user: device.listing_user,
+
+            user: device.listing_user?.toJSON(),
+
             device_id: device._id,
         });
     });
@@ -243,8 +222,15 @@ async function prepareCasesTable() {
     devices.forEach(device => {
         table.push({
             name: `${device.brand?.name ?? "Unbranded"} ${device.model?.name ?? "Unknown Model"}`,
+
             category: device.category,
+            category_string: deviceCategory.deviceCategoryToString(device.category),
+            category_colour: deviceCategory.deviceCategoryToColour(device.category),
+
             state: device.state,
+            state_string: deviceState.deviceStateToString(device.state),
+            state_colour: deviceState.deviceStateToColour(device.state),
+
             date_added: device.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
@@ -252,7 +238,7 @@ async function prepareCasesTable() {
                 hour: "numeric",
                 minute: "numeric"
             }),
-            user: device.listing_user,
+            user: device.listing_user?.toJSON(),
             device_id: device._id,
         });
     });
@@ -300,8 +286,15 @@ async function prepareTypesTable() {
         table.push({
             name: `${device.brand?.name ?? "Unbranded"} ${device.model?.name ?? "Unknown Model"}`,
             device_type: device.device_type?.name,
+
             category: device.category,
+            category_string: deviceCategory.deviceCategoryToString(device.category),
+            category_colour: deviceCategory.deviceCategoryToColour(device.category),
+
             state: device.state,
+            state_string: deviceState.deviceStateToString(device.state),
+            state_colour: deviceState.deviceStateToColour(device.state),
+
             date_added: device.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
@@ -394,7 +387,7 @@ async function prepareAccountTypesTable() {
             name: `${user.first_name} ${user.last_name}`,
             id: user._id,
             active: user.active,
-            role: user.role,
+            role: roleTypes.roleTypeToString(user.role),
             email: user.email,
             date_added: user.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
@@ -585,7 +578,11 @@ async function prepareReferralsTable() {
             }),
             user: referral.device?.listing_user,
             product: referral.device,
+
             state: referral.state,
+            state_string: quoteState.stateToString(referral.state),
+            state_colour: quoteState.stateToColour(referral.state),
+
             referral_amount: referral.confirmation_details?.final_price,
             provider: referral.provider?.name,
             provider_logo: referral.provider?.logo,
@@ -626,7 +623,11 @@ async function prepareQuotesTable() {
         table.push({
             name: `${quote.device?.model?.name ?? "Unknown Model"}`,
             provider: `${quote.provider?.name ?? "Unknown provider"}`,
+
             state: quote.state,
+            state_string: quoteState.stateToString(quote.state),
+            state_colour: quoteState.stateToColour(quote.state),
+
             logo: quote.provider?.logo,
             date_added: quote.createdAt?.toLocaleDateString("en-GB", {
                 day: "numeric",
