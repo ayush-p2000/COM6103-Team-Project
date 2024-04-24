@@ -1231,6 +1231,21 @@ async function updateUserDob(id, birthday) {
     return User.updateOne({_id: id}, update)
 }
 
+/**
+ * method to update the user's listed devices array to device id
+ * here $push updates the array without deleting the previous contents
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateUserListedItem(id, deviceId) {
+    const update = {
+        $push: {
+            listed_devices : deviceId
+        }
+    }
+
+    return User.updateOne({_id: id}, update)
+}
+
 
 
 module.exports = {
@@ -1303,5 +1318,6 @@ module.exports = {
     getQuotesGroupByState,
     getAllQuotes,
     updateUnknownDevices,
-    updateUserDob
+    updateUserDob,
+    updateUserListedItem
 }
