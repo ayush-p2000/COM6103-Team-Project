@@ -115,40 +115,84 @@
 
                         <div class="mb-3 row">
                             <label for="deviceType" class="col-sm-3 col-lg-2 col-form-label">Device Type</label>
-                            <div class="col-sm-5">
-                                <select class="form-select" id="deviceType" name="deviceType" disabled>
-                                    <% deviceType.forEach(device => { %>
-                                        <option <%= item.device_type && item.device_type.name === device.name ? 'selected' : '' %>
-                                                value="<%= device._id %>"><%= device.name %></option>
-                                    <% }) %>
-                                </select>
+                            <div class="col align-content-center">
+                                <span id="deviceType" class="my-auto"><%= item.device_type.name %></span>
+                                <div class="d-inline d-none modelChanges">
+                                    <i class="fa-solid fa-arrow-right px-2"></i>
+                                    <span id="newDeviceType" class="my-auto text-primary"></span>
+                                </div>
                             </div>
+
                         </div>
 
                         <!--                        Brand -->
                         <div class="mb-3 row">
                             <label for="deviceBrand" class="col-sm-3 col-lg-2 col-form-label">Brand</label>
-                            <div class="col-sm-5">
-                                <select class="form-select" id="deviceBrand" name="deviceBrand" disabled>
-                                    <% brands.forEach(brand => { %>
-                                        <option <%= item.brand.name === brand.name ? 'selected' : '' %>
-                                                value="<%= brand._id %>"><%= brand.name %></option>
-                                    <% }) %>
-                                </select>
+
+                            <div class="col align-content-center">
+                                <span id="deviceBrand" class="my-auto"><%= item.brand.name %></span>
+                                <div class="d-inline d-none modelChanges">
+                                    <i class="fa-solid fa-arrow-right px-2"></i>
+                                    <span id="newDeviceBrand" class="my-auto text-primary"></span>
+                                </div>
                             </div>
+
+
                         </div>
 
                         <!--                        Model-->
                         <div class="mb-3 row">
                             <label for="deviceModel" class="col-sm-3 col-lg-2 col-form-label">Model</label>
-                            <div class="col-sm-5">
-                                <select class="form-select" id="deviceModel"
-                                        name="deviceModel" <%= user.role >= 1 ? '' : 'disabled' %>>
 
-                                    <% models.forEach(model => { %>
-                                        <option value="<%= model._id %>" <%= item.model.name === model.name ? 'selected' : '' %> ><%= model.name %></option>
-                                    <% }) %>
-                                </select>
+                            <div class="col align-content-center">
+                                <span id="deviceModel" class="my-auto"><%= item.model.name %></span>
+                                <div class="d-inline d-none modelChanges">
+                                    <i class="fa-solid fa-arrow-right px-2"></i>
+                                    <span id="newDeviceModel" class="my-auto text-primary"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modelModal" >Change Model Information</button>
+                    <div class="modal fade" id="modelModal" tabindex="-1" aria-labelledby="modelModal" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modelModal">Change Model</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="col-12" id="selected-model-content"></div>
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="device-type-for-modal" class="col-form-label">DeviceType</label>
+                                            <select class="form-select" id="device-type-for-modal">
+                                                <% deviceTypes.forEach(function(type) { %>
+                                                    <option value="<%= type.id %>"><%= type.name %></option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="device-brand-for-modal" class="col-form-label">Brand:</label>
+                                            <select class="form-select" id="device-brand-for-modal">
+                                                <% brands.forEach(function(brand) { %>
+                                                    <option value="<%= brand.id %>"><%= brand.name %></option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="device-model-for-modal" class="col-form-label">Model Name:</label>
+                                            <select class="form-select" id="device-model-for-modal">
+
+                                            </select>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="model-submit">Change</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -166,6 +210,37 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="mb-3 row">
+                        <label for="deviceColor" class="col-sm-3 col-lg-2 col-form-label">Color</label>
+                        <div class="col-sm-5">
+                            <select class="form-select" id="deviceColor">
+                                <% colors.forEach(color => { %>
+                                    <option value="<%= color %>" <% if (item.color === color) { %> selected <% } %>><%= color %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="deviceCapacity" class="col-sm-3 col-lg-2 col-form-label">Capacity</label>
+                        <div class="col-sm-5">
+                            <select class="form-select" id="deviceCapacity">
+                                <% capacities.forEach(capacity => { %>
+                                    <option value="<%= capacity %>" <% if (item.capacity === capacity) { %> selected <% } %>><%= capacity %></option>
+                                <% }); %>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="deviceYear" class="col-form-label fw-bold">It has been in use for how many years?</label>
+                        <div>
+                            <input type="number" class="form-control" id="deviceYear" name="deviceYear" min="0"
+                                   value="<%= item.years_used %>" >
+                        </div>
+                    </div>
+
 
                     <div class="mb-3 row">
                         <h5 class="fw-bold mb-4">Specification: </h5>
