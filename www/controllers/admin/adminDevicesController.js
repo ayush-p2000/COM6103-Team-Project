@@ -28,17 +28,20 @@ const {
     deleteType,
     deleteModel,
     deleteBrand,
-    getAllRetrievalDevices
+    getAllRetrievalDevices,
+    updateUnknownDevices
 } = require("../../model/mongodb")
 
 const dataService = require("../../model/enum/dataService")
 const deviceCategory = require("../../model/enum/deviceCategory")
 const deviceState = require("../../model/enum/deviceState")
+const deviceColor = require("../../model/enum/deviceColors")
+const deviceCapacity = require("../../model/enum/deviceCapacity")
 
 const historyType = require("../../model/enum/historyType");
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const roleTypes = require("../../model/enum/roleTypes");
-const {handleMissingModels} = require("../../util/Devices/devices");
+const {handleMissingModel,handleMissingModels} = require("../../util/Devices/devices");
 
 /**
  * Get All Device with Specific Field Showing and Support Unknown Devices
@@ -141,6 +144,9 @@ async function postNewModel(req, res, next) {
         }
 
         const model = await addModel(req.body, properties, category)
+
+        const updatedUnknownDevices = await updateUnknownDevices(model.deviceType, model.brand, model._id)
+
         res.status(200).send("successfully")
     } catch (e) {
         console.log(e)
@@ -261,12 +267,12 @@ const deleteDeviceType = async (req,res,next) => {
 
 /**
  * Get method to retrieve the details of the device from the staff side, which is then used to update the details of the device
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 async function getUserDeviceDetailsPage(req, res, next) {
     try {
         const item = await getItemDetail(req.params.id)
-        const deviceType = await getAllDeviceType()
+        const deviceTypes = await getAllDeviceType()
         const brands = await getAllBrand()
         var models = []
         var specs = []
@@ -279,32 +285,16 @@ async function getUserDeviceDetailsPage(req, res, next) {
             } else {
                 specs = []
             }
-        } else {
-            var type = ""
-            var brand = ""
-            var model = ""
-            const customModel = await getUnknownDeviceHistoryByDevice(item._id)
-            customModel[0].data.forEach(data => {
-                if (data.name === "device_type") {
-                    type = data.value
-                } else if (data.name === "brand") {
-                    brand = data.value
-                } else if (data.name === "model") {
-                    model = data.value
-                }
-            });
-            models = []
-            item.device_type = {name: deviceType}
-            item.brand = {name: brand}
-            item.model = {name: model}
         }
+
+        await handleMissingModel(item);
 
         //Get the review history of the device
         const reviewHistory = await getReviewHistory(item._id);
 
         renderAdminLayout(req, res, "edit_details", {
             item,
-            deviceType,
+            deviceTypes,
             brands,
             models,
             specs,
@@ -313,7 +303,9 @@ async function getUserDeviceDetailsPage(req, res, next) {
             historyType,
             dataService,
             deviceCategory,
-            deviceState
+            deviceState,
+            colors: deviceColor,
+            capacities: deviceCapacity
         }, "User Device Details page")
 
     } catch (err) {
@@ -341,9 +333,8 @@ async function getModelsFromTypeAndBrand(req, res) {
 
 /**
  * Update method to update the details of the device from the staff side, which is used when staff wants to change the device visibility, state etc.
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
-
 const updateUserDeviceDetailsPage = async (req, res) => {
     try {
         const item_id = req.params.id;

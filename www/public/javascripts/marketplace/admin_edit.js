@@ -1,8 +1,23 @@
 document.addEventListener('DOMContentLoaded', function () {
+    var isUpdatedModel = false
 
-    const deviceType = document.getElementById('deviceType')
-    const deviceBrand = document.getElementById('deviceBrand')
-    const deviceModel = document.getElementById('deviceModel')
+    const deviceType = document.getElementById('deviceType');
+    const deviceBrand = document.getElementById('deviceBrand');
+    const deviceModel = document.getElementById('deviceModel');
+
+    const deviceTypeElement = document.getElementById('device-type-for-modal');
+    const deviceBrandElement = document.getElementById('device-brand-for-modal');
+    const deviceModelElement = document.getElementById('device-model-for-modal');
+
+    const newDeviceType = document.getElementById('newDeviceType');
+    const newDeviceBrand = document.getElementById('newDeviceBrand');
+    const newDeviceModel = document.getElementById('newDeviceModel');
+
+    const modelChanges = document.getElementsByClassName('modelChanges');
+
+    const modalSubmit = document.getElementById('model-submit');
+
+
     const deviceCategory = document.getElementById('deviceCategory');
     const conditionYes = document.getElementById('conditionYes');
     const conditionNo = document.getElementById('conditionNo');
@@ -10,8 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const saveBtn = document.getElementById('saveBtn')
     const additionalInfo = document.getElementById('additionalInfo')
 
-    //const deviceState = document.getElementById('deviceState')
-    //const deviceVisible = document.getElementById('visibleYes')
+    const deviceColor = document.getElementById('deviceColor')
+    const deviceCapacity = document.getElementById('deviceCapacity')
+    const deviceYear = document.getElementById('deviceYear')
 
 
     const displayRadios = document.getElementsByName('displayRadio')
@@ -21,6 +37,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const cameraRadios = document.getElementsByName('cameraRadio')
     const btnRadios = document.getElementsByName('btnRadio')
     const functionalityRadios = document.getElementsByName('functionalityRadio')
+
+
+
+    requestModels()
 
     saveBtn.addEventListener('click', () => {
         postUpdatedDataToServer()
@@ -39,6 +59,102 @@ document.addEventListener('DOMContentLoaded', function () {
             setConditionValues("1");
         }
     });
+
+    /**
+     * Handling Device type Brand and Model update when changed
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
+    deviceTypeElement.addEventListener("change", ()=> {requestModels()});
+    deviceBrandElement.addEventListener("change", ()=> {requestModels()});
+    deviceModelElement.addEventListener("change", ()=> {updateModelPreview()});
+
+    modalSubmit.addEventListener("click", ()=> {
+        newDeviceType.innerHTML = deviceTypeElement.options[deviceTypeElement.selectedIndex].text
+        newDeviceBrand.innerHTML = deviceBrandElement.options[deviceBrandElement.selectedIndex].text
+        newDeviceModel.innerHTML = deviceModelElement.options[deviceModelElement.selectedIndex].text
+
+        for (var i = 0; i < modelChanges.length; i++) {
+            modelChanges[i].classList.remove('d-none');
+        }
+
+        deviceType.classList.add("text-decoration-line-through")
+        deviceBrand.classList.add("text-decoration-line-through")
+        deviceModel.classList.add("text-decoration-line-through")
+
+        isUpdatedModel = true
+    });
+
+    /**
+     * get Models from server when Type or Brand change
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
+    function requestModels() {
+        var selectedDeviceType = deviceTypeElement.value
+        var selectedDeviceBrand = deviceBrandElement.value;
+
+        const params = new URLSearchParams();
+        params.append('brand', selectedDeviceBrand);
+        params.append('deviceType', selectedDeviceType);
+        const url = '/getModelByBrandAndType?' + params.toString();
+
+        // Axios to get model base on selected properties
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                models = data
+                // clear model data
+                deviceModelElement.innerHTML = '';
+
+                data.forEach(model => {
+                    var templateString = `<option value="${model._id}">${model.name}</option>`;
+                    deviceModelElement.innerHTML += templateString;
+                });
+                updateModelPreview()
+            })
+            .catch(error => {
+                hideModelPreview()
+                console.error(error);
+            });
+    }
+
+    function hideModelPreview(){
+        document.getElementById('selected-model-content').style.display = "none"
+    }
+
+    function showModelPreview(){
+        document.getElementById('selected-model-content').style.display = "block"
+    }
+
+    /**
+     *  Update Model Preview when change selected model
+     *  @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
+    function updateModelPreview(){
+        showModelPreview()
+        var selectedIndex = deviceModelElement.selectedIndex;
+        var template = `
+            <div class="card p-3 ">
+                <div class="row" id="selected-model-content">
+                    <div class="col-3">
+                        <img src="${models[selectedIndex].properties[0].value}" class="img-fluid rounded-start" >
+                    </div>
+                    <div class="col-9">
+                        <div class="card-body p-0">
+                            <h5 class="card-title">${models[selectedIndex].name}</h5>
+                            <p class="card-text m-0"><small>Device Type:</small> ${deviceTypeElement.options[deviceTypeElement.selectedIndex].innerText}</p>
+                            <p class="card-text m-0"><small>Brand:</small> ${deviceBrandElement.options[deviceBrandElement.selectedIndex].innerText}</p>
+                            <p class="card-text"><small class="text-muted">Release at ${models[selectedIndex].properties[2].value}</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>`
+        document.getElementById('selected-model-content').innerHTML = template;
+    }
 
     /**
      * Function to set All the Radio to a Value
@@ -99,20 +215,25 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
 
         var formData = new FormData();
-        formData.append('model', deviceModel.value);
+        formData.append('color', deviceColor.value);
+        formData.append('capacity', deviceCapacity.value);
+        formData.append('years_used', deviceYear.value);
+
+        if (isUpdatedModel){
+            formData.append('device_type', deviceTypeElement.value);
+            formData.append('brand', deviceBrandElement.value);
+            formData.append('model', deviceModelElement.value);
+        }
+
         formData.append('details', JSON.stringify(details));
         formData.append('category', deviceCategory.value);
         formData.append('good_condition', conditionYes.checked);
-        //formData.append('state', deviceState.value); // default to review when posted
         formData.append('additional_details', additionalInfo.value !== "" ? additionalInfo.value : "Not Provided");
-        //formData.append('visible', deviceVisible.checked);
 
 
         var url = window.location.href
         var parts = url.split('/')
         var id = parts[parts.length - 1]
-
-        console.log(id)
 
         fetch(`/admin/devices/${id}`, {
             method: 'POST',

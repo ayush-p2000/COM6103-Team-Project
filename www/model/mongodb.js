@@ -292,7 +292,7 @@ const listDevice = async (deviceData, photos, user) => {
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 const getAllUnknownDevices = async () => {
-    return History.find({history_type: UNKNOWN_DEVICE});
+    return History.find({history_type: UNKNOWN_DEVICE}).populate("device");
 }
 
 const addHistory = async (device, history_type, data, actioned_by) => {
@@ -422,6 +422,53 @@ const addModel = async (modelData, properties, category) => {
 }
 
 /**
+ * Update Unknown Devices if there is a custom model match the brand and model name
+ * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+ */
+const updateUnknownDevices = async (type,brand,model) => {
+    try{
+        const modelData = await Model.findById(model).populate("brand")
+        const modelName = modelData.name
+        const brandName = modelData.brand.name
+        const modelCategory = modelData.category
+
+        var unknownDevices = await History.find({history_type: UNKNOWN_DEVICE}).populate("device")
+
+        for (let device of unknownDevices) {
+            if (device.device.category === UNKNOWN){
+                var deviceBrand = "";
+                var deviceModel = "";
+
+                for (let key in device.data) {
+                    if (device.data[key].name === "brand") {
+                        deviceBrand = device.data[key].value;
+                    } else if (device.data[key].name === "model") {
+                        deviceModel = device.data[key].value;
+                    }
+                }
+                const filter = {_id: device.device._id}
+
+                if (brandName.replace(/[^\w]/g, '').toLowerCase() === deviceBrand.replace(/[^\w]/g, '').toLowerCase()
+                    && modelName.replace(/[^\w]/g, '').toLowerCase() === deviceModel.replace(/[^\w]/g, '').toLowerCase()){
+                    const device = {
+                        $set: {
+                            model: model,
+                            brand: brand,
+                            device_type: type,
+                            category: modelCategory
+                        }
+                    }
+                    const updatedDevice = await Device.updateOne(filter, device)
+                }
+            }
+        }
+    }catch (e) {
+        console.log(e)
+    }
+
+}
+
+/**
  * Delete model
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
@@ -538,17 +585,29 @@ async function getAllBrands() {
 
 /**
  * Update method to update the details of the device from the staff side to the mongodb database
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 async function updateDeviceDetails(id, deviceDetails) {
     try {
-        console.log(deviceDetails);
+
+        var category = deviceDetails.category
+
+        if (typeof deviceDetails.model !== 'undefined') {
+            var modelCategory = await Model.findOne({_id: deviceDetails.model})
+            category = modelCategory.category
+        }
+
         const filter = {_id: id}
         const device = {
             $set: {
+                color: deviceDetails.color,
+                capacity: deviceDetails.capacity,
+                years_used: deviceDetails.years_used,
                 model: deviceDetails.model,
+                brand: deviceDetails.brand,
+                device_type: deviceDetails.device_type,
                 details: JSON.parse(deviceDetails.details),
-                category: deviceDetails.category,
+                category: category,
                 good_condition: deviceDetails.good_condition,
                 state: deviceDetails.state,
                 additional_details: deviceDetails.additional_details,
@@ -1243,5 +1302,6 @@ module.exports = {
     getTransactionById,
     getQuotesGroupByState,
     getAllQuotes,
+    updateUnknownDevices,
     updateUserDob
 }
