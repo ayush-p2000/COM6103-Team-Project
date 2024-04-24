@@ -54,7 +54,10 @@
                                     <span class="badge <%= (device.visible ? "bg-success" : "bg-danger") %>"><%= (device.visible) ? "Visible" : "Hidden" %></span>
                                 </td>
                                 <td>
-                                    <a href="/admin/accounts/<%= device.listing_user?._id %>"> <%= device.listing_user?._id ?? "Unknown User" %> </a>
+                                    <a href="/admin/accounts/<%= device.listing_user?._id %>" class="btn btn-info btn-sm w-100">
+                                                <%= `${device.listing_user?.first_name ?? "Unknown"} ${device.listing_user?.last_name ?? "User"}` ?? "Unknown User" %>
+                                                <i class="fa-solid fa-arrow-right ms-1"></i>
+                                            </a>
                                 </td>
                                 <td><a href="/admin/devices/<%= device._id %>" class="btn btn-primary">View</a></td>
                             </tr>

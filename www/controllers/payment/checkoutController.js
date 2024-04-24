@@ -38,7 +38,6 @@ async function getCheckout(req, res, next) {
             case 'payment_retrieval':
                 product = 'Data Retrieval'
                 transaction = await getTransactionByDevice(id)
-                await updateDeviceState(id, deviceState.DATA_RECOVERY)
                 if (!transaction) {
                     transactionDetails = {
                         deviceId: id,
@@ -136,11 +135,18 @@ async function getCheckoutCompleted(req, res, next) {
         state: transactionState['PAYMENT_RECEIVED'],
         paymentMethod: paymentMethod[req.query.method.toUpperCase()]
     }
+
+    const retrieval = await getRetrieval(id)
+    const device = await getItemDetail(retrieval.device._id)
+
+    if (type === 'payment_retrieval') {
+        await updateDeviceState(device._id, deviceState.DATA_RECOVERY)
+    }
+
     if (type === 'retrieval_extension') {
         product = 'Data Retrieval Extension'
         transactionDetails.extension = extension
 
-        const retrieval = await getRetrieval(id)
         retrieval.retrieval_state = retrievalState.AVAILABLE_FOR_RETREIVAL;
         await retrieval.save()
     }
