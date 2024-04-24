@@ -25,10 +25,13 @@ document.addEventListener("DOMContentLoaded", function () {
     var url = window.location.href
     var parts = url.split('/')
     var id = parts[parts.length - 1]
+    var quoteId
 
     acceptButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
             form = new FormData()
+            quoteId = btn.dataset.quoteId
+            form.append('id', quoteId)
             form.append('state', 'ACCEPTED')
             updateQuote()
             //Find the quote state element with data-quote-id equal to the data-quote-id of the button clicked from the quoteStates NodeList
@@ -40,6 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
     rejectButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
             form = new FormData()
+            quoteId = btn.dataset.quoteId
+            form.append('id', quoteId)
             form.append('state', 'REJECTED')
             updateQuote()
             //Find the quote state element with data-quote-id equal to the data-quote-id of the button clicked from the quoteStates NodeList
@@ -51,6 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
     starButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
             form = new FormData()
+            quoteId = btn.dataset.quoteId
+            form.append('id', quoteId)
             form.append('state', 'SAVED')
             updateQuote()
             //Find the quote state element with data-quote-id equal to the data-quote-id of the button clicked from the quoteStates NodeList

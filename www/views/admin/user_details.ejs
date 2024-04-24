@@ -34,7 +34,19 @@
                                 Basic details</h4>
                         </div>
 
-                        <div class="row">
+                        <div>
+                <% if (hasMessages) { %>
+                    <section>
+                        <ol class="mb-0 list-group list-group-numbered m-1">
+                            <% messages.forEach(function(message) { %>
+                                <li class="border border-danger border-1 d-flex justify-content-center bg-danger-subtle pt-2 pb-2 rounded-1 mb-1"><%= message %></li>
+                            <% }); %>
+                        </ol>
+
+                    </section>
+                <% } %>
+            </div>
+        <div class="row">
                             <div class="col-md-12">
                                 <div class="d-flex justify-content-center mb-3">
                                     <img src="<%= userDetails.avatar %>" class="w-100 mx-auto rounded-circle"
@@ -84,7 +96,7 @@
                                             <label for="date_of_birth"></label><input name="date_of_birth"
                                                                                       id="date_of_birth"
                                                                                       class="form-control"
-                                                                                      value="<%= dob %>"/>
+                                                                                      value="<%= dob %>" disabled/>
                                             <label for="date_of_birth" class="d-inline-block w-25">Date of
                                                 Birth: </label>
                                         </div>

@@ -34,6 +34,7 @@ const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const retrievalState = require("../../model/enum/retrievalState");
 const historyType = require("../../model/enum/historyType");
 const roleTypes = require("../../model/enum/roleTypes");
+const {handleMissingModels} = require("../../util/Devices/devices");
 
 /**
  * Handling Request to post item base on the info in request body
@@ -77,34 +78,24 @@ async function getListItem(req, res) {
         try {
             let deviceTypes = await getAllDeviceType();
             let brands = await getAllBrand();
-
             renderUserLayout(req, res, '../marketplace/list_item', {
                 auth: req.isLoggedIn, user: req.user, deviceTypes: deviceTypes, brands: brands, colors: deviceColors, capacities: deviceCapacity
             })
 
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     } else {
         try {
             let device = await getDevice(id);
             if (device.model == null) {
-                let customModel = await getUnknownDeviceHistoryByDevice(id)
-                customModel[0].data.forEach(data => {
-                    if (data.name === "device_type") {
-                        device.device_type = {name: data.value}
-                    } else if (data.name === "brand") {
-                        device.brand = {name: data.value}
-                    } else if (data.name === "model") {
-                        device.model = {name: data.value, properties: []}
-                    }
-                });
+                await handleMissingModels([device]);
             }
             renderUserLayout(req, res, '../marketplace/edit_item', {
                 auth: req.isLoggedIn, user: req.user, device: device, colors: deviceColors, capacities: deviceCapacity
             })
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     }
 }
@@ -139,6 +130,16 @@ async function getItemDetails(req, res, next) {
             await item.save()
         }
 
+        let hasApprovedQuote = false
+        let approvedQuote
+
+        quotes.forEach(quote => {
+            if (quote.state === quoteState.ACCEPTED) {
+                hasApprovedQuote = true
+                approvedQuote = quote
+            }
+        })
+
         if (item.model != null) {
             const specProp = item.model.properties.find(property => property.name === 'specifications')?.value;
             if (specProp != null) {
@@ -147,22 +148,7 @@ async function getItemDetails(req, res, next) {
                 specs = []
             }
         } else {
-            var deviceType = ""
-            var brand = ""
-            var model = ""
-            const customModel = await getUnknownDeviceHistoryByDevice(item._id)
-            customModel[0].data.forEach(data => {
-                if (data.name === "device_type") {
-                    deviceType = data.value
-                } else if (data.name === "brand") {
-                    brand = data.value
-                } else if (data.name === "model") {
-                    model = data.value
-                }
-            });
-            item.device_type = {name: deviceType}
-            item.brand = {name: brand}
-            item.model = {name: model}
+            await handleMissingModels(item)
         }
 
         // Add a QR code to each quote
@@ -180,11 +166,8 @@ async function getItemDetails(req, res, next) {
             retrievalData = await getRetrievalObjectByDeviceId(item._id);
         }
         renderUserLayout(req, res, '../marketplace/item_details', {
-            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, retrievalData, retrievalState,deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes
+            item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, retrievalData, retrievalState,deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes, approvedQuote, hasApprovedQuote
         })
-        // res.render('marketplace/item_details', {
-        //     item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user,
-        // })
     } catch (e) {
         console.log(e)
         res.status(500);
@@ -193,13 +176,34 @@ async function getItemDetails(req, res, next) {
 
 }
 
+
+
+/**
+ * Update quote state method to update if it is starred, accepted or rejected
+ * Also checks if the quote is accepted then it'll update other quote states to rejected
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang
+ */
 async function postUpdateQuote(req, res) {
     try {
         const state = req.body.state
         const value = quoteState[state]
         const device_state = deviceState.HAS_QUOTE
-        const updated_quote = await updateQuoteState(req.params.id, value)
+        const id = req.body.id
+        const updateQuote = await updateQuoteState(id, value)
+
+        // Check if quote is accepted then update other device quotes to rejected
+        if (value === quoteState.ACCEPTED) {
+            const quotes = await getQuotes(req.params.id)
+            for (const quote of quotes) {
+                if(quote._id.toString() !== id) {
+                    await updateQuoteState(quote._id, quoteState.REJECTED)
+                }
+            }
+        }
         await updateDeviceState(req.params.id, device_state)
+
+        res.status(200).send(req.params.id)
+
     } catch (err) {
         console.log(err)
     }

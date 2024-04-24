@@ -24,6 +24,10 @@ const deviceState = {
     REJECTED,
 
     deviceStateToColour: function (deviceState, prefix = "") {
+        if (typeof prefix !== 'string') {
+            prefix = "";
+        }
+
         switch (deviceState) {
             case DRAFT:
                 return prefix + "secondary";
@@ -98,7 +102,7 @@ const deviceState = {
             case AUCTION:
                 return border ? 'rgb(255, 165, 0)' : 'rgba(255, 165, 0, 0.2)';
             case DATA_RECOVERY:
-                return border ? 'rgb(13,202,240)' : 'rgba(13,202,240, 0.2)';
+                return border ? 'rgb(13, 202, 240)' : 'rgba(13, 202, 240, 0.2)';
             case CLOSED:
                 return border ? 'rgb(128, 128, 128)' : 'rgba(128, 128, 128, 0.2)';
             case HIDDEN:

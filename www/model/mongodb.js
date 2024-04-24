@@ -108,7 +108,7 @@ async function addQuote(quoteDetails) {
  */
 async function updateQuoteState(id, state) {
     try {
-        return await Quote.updateOne({device: id}, {state: state})
+        return await Quote.updateOne({_id: id}, {state: state})
     } catch (err) {
         console.log(err)
     }
@@ -1159,6 +1159,20 @@ async function getTransactionById(id) {
     return Retrieval.findOne({_id: id});
 }
 
+/**
+ * method to update the user's dob in the database
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateUserDob(id, birthday) {
+    const update = {
+        $set: {
+            date_of_birth: birthday
+        }
+    }
+    return User.updateOne({_id: id}, update)
+}
+
+
 
 module.exports = {
     getAllUsers,
@@ -1228,5 +1242,6 @@ module.exports = {
     getTransactionByDevice,
     getTransactionById,
     getQuotesGroupByState,
-    getAllQuotes
+    getAllQuotes,
+    updateUserDob
 }
