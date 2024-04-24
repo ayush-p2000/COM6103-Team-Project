@@ -404,33 +404,36 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <div class="col-md-3">
-                                                    <div class="card h-100">
-                                                        <div class="card-body">
-                                                            <div class="row justify-content-center align-items-center">
-                                                                <div class="col-12">
-                                                                    <p class="fs-6 fst-italic text-center">Click the QR code
-                                                                        to
-                                                                        see a larger version</p>
-                                                                </div>
-                                                            </div>
+                                                <% if(quote.state !== quoteState.REJECTED) { %>
 
-                                                            <div class="row justify-content-between align-items-center">
-                                                                <div class="col-9 d-flex justify-content-center">
-                                                                    <a onclick="showQRModal('<%= quote._id %>')">
-                                                                        <img class="img-thumbnail h-100 hover-shadow mx-auto"
-                                                                             src="<%= quote.qr_code %>" alt="Quote QR Code">
-                                                                    </a>
+                                                        <div class="card h-100">
+                                                            <div class="card-body">
+                                                                <div class="row justify-content-center align-items-center">
+                                                                    <div class="col-12">
+                                                                        <p class="fs-6 fst-italic text-center">Click the QR code
+                                                                            to
+                                                                            see a larger version</p>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-2 d-flex justify-content-center align-content-center">
-                                                                    <a href="/qr/<%= quote._id %>" class="hover-grow">
-                                                                        <i class="fa-solid fa-chevron-right fa-5x my-auto"></i>
-                                                                    </a>
+
+                                                                <div class="row justify-content-between align-items-center">
+                                                                    <div class="col-9 d-flex justify-content-center">
+                                                                        <a onclick="showQRModal('<%= quote._id %>')">
+                                                                            <img class="img-thumbnail h-100 hover-shadow mx-auto"
+                                                                                 src="<%= quote.qr_code %>" alt="Quote QR Code">
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="col-2 d-flex justify-content-center align-content-center">
+                                                                        <a href="/qr/<%= quote._id %>" class="hover-grow">
+                                                                            <i class="fa-solid fa-chevron-right fa-5x my-auto"></i>
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+
+                                                <% } %>
                                                 </div>
                                             </div>
                                         </div>
