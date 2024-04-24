@@ -34,5 +34,6 @@ async function handleMissingModels(devices) {
 }
 
 module.exports = {
+    handleMissingModel,
     handleMissingModels,
 }

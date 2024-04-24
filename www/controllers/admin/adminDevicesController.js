@@ -41,7 +41,7 @@ const deviceCapacity = require("../../model/enum/deviceCapacity")
 const historyType = require("../../model/enum/historyType");
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const roleTypes = require("../../model/enum/roleTypes");
-const {handleMissingModels} = require("../../util/Devices/devices");
+const {handleMissingModel,handleMissingModels} = require("../../util/Devices/devices");
 
 /**
  * Get All Device with Specific Field Showing and Support Unknown Devices
@@ -285,25 +285,9 @@ async function getUserDeviceDetailsPage(req, res, next) {
             } else {
                 specs = []
             }
-        } else {
-            var type = ""
-            var brand = ""
-            var model = ""
-            const customModel = await getUnknownDeviceHistoryByDevice(item._id)
-            customModel[0].data.forEach(data => {
-                if (data.name === "device_type") {
-                    type = data.value
-                } else if (data.name === "brand") {
-                    brand = data.value
-                } else if (data.name === "model") {
-                    model = data.value
-                }
-            });
-            models = []
-            item.device_type = {name: type}
-            item.brand = {name: brand}
-            item.model = {name: model}
         }
+
+        await handleMissingModel(item);
 
         //Get the review history of the device
         const reviewHistory = await getReviewHistory(item._id);
