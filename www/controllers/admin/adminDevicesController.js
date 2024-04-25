@@ -4,7 +4,10 @@
 
 const gsmarena = require('gsmarena-api');
 const {get} = require("axios");
-const {renderAdminLayout, renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
+const {
+    renderAdminLayout,
+    renderAdminLayoutPlaceholder
+} = require("../../util/layout/layoutUtils");
 const {
     getItemDetail,
     getAllDeviceType,
@@ -16,7 +19,9 @@ const {
     addBrand,
     addModel,
     getUnknownDeviceHistoryByDevice,
-    getAllDevices, addHistory, getReviewHistory,
+    getAllDevices,
+    addHistory,
+    getReviewHistory,
     getAllModels,
     getBrandById,
     getDeviceTypeById,
@@ -42,7 +47,10 @@ const deviceCapacity = require("../../model/enum/deviceCapacity")
 const historyType = require("../../model/enum/historyType");
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const roleTypes = require("../../model/enum/roleTypes");
-const {handleMissingModel,handleMissingModels} = require("../../util/Devices/devices");
+const {
+    handleMissingModel,
+    handleMissingModels
+} = require("../../util/Devices/devices");
 
 /**
  * Get All Device with Specific Field Showing and Support Unknown Devices
@@ -51,7 +59,11 @@ const {handleMissingModel,handleMissingModels} = require("../../util/Devices/dev
 async function getDevicesPage(req, res, next) {
     const devices = await getAllDevices();
     await handleMissingModels(devices);
-    renderAdminLayout(req, res, "devices", { devices: devices, deviceState, deviceCategory });
+    renderAdminLayout(req, res, "devices", {
+        devices: devices,
+        deviceState,
+        deviceCategory
+    });
 }
 
 /**
@@ -64,7 +76,11 @@ async function getFlaggedDevicesPage(req, res, next) {
         const deviceTypes = await getAllDeviceType()
         const brands = await getAllBrand()
 
-        renderAdminLayout(req, res, "unknown_devices", {devices, deviceTypes, brands});
+        renderAdminLayout(req, res, "unknown_devices", {
+            devices,
+            deviceTypes,
+            brands
+        });
     } catch (e) {
         console.log(e)
         res.status(500);
@@ -78,7 +94,13 @@ async function getRetrievalDevicesPage(req, res, next) {
         const deviceTypes = await getAllDeviceType()
         const brands = await getAllBrand()
 
-        renderAdminLayout(req, res, "retrieval_devices", {devices,deviceTypes,brands, deviceCategory, deviceState});
+        renderAdminLayout(req, res, "retrieval_devices", {
+            devices,
+            deviceTypes,
+            brands,
+            deviceCategory,
+            deviceState
+        });
     } catch (e) {
         console.log(e)
         res.status(500);
@@ -128,9 +150,18 @@ async function postNewModel(req, res, next) {
             const devicesDetail = await get(`https://phone-specs-clzpu7gyh-azharimm.vercel.app/${slug}`)
             if (devicesDetail.data) {
                 var released = parseInt(devicesDetail.data.data.release_date.match(/\b\d+\b/)[0])
-                properties.push({name: 'picture', value: devicesDetail.data.data.thumbnail})
-                properties.push({name: "specifications", value: JSON.stringify(devicesDetail.data.data.specifications)})
-                properties.push({name: "released", value: released})
+                properties.push({
+                    name: 'picture',
+                    value: devicesDetail.data.data.thumbnail
+                })
+                properties.push({
+                    name: "specifications",
+                    value: JSON.stringify(devicesDetail.data.data.specifications)
+                })
+                properties.push({
+                    name: "released",
+                    value: released
+                })
                 //Greater than 10 is 2，5-10 is 1, 0-5 is 0
                 const currentDate = new Date();
                 const currentYear = currentDate.getFullYear()
@@ -159,7 +190,12 @@ async function getDeviceTypePage(req, res, next) {
     const deviceTypes = await getAllDeviceType()
     const brands = await getAllBrand()
     const models = subpage === "models" ? await getAllModelsTableData() : [];
-    renderAdminLayoutPlaceholder(req, res, "device_types", {brands,deviceTypes,subpage,models}, null)
+    renderAdminLayoutPlaceholder(req, res, "device_types", {
+        brands,
+        deviceTypes,
+        subpage,
+        models
+    }, null)
 }
 
 /**
@@ -175,7 +211,7 @@ async function getDeviceTypeDetailsPage(req, res, next) {
     let deviceTypes = []
     let typeModels = []
     try {
-        switch (subpage){
+        switch (subpage) {
             case "brands":
                 item = await getBrandById(id);
                 break;
@@ -186,27 +222,34 @@ async function getDeviceTypeDetailsPage(req, res, next) {
                 break;
             case "device-types":
                 item = await getDeviceTypeById(id)
-                typeModels = await getAllModelsOfType(item.id)
+                typeModels = await getAllModelsOfType(item._id)
                 break;
             default:
                 res.redirect("/admin/types")
         }
-    }catch (err){
+    } catch (err) {
         res.status(500)
         console.log(err)
         next(err)
     }
 
 // Make subpage singular form
-    const itemType = subpage.slice(0,-1)
+    const itemType = subpage.slice(0, -1)
 
-    renderAdminLayoutPlaceholder(req,res, "device_type_details", {item, itemType, brands, deviceTypes, typeModels}, null)
+    renderAdminLayoutPlaceholder(req, res, "device_type_details", {
+        item,
+        itemType,
+        brands,
+        deviceTypes,
+        typeModels
+    }, null)
 }
+
 /**
  * Update Device Type
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
-const updateDeviceType = async (req,res,next) => {
+const updateDeviceType = async (req, res, next) => {
     const id = req.params.id
     const subpage = req.params.subpage
     if (req.session.messages.length > 0) {
@@ -214,7 +257,7 @@ const updateDeviceType = async (req,res,next) => {
     }
 
     try {
-        switch (subpage){
+        switch (subpage) {
             case "brands":
                 await updateBrandDetails(id, req.body.name)
                 break;
@@ -227,7 +270,7 @@ const updateDeviceType = async (req,res,next) => {
             default:
                 res.redirect("/admin/types")
         }
-    }catch(err){
+    } catch (err) {
         console.log("here")
 
         res.status(500)
@@ -241,11 +284,11 @@ const updateDeviceType = async (req,res,next) => {
  * Delete Device Type
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
-const deleteDeviceType = async (req,res,next) => {
+const deleteDeviceType = async (req, res, next) => {
     const id = req.params.id
     const subpage = req.params.subpage
     try {
-        switch (subpage){
+        switch (subpage) {
             case "brands":
                 await deleteBrand(id)
                 break;
@@ -258,7 +301,7 @@ const deleteDeviceType = async (req,res,next) => {
             default:
                 res.redirect("/admin/types")
         }
-    }catch (err){
+    } catch (err) {
         res.status(500)
         console.log(err)
         next(err)
@@ -267,6 +310,7 @@ const deleteDeviceType = async (req,res,next) => {
     res.redirect(`/admin/types/${subpage}`)
 
 }
+
 /**
  * Get method to retrieve the details of the device from the staff side, which is then used to update the details of the device
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
@@ -294,6 +338,8 @@ async function getUserDeviceDetailsPage(req, res, next) {
         //Get the review history of the device
         const reviewHistory = await getReviewHistory(item._id);
 
+        const visibilityVisible = (item.state !== deviceState.REJECTED && item.state !== deviceState.RECYCLED && item.state !== deviceState.IN_REVIEW && item.state !== deviceState.DRAFT && item.state !== deviceState.SOLD && item.state !== deviceState.DATA_RECOVERY);
+
         renderAdminLayout(req, res, "edit_details", {
             item,
             deviceTypes,
@@ -307,7 +353,8 @@ async function getUserDeviceDetailsPage(req, res, next) {
             deviceCategory,
             deviceState,
             colors: deviceColor,
-            capacities: deviceCapacity
+            capacities: deviceCapacity,
+            visibilityVisible
         }, "User Device Details page")
 
     } catch (err) {
@@ -323,7 +370,10 @@ async function getUserDeviceDetailsPage(req, res, next) {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getModelsFromTypeAndBrand(req, res) {
-    const {deviceType, deviceBrand} = req.body
+    const {
+        deviceType,
+        deviceBrand
+    } = req.body
     try {
         const models = await getModels(deviceType, deviceBrand)
         res.json({models})
@@ -358,6 +408,8 @@ const postDevicePromotion = async (req, res) => {
             item.state = newValue;
 
             if (newValue === deviceState.REJECTED) {
+                item.visible = false;
+
                 const historyObject = {
                     device: item._id,
                     history_type: historyType.REVIEW_REJECTED,
@@ -366,6 +418,8 @@ const postDevicePromotion = async (req, res) => {
                 };
                 await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
             } else if (newValue === deviceState.LISTED) {
+                item.visible = true;
+
                 const historyObject = {
                     device: item._id,
                     history_type: historyType.ITEM_APPROVED,
@@ -386,6 +440,8 @@ const postDevicePromotion = async (req, res) => {
                     await addHistory(newHistoryObject.device, newHistoryObject.history_type, newHistoryObject.data, newHistoryObject.actioned_by);
                 }
             } else if (newValue === deviceState.HIDDEN) {
+                item.visible = false;
+
                 const historyObject = {
                     device: item._id,
                     history_type: historyType.ITEM_HIDDEN,
@@ -416,6 +472,8 @@ const postDeviceDemotion = async (req, res) => {
             item.state = newValue;
 
             if (newValue === deviceState.REJECTED) {
+                item.visible = false;
+
                 const historyObject = {
                     device: item._id,
                     history_type: historyType.REVIEW_REJECTED,
@@ -423,28 +481,31 @@ const postDeviceDemotion = async (req, res) => {
                     actioned_by: req.user.id
                 };
                 await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
-            } else if (newValue === deviceState.LISTED ) {
-                    item.visible = true;
-                    const historyObject = {
+            } else if (newValue === deviceState.LISTED) {
+                item.visible = true;
+
+                const historyObject = {
+                    device: item._id,
+                    history_type: historyType.ITEM_APPROVED,
+                    data: [],
+                    actioned_by: req.user.id
+                };
+                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+
+                const reviewHistory = await getReviewHistory(item._id);
+                if (reviewHistory.length > 0 && reviewHistory[0]?.history_type === historyType.REVIEW_REQUESTED || reviewHistory[0]?.history_type === historyType.REVIEW_REJECTED) {
+                    //Add another history item approving the review
+                    const newHistoryObject = {
                         device: item._id,
-                        history_type: historyType.ITEM_APPROVED,
+                        history_type: historyType.REVIEW_ACCEPTED,
                         data: [],
                         actioned_by: req.user.id
                     };
-                    await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
-
-                    const reviewHistory = await getReviewHistory(item._id);
-                    if (reviewHistory.length > 0 && reviewHistory[0].history_type === historyType.REVIEW_REQUESTED || reviewHistory[0].history_type === historyType.REVIEW_REJECTED) {
-                        //Add another history item approving the review
-                        const newHistoryObject = {
-                            device: item._id,
-                            history_type: historyType.REVIEW_ACCEPTED,
-                            data: [],
-                            actioned_by: req.user.id
-                        };
-                        await addHistory(newHistoryObject.device, newHistoryObject.history_type, newHistoryObject.data, newHistoryObject.actioned_by);
-                    }
+                    await addHistory(newHistoryObject.device, newHistoryObject.history_type, newHistoryObject.data, newHistoryObject.actioned_by);
+                }
             } else if (newValue === deviceState.HIDDEN) {
+                item.visible = false;
+
                 const historyObject = {
                     device: item._id,
                     history_type: historyType.ITEM_HIDDEN,
@@ -482,6 +543,8 @@ const postDeviceStateOverride = async (req, res) => {
             item.state = newState;
 
             if (newState === deviceState.REJECTED) {
+                item.visible = false;
+
                 const historyObject = {
                     device: item._id,
                     history_type: historyType.REVIEW_REJECTED,
@@ -490,6 +553,8 @@ const postDeviceStateOverride = async (req, res) => {
                 };
                 await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
             } else if (newState === deviceState.LISTED) {
+                item.visible = true;
+
                 const historyObject = {
                     device: item._id,
                     history_type: historyType.ITEM_APPROVED,
@@ -499,7 +564,7 @@ const postDeviceStateOverride = async (req, res) => {
                 await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
 
                 const reviewHistory = await getReviewHistory(item._id);
-                if (reviewHistory.length > 0 && reviewHistory[0].history_type === historyType.REVIEW_REQUESTED || reviewHistory[0].history_type === historyType.REVIEW_REJECTED) {
+                if (reviewHistory.length > 0 && reviewHistory[0]?.history_type === historyType.REVIEW_REQUESTED || reviewHistory[0]?.history_type === historyType.REVIEW_REJECTED) {
                     //Add another history item approving the review
                     const newHistoryObject = {
                         device: item._id,
@@ -510,6 +575,8 @@ const postDeviceStateOverride = async (req, res) => {
                     await addHistory(newHistoryObject.device, newHistoryObject.history_type, newHistoryObject.data, newHistoryObject.actioned_by);
                 }
             } else if (newState === deviceState.HIDDEN) {
+                item.visible = false;
+
                 const historyObject = {
                     device: item._id,
                     history_type: historyType.ITEM_HIDDEN,
@@ -545,13 +612,11 @@ const postDeviceChangeRequest = async (req, res) => {
         const historyObject = {
             device: item._id,
             history_type: historyType.REVIEW_REQUESTED,
-            data: [
-                {
-                    name: 'reason',
-                    value: reason,
-                    data_type: 0
-                }
-            ],
+            data: [{
+                name: 'reason',
+                value: reason,
+                data_type: 0
+            }],
             actioned_by: req.user.id
         };
 

@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         //Create a bar chart with the given data
         const cases_dataset = [
             {
-                label: 'States',
+                label: 'Device Count',
                 data: cases_data,
                 backgroundColor: cases_backgrounds,
                 borderColor: cases_borderColours,

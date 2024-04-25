@@ -4,163 +4,163 @@
 
 
 <div class="container-fluid py-4 h-100">
-    <div class="row ">
+    <div class="row">
         <div class="col-md-12">
-            <div class="card shadow-sm">
-                <div class="row">
-                    <div class="col-md-12 py-4">
-                        <div class="text-center">
-                            <h1>Reports</h1>
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="fw-semibold">
+                        <span class="fa-stack">
+                            <i class="fa-solid fa-stack-2x fa-square"></i>
+                            <i class="fa-solid fa-stack-1x fa-chart-line text-white"></i>
+                        </span>
+                        Reports
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row pb-4">
+        <div class="col-md-6 mb-4 mb-md-0">
+            <a href="/admin/reports/sales" class="text-decoration-none text-body">
+                <div class="card rounded-4 shadow-sm hover-shadow h-100 height-500">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Total Sales</h5>
+
+                        <%- include('charts/sales') %>
+
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/sales">View Details</a>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 px-4">
-                        <hr>
+            </a>
+        </div>
+
+        <div class="col-md-6">
+            <a href="/admin/reports/referrals" class="text-decoration-none text-body">
+                <div class="card rounded-4 shadow-sm hover-shadow h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Total Referrals</h5>
+
+                        <%- include("charts/referrals") %>
+
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/referrals">View
+                                Details</a>
+                        </div>
                     </div>
                 </div>
+            </a>
+        </div>
 
-                <div class="row px-4 pb-4">
-                    <div class="col-md-6">
-                        <a href="/admin/reports/sales" class="text-decoration-none text-body">
-                            <div class="card shadow-sm hover-shadow h-100 height-500">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">Total Sales</h5>
+    </div>
 
-                                    <%- include('charts/sales') %>
+    <div class="row pb-4">
+        <div class="col-md-4 mb-4 mb-md-0">
+            <a href="/admin/reports/classes" class="text-decoration-none text-body">
+                <div class="card rounded-4 shadow-sm hover-shadow h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Devices per Class</h5>
 
-                                    <div class="d-flex justify-content-end">
-                                        <a class="btn btn-outline-primary" href="/admin/reports/sales">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                        <%- include("charts/classes") %>
 
-                    <div class="col-md-6">
-                        <a href="/admin/reports/referrals" class="text-decoration-none text-body">
-                            <div class="card shadow-sm hover-shadow h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">Total Referrals</h5>
-
-                                    <%- include("charts/referrals") %>
-
-                                    <div class="d-flex justify-content-end">
-                                        <a class="btn btn-outline-primary" href="/admin/reports/referrals">View
-                                            Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                </div>
-
-                <div class="row px-4 pb-4">
-                    <div class="col-md-4">
-                        <a href="/admin/reports/classes" class="text-decoration-none text-body">
-                            <div class="card shadow-sm hover-shadow h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">Devices per Class</h5>
-
-                                    <%- include("charts/classes") %>
-
-                                    <div class="d-flex justify-content-end">
-                                        <a class="btn btn-outline-primary" href="/admin/reports/classes">View
-                                            Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-md-4">
-                        <a href="/admin/reports/accounts" class="text-decoration-none text-body">
-                            <div class="card shadow-sm hover-shadow h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">Active Accounts</h5>
-
-                                    <%- include("charts/accounts") %>
-
-
-                                    <div class="d-flex justify-content-end">
-                                        <a class="btn btn-outline-primary" href="/admin/reports/accounts">View
-                                            Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-md-4">
-                        <a href="/admin/reports/account_types" class="text-decoration-none text-body">
-                            <div class="card shadow-sm hover-shadow h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">Account Types</h5>
-
-                                    <%- include('charts/account_types') %>
-
-                                    <div class="d-flex justify-content-end">
-                                        <a class="btn btn-outline-primary" href="/admin/reports/account_types">View
-                                            Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/classes">View
+                                Details</a>
+                        </div>
                     </div>
                 </div>
+            </a>
+        </div>
 
-                <div class="row px-4 pb-4">
-                    <div class="col-md-6">
-                        <a href="/admin/reports/cases" class="text-decoration-none text-body">
-                            <div class="card shadow-sm hover-shadow h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">Devices per State</h5>
+        <div class="col-md-4 mb-4 mb-md-0">
+            <a href="/admin/reports/accounts" class="text-decoration-none text-body">
+                <div class="card rounded-4 shadow-sm hover-shadow h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Active Accounts</h5>
 
-                                    <%- include("charts/cases") %>
-
-                                    <div class="d-flex justify-content-end">
-                                        <a class="btn btn-outline-primary" href="/admin/reports/cases">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                        <%- include("charts/accounts") %>
 
 
-                    <div class="col-md-6">
-                        <a href="/admin/reports/types" class="text-decoration-none text-body">
-                            <div class="card shadow-sm hover-shadow h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">Devices per Type</h5>
-
-                                    <%- include("charts/types") %>
-
-                                    <div class="d-flex justify-content-end">
-                                        <a class="btn btn-outline-primary" href="/admin/reports/types">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-md-6 mt-4">
-                        <a href="/admin/reports/quotes" class="text-decoration-none text-body">
-                            <div class="card shadow-sm hover-shadow h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">Quotes Per State</h5>
-
-                                    <%- include("charts/quotes") %>
-
-                                    <div class="d-flex justify-content-end">
-                                        <a class="btn btn-outline-primary" href="/admin/reports/quotes">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/accounts">View
+                                Details</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="/admin/reports/account_types" class="text-decoration-none text-body">
+                <div class="card rounded-4 shadow-sm hover-shadow h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Account Types</h5>
+
+                        <%- include('charts/account_types') %>
+
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/account_types">View
+                                Details</a>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="row pb-4">
+        <div class="col-md-6 mb-4 mb-md-0">
+            <a href="/admin/reports/quotes" class="text-decoration-none text-body">
+                <div class="card rounded-4 shadow-sm hover-shadow h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Quotes Per State</h5>
+
+                        <%- include("charts/quotes") %>
+
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/quotes">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="col-md-6">
+            <a href="/admin/reports/types" class="text-decoration-none text-body">
+                <div class="card rounded-4 shadow-sm hover-shadow h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Devices per Type</h5>
+
+                        <%- include("charts/types") %>
+
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/types">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="row pb-4">
+        <div class="col-md-12">
+            <a href="/admin/reports/cases" class="text-decoration-none text-body">
+                <div class="card rounded-4 shadow-sm hover-shadow h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Devices per State</h5>
+
+                        <%- include("charts/cases") %>
+
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary" href="/admin/reports/cases">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>

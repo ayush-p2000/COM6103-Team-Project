@@ -261,8 +261,7 @@ async function getItemQrCodeView(req, res, next) {
         auth: req.isLoggedIn,
         user: req.user,
         toCurrencyFunc: fixedToCurrency,
-        stateStringFunc: stateToString,
-        stateColourFunc: stateToColour,
+        quoteState: quoteState.quoteState,
         quoteActive
     })
 }

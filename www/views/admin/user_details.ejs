@@ -4,184 +4,43 @@
 */
 ---->
 
-
-<div class="pt-4">
-    <div class="border-1 border-black border p-5">
-        <!--        <form method="POST" name="editUserDetails" class="w-100">-->
-        <form method="POST" name="userPermissions" action="/admin/accounts/<%= userDetails._id %>" class="w-100">
-            <div>
-                <% if (hasMessages) { %>
-                    <section>
-                        <ol class="mb-0 list-group list-group-numbered m-1">
-                            <% messages.forEach(function(message) { %>
-                                <li class="border border-danger border-1 d-flex justify-content-center bg-danger-subtle pt-2 pb-2 rounded-1 mb-1"><%= message %></li>
-                            <% }); %>
-                        </ol>
-
-                    </section>
-                <% } %>
-            </div>
-        <div class="row">
-            <div class="col-md-12">
-                <h2>
-                    User Details
-                    <small class="text-muted">ID: <%= userDetails._id %></small>
-                </h2>
-                <div class="mt-3 me-auto ms-auto">
-                    <img src="https://ui-avatars.com/api/?name=<%= userDetails.first_name + " " + userDetails.last_name %>" class="me-auto ms-auto d-block rounded-circle" alt="Avatar"
-                         style="max-width: 150px;">
-                </div>
-            </div>
+<div class="container-fluid mb-5">
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <h2 class="fw-semibold">
+            <span>
+                <a href="/admin/accounts" class="text-decoration-none">
+                    <i class="fa-solid fa-arrow-left text-dark"></i>
+                </a>
+            </span>
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square"></i>
+                    <i class="fa-solid fa-stack-1x fa-user text-white"></i>
+            </span>
+                User Details
+            </h2>
         </div>
+    </div>
 
-        <div class="row">
-            <h4 class="text-center mt-4 mb-3">Basic details</h4>
-        </div>
+    <% if (locals.hasMessages === true) { %>
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold fs-5 mb-3">
+                        <i class="fa-solid fa-flag"></i>
+                        Notices
+                    </h4>
 
-        <div class="row">
-            <div class="shadow-lg ps-4 pe-4 pt-3 pb-3">
-                <div class="row" hidden="true">
-                    <input name="id" id="userId" hidden="true" class="d-inline-block w-50 form-control"
-                           value="<%= userDetails._id %>"/>
-                </div>
-                <div class="row">
-                    <label for="firstName" class="d-inline-block w-25">First Name: </label>
-                    <input name="firstName" id="firstName" class="d-inline-block w-50 form-control"
-                           value="<%= userDetails.first_name %>"/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-                <div class="row">
-                    <label for="lastName" class="d-inline-block w-25">Last Name: </label>
-                    <input name="lastName" id="lastName" class="d-inline-block w-50 form-control"
-                           value="<%= userDetails.last_name %>"/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-                <div>
-                    <label for="date_of_birth" class="d-inline-block w-25">Date of Birth: </label>
-                    <%
-                    const dob = userDetails.date_of_birth instanceof Date ? userDetails.date_of_birth.toLocaleDateString('en-GB', {
-                        month: 'numeric',
-                        day: 'numeric',
-                        year: 'numeric'
-                    }) : userDetails.date_of_birth;
-                    %>
-                    <label for="date_of_birth"></label><input name="date_of_birth" id="date_of_birth"
-                                                              class="d-inline-block w-50 form-control"
-                                                              value="<%= dob %>" disabled/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-1"/>
-            </div>
-        </div>
-
-        <div class="row">
-            <h4 class="text-center mt-4 mb-3">Address & Contact Information</h4>
-            <div class="d-flex w-100 shadow-lg flex-column ps-4 pe-4 pt-3 pb-1">
-                <div>
-                    <label for="email" class="d-inline-block w-25">Email: </label>
-                    <% if (isGoogleAuthenticated) { %>
-                        <!-- Render Google logo -->
-                        <input name="email" id="email" class="d-inline-block w-50 form-control bg-dark-subtle" readonly
-                               value="<%= userDetails?.email %>"/>
-                        <span class="input-group-append mx-2">
-                            <i class="fab fa-google"></i>
-                            <small>Google Account</small>
-                        </span>
-                    <% } else { %>
-                        <!-- Remove the readonly attribute -->
-                        <input name="email" id="email" class="d-inline-block w-50 form-control"
-                               value="<%= userDetails?.email %>"/>
-                    <% } %>
-                </div>
-
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-                <div class="row">
-                    <label for="phone" class="d-inline-block w-25">Telephone: </label>
-                    <input name="phone" id="phone" class="d-inline-block w-50 form-control" value="<%= userDetails.phone_number %>"/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div class="row">
-                    <label for="addressFirst" class="d-inline-block w-25">Address Line 1: </label>
-                    <input name="addressFirst" id="addressFirst" class="d-inline-block w-50 form-control"
-                           value="<%= userDetails.address?.address_1 %>"/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div class="row">
-                    <label for="addressSecond" class="d-inline-block w-25">Address Line 2: </label>
-                    <input name="addressSecond" id="addressSecond" class="d-inline-block w-50 form-control"
-                           value="<%= userDetails.address?.address_2 %>"/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div class="row">
-                    <label for="postCode" class="d-inline-block w-25">Post Code: </label>
-                    <input name="postCode" id="postCode" class="d-inline-block w-50 form-control"
-                           value="<%= userDetails.address?.postcode %>"/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div class="row">
-                    <label for="city" class="d-inline-block w-25">City: </label>
-                    <input name="city" id="city" class="d-inline-block w-50 form-control" value="<%= userDetails.address?.city %>"/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div class="row">
-                    <label for="country" class="d-inline-block w-25">Country: </label>
-                    <input name="country" id="country" class="d-inline-block w-50 form-control"
-                           value="<%= userDetails.address?.country %>"/>
-                </div>
-
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div class="row">
-                    <label for="role" class="d-inline-block w-25">Role: </label>
-                    <select name="role" id="role" class="d-inline-block w-50 form-control">
-                        <option value="0" <%= userDetails.role === 0 ? 'selected' : '' %>>USER</option>
-                        <option value="1" <%= userDetails.role === 1 ? 'selected' : '' %>>STAFF</option>
-                        <option value="2" <%= userDetails.role === 2 ? 'selected' : ''%>>ADMIN</option>
-                    </select>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3"/>
-            </div>
-        </div>
-
-
-        <div class="row">
-            <div class="mt-2 d-flex align-items-center justify-content-between mt-3">
-                <button class="btn btn-primary w-100" type="submit">Save details</button>
-                <button class="btn btn-danger ms-3 w-100" type="button" id="deleteUser">Delete User</button>
-                <% if (userDetails.active) { %>
-                    <button class="btn btn-danger ms-3 w-100" type="button" id="deactivateUser">Deactivate User</button>
-                <% } else { %>
-                    <button class="btn btn-success ms-3 w-100" type="button" id="activateUser">Activate User</button>
-                <% } %>
-            </div>
-        </div>
-        </form>
-
-        <div class="row">
-            <!--        </form>-->
-            <h4 class="text-center mt-4 mb-3">Owned Items</h4>
-            <div class="d-flex shadow-lg w-100 ps-3 pe-3 pt-3 pb-3">
-                <div class="container-fluid text-center">
-                    <div class="row mb-2">
-                        <div class="col-sm fw-bold ">Item ID:</div>
-                        <div class="col fw-bold ">Item Name</div>
-                        <div class="col-sm fw-bold ">Details Page</div>
-                        <div class="col-sm fw-bold ">Status</div>
-                    </div>
-                    <hr class="w-100"/>
-                    <% userDetails.listed_devices?.forEach( item => {
-                        const statusStyle = item.state === "Approved" ? "btn-success" : "btn-warning";
-                    %>
-                    <div class="row mb-3">
-                        <div class="col-sm"><%= item._id %></div>
-                        <div class="col"><%= item.brand?.name + " " + item.model?.name %></div>
-                        <div class="col-sm"><a class="btn btn-primary w-100" href="<%= item._id %>">Details</a></div>
-                        <div class="col-sm">
-                            <div class="btn <%= statusStyle %> w-100"><%= item.state %></div>
+                    <% locals.messages?.forEach(message => { %>
+                    <div class="w-100 card bg-danger-subtle rounded-4 shadow-sm mb-2">
+                        <div class="card-body p-4">
+                            <div class="alert text-center mb-0 py-0">
+                                <p class="mb-0 pb-0">
+                                    <i class="fa-solid fa-exclamation-triangle"></i>
+                                    <%= message %>
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <% }) %>
@@ -189,5 +48,287 @@
             </div>
         </div>
     </div>
+    <% } %>
+
+    <form method="POST" name="userPermissions" action="/admin/accounts/<%= userDetails._id %>">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <!--        <form method="POST" name="editUserDetails" class="w-100">-->
+                        <div class="row">
+                            <h4 class="fs-5 fw-bold mb-3">
+                                <i class="fa-solid fa-user"></i>
+                                Basic details</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="d-flex justify-content-center mb-3">
+                                    <img src="<%= userDetails.avatar %>" class="w-100 mx-auto rounded-circle"
+                                         alt="Avatar"
+                                         style="max-width: 150px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <label for="id" class="visually-hidden">User ID: </label>
+                                    <input name="id" type="hidden" id="userId" class="form-control"
+                                           value="<%= userDetails._id %>"/>
+                                </div>
+
+                                <div class="row mb-1">
+                                    <div class="col-md-6 pe-1">
+                                        <div class="form-floating">
+                                            <input name="firstName" id="firstName" class="form-control"
+                                                   value="<%= userDetails.first_name %>"/>
+                                            <label for="firstName" class="">First Name: </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 ps-1">
+                                        <div class="form-floating">
+                                            <input name="lastName" id="lastName" class="form-control"
+                                                   value="<%= userDetails.last_name %>"/>
+                                            <label for="lastName" class="">Last Name: </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row mb-1">
+                                    <div class="col-md-12">
+                                        <div class="form-floating">
+                                            <%
+                                            const dob = userDetails.date_of_birth instanceof Date ? userDetails.date_of_birth.toLocaleDateString('en-GB', {
+                                                month: 'numeric',
+                                                day: 'numeric',
+                                                year: 'numeric'
+                                            }) : userDetails.date_of_birth;
+                                            %>
+                                            <label for="date_of_birth"></label><input name="date_of_birth"
+                                                                                      id="date_of_birth"
+                                                                                      class="form-control"
+                                                                                      value="<%= dob %>" disabled/>
+                                            <label for="date_of_birth" class="d-inline-block w-25">Date of
+                                                Birth: </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-floating">
+                                            <select name="role" id="role" class="form-control">
+                                                <% roleTypes.getList()?.forEach((role) => { %>
+                                                    <option value="<%= role %>" <%= userDetails.role === role ? 'selected' : '' %>><%= roleTypes.roleTypeToString(role) %></option>
+                                                <% }) %>
+                                            </select>
+                                            <label for="role">Role: </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold fs-5 mb-3">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Contact Information
+                        </h4>
+
+                        <div class="row mb-1">
+                            <div class="col-md-12">
+                                <div class="form-floating input-group">
+                                    <input name="email" id="email"
+                                           class="form-control" <%= (isGoogleAuthenticated) ? "disabled" : "" %>
+                                           value="<%= userDetails?.email %>" required/>
+                                    <label for="email" class="">Email: </label>
+
+                                    <% if (isGoogleAuthenticated) { %>
+                                        <!-- Render Google logo -->
+                                        <span class="my-auto h-100 py-3 px-2 border rounded-start-0 rounded-2 bg-danger-subtle">
+                                                    <i class="fab fa-google"></i>&nbsp;
+                                                            <small>Google Account</small>
+                                                </span>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <input name="phone" id="phone" class="form-control"
+                                           value="<%= userDetails?.phone_number %>" required/>
+                                    <label for="phone" class="">Telephone: </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="col-md-6 pe-md-1">
+                                <div class="form-floating">
+                                    <input name="addressFirst" id="addressFirst"
+                                           class="form-control"
+                                           value="<%= userDetails.address?.address_1 %>" required/>
+                                    <label for="addressFirst">Address Line 1: </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ps-md-1">
+                                <div class="form-floating">
+                                    <input name="addressSecond" id="addressSecond"
+                                           class="form-control"
+                                           value="<%= userDetails.address?.address_2 %>" required/>
+                                    <label for="addressSecond">Address Line 2: </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="col-md-8 pe-md-1">
+                                <div class="form-floating">
+                                    <input name="city" id="city"
+                                           class="form-control"
+                                           value="<%= userDetails.address?.city %>" required/>
+                                    <label for="city">City: </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 ps-md-1">
+                                <div class="form-floating">
+                                    <input name="postCode" id="postCode"
+                                           class="form-control"
+                                           value="<%= userDetails.address?.postcode %>" required/>
+                                    <label for="postCode">Postcode: </label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="col-md-6 pe-md-1">
+                                <div class="form-floating">
+                                    <input name="county" id="county"
+                                           class="form-control"
+                                           value="<%= userDetails.address?.county %>" required/>
+                                    <label for="county">County: </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ps-md-1">
+                                <div class="form-floating">
+                                    <input name="country" id="country"
+                                           class="form-control"
+                                           value="<%= userDetails.address?.country %>" required/>
+                                    <label for="country">Country: </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold fs-5 mb-3">
+                            <i class="fa-solid fa-wrench"></i>
+                            Actions
+                        </h4>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button class="btn btn-primary w-100" type="submit">Save details</button>
+                            </div>
+
+                            <div class="col-md-4">
+                                <button class="btn btn-danger w-100" type="button" id="deleteUser">Delete User</button>
+                            </div>
+
+                            <div class="col-md-4">
+                                <% if (userDetails.active) { %>
+                                    <button class="btn btn-danger w-100" type="button" id="deactivateUser">
+                                        Deactivate User
+                                    </button>
+                                <% } else { %>
+                                    <button class="btn btn-success w-100" type="button" id="activateUser">
+                                        Activate User
+                                    </button>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <div class="card rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <!--        </form>-->
+                            <h4 class="fw-bold fs-5 mb-3">
+                                <i class="fa-solid fa-mobile-screen"></i>
+                                Owned Items
+                            </h4>
+                            <div class="d-flex w-100 ps-3 pe-3 pt-3 pb-3">
+                                <div class="container-fluid text-center">
+                                    <div class="row mb-2">
+                                        <div class="col-sm fw-bold ">Item ID:</div>
+                                        <div class="col fw-bold ">Item Name</div>
+                                        <div class="col-sm fw-bold ">Details Page</div>
+                                        <div class="col-sm fw-bold ">Status</div>
+                                    </div>
+                                    <hr class="w-100"/>
+                                    <% if (userDetails.listed_devices?.length > 0) { %>
+                                        <% userDetails.listed_devices?.forEach( item => {
+                                            const statusStyle = item.state === "Approved" ? "btn-success" : "btn-warning";
+                                        %>
+                                        <div class="row mb-3">
+                                            <div class="col-sm"><%= item._id %></div>
+                                            <div class="col"><%= item.brand?.name + " " + item.model?.name %></div>
+                                            <div class="col-sm"><a class="btn btn-primary w-100"
+                                                                   href="<%= item._id %>">Details</a>
+                                            </div>
+                                            <div class="col-sm">
+                                                <div class="btn <%= statusStyle %> w-100"><%= item.state %></div>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="text-center">No items found</p>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
+
 <script src="/javascripts/accountManagement/accountManagement.js"></script>

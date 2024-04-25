@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     <td>${item.id}</td>
                     <td>${item.date_added}</td>
                     <td>
-                        <a href="/admin/users/${item.id}">
+                        <a href="/admin/accounts/${item.id}">
                             ${item.name}
                         </a>
                     </td>
@@ -26,10 +26,15 @@ document.addEventListener('DOMContentLoaded', async function () {
                         ${item.email}
                     </td>
                     <td>
-                        ${item.role}
+                        <div class="w-100 badge bg-${item.role_colour}">
+                            ${item.role_string}
+                        </div>
+
                     </td>
                     <td>
-                        ${item.active ? "Yes" : "No"}
+                        <div class="w-100 badge bg-${item.active ? "success" : "danger"}">
+                            ${item.active ? "Yes" : "No"}
+                        </div>
                     </td>
                 </tr>`;
 

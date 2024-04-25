@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         //Create a bar chart with the given data
         const types_dataset = [
             {
-                label: 'Device Type',
+                label: 'Device Count',
                 data: types_data,
                 backgroundColor: types_backgrounds,
                 borderColor: types_border_colours,

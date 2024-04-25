@@ -341,7 +341,11 @@ async function prepareActiveAccountsTable() {
             name: `${user.first_name} ${user.last_name}`,
             id: user._id,
             active: user.active,
+
             role: user.role,
+            role_string: roleTypes.roleTypeToString(user.role),
+            role_colour: roleTypes.roleTypeToColour(user.role),
+
             email: user.email,
             date_added: user.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
@@ -387,7 +391,10 @@ async function prepareAccountTypesTable() {
             name: `${user.first_name} ${user.last_name}`,
             id: user._id,
             active: user.active,
+
             role: roleTypes.roleTypeToString(user.role),
+            role_colour: roleTypes.roleTypeToColour(user.role),
+
             email: user.email,
             date_added: user.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
@@ -638,6 +645,7 @@ async function prepareQuotesTable() {
             }),
             user: quote.device?.listing_user,
             quote_id: quote._id,
+            device_id: quote.device?._id,
         });
     });
     return table;

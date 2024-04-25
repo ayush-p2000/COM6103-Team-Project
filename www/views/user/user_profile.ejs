@@ -1,146 +1,235 @@
 <%- include("../components/header.ejs") %>
 
-
-<div class="d-flex justify-content-center align-items-center">
-    <div class="w-75 d-flex justify-content-start align-items-start flex-column p-5">
-        <form method="POST" action="/profile" name="editUserDetails" class="w-100">
-            <br>
-            <div>
-                <% if (hasMessages) { %>
-                    <section>
-                        <ol class="mb-0 list-group list-group-numbered m-1">
-                            <% messages.forEach(function(message) { %>
-                                    <li class="border border-success border-1 d-flex justify-content-center bg-success-subtle pt-2 pb-2 rounded-1 mb-1"><%= message %></li>
-                            <% }); %>
-                        </ol>
-
-                    </section>
-                <% } %>
-            </div>
-            <br>
-            <br>
-            <h2>
-                Your Profile
-            </h2>
-            <div class="mt-3 me-auto ms-auto">
-                <img src="<%= userData.avatar %>" class="me-auto ms-auto d-block rounded-circle" alt="Avatar"
-                     style="max-width: 150px;">
-            </div>
-
-            <h4 class="text-center mt-4 mb-3">Basic details</h4>
-            <div class="d-flex w-100 shadow-lg flex-column ps-4 pe-4 pt-3 pb-3">
-                <div>
-                    <label for="firstName" class="d-inline-block w-25">First Name: </label>
-                    <input name="firstName" id="firstName" class="d-inline-block w-50 form-control"
-                           value="<%= userData?.first_name %>" required/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-                <div>
-                    <label for="lastName" class="d-inline-block w-25">Last Name: </label>
-                    <input name="lastName" id="lastName" class="d-inline-block w-50 form-control"
-                           value="<%= userData?.last_name %>" required/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-                <div>
-                    <label for="email" class="d-inline-block w-25">Date of Birth: </label>
-                    <%
-                    const dob = userData.date_of_birth instanceof Date ? userData.date_of_birth.toLocaleDateString('en-GB', {
-                        month: 'numeric',
-                        day: 'numeric',
-                        year: 'numeric'
-                    }) : userData.date_of_birth;
-                    %>
-                    <label for="date_of_birth"></label><input name="date_of_birth" id="date_of_birth"
-                                                              class="d-inline-block w-50 form-control bg-dark-subtle"
-                                                              value="<%= dob %>" readonly/>
-                </div>
-
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-1"/>
-            </div>
-            <h4 class="text-center mt-4 mb-3">Address & Contact Information</h4>
-            <div class="d-flex w-100 shadow-lg flex-column ps-4 pe-4 pt-3 pb-1">
-                <div>
-                    <label for="email" class="d-inline-block w-25">Email: </label>
-                    <input name="email" id="email" class="d-inline-block w-50 form-control bg-dark-subtle" readonly
-                           value="<%= userData?.email %>"/>
-                    <% if (isGoogleAuthenticated) { %>
-                        <!-- Render Google logo -->
-                        <span class="input-group-append mx-2">
-                    <i class="fab fa-google"></i>&nbsp;
-                            <small>Google Account</small>
-
+<div class="container-fluid my-5">
+    <div class="row mb-3">
+        <div class="col-12">
+            <h2 class="fw-semibold">
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square text-success"></i>
+                    <i class="fa-solid fa-stack-1x fa-user text-white"></i>
                 </span>
-                        <label>
-                            <input name="isGoogleAuthenticated" hidden="hidden" value="<% isGoogleAuthenticated %>"/>
-                        </label>
-                    <% } %>
-
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-                <div>
-                    <label for="phone" class="d-inline-block w-25">Telephone: </label>
-                    <input name="phone" id="phone" class="d-inline-block w-50 form-control"
-                           value="<%= userData?.phone_number %>" required/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div>
-                    <label for="addressFirst" class="d-inline-block w-25">Address Line 1: </label>
-                    <input name="addressFirst" id="addressFirst" class="d-inline-block w-50 form-control"
-                           value="<%= userData.address?.address_1 %>" required/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div>
-                    <label for="addressSecond" class="d-inline-block w-25">Address Line 2: </label>
-                    <input name="addressSecond" id="addressSecond" class="d-inline-block w-50 form-control"
-                           value="<%= userData.address?.address_2 %>" required/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div>
-                    <label for="postCode" class="d-inline-block w-25">Post Code: </label>
-                    <input name="postCode" id="postCode" class="d-inline-block w-50 form-control"
-                           value="<%= userData.address?.postcode %>" required/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div>
-                    <label for="city" class="d-inline-block w-25">City: </label>
-                    <input name="city" id="city" class="d-inline-block w-50 form-control"
-                           value="<%= userData.address?.city %>" required/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div>
-                    <label for="county" class="d-inline-block w-25">County: </label>
-                    <input name="county" id="county" class="d-inline-block w-50 form-control"
-                           value="<%= userData.address?.county %>" required/>
-                </div>
-
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3 mb-3"/>
-
-                <div>
-                    <label for="country" class="d-inline-block w-25">Country: </label>
-                    <input name="country" id="country" class="d-inline-block w-50 form-control"
-                           value="<%= userData.address?.country %>" required/>
-                </div>
-                <hr class="w-100 text-center ms-auto me-auto pl-1 pr-1 mt-3"/>
-            </div>
-            <div class="d-flex mt-2 align-items-center justify-content-start mt-3">
-                <button class="btn btn-primary" type="submit">Save details</button>
-            </div>
-        </form>
-        <h3 class="w-100 text-center mt-4 mb-1r">Your reduced footprint</h3>
-        <div class="card bg-success mt-3 rounded-5 w-100 ms-auto me-auto">
-            <div class="card-body d-flex align-content-center justify-content-evenly">
-                <p class="h3 text-center text-white m-0 align-self-center"><%= userData.savedCo2 %> Nkg</p>
-                <img src="/assets/leaf.svg" alt="">
-            </div>
-            <div class="card-footer">
-                <p class="text-white m-0 text-center">C02 Saved because of eWaste</p>
-            </div>
+                Profile
+            </h2>
         </div>
     </div>
 
+    <form method="POST" action="/profile" name="editUserDetails" class="w-100">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-10 justify-content-start align-items-start">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <% if (hasMessages) { %>
+                            <% messages.forEach(function(message) { %>
+                                <div class="card rounded-4 shadow-sm bg-info-subtle border-info mb-3">
+                                    <div class="card-body">
+                                        <div class="alert mb-0 text-center">
+                                            <i class="fas fa-info-circle"></i>
+                                            <%= message %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+
+                        <% } %>
+                    </div>
+                </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="card rounded-4 shadow-sm">
+                            <div class="card-body p-4">
+                                <h4 class="fw-bold">
+                                    <i class="fas fa-id-card"></i>
+                                    Basic details
+                                </h4>
+
+                                <div class="d-flex justify-content-center mb-3">
+                                    <img src="<%= userData.avatar %>" class="w-100 mx-auto rounded-circle"
+                                         alt="Avatar"
+                                         style="max-width: 150px;">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 pe-md-1">
+                                        <div class="form-floating">
+                                            <input name="firstName" id="firstName" class="form-control"
+                                                   value="<%= userData?.first_name %>" required/>
+                                            <label for="firstName" class="">First Name: </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 ps-md-1">
+                                        <div class="form-floating">
+                                            <input name="lastName" id="lastName" class="form-control"
+                                                   value="<%= userData?.last_name %>" required/>
+                                            <label for="lastName" class="">Last Name: </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-1">
+                                    <div class="col-md-12">
+                                        <div class="form-floating">
+                                            <%
+                                            const dob = userData.date_of_birth instanceof Date ? userData.date_of_birth.toLocaleDateString('en-GB', {
+                                                month: 'numeric',
+                                                day: 'numeric',
+                                                year: 'numeric'
+                                            }) : userData.date_of_birth;
+                                            %>
+                                            <input name="date_of_birth"
+                                                   id="date_of_birth"
+                                                   class="form-control-plaintext border rounded-2"
+                                                   value="<%= dob %>" readonly/>
+                                            <label for="date_of_birth">Date of Birth</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="card rounded-4 shadow-sm">
+                            <div class="card-body p-4">
+                                <h4 class="fw-bold">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Contact Information
+                                </h4>
+
+                                <div class="row mb-1">
+                                    <div class="col-md-12">
+                                        <div class="form-floating input-group">
+                                            <input name="email" id="email"
+                                                   class="form-control" <%= (isGoogleAuthenticated) ? "disabled" : "" %>
+                                                   value="<%= userData?.email %>" required/>
+                                            <label for="email" class="">Email: </label>
+
+                                            <% if (isGoogleAuthenticated) { %>
+                                                <!-- Render Google logo -->
+                                                <span class="my-auto h-100 py-3 px-2 border rounded-start-0 rounded-2 bg-danger-subtle">
+                                                    <i class="fab fa-google"></i>&nbsp;
+                                                            <small>Google Account</small>
+                                                </span><label>
+                                                    <input name="isGoogleAuthenticated" hidden="hidden"
+                                                           value="<% isGoogleAuthenticated %>"/>
+                                                </label>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-1">
+                                    <div class="col-md-12">
+                                        <div class="form-floating">
+                                            <input name="phone" id="phone" class="form-control"
+                                                   value="<%= userData?.phone_number %>" required/>
+                                            <label for="phone" class="">Telephone: </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-1">
+                                    <div class="col-md-6 pe-md-1">
+                                        <div class="form-floating">
+                                            <input name="addressFirst" id="addressFirst"
+                                                   class="form-control"
+                                                   value="<%= userData.address?.address_1 %>" required/>
+                                            <label for="addressFirst">Address Line 1: </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 ps-md-1">
+                                        <div class="form-floating">
+                                            <input name="addressSecond" id="addressSecond"
+                                                   class="form-control"
+                                                   value="<%= userData.address?.address_2 %>" required/>
+                                            <label for="addressSecond">Address Line 2: </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-1">
+                                    <div class="col-md-8 pe-md-1">
+                                        <div class="form-floating">
+                                            <input name="city" id="city"
+                                                   class="form-control"
+                                                   value="<%= userData.address?.city %>" required/>
+                                            <label for="city">City: </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 ps-md-1">
+                                        <div class="form-floating">
+                                            <input name="postCode" id="postCode"
+                                                   class="form-control"
+                                                   value="<%= userData.address?.postcode %>" required/>
+                                            <label for="postCode">Postcode: </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row mb-1">
+                                    <div class="col-md-6 pe-md-1">
+                                        <div class="form-floating">
+                                            <input name="county" id="county"
+                                                   class="form-control"
+                                                   value="<%= userData.address?.county %>" required/>
+                                            <label for="county">County: </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 ps-md-1">
+                                        <div class="form-floating">
+                                            <input name="country" id="country"
+                                                   class="form-control"
+                                                   value="<%= userData.address?.country %>" required/>
+                                            <label for="country">Country: </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="card rounded-4 shadow-sm">
+                            <div class="card-body p-4">
+                                <button class="btn btn-primary w-100" type="submit">Save details</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="card rounded-4 shadow-sm bg-success">
+                            <div class="card-body p-4">
+                                <h4 class="fw-bold text-white">
+                                    <i class="fa-solid fa-leaf"></i>
+                                    Environmental Impact
+                                </h4>
+
+                                <div class="alert">
+                                    <p class="display-4 text-center text-white"><%= userData.savedCo2 %>kg</p>
+                                    <p class="text-center text-white">C02 Saved by using our services</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
+

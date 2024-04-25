@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         //Create a bar chart with the given data
         const quotes_dataset = [
             {
-                label: 'Quotes',
+                label: 'Quote Count',
                 data: quotes_data,
                 backgroundColor: quotes_backgrounds,
                 borderColor: quotes_borderColours,

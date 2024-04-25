@@ -87,7 +87,7 @@ async function insertStaffDetails(req,res,next){
         }
 
         if (req.user.role > roleTypes.USER && req.body.role > req.user.role) {
-            return res.status(403).send('You do not have the required permissions to perform this action');
+            return renderAdminLayout(req, res, "user_details", {userDetails: user, messages: ['You do not have the required permissions to perform this action'], hasMessages: true, isGoogleAuthenticated: user.google_id !== null, roleTypes})
         }
 
         if (req.session.messages.length > 0) {

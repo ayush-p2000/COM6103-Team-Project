@@ -1,184 +1,318 @@
-<div class="container">
-    <div class="row my-3">
-        <div class="col-md-12 text-center">
-            <h2>Flagged Devices</h2>
-            <hr>
-        </div>
-    </div>
-
+<div class="container-fluid mt-3 mb-5">
     <div class="row">
-        <div class="col-6 col-md-8">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deviceTypeModal" >Register New DeviceType</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#brandModal" >Register New Brand</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modelModal" >Register New Model</button>
-        </div>
-
-
-        <div class="col-6 col-md-4">
-            <div class="form-check form-switch">
-                <input type="checkbox" class="form-check-input" id="needUpdate">
-                <label class="form-check-label" for="needUpdate">Need Update</label>
-            </div>
-        </div>
-
-    </div>
-
-
-
-    <div class="modal fade" id="deviceTypeModal" tabindex="-1" aria-labelledby="deviceTypeModal" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deviceTypeModal">New Device Type</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="device-type-name" class="col-form-label">Device Type Name:</label>
-                            <input type="text" class="form-control" id="device-type-name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="device-type-description" class="col-form-label">Description:</label>
-                            <textarea class="form-control" id="device-type-description"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="deviceType-submit">Register</button>
-                </div>
-            </div>
+        <div class="col-md-12">
+            <h2 class="fw-semibold">
+            <span>
+                <a href="/admin/devices" class="text-decoration-none">
+                    <i class="fa-solid fa-arrow-left text-dark"></i>
+                </a>
+            </span>
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square"></i>
+                    <i class="fa-solid fa-stack-1x fa-exclamation text-white"></i>
+                </span>
+                Flagged Devices
+            </h2>
         </div>
     </div>
 
-
-    <div class="modal fade" id="brandModal" tabindex="-1" aria-labelledby="brandModal" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="brandModal">New Brand</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="brand-name" class="col-form-label">Brand Name:</label>
-                            <input type="text" class="form-control" id="brand-name">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="brand-submit">Register</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modelModal" tabindex="-1" aria-labelledby="modelModal" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modelModal">New Model</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="device-type-for-model" class="col-form-label">DeviceType</label>
-                            <select class="form-select" id="device-type-for-model">
-                                <% deviceTypes.forEach(function(device) { %>
-                                    <option value="<%= device.id %>"><%= device.name %></option>
-                                <% }); %>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="device-brand-for-model" class="col-form-label">Brand:</label>
-                            <select class="form-select" id="device-brand-for-model">
-                                <% brands.forEach(function(brand) { %>
-                                    <option value="<%= brand.id %>"><%= brand.name %></option>
-                                <% }); %>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="model-name" class="col-form-label">Model Name:</label>
-                            <input type="text" class="form-control" id="model-name">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="model-submit">Register</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-    <div class="row mt-3">
+    <div class="row mb-3">
         <div class="col-md-12">
 
-            <% if (typeof(error) !== "undefined") { %>
-                <div class="alert alert-danger" role="alert">
-                    <strong>Error:</strong> <%= error %>
+
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="text-center">Actions</h3>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="border border-1 rounded-2 border-secondary-subtle d-flex justify-content-center py-2">
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" class="form-check-input" id="needUpdate">
+                                    <label class="form-check-label" for="needUpdate">Need Update</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
+                                    data-bs-target="#deviceTypeModal">
+                                Register New Device Type
+                            </button>
+                        </div>
+
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
+                                    data-bs-target="#brandModal">Register
+                                New Brand
+                            </button>
+                        </div>
+
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
+                                    data-bs-target="#modelModal">
+                                Register
+                                New Model
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="deviceTypeModal" tabindex="-1" aria-labelledby="deviceTypeModal"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content bg-secondary-subtle rounded-4">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deviceTypeModal">
+                                <span class="fa-stack">
+                                    <i class="fa-solid fa-stack-2x fa-square"></i>
+                                    <i class="fa-solid fa-stack-1x fa-cube text-white"></i>
+                                </span>
+                                        New Device Type
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <div class="card rounded-4 shadow-sm">
+                                                    <div class="card-body p-4">
+                                                        <h5 class="fw-bold">
+                                                            <i class="fa-solid fa-info-circle"></i>
+                                                            Type Information
+                                                        </h5>
+                                                        <div class="form-floating pb-2">
+                                                            <input type="text" class="form-control"
+                                                                   id="device-type-name">
+                                                            <label for="device-type-name" class="">Device Type
+                                                                Name:</label>
+                                                        </div>
+                                                        <div class="form-floating">
+                                                    <textarea class="form-control"
+                                                              id="device-type-description"></textarea>
+                                                            <label for="device-type-description"
+                                                                   class="">Description:</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button type="button" class="btn btn-primary w-100 rounded-4"
+                                                    data-bs-dismiss="modal"
+                                                    id="deviceType-submit">Register
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="modal fade" id="brandModal" tabindex="-1" aria-labelledby="brandModal"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content bg-secondary-subtle rounded-4">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="brandModal">
+                                <span class="fa-stack">
+                                    <i class="fa-solid fa-stack-2x fa-square"></i>
+                                    <i class="fa-solid fa-stack-1x fa-cube text-white"></i>
+                                </span>
+                                        New Brand
+                                    </h5>
+
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <div class="card rounded-4 shadow-sm">
+                                                    <div class="card-body p-4">
+                                                        <h5 class="fw-bold">
+                                                            <i class="fa-solid fa-info-circle"></i>
+                                                            Brand Information
+                                                        </h5>
+
+                                                        <div class="form-floating">
+                                                            <input type="text" class="form-control" id="brand-name">
+                                                            <label for="brand-name" class="">Brand Name:</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button type="button" class="btn btn-primary w-100 rounded-4"
+                                                    data-bs-dismiss="modal"
+                                                    id="brand-submit">Register
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="modelModal" tabindex="-1" aria-labelledby="modelModal"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content rounded-4 bg-secondary-subtle">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modelModal">
+                                <span class="fa-stack">
+                                    <i class="fa-solid fa-stack-2x fa-square"></i>
+                                    <i class="fa-solid fa-stack-1x fa-cube text-white"></i>
+                                </span>
+                                        New Model
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <div class="card rounded-4 shadow-sm">
+                                                    <div class="card-body p-4">
+                                                        <h5 class="fw-bold">
+                                                            <i class="fa-solid fa-info-circle"></i>
+                                                            Model Information
+                                                        </h5>
+                                                        <div class="form-floating pb-2">
+                                                            <select class="form-select" id="device-type-for-model">
+                                                                <% deviceTypes.forEach(function(device) { %>
+                                                                    <option value="<%= device.id %>"><%= device.name %></option>
+                                                                <% }); %>
+                                                            </select>
+                                                            <label for="device-type-for-model" class="">Device
+                                                                Type</label>
+                                                        </div>
+
+                                                        <div class="form-floating pb-2">
+                                                            <select class="form-select" id="device-brand-for-model">
+                                                                <% brands.forEach(function(brand) { %>
+                                                                    <option value="<%= brand.id %>"><%= brand.name %></option>
+                                                                <% }); %>
+                                                            </select>
+                                                            <label for="device-brand-for-model" class="">Brand:</label>
+                                                        </div>
+                                                        <div class="form-floating pb-2">
+                                                            <input type="text" class="form-control" id="model-name">
+                                                            <label for="model-name" class="">Model Name:</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button type="button" class="btn btn-primary w-100 rounded-4"
+                                                    data-bs-dismiss="modal"
+                                                    id="model-submit">Register
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            <% } else { %>
-                <table class="table table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Device ID</th>
-                        <th>Device Type</th>
-                        <th>Device Brand</th>
-                        <th>Device Model</th>
-                        <th><i class="fas fa-eye"></i></th>
-                    </tr>
-                    </thead>
-                    <tbody>
+            </div>
+        </div>
+    </div>
 
-                    <% devices.forEach(device => { %>
-                        <tr>
-                            <td><span class="badge mx-auto <%= device.device.category === 3? "bg-danger" : "bg-success" %>">
-                                    <%= device.device.category === 3? "Need Update" : "Updated" %></span></td>
-                            <td><%= device.device._id %></td>
 
-                            <td>
-                                <div class="d-inline">
-                                    <span class=" <%= device.device.device_type? "text-decoration-line-through" : ""%>"><%= device.data[0].value %></span>
-                                    <% if (device.device.device_type) { %>
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                        <span class="text-success"><%= device.device.device_type.name %></span>
-                                    <% } %>
-                                </div>
-                            </td>
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body">
 
-                            <td>
-                                <div class="d-inline">
-                                    <span class="<%= device.device.device_type? "text-decoration-line-through" : ""%>"><%= device.data[1].value %></span>
-                                    <% if (device.device.brand) { %>
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                        <span class="text-success"><%= device.device.brand.name %></span>
-                                    <% } %>
-                                </div>
-                            </td>
+                    <% if (typeof (error) !== "undefined") { %>
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Error:</strong> <%= error %>
+                        </div>
+                    <% } else { %>
+                        <table class="table table-striped table-bordered" id="unknown_devices_table">
+                            <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Device ID</th>
+                                <th>Device Type</th>
+                                <th>Device Brand</th>
+                                <th>Device Model</th>
+                                <th><i class="fas fa-eye"></i></th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-                            <td>
-                                <div class="d-inline">
-                                    <span class="<%= device.device.device_type? "text-decoration-line-through" : ""%>"><%= device.data[2].value %></span>
-                                    <% if (device.device.model) { %>
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                        <span class="text-success"><%= device.device.model.name %></span>
-                                    <% } %>
-                                </div>
-                            </td>
+                            <% devices.forEach(device => { %>
+                                <tr>
+                                    <td><span class="badge mx-auto <%= device.device.category === 3 ? "bg-danger" : "bg-success" %>">
+                                    <%= device.device.category === 3 ? "Need Update" : "Updated" %></span></td>
+                                    <td><%= device.device._id %></td>
 
-                            <td><a href='/admin/devices/<%= device.device._id %>'>view</a></td>
-                        </tr>
-                    <% }) %>
+                                    <td>
+                                        <div class="d-inline">
+                                            <span class=" <%= device.device.device_type ? "text-decoration-line-through" : "" %>"><%= device.data[0].value %></span>
+                                            <% if (device.device.device_type) { %>
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                                <span class="text-success"><%= device.device.device_type.name %></span>
+                                            <% } %>
+                                        </div>
+                                    </td>
 
-                    </tbody>
-                </table>
-            <% } %>
+                                    <td>
+                                        <div class="d-inline">
+                                            <span class="<%= device.device.device_type ? "text-decoration-line-through" : "" %>"><%= device.data[1].value %></span>
+                                            <% if (device.device.brand) { %>
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                                <span class="text-success"><%= device.device.brand.name %></span>
+                                            <% } %>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="d-inline">
+                                            <span class="<%= device.device.device_type ? "text-decoration-line-through" : "" %>"><%= device.data[2].value %></span>
+                                            <% if (device.device.model) { %>
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                                <span class="text-success"><%= device.device.model.name %></span>
+                                            <% } %>
+                                        </div>
+                                    </td>
+
+                                    <td><a href='/admin/devices/<%= device.device._id %>'>view</a></td>
+                                </tr>
+                            <% }) %>
+
+                            </tbody>
+                        </table>
+                    <% } %>
+                </div>
+            </div>
         </div>
     </div>
 </div>

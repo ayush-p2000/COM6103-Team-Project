@@ -80,11 +80,14 @@ if (process.env.ENVIRONMENT === undefined || process.env.ENVIRONMENT !== "prod")
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    next(createError(404));
+    //Get the route the user is trying to access
+    let url = req.url;
+
+    next(createError(404, {message: `The page you are looking for does not exist: ${url}`}));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function (err,req,  res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};

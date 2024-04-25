@@ -22,122 +22,237 @@
 <!----------------------------------------------- Form-card Layout ------------------------------------------------>
 
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="justify-content-center h-100 mt-3 align-items-center">
-                <main class="form-signin w-100 m-auto p-2 justify-content-center align-items-center overflow-hidden fw-bold card shadow-lg rounded-3 bg-transparent">
-                    <form class="w-75 py-5" method="POST" action="/register" id="form">
-                        <h2 class="parent-text text-center align-items-center justify-content-center fw-bold pb-4 my-2">
-                            Register
-                        </h2>
-                        <% if (hasMessages) { %>
-                            <section >
-                                <ol class="mb-0 list-group list-group-numbered m-1">
-                                    <% messages.forEach(function(message) { %>
-                                            <li class="border border-danger border-1 bg-danger-subtle pt-2 pb-2 rounded-1 mb-1 list-group-item"><%= message %></li>
-                                    <% }); %>
-                                </ol>
+    <div class="card shadow-lg mt-1">
+        <div class="card-body p-0">
+            <div class="row justify-content-center m-0">
+                <div class="col-md-6 bg-success-subtle rounded-start-2 align-content-center py-5 py-md-0">
+                    <p class="text-center">
+                        <i class="fa-solid fa-leaf fa-5x text-center"></i>
+                    </p>
+                    <h1 class="text-center">
+                        Welcome to <strong>ePanda</strong>!
+                    </h1>
+                    <p class="text-center">
+                        Please register for an account to see how much your device is worth.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="justify-content-center h-100 align-items-center">
+                        <main class="w-100 d-flex justify-content-center align-items-center fw-bold">
+                            <form class="w-75" method="POST" action="/register" id="form">
+                                <% if (hasMessages) { %>
+                                    <section>
+                                        <ol class="mb-0 list-group list-group-numbered m-1">
+                                            <% messages.forEach(function(message) { %>
+                                                <li class="border border-danger border-1 bg-danger-subtle pt-2 pb-2 rounded-1 mb-1 list-group-item"><%= message %></li>
+                                            <% }); %>
+                                        </ol>
 
-                            </section>
-                        <% } %>
+                                    </section>
+                                <% } %>
 
-<!----------------------------------------------------- Registration field entries --------------------------------------------------------------------------->
+                                <!----------------------------------------------------- Registration field entries --------------------------------------------------------------------------->
 
-                        <div class="pb-2">
-                            <h5 class="mt-3 mb-3 text-center">Your basic details</h5>
-                            <div class="form-floating m-1">
-                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" required>
-                                <label for="firstName">First Name</label>
-                            </div>
-                            <div class="form-floating m-1">
-                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name" required >
-                                <label for="lastName">Last Name</label>
-                            </div>
-                            <div class="form-floating m-1">
-                                <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required>
-                                <label for="dateOfBirth">Date of Birth</label>
-                            </div>
-                            <h5 class="mt-3 mb-3 text-center">Contact Details</h5>
-                            <div class="form-floating mt-1 mx-1">
-                                <input type="email" class="form-control" id="email" name="email"
-                                       placeholder="name@example.com"
-                                       required>
-                                <label for="email">Email address</label>
-                            </div>
-                            <div class="form-floating m-1">
-                                <input type="number" class="form-control" id="phone" name="phone" placeholder="+99 1234567890" required>
-                                <label for="phone">Phone</label>
-                            </div>
-                            <h5 class="mt-3 mb-3 text-center">Your Address</h5>
-                            <div class="form-floating m-1">
-                                <input type="text" class="form-control" id="address_1" name="address_1" placeholder="22 High street" required>
-                                <label for="address_1">Address Line 1</label>
-                            </div>
-                            <div class="form-floating m-1">
-                                <input type="text" class="form-control" id="address_2" name="address_2" placeholder="Apartment 07" required>
-                                <label for="address_2">Address Line 2</label>
-                            </div>
-                            <div class="form-floating m-1">
-                                <input type="text" class="form-control" id="city" name="city" placeholder="Sheffield" required>
-                                <label for="city">City</label>
-                            </div>
-                            <div class="form-floating m-1">
-                                <input type="text" class="form-control" id="postcode" name="postcode" placeholder="XY0 XYZ0" required>
-                                <label for="postcode">Postcode</label>
-                            </div>
-                            <div class="form-floating m-1">
-                                <input type="text" class="form-control" id="county" name="county" placeholder="United Kingdom" required>
-                                <label for="county">County</label>
-                            </div>
-                            <div class="form-floating m-1">
-                                <input type="text" class="form-control" id="country" name="country" placeholder="United Kingdom" required>
-                                <label for="country">Country</label>
-                            </div>
-                            <h5 class="mt-3 mb-3 text-center">Create password</h5>
-                            <div class="form-floating mb-1 mx-1">
-                                <input type="password" class="form-control" id="password" name="password"
-                                       placeholder="Password"
-                                       required>
-                                <label for="password">Password</label>
-                            </div>
-                            <div class="form-floating mb-1 mx-1">
-                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-                                       placeholder="Confirm Password"
-                                       required>
-                                <label for="confirmPassword">Confirm Password</label>
-                            </div>
-                        </div>
+                                <div class="pt-4 pb-2">
+                                    <div class="row mb-4">
+                                        <div class="col-md-12 p-0 px-1">
 
-<!---------------------------------------------- Terms and Conditions Checkbox ---------------------------------------------------------------------------->
+                                            <div class="row">
+                                                <div class="col-lg-6 px-1 p-0">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" id="firstName"
+                                                               name="firstName"
+                                                               placeholder="First Name" required>
+                                                        <label for="firstName">First Name</label>
+                                                    </div>
+                                                </div>
 
-                        <div class="form-check form-switch text-center m-1 d-flex mb-4">
-                            <input class="form-check-input" type="checkbox" id="tcCheck" name="tcCheck" required>
-                            <label class="form-check-label ms-3" for="tcCheck">
-                                Agree to the <a href="#" class="hover-link text-decoration-none">Terms and Conditions</a>
-                            </label>
-                        </div>
+                                                <div class="col-lg-6 px-1 p-0">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" id="lastName"
+                                                               name="lastName"
+                                                               placeholder="Last Name" required>
+                                                        <label for="lastName">Last Name</label>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-<!---------------------------------------------- Captcha --------------------------------------------------------------------------------------------------->
+                                            <div class="row">
+                                                <div class="col-lg-12 px-1">
+                                                    <div class="form-floating">
+                                                        <input type="email" class="form-control" id="email" name="email"
+                                                               placeholder="name@example.com"
+                                                               required>
+                                                        <label for="email">Email address</label>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                        <div class="card-footer-sign mt-2">
-                            <input type="hidden" id="token" name="token">
-                            <button class="btn btn-primary w-100 py-2"
-                                    id="submit-btn"
-                                    data-sitekey="<%= process.env.CAPTCHA_PUBLIC %>>"
-                                    data-callback='onSubmit'
-                                    disabled
-                                    data-action='submit'>
-                                <span class="spinner-border spinner-border-sm me-2" role="status" id="spinner"></span>
-                                Loading...
-                            </button>
+                                            <div class="row">
+                                                <div class="col-xl-8 px-1">
+                                                    <div class="form-floating">
+                                                        <input type="tel" class="form-control" id="phone"
+                                                               name="phone"
+                                                               placeholder="+44 00000 000000"
+                                                               required>
+                                                        <label for="phone">Phone</label>
+                                                    </div>
+                                                </div>
 
-                            <div class="text-center align-content-center fw-bolder mt-3">
-                                <p>Already have an account? <a href="/login" class="hover-link text-decoration-none">Login</a></p>
+                                                <div class="col-xl-4 px-1">
+                                                    <div class="form-floating">
+                                                        <input type="date" class="form-control" id="dateOfBirth"
+                                                               name="dateOfBirth" required>
+                                                        <label for="dateOfBirth">Date of Birth</label>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                            </div>
-                        </div>
-                    </form>
-                </main>
+                                        </div>
+                                    </div>
+
+                                    <div class="row my-4">
+                                        <div class="col-md-12 p-0 px-1">
+
+                                            <div class="row">
+                                                <div class="col-md-12 px-1">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" id="address_1"
+                                                               name="address_1"
+                                                               placeholder="22 High street" required>
+                                                        <label for="address_1">Address Line 1</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12 px-1">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" id="address_2"
+                                                               name="address_2"
+                                                               placeholder="Apartment 07" required>
+                                                        <label for="address_2">Address Line 2</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-8 ps-md-1 px-1 px-md-0">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" id="city"
+                                                               name="city"
+                                                               placeholder="Sheffield" required>
+                                                        <label for="city">City</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xl-4 pe-md-1 px-1 px-md-0">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control"
+                                                               id="postcode"
+                                                               name="postcode"
+                                                               placeholder="XY0 XYZ0" required>
+                                                        <label for="postcode">Postcode</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12 px-1">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" id="county"
+                                                               name="county"
+                                                               placeholder="United Kingdom" required>
+                                                        <label for="county">County</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12 px-1">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" id="country"
+                                                               name="country"
+                                                               placeholder="United Kingdom" required>
+                                                        <label for="country">Country</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row my-4">
+                                        <div class="col-md-12 p-0 px-1">
+
+                                            <div class="row">
+                                                <div class="col-md-12 px-1">
+                                                    <div class="form-floating">
+                                                        <input type="password" class="form-control" id="password"
+                                                               name="password"
+                                                               placeholder="Password"
+                                                               required>
+                                                        <label for="password">Password</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12 px-1">
+                                                    <div class="form-floating">
+                                                        <input type="password" class="form-control" id="confirmPassword"
+                                                               name="confirmPassword"
+                                                               placeholder="Confirm Password"
+                                                               required>
+                                                        <label for="confirmPassword">Confirm Password</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!---------------------------------------------- Terms and Conditions Checkbox ---------------------------------------------------------------------------->
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-check form-switch text-center m-1 d-flex justify-content-center mb-4">
+                                            <input class="form-check-input" type="checkbox" id="tcCheck" name="tcCheck"
+                                                   required>
+                                            <label class="form-check-label ms-3" for="tcCheck">
+                                                Agree to the <a href="#" class="hover-link text-decoration-none">Terms
+                                                    and Conditions</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!---------------------------------------------- Captcha --------------------------------------------------------------------------------------------------->
+
+                                <div class="card-footer-sign my-2">
+                                    <input type="hidden" id="token" name="token">
+                                    <button class="btn btn-primary w-100 py-2"
+                                            id="submit-btn"
+                                            data-sitekey="<%= process.env.CAPTCHA_PUBLIC %>>"
+                                            data-callback='onSubmit'
+                                            disabled
+                                            data-action='submit'>
+                                        <span class="spinner-border spinner-border-sm me-2" role="status"
+                                              id="spinner"></span>
+                                        Loading...
+                                    </button>
+
+                                    <div class="text-center align-content-center fw-bolder mt-3">
+                                        <p>Already have an account? <a href="/login"
+                                                                       class="hover-link text-decoration-none">Login</a>
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </main>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

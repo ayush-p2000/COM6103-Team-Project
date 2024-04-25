@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon -e js -i 'views/*' -i public/* ./bin/www.js",
+    "dev": "nodemon -e js -i 'views/*' -i public/* ./bin/www",
     "test": "mocha \"./tests/**/*.js\" --recursive",
     "coverage": "nyc --reporter=text --reporter=html npm test"
   },

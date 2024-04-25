@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 <tr class="text-center">
                     <td>${item.date_of_referral}</td>
                     <td>
-                        <a href="/admin/users/${item.user?._id}">
+                        <a href="/admin/accounts/${item.user?._id}">
                             ${item.user?.first_name} ${item.user?.last_name}
                         </a>
                     </td>
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                         </a>
                     </td>
                     <td>
-                        <p class="badge bg-${item.state_colour}">
+                        <p class="w-100 badge bg-${item.state_colour}">
                             ${item.state_string}
                         </p>
                     </td>

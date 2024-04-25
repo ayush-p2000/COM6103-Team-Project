@@ -1,105 +1,117 @@
-<%- include("../components/header") %>
-
-<%- include("../components/navbar") %>
-
 <div class="container p-5">
-    <div class="row">
+    <div class="row mb-3">
         <div class="col-md-12">
-            <div class="card rounded shadow">
+            <h2 class="fw-semibold">
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square text-success"></i>
+                    <i class="fa-solid fa-stack-1x fa-shopping-bag text-white"></i>
+                </span>
+                Checkout
+            </h2>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow">
                 <div class="card-body p-4">
-                    <h1 class="fw-bold text-center">Checkout</h1>
-
                     <div class="row">
                         <div class="col-auto">
                             <i class="fa-regular fa-circle-check fa-3x"></i>
                         </div>
                         <div class="col">
-                        <p class="pb-0 mb-0">Order #<%= order.id %></p>
-                        <h5 class="fw-bold">Thank you for your purchase!</h5>
+                            <p class="pb-0 mb-0">Order #<%= order.id %></p>
+                            <h5 class="fw-bold">Thank you for your purchase!</h5>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-
-                    <hr>
-
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow">
+                <div class="card-body p-4">
                     <div class="row pb-4">
                         <div class="col-md-6 mb-md-0 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h3 class="fw-bold">Order Details</h3>
-                                    <hr>
-                                    <p><strong>ID:</strong> <%= order.id %></p>
-                                    <p>
-                                        <strong>Date:</strong> <%= new Date(order.date.toISOString()).toLocaleDateString() %>
-                                    </p>
-                                    <p><strong>Total:</strong> <%= order.currency %><%= order.amount %></p>
 
-                                    <div class="text-center">
-                                        <p>Paid via:</p>
-                                        <div class="border border-2 rounded p-2">
-                                            <% if (order.paymentMethod === "paypal") { %>
-                                                <img src="/images/paypal.png" alt="PayPal" width="100">
-                                            <% } else if (order.paymentMethod === "stripe") { %>
-                                                <img src="/images/stripe.png" alt="Stripe" width="100">
-                                            <% } else { %>
-                                                <h4 class="text-muted">Not applicable</h4>
-                                            <% } %>
-                                        </div>
+                            <h3 class="fw-bold">Order Details</h3>
+                            <hr>
+                            <p><strong>ID:</strong> <%= order.id %></p>
+                            <p>
+                                <strong>Date:</strong> <%= new Date(order.date.toISOString()).toLocaleDateString() %>
+                            </p>
+                            <p><strong>Total:</strong> <%= order.currency %><%= order.amount %></p>
 
-                                    </div>
+                            <div class="text-center">
+                                <p>Paid via:</p>
+                                <div class="border border-2 rounded p-2">
+                                    <% if (order.paymentMethod === "paypal") { %>
+                                        <img src="/images/paypal.png" alt="PayPal" width="100">
+                                    <% } else if (order.paymentMethod === "stripe") { %>
+                                        <img src="/images/stripe.png" alt="Stripe" width="100">
+                                    <% } else { %>
+                                        <h4 class="text-muted">Not applicable</h4>
+                                    <% } %>
                                 </div>
+
                             </div>
+
                         </div>
 
                         <div class="col-md-6">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <p class="m-0">By selling your device with us,</p>
-                                    <h5 class="fw-bold">You Have:</h5>
 
-                                    <div class="alert alert-success rounded-5">
-                                        <p class="mb-0">
-                                            <i class="fa-solid fa-leaf"></i>
-                                            <strong>Saved </strong> Nkg of CO2
-                                        </p>
-                                    </div>
+                            <p class="m-0">By selling your device with us,</p>
+                            <h5 class="fw-bold">You Have:</h5>
 
-                                    <div class="alert alert-success rounded-5">
-                                        <p class="mb-0">
-                                            <i class="fa-solid fa-recycle"></i>
-                                            <strong>Recycled </strong> Nkg of electronic waste
-                                        </p>
-                                    </div>
-
-                                    <div>
-                                        <p> [Additional Green Stats]</p>
-                                    </div>
-                                </div>
+                            <div class="alert alert-success rounded-5">
+                                <p class="mb-0">
+                                    <i class="fa-solid fa-leaf"></i>
+                                    <strong>Saved </strong> Nkg of CO2
+                                </p>
                             </div>
+
+                            <div class="alert alert-success rounded-5">
+                                <p class="mb-0">
+                                    <i class="fa-solid fa-recycle"></i>
+                                    <strong>Recycled </strong> Nkg of electronic waste
+                                </p>
+                            </div>
+
+                            <div>
+                                <p> [Additional Green Stats]</p>
+                            </div>
+
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow">
+                <div class="card-body p-4">
                     <div class="row pb-2">
 
                         <div class="col-md-12">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h3 class="fw-bold">Product Details</h3>
-                                    <hr>
-                                    <p><strong><%= order.product %></strong></p>
-                                    <p><strong>Price:</strong> <%= order.currency %><%= order.amount %></p>
-                                    <div class="alert <%= (order.data_retrieval) ? "alert-success" : "alert-secondary" %> p-0 m-0 w-auto">
-                                        <% if(order.data_retrieval === '0') { %>
-                                            <% if(order.amount === '0') { %>
-                                                <p class="p-0 m-0 text-center"> Recycle <%= order.product %> </p>
-                                            <% } else { %>
-                                                <p class="p-0 m-0 text-center"><%= order.product +' '+ order.currency +' '+ order.amount %></p>
-                                            <% } %>
-                                        <% } else { %>
-                                            <p class="p-0 m-0 text-center"><%= order.product +' '+ order.currency +' '+ order.amount %> for <%= extension %> months</p>
-                                        <% } %>
+                            <h3 class="fw-bold">Product Details</h3>
+                            <hr>
+                            <p><strong><%= order.product %></strong></p>
+                            <p><strong>Price:</strong> <%= order.currency %><%= order.amount %></p>
+                            <div class="alert <%= (order.data_retrieval) ? "alert-success" : "alert-secondary" %> p-0 m-0 w-auto">
+                                <% if(order.data_retrieval === '0') { %>
+                                    <% if(order.amount === '0') { %>
+                                        <p class="p-0 m-0 text-center"> Recycle <%= order.product %> </p>
+                                    <% } else { %>
+                                        <p class="p-0 m-0 text-center"><%= order.product + ' ' + order.currency + ' ' + order.amount %></p>
+                                    <% } %>
+                                <% } else { %>
+                                    <p class="p-0 m-0 text-center"><%= order.product + ' ' + order.currency + ' ' + order.amount %>
+                                        for <%= extension %> months</p>
+                                <% } %>
 
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

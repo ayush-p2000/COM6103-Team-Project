@@ -11,7 +11,8 @@ const {
     getProviders,
     addQuote,
     deleteQuote,
-    getAllDevices, getAllDeviceType,
+    getAllDevices,
+    getAllDeviceType,
     getUnknownDeviceHistoryByDevice
 } = require('../../model/mongodb')
 const deviceState = require("../../model/enum/deviceState")
@@ -27,10 +28,13 @@ const {handleMissingModels} = require("../../util/Devices/devices");
 const getMarketplace = async (req, res, next) => {
     const deviceTypes = await getAllDeviceType()
     try {
-        let {items, pagination} = await getPaginatedResults(Device, req.params.page, {}, {}, 10);
+        let {
+            items,
+            pagination
+        } = await getPaginatedResults(Device, req.params.page, {}, {}, 10);
 
-        for (const item of items) {
-            await handleMissingModels(item)
+        if (items.length > 0) {
+            await handleMissingModels(items)
         }
         renderUserLayout(req, res, '../marketplace/marketplace', {
             deviceTypes,
@@ -42,6 +46,8 @@ const getMarketplace = async (req, res, next) => {
         })
     } catch (e) {
         console.log(e)
+        res.status(500);
+        next(e);
     }
 }
 

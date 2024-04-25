@@ -19,22 +19,22 @@ document.addEventListener('DOMContentLoaded', async function () {
                 <tr>
                     <td>${item.date_added}</td>
                     <td>
-                        <a href="/admin/users/${item.user?._id}">
+                        <a href="/admin/accounts/${item.user?._id}">
                             ${item.user?.first_name} ${item.user?.last_name}
                         </a>
                     </td>
                     <td>
-                        <a href="/admin/products/${item.device_id}">
+                        <a href="/admin/devices/${item.device_id}">
                             ${item.name}
                         </a>
                     </td>
                     <td>
-                        <p class="badge bg-${item.category_colour}">
+                        <p class="w-100 badge bg-${item.category_colour}">
                             ${item.category_string}
                         </p>
                     </td>
                     <td>
-                        <p class="badge bg-${item.state_colour}">
+                        <p class="w-100 badge bg-${item.state_colour}">
                             ${item.state_string}
                         </p>
                     </td>

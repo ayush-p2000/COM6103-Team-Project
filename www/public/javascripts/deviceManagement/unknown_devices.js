@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var checkbox = document.getElementById("needUpdate");
     var rows = document.querySelectorAll("tbody tr");
-    document.getElementById('needUpdate').addEventListener('change', function() {
+    document.getElementById('needUpdate')?.addEventListener('change', function() {
         if (checkbox.checked) {
             rows.forEach(function(row) {
                 var statusCell = row.querySelector("td:first-child");
@@ -138,5 +138,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 row.style.display = "";
             });
         }
+    });
+
+    $('#unknown_devices_table').DataTable({
+
     });
 })

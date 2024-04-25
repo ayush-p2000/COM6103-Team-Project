@@ -35,7 +35,7 @@ async function getUserDashboard(req, res, next) {
         })
         const marketContainsDevices = marketDevices.length > 0
         renderUserLayout(req, res, '../marketplace/user_home', {
-            user: userData,
+            userData: userData,
             firstName: firstName,
             devices: userItems,
             marketDevices: marketDevices,
@@ -144,8 +144,8 @@ async function updateUserDetails(req, res, next) {
             messages: messages,
             hasMessages: messages.length > 0,
             userData: updatedUser,
-            isGoogleAuthenticated: req.user.google_id != null,
-            auth: req.isLoggedIn
+            auth: req.isLoggedIn,
+            isGoogleAuthenticated: updatedUser.google_id !== null
         })
     } catch (err) {
         console.error(err);

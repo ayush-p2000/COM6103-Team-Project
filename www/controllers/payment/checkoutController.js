@@ -10,6 +10,7 @@ const transactionState = require('../../model/enum/transactionState')
 const deviceState = require('../../model/enum/deviceState')
 const paymentMethod = require('../../model/enum/paymentMethod')
 const retrievalState = require("../../model/enum/retrievalState");
+const {renderUserLayout} = require("../../util/layout/layoutUtils");
 
 
 /**
@@ -31,7 +32,7 @@ async function getCheckout(req, res, next) {
         const state = deviceState.RECYCLED
         await updateDeviceState(id, state)
         const order = setTransactionDetails(id, total, 'Not Available', model, extension)
-        res.render('payment/checkout_complete', {title: 'Payment Completed', order: order, extension: extension})
+        renderUserLayout(req, res, 'payment/checkout_complete', {title: 'Payment Completed', order: order, extension: extension})
     } else {
         //Check to determine if the payment is for retrieval or for extending the retrieval time
         switch (type) {
@@ -67,7 +68,7 @@ async function getCheckout(req, res, next) {
                 break
         }
 
-        res.render('payment/checkout', {id: id, total: total, extension: extension, product: product, user: req.user, auth:req.isLoggedIn})
+        renderUserLayout(req, res, '../payment/checkout', {id: id, total: total, extension: extension, product: product})
     }
 
 }
@@ -154,7 +155,7 @@ async function getCheckoutCompleted(req, res, next) {
 
     await updateTransaction(transactionDetails)
 
-    res.render('payment/checkout_complete', {title: 'Payment Completed', order: order, extension: extension});
+    renderUserLayout(req, res,'../payment/checkout_complete', {title: 'Payment Completed', order: order, extension: extension});
 }
 
 /**

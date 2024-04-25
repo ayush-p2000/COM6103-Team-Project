@@ -1,71 +1,93 @@
-<div class="container">
+<div class="container-fluid mb-5">
     <div class="row my-3">
-        <div class="col-md-12 text-center">
-            <h2>List of Devices</h2>
-            <hr>
+        <div class="col-md-12">
+            <h2 class="fw-semibold">
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square"></i>
+                    <i class="fa-solid fa-stack-1x fa-mobile-screen text-white"></i>
+                </span>
+                Devices
+            </h2>
         </div>
 
     </div>
 
-    <div class="d-inline-flex w-100">
-        <div class="btn btn-warning mb-3 mx-2">
-            <a href="/admin/devices/flagged" class="text-decoration-none text-white">Flagged Devices</a>
-        </div>
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body">
 
-        <div class="btn btn-info mb-3">
-            <a href="/admin/devices/retrievals" class="text-decoration-none text-white">Data Retrieval Devices</a>
+
+                    <div class="d-inline-flex w-100 align-content-center">
+                        <div class="btn btn-warning my-auto w-100 me-1">
+                            <a href="/admin/devices/flagged" class="text-decoration-none text-white">Flagged Devices</a>
+                        </div>
+
+                        <div class="btn btn-info my-auto w-100 ms-1">
+                            <a href="/admin/devices/retrievals" class="text-decoration-none text-white">Data Retrieval
+                                Devices</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-12">
-            <% if (typeof (error) !== "undefined") { %>
-                <div class="alert alert-danger" role="alert">
-                    <strong>Error:</strong> <%= error %>
-                </div>
-            <% } else { %>
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered" id="devices_management">
-                        <thead>
-                        <tr>
-                            <th>Device ID</th>
-                            <th>Device Type</th>
-                            <th>Device Brand</th>
-                            <th>Device Model</th>
-                            <th>Category</th>
-                            <th>State</th>
-                            <th>Visibility</th>
-                            <th>Listing User</th>
-                            <th><i class="fas fa-eye"></i></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <% devices.forEach(function(device) { %>
-                            <tr>
-                                <td><%= device._id %></td>
-                                <td><%= device.device_type?.name %></td>
-                                <td><%= device.brand?.name %></td>
-                                <td><%= device.model?.name %></td>
-                                <td><%= deviceCategory.deviceCategoryToString(device.category) %></td>
-                                <td>
-                                    <span class="badge <%= deviceState.deviceStateToColour(device.state, "bg-") %> mx-auto"><%= deviceState.deviceStateToString(device.state) %></span>
-                                </td>
-                                <td>
-                                    <span class="badge <%= (device.visible ? "bg-success" : "bg-danger") %>"><%= (device.visible) ? "Visible" : "Hidden" %></span>
-                                </td>
-                                <td>
-                                    <a href="/admin/accounts/<%= device.listing_user?._id %>" class="btn btn-info btn-sm w-100">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body">
+
+                    <% if (typeof (error) !== "undefined") { %>
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Error:</strong> <%= error %>
+                        </div>
+                    <% } else { %>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered" id="devices_management">
+                                <thead>
+                                <tr>
+                                    <th>Device ID</th>
+                                    <th>Device Type</th>
+                                    <th>Device Brand</th>
+                                    <th>Device Model</th>
+                                    <th>Category</th>
+                                    <th>State</th>
+                                    <th>Visibility</th>
+                                    <th>Listing User</th>
+                                    <th><i class="fas fa-eye"></i></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% devices.forEach(function(device) { %>
+                                    <tr>
+                                        <td><%= device._id %></td>
+                                        <td><%= device.device_type?.name %></td>
+                                        <td><%= device.brand?.name %></td>
+                                        <td><%= device.model?.name %></td>
+                                        <td><%= deviceCategory.deviceCategoryToString(device.category) %></td>
+                                        <td>
+                                            <span class="w-100 badge <%= deviceState.deviceStateToColour(device.state, "bg-") %> mx-auto"><%= deviceState.deviceStateToString(device.state) %></span>
+                                        </td>
+                                        <td>
+                                            <span class="w-100 badge <%= (device.visible ? "bg-success" : "bg-danger") %>"><%= (device.visible) ? "Visible" : "Hidden" %></span>
+                                        </td>
+                                        <td>
+                                            <a href="/admin/accounts/<%= device.listing_user?._id %>" class="btn btn-info btn-sm w-100">
                                                 <%= `${device.listing_user?.first_name ?? "Unknown"} ${device.listing_user?.last_name ?? "User"}` ?? "Unknown User" %>
                                                 <i class="fa-solid fa-arrow-right ms-1"></i>
                                             </a>
-                                </td>
-                                <td><a href="/admin/devices/<%= device._id %>" class="btn btn-primary">View</a></td>
-                            </tr>
-                        <% }); %>
-                        </tbody>
-                    </table>
+                                        </td>
+                                        <td><a href="/admin/devices/<%= device._id %>" class="btn btn-primary">View</a>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } %>
                 </div>
-            <% } %>
+            </div>
         </div>
     </div>
 
