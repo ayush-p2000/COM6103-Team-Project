@@ -505,7 +505,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <% if (deviceState.deviceStateToString(item.state) !== 'Rejected') { %>
+                            <% if (item.state !==  deviceState.REJECTED && item.state !==  deviceState.RECYCLED && item.state !==  deviceState.IN_REVIEW && item.state !==  deviceState.DRAFT && item.state !==  deviceState.SOLD && item.state !==  deviceState.DATA_RECOVERY) { %>
                             <div class="col-sm-6">
                                 <p class="text-center lead">
                                     Visible to Public?
