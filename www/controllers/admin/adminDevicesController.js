@@ -423,26 +423,27 @@ const postDeviceDemotion = async (req, res) => {
                     actioned_by: req.user.id
                 };
                 await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
-            } else if (newValue === deviceState.LISTED) {
-                const historyObject = {
-                    device: item._id,
-                    history_type: historyType.ITEM_APPROVED,
-                    data: [],
-                    actioned_by: req.user.id
-                };
-                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
-
-                const reviewHistory = await getReviewHistory(item._id);
-                if (reviewHistory.length > 0 && reviewHistory[0].history_type === historyType.REVIEW_REQUESTED || reviewHistory[0].history_type === historyType.REVIEW_REJECTED) {
-                    //Add another history item approving the review
-                    const newHistoryObject = {
+            } else if (newValue === deviceState.LISTED ) {
+                    item.visible = true;
+                    const historyObject = {
                         device: item._id,
-                        history_type: historyType.REVIEW_ACCEPTED,
+                        history_type: historyType.ITEM_APPROVED,
                         data: [],
                         actioned_by: req.user.id
                     };
-                    await addHistory(newHistoryObject.device, newHistoryObject.history_type, newHistoryObject.data, newHistoryObject.actioned_by);
-                }
+                    await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
+
+                    const reviewHistory = await getReviewHistory(item._id);
+                    if (reviewHistory.length > 0 && reviewHistory[0].history_type === historyType.REVIEW_REQUESTED || reviewHistory[0].history_type === historyType.REVIEW_REJECTED) {
+                        //Add another history item approving the review
+                        const newHistoryObject = {
+                            device: item._id,
+                            history_type: historyType.REVIEW_ACCEPTED,
+                            data: [],
+                            actioned_by: req.user.id
+                        };
+                        await addHistory(newHistoryObject.device, newHistoryObject.history_type, newHistoryObject.data, newHistoryObject.actioned_by);
+                    }
             } else if (newValue === deviceState.HIDDEN) {
                 const historyObject = {
                     device: item._id,
