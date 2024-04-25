@@ -505,6 +505,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <% if (deviceState.deviceStateToString(item.state) !== 'Rejected') { %>
                             <div class="col-sm-6">
                                 <p class="text-center lead">
                                     Visible to Public?
@@ -528,6 +529,7 @@
                                 </div>
 
                             </div>
+                            <% } %>
                         </div>
 
                     </div>
