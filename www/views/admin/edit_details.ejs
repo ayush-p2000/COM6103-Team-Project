@@ -460,8 +460,14 @@
                         <% } %>
 
                         <div class="mb-3 row">
+                            <% if (item.state !== deviceState.REJECTED && item.state !== deviceState.RECYCLED && item.state !== deviceState.IN_REVIEW && item.state !== deviceState.DRAFT && item.state !== deviceState.SOLD && item.state !== deviceState.DATA_RECOVERY) { %>
                             <div class="col-sm-6">
-                                <p class="text-center lead">Device State</p>
+                                <% } else { %>
+                                <div class="col-sm-12">
+                                    <% } %>
+
+
+                                    <p class="text-center lead">Device State</p>
 
                                 <div class="alert <%= deviceState.deviceStateToColour(item.state, "alert-") %> mb-0 rounded-bottom-0">
                                     <div class="d-inline-flex justify-content-center w-100">
@@ -505,6 +511,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <% if (item.state !==  deviceState.REJECTED && item.state !==  deviceState.RECYCLED && item.state !==  deviceState.IN_REVIEW && item.state !==  deviceState.DRAFT && item.state !==  deviceState.SOLD && item.state !==  deviceState.DATA_RECOVERY) { %>
                             <div class="col-sm-6">
                                 <p class="text-center lead">
                                     Visible to Public?
@@ -528,6 +535,7 @@
                                 </div>
 
                             </div>
+                            <% } %>
                         </div>
 
                     </div>
