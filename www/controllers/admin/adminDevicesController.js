@@ -29,6 +29,7 @@ const {
     deleteModel,
     deleteBrand,
     getAllRetrievalDevices,
+    getAllModelsTableData,
     updateUnknownDevices
 } = require("../../model/mongodb")
 
@@ -157,8 +158,7 @@ async function getDeviceTypePage(req, res, next) {
     const subpage = req.params.subpage ? req.params.subpage : "brands";
     const deviceTypes = await getAllDeviceType()
     const brands = await getAllBrand()
-    const models = subpage === "models" ? await getAllModels() : [];
-
+    const models = subpage === "models" ? await getAllModelsTableData() : [];
     renderAdminLayoutPlaceholder(req, res, "device_types", {brands,deviceTypes,subpage,models}, null)
 }
 
@@ -237,7 +237,10 @@ const updateDeviceType = async (req,res,next) => {
 
     res.redirect(`/admin/types/${subpage}/${id}`)
 }
-
+/**
+ * Delete Device Type
+ * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
+ */
 const deleteDeviceType = async (req,res,next) => {
     const id = req.params.id
     const subpage = req.params.subpage
@@ -264,7 +267,6 @@ const deleteDeviceType = async (req,res,next) => {
     res.redirect(`/admin/types/${subpage}`)
 
 }
-
 /**
  * Get method to retrieve the details of the device from the staff side, which is then used to update the details of the device
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
@@ -639,5 +641,6 @@ module.exports = {
     postDeviceChangeRequest,
     postDeviceVisibility,
     updateDeviceType,
-    deleteDeviceType
+    deleteDeviceType,
+
 }

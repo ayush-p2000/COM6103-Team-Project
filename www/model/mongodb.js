@@ -208,6 +208,10 @@ const getAllModels = async () => {
     return await Model.find({is_deleted: {$ne: true}}).populate("deviceType").populate("brand")
 }
 
+const getAllModelsTableData = async () => {
+    return await Model.find({is_deleted: {$ne: true}}).populate("deviceType","name").populate("brand","name").select({_id:1, name:1})
+}
+
 /**
  * Get All models of a type
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
@@ -1237,6 +1241,21 @@ async function updateUserDob(id, birthday) {
     return User.updateOne({_id: id}, update)
 }
 
+/**
+ * method to update the user's listed devices array to device id
+ * here $push updates the array without deleting the previous contents
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function updateUserListedItem(id, deviceId) {
+    const update = {
+        $push: {
+            listed_devices : deviceId
+        }
+    }
+
+    return User.updateOne({_id: id}, update)
+}
+
 
 
 module.exports = {
@@ -1308,6 +1327,8 @@ module.exports = {
     getTransactionById,
     getQuotesGroupByState,
     getAllQuotes,
+    getAllModelsTableData,
     updateUnknownDevices,
-    updateUserDob
+    updateUserDob,
+    updateUserListedItem
 }

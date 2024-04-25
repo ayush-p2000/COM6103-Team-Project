@@ -17,27 +17,11 @@ const deviceCategory = require("../../model/enum/deviceCategory");
 const deviceState = require("../../model/enum/deviceState");
 const accountStatus = require("../../model/enum/accountStatus")
 const roleTypes = require("../../model/enum/roleTypes")
-const {quoteState, stateToColour, stateToString, getList,quoteStateToRGB} = require("../../model/enum/quoteState");
+const {quoteState, stateToColour, stateToString, getList, quoteStateToRGB} = require("../../model/enum/quoteState");
 
 async function getReportsPage(req, res, next) {
-    const classes = await prepareClassesData();
-    const cases = await prepareCasesData();
-    const types = await prepareTypesData();
-    const accounts = await prepareActiveAccountsData()
-    const account_types = await prepareAccountTypesData()
-    const sales = await prepareSalesData();
-    const referrals = await prepareReferralsData();
-    const quotes = await prepareQuotesData();
     renderAdminLayout(req, res, "reports/reports",
         {
-            classes: classes,
-            cases: cases,
-            types: types,
-            accounts,
-            account_types,
-            sales,
-            referrals,
-            quotes,
             deviceCategory,
             deviceState,
             accountStatus,
@@ -53,56 +37,108 @@ async function getReportPage(req, res, next) {
     //Create the title by removing underscores and capitalising the first letter of each word
     const title = type.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
 
-    let data;
-
-    switch (type) {
-        case "classes":
-            data = await prepareClassesData();
-            break;
-        case "cases":
-            data = await prepareCasesData();
-            break;
-        case "types":
-            data = await prepareTypesData();
-            break;
-        case "accounts":
-            data = await prepareActiveAccountsData();
-            break;
-        case "account_types":
-            data = await prepareAccountTypesData();
-            break;
-        case "referrals":
-            data = await prepareReferralsData();
-            break;
-        case "sales":
-            data = await prepareSalesData();
-            break;
-        case "quotes":
-            data = await prepareQuotesData();
-            break;
-        default:
-            data = {...getMockGraphData(), table: getMockSalesData()}
-    }
-
     renderAdminLayout(req, res, `reports/report`, {
         title: title,
         report: type,
-        data: {labels: data.labels, datasets: data.datasets, table: data.table},
         deviceCategory,
         deviceState,
         accountStatus,
         roleTypes,
         quoteState,
+        quoteStateToColour: quoteState.stateToColour,
+        quoteStateToString: quoteState.stateToString
     });
 }
 
-/**
- * Prepare the data for the classes report
- * @returns {Promise<{datasets: any[][], table: *[], labels: *[]}>}
- */
-async function prepareClassesData() {
+async function getReportChartData(req, res, next) {
+    const type = req.params.report_type;
+
+    let data;
+
+    switch (type) {
+        case "classes":
+            data = await prepareClassesChart();
+            data.backgrounds = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category));
+            data.borderColors = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category, true));
+            break;
+        case "cases":
+            data = await prepareCasesChart();
+            data.backgrounds = deviceState.getList().map(state => deviceState.deviceStateToRGB(state));
+            data.borderColors = deviceState.getList().map(state => deviceState.deviceStateToRGB(state, true));
+            break;
+        case "types":
+            data = await prepareTypesChart();
+            data.backgrounds = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category));
+            data.borderColors = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category, true));
+            break;
+        case "accounts":
+            data = await prepareActiveAccountsChart();
+            data.backgrounds = accountStatus.getList().map(status => accountStatus.accountStatusToRGB(status));
+            data.borderColors = accountStatus.getList().map(status => accountStatus.accountStatusToRGB(status, true));
+            break;
+        case "account_types":
+            data = await prepareAccountTypesChart();
+            data.backgrounds = roleTypes.getList().map(type => roleTypes.roleTypeToRGB(type));
+            data.borderColors = roleTypes.getList().map(type => roleTypes.roleTypeToRGB(type, true));
+            break;
+        case "referrals":
+            data = await prepareReferralsChart();
+            break;
+        case "sales":
+            data = await prepareSalesChart();
+            break;
+        case "quotes":
+            data = await prepareQuotesChart();
+            data.backgrounds = quoteState.getList().map(state => quoteState.quoteStateToRGB(state));
+            data.borderColors = quoteState.getList().map(state => quoteState.quoteStateToRGB(state, true));
+            break;
+        default:
+            return res.status(400).json({error: "Invalid report type"});
+    }
+
+    return res.json(data);
+}
+
+async function getReportTableData(req, res, next) {
+    const type = req.params.report_type;
+
+    let data = {};
+
+    switch (type) {
+        case "classes":
+            data.table = await prepareClassesTable();
+            break;
+        case "cases":
+            data.table = await prepareCasesTable();
+            break;
+        case "types":
+            data.table = await prepareTypesTable();
+            break;
+        case "accounts":
+            data.table = await prepareActiveAccountsTable();
+            break;
+        case "account_types":
+            data.table = await prepareAccountTypesTable();
+            break;
+        case "referrals":
+            data.table = await prepareReferralsTable();
+            break;
+        case "sales":
+            data.table = await prepareSalesTable();
+            break;
+        case "quotes":
+            data.table = await prepareQuotesTable();
+            break;
+        default:
+            return res.status(400).json({error: "Invalid report type"});
+    }
+
+    return res.json(data);
+}
+
+//region Classes Data
+async function prepareClassesChart() {
     const deviceGroups = await getDevicesGroupByCategory();
-    const devices = await getAllDevices();
     const deviceCategoryIntegers = deviceCategory.getList();
     const labels = [];
     deviceCategoryIntegers.forEach(value => labels.push(deviceCategory.deviceCategoryToString(value)));
@@ -113,14 +149,25 @@ async function prepareClassesData() {
         const index = deviceCategoryIntegers.indexOf(group._id);
         data[index] = group.total;
     });
+    return {labels, data};
+}
 
+async function prepareClassesTable() {
+    const devices = await getAllDevices();
     const table = [];
 
     devices.forEach(device => {
         table.push({
             name: `${device.brand?.name ?? "Unbranded"} ${device.model?.name ?? "Unknown Model"}`,
+
             category: device.category,
+            category_string: deviceCategory.deviceCategoryToString(device.category),
+            category_colour: deviceCategory.deviceCategoryToColour(device.category),
+
             state: device.state,
+            state_string: deviceState.deviceStateToString(device.state),
+            state_colour: deviceState.deviceStateToColour(device.state),
+
             date_added: device.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
@@ -128,22 +175,33 @@ async function prepareClassesData() {
                 hour: "numeric",
                 minute: "numeric"
             }),
-            user: device.listing_user,
+
+            user: device.listing_user?.toJSON(),
+
             device_id: device._id,
         });
     });
+    return table;
+}
+
+/**
+ * Prepare the data for the classes report
+ * @returns {Promise<{datasets: any[][], table: *[], labels: *[]}>}
+ */
+async function prepareClassesData() {
+    const {labels, data} = await prepareClassesChart();
+
+    const table = await prepareClassesTable();
 
     return {labels: labels, datasets: [data], table: table};
 
 }
 
-/**
- * Prepare the data for the cases report
- * @returns {Promise<{datasets: any[][], table: *[], labels: *[]}>}
- */
-async function prepareCasesData() {
+//endregion
+
+//region Cases Data
+async function prepareCasesChart() {
     const deviceGroups = await getDevicesGroupByState();
-    const devices = await getAllDevices();
     const deviceStatesIntegers = deviceState.getList();
     const labels = [];
     deviceStatesIntegers.forEach(value => labels.push(deviceState.deviceStateToString(value)));
@@ -154,14 +212,25 @@ async function prepareCasesData() {
         const index = deviceStatesIntegers.indexOf(group._id);
         data[index] = group.total;
     });
+    return {labels, data};
+}
 
+async function prepareCasesTable() {
+    const devices = await getAllDevices();
     const table = [];
 
     devices.forEach(device => {
         table.push({
             name: `${device.brand?.name ?? "Unbranded"} ${device.model?.name ?? "Unknown Model"}`,
+
             category: device.category,
+            category_string: deviceCategory.deviceCategoryToString(device.category),
+            category_colour: deviceCategory.deviceCategoryToColour(device.category),
+
             state: device.state,
+            state_string: deviceState.deviceStateToString(device.state),
+            state_colour: deviceState.deviceStateToColour(device.state),
+
             date_added: device.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
@@ -169,22 +238,31 @@ async function prepareCasesData() {
                 hour: "numeric",
                 minute: "numeric"
             }),
-            user: device.listing_user,
+            user: device.listing_user?.toJSON(),
             device_id: device._id,
         });
     });
+    return table;
+}
+
+/**
+ * Prepare the data for the cases report
+ * @returns {Promise<{datasets: any[][], table: *[], labels: *[]}>}
+ */
+async function prepareCasesData() {
+    const {labels, data} = await prepareCasesChart();
+
+    const table = await prepareCasesTable();
 
     return {labels: labels, datasets: [data], table: table};
 
 }
 
-/**
- * Prepare the data for the classes report
- * @returns {Promise<{datasets: any[][], table: *[], labels: *[]}>}
- */
-async function prepareTypesData() {
+//endregion
+
+//region Types Data
+async function prepareTypesChart() {
     const deviceGroups = await getDevicesGroupByType();
-    const devices = await getAllDevices();
     const deviceTypes = await getAllDeviceTypes();
 
     //Create a list of labels for the chart
@@ -197,15 +275,26 @@ async function prepareTypesData() {
         const index = labels.indexOf(group.name);
         data[index] = group.total;
     });
+    return {labels, data};
+}
 
+async function prepareTypesTable() {
+    const devices = await getAllDevices();
     const table = [];
 
     devices.forEach(device => {
         table.push({
             name: `${device.brand?.name ?? "Unbranded"} ${device.model?.name ?? "Unknown Model"}`,
             device_type: device.device_type?.name,
+
             category: device.category,
+            category_string: deviceCategory.deviceCategoryToString(device.category),
+            category_colour: deviceCategory.deviceCategoryToColour(device.category),
+
             state: device.state,
+            state_string: deviceState.deviceStateToString(device.state),
+            state_colour: deviceState.deviceStateToColour(device.state),
+
             date_added: device.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
@@ -217,9 +306,53 @@ async function prepareTypesData() {
             device_id: device._id,
         });
     });
+    return table;
+}
+
+/**
+ * Prepare the data for the classes report
+ * @returns {Promise<{datasets: any[][], table: *[], labels: *[]}>}
+ */
+async function prepareTypesData() {
+    const {labels, data} = await prepareTypesChart();
+
+    const table = await prepareTypesTable();
 
     return {labels: labels, datasets: [data], table: table};
 
+}
+
+//endregion
+
+//region Active Accounts Data
+async function prepareActiveAccountsChart() {
+    const accountCount = await getAccountsCountByStatus()
+    const labels = accountCount.map(item => item._id ? "Active" : "Inactive")
+    const data = accountCount.map(item => item.count)
+    return {labels, data};
+}
+
+async function prepareActiveAccountsTable() {
+    const users = await getAllUsers()
+    const table = []
+
+    users.forEach(user => {
+        table.push({
+            name: `${user.first_name} ${user.last_name}`,
+            id: user._id,
+            active: user.active,
+            role: user.role,
+            email: user.email,
+            date_added: user.createdAt.toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric"
+            }),
+        });
+    });
+    return table;
 }
 
 /**
@@ -228,10 +361,25 @@ async function prepareTypesData() {
  * @author Adrian Urbanczyk
  */
 const prepareActiveAccountsData = async () => {
-    const accountCount = await getAccountsCountByStatus()
-    const users = await getAllUsers()
-    const labels = accountCount.map(item => item._id ? "Active" : "Inactive")
+    const {labels, data} = await prepareActiveAccountsChart();
+
+    const table = await prepareActiveAccountsTable();
+
+    return {labels, datasets: [data], table: table};
+
+}
+//endregion
+
+//region Account Types Data
+async function prepareAccountTypesChart() {
+    const accountCount = await getAccountsCountByType()
+    const labels = accountCount.map(item => roleTypes.roleTypeToString(item._id))
     const data = accountCount.map(item => item.count)
+    return {labels, data};
+}
+
+async function prepareAccountTypesTable() {
+    const users = await getAllUsers()
     const table = []
 
     users.forEach(user => {
@@ -239,7 +387,7 @@ const prepareActiveAccountsData = async () => {
             name: `${user.first_name} ${user.last_name}`,
             id: user._id,
             active: user.active,
-            role: user.role,
+            role: roleTypes.roleTypeToString(user.role),
             email: user.email,
             date_added: user.createdAt.toLocaleDateString("en-GB", {
                 day: "numeric",
@@ -250,9 +398,7 @@ const prepareActiveAccountsData = async () => {
             }),
         });
     });
-
-    return {labels, datasets: [data], table: table};
-
+    return table;
 }
 
 /**
@@ -261,36 +407,19 @@ const prepareActiveAccountsData = async () => {
  * @author Adrian Urbanczyk
  */
 const prepareAccountTypesData = async () => {
-    const accountCount = await getAccountsCountByType()
-    const users = await getAllUsers()
-    const labels = accountCount.map(item => roleTypes.roleTypeToString(item._id))
-    const data = accountCount.map(item => item.count)
-    const table = []
+    const {labels, data} = await prepareAccountTypesChart();
 
-    users.forEach(user => {
-        table.push({
-            name: `${user.first_name} ${user.last_name}`,
-            id: user._id,
-            active: user.active,
-            role: user.role,
-            email: user.email,
-            date_added: user.createdAt.toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-                hour: "numeric",
-                minute: "numeric"
-            }),
-        });
-    });
+    const table = await prepareAccountTypesTable();
 
     return {labels, datasets: [data], table: table};
 
 }
+//endregion
 
+//region Sales Data
 const SALES_PREV_MONTHS = 12;
 
-const prepareSalesData = async () => {
+async function prepareSalesChart() {
     //Labels is an array of strings, each representing a month from the current month, going back 6 months
     const labels = [];
     const currentMonth = new Date().getMonth();
@@ -341,11 +470,14 @@ const prepareSalesData = async () => {
 
         referrals_value_data[index] = item.value;
     });
+    return {labels, datasets: [referrals_count_data, referrals_value_data]};
+}
 
+async function prepareSalesTable() {
     //Get all converted sales ordered by date
     const table = [];
-
     const sales = await getAllSalesOrderedByDate(SALES_PREV_MONTHS);
+
     sales.forEach(referral => {
         table.push({
             date: referral.date.toLocaleDateString("en-GB", {
@@ -361,13 +493,22 @@ const prepareSalesData = async () => {
             purchase_type: referral.purchase_type,
         });
     });
-
-    return {labels, datasets: [referrals_count_data, referrals_value_data], table};
+    return table;
 }
 
+const prepareSalesData = async () => {
+    const {labels, datasets} = await prepareSalesChart();
+
+    const table = await prepareSalesTable();
+
+    return {labels, datasets, table};
+}
+//endregion
+
+//region Referrals Data
 const REFERRALS_PREV_MONTHS = 12;
 
-const prepareReferralsData = async () => {
+async function prepareReferralsChart() {
     //Labels is an array of strings, each representing a month from the current month, going back 6 months
     const labels = [];
     const currentMonth = new Date().getMonth();
@@ -418,11 +559,14 @@ const prepareReferralsData = async () => {
 
         referrals_value_data[index] = item.value;
     });
+    return {labels, datasets: [referrals_count_data, referrals_value_data]};
+}
 
+async function prepareReferralsTable() {
     //Get all converted referrals ordered by date
     const table = [];
-
     const referrals = await getAllReferralsOrderedByDate(REFERRALS_PREV_MONTHS);
+
     referrals.forEach(referral => {
         table.push({
             date_of_referral: referral.confirmation_details?.receipt_date.toLocaleDateString("en-GB", {
@@ -434,24 +578,31 @@ const prepareReferralsData = async () => {
             }),
             user: referral.device?.listing_user,
             product: referral.device,
+
             state: referral.state,
+            state_string: quoteState.stateToString(referral.state),
+            state_colour: quoteState.stateToColour(referral.state),
+
             referral_amount: referral.confirmation_details?.final_price,
             provider: referral.provider?.name,
             provider_logo: referral.provider?.logo,
         });
     });
-
-    return {labels, datasets: [referrals_count_data, referrals_value_data], table};
+    return table;
 }
 
+const prepareReferralsData = async () => {
+    const {labels, datasets} = await prepareReferralsChart();
 
-/**
- * Prepare the data for the quotes per state report
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
- */
-async function prepareQuotesData() {
+    const table = await prepareReferralsTable();
+
+    return {labels, datasets, table};
+}
+//endregion
+
+//region Quotes Data
+async function prepareQuotesChart() {
     const quoteGroups = await getQuotesGroupByState();
-    const quotes = await getAllQuotes();
     const quoteStatesIntegers = quoteState.getList();
     const labels = [];
     quoteStatesIntegers.forEach(value => labels.push(quoteState.stateToString(value)));
@@ -461,14 +612,22 @@ async function prepareQuotesData() {
         const index = quoteStatesIntegers.indexOf(group._id);
         data[index] = group.total;
     });
+    return {labels, data};
+}
 
+async function prepareQuotesTable() {
     const table = [];
+    const quotes = await getAllQuotes();
 
     quotes.forEach(quote => {
         table.push({
             name: `${quote.device?.model?.name ?? "Unknown Model"}`,
             provider: `${quote.provider?.name ?? "Unknown provider"}`,
+
             state: quote.state,
+            state_string: quoteState.stateToString(quote.state),
+            state_colour: quoteState.stateToColour(quote.state),
+
             logo: quote.provider?.logo,
             date_added: quote.createdAt?.toLocaleDateString("en-GB", {
                 day: "numeric",
@@ -482,13 +641,28 @@ async function prepareQuotesData() {
             device_id: quote.device?._id,
         });
     });
+    return table;
+}
+
+/**
+ * Prepare the data for the quotes per state report
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
+async function prepareQuotesData() {
+    const {labels, data} = await prepareQuotesChart();
+
+    const table = await prepareQuotesTable();
 
     return {labels: labels, datasets: [data], table: table};
 }
 
+//endregion
+
 module.exports = {
     getReportsPage,
     getReportPage,
+    getReportChartData,
+    getReportTableData,
     prepareSalesData,
     prepareReferralsData,
 }

@@ -1,48 +1,66 @@
 /* globals Chart:false */
 
-document.addEventListener('DOMContentLoaded', function () {
-    var mock_sales_dataset = [
-        {
-            label: 'Sales',
-            data: [0, 10, 5, 2, 20, 30, 45],
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1,
-            lineTension: 0,
-            yAxisID: 'y',
-        },
-        {
-            label: 'Value (£)',
-            data: [0, 45.28, 27.88, 67.55, 547.55, 687.44, 472.55],
-            backgroundColor: 'rgba(0,192,0,0.2)',
-            borderColor: 'rgb(0,192,0)',
-            borderWidth: 1,
-            lineTension: 0,
-            yAxisID: 'y1',
-        }
-    ];
+document.addEventListener('DOMContentLoaded', async function () {
+    //Get the elements from the DOM
+    const $loadingCollapse = $('#loadingCollapse')
+    const $tableCollapse = $('#tableCollapse')
+    const $errorCollapse = $('#errorCollapse')
 
-    var mock_sales_options = {
-        scales: {
-            y: {
-                type: 'linear',
-                display: true,
-                position: 'left',
-            },
-            y1: {
-                type: 'linear',
-                display: true,
-                position: 'right',
-                grid: {
-                    drawOnChartArea: false,
-                },
-            },
-        }
-    };
+    try {
+        //Get the data from the server
+        const response = await axios.get('/admin/reports/referrals/table');
 
-    createChart('#r', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'], mock_sales_dataset, 'line', mock_sales_options);
+        const data = response.data
+        const table = data.table;
 
-    $('#referrals_table').DataTable({
+        let html = "";
+        table.forEach((item) => {
+            const row = `
+                <tr class="text-center">
+                    <td>${item.date_of_referral}</td>
+                    <td>
+                        <a href="/admin/users/${item.user?._id}">
+                            ${item.user?.first_name} ${item.user?.last_name}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="/admin/devices/${item.product?._id}">
+                            ${item.product?.brand?.name} ${item.product?.model?.name}
+                        </a>
+                    </td>
+                    <td>
+                        <p class="badge bg-${item.state_colour}">
+                            ${item.state_string}
+                        </p>
+                    </td>
+                    <td>£${item.referral_amount}</td>
+                    <td>
+                        <div class="d-inline-flex justify-content-center w-100">
+                            <img src="${item.provider_logo}" alt="${item.provider}" class="img-fluid img-thumbnail mr-2 h-100" style="max-width: 100px;" >
+                        </div>
+                    </td>
+                </tr>`;
 
-    });
+            html += row;
+        });
+
+        $('#referrals_table tbody').html(html);
+
+        //Hide the loading collapse and show the table collapse
+        $loadingCollapse.collapse('hide');
+
+        $tableCollapse.on('shown.bs.collapse', function () {
+            $('#referrals_table').DataTable({
+
+            });
+        });
+
+        $tableCollapse.collapse('show');
+    } catch (e) {
+        console.error(e);
+
+        //Hide the loading collapse and show the error message
+        $loadingCollapse.collapse('hide');
+        $errorCollapse.collapse('show');
+    }
 });

@@ -7,7 +7,7 @@ const {
     getAccountDetailsPage, getAccountsPage, getEditAccountPage, createStaff, deleteUser
 } = require("../controllers/admin/adminAccountsController");
 
-const {getReportsPage, getReportPage} = require("../controllers/admin/adminReportsController");
+const {getReportsPage, getReportPage, getReportTableData, getReportChartData} = require("../controllers/admin/adminReportsController");
 
 const {
     getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage,
@@ -56,6 +56,8 @@ router.get('/moderation', getModerationDashboard);
 router.get('/reports', getReportsPage);
 
 router.get('/reports/:report_type', getReportPage);
+router.get('/reports/:report_type/chart', getReportChartData);
+router.get('/reports/:report_type/table', getReportTableData)
 
 router.get('/types/:subpage?', getDeviceTypePage);
 
@@ -76,5 +78,6 @@ router.post('/activateUser', upload.none(), activateUser);
 router.get('/error', upload.none(),)
 
 router.post('/deleteUser',upload.none(),deleteUser);
+
 
 module.exports = router;

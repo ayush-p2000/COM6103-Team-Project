@@ -25,24 +25,27 @@ const {handleMissingModels} = require("../../util/Devices/devices");
  * @author Zhicong Jiang<zjiang34@sheffield.ac.uk>
  */
 const getMarketplace = async (req, res, next) => {
-    const deviceTypes = await getAllDeviceType();
-    const { items, pagination } = await getPaginatedResults(Device, req.params.page, {}, {}, 10);
+    const deviceTypes = await getAllDeviceType()
     try {
-        var devices = await getAllDevices();
-        await handleMissingModels(devices);
+        let {items, pagination} = await getPaginatedResults(Device, req.params.page, {}, {}, 10);
+
+        for (const item of items) {
+            await handleMissingModels(item)
+        }
+        renderUserLayout(req, res, '../marketplace/marketplace', {
+            deviceTypes,
+            devices: items,
+            deviceCategory,
+            auth: req.isLoggedIn,
+            user: req.user,
+            pagination
+        })
     } catch (e) {
-        console.log(e);
+        console.log(e)
     }
-    renderUserLayout(req, res, '../marketplace/marketplace', {
-        deviceTypes,
-        devices,
-        items,
-        deviceCategory,
-        auth: req.isLoggedIn,
-        user: req.user,
-        pagination
-    });
-};
+}
+
+
 /**
  * Get User's items to display it in the my-items page, so that the user can see what items they have listed in the application
  * Here the function also checks if there is quotation details in the database for the item, if not then it'll fetch the details from getDeviceQuotation method
@@ -106,7 +109,6 @@ async function getMyItems(req, res, next) {
         console.log(e);
     }
 }
-
 
 
 module.exports = {

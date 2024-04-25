@@ -8,7 +8,7 @@ const {
     updateQuote,
     getQuoteById,
     getUnknownDeviceHistoryByDevice,
-    getRetrievalObjectByDeviceId
+    getRetrievalObjectByDeviceId, updateUserListedItem
 } = require("../../model/mongodb");
 const mongoose = require("mongoose");
 const {
@@ -57,6 +57,8 @@ const postListItem = async (req, res) => {
 
         if (typeof id === 'undefined') {
             const deviceId = await listDevice(req.body, filesBase64, req.user);
+            await updateUserListedItem(req.user.id, deviceId)
+
             res.status(200).send(deviceId);
         } else {
             const deviceId = await updateDevice(id, req.body, filesBase64);
