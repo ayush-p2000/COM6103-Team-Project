@@ -50,7 +50,7 @@
                 <!-- Carousel Section -->
                 <h2 class="text-center mt-5 mb-1">Our Marketplace</h2>
                 <p class="text-center mb-2">Take a look at some of the items currently listed on our platform.</p>
-                <% if (items.length >= 3 && false) { %>
+                <% if (items.length >= imgPerCarousel) { %>
                     <div id="landingCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
                         <div class="carousel-inner ">
                             <% for(let i = 0; i < Math.floor(items.length / imgPerCarousel); i++) { %>

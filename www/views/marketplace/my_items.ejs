@@ -100,11 +100,11 @@
                                                 <small>Classification: </small><%= deviceCategory.deviceCategoryToString(item.category) %>
                                             </p>
                                             <% quotations.forEach(quoteArray => { %>
-                                                <% if (quoteArray.length > 0) { %>
+                                                <% if (quoteArray.length > 0 && (item.state === deviceState.LISTED || item.state === deviceState.HAS_QUOTE) && item.visible) { %>
                                                     <% const firstQuote = quoteArray[0] %>
                                                     <% if(firstQuote.device.equals(item._id)) { %>
                                                         <p class="m-0 p-0 text-muted">
-                                                            <small>Price: </small>£<%= firstQuote.value %></p>
+                                                            <small>Price: </small>£<%= firstQuote?.value ?? "Not Found" %></p>
                                                     <% } %>
                                                 <% } %>
                                             <% }) %>
