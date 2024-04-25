@@ -423,7 +423,7 @@ const postDeviceDemotion = async (req, res) => {
                     actioned_by: req.user.id
                 };
                 await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
-            } else if (newValue === deviceState.LISTED) {
+            } else if (newValue === deviceState.LISTED && item.visible === true ) {
                 const historyObject = {
                     device: item._id,
                     history_type: historyType.ITEM_APPROVED,
