@@ -3,7 +3,7 @@
  */
 
 const {renderAdminLayout} = require("../../util/layout/layoutUtils");
-const {User} = require("../../model/schema/user");
+const {User} = require("../../model/models");
 const roleTypes = require("../../model/enum/roleTypes");
 
 const {getAllUsers, searchUserAndPopulate, getUserById, getTotalAccountsCount, getSalesCountByMonth,
@@ -86,8 +86,12 @@ async function insertStaffDetails(req,res,next){
             updateFields.role = role;
         }
 
-        if (req.user.role > roleTypes.USER && req.body.role <= req.user.role) {
-            return res.status(403).send('You do not have the required permissions to perform this action');
+        if (req.user.role > roleTypes.USER && req.body.role > req.user.role) {
+            return renderAdminLayout(req, res, "user_details", {userDetails: user, messages: ['You do not have the required permissions to perform this action'], hasMessages: true, isGoogleAuthenticated: user.google_id !== null, roleTypes})
+        }
+
+        if (req.session.messages.length > 0) {
+            return res.redirect(`/admin/accounts/${req.params.id}`)
         }
 
         const userDetails = await User.findByIdAndUpdate(user, updateFields, {new: true});

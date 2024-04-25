@@ -1,8 +1,19 @@
-<canvas id="account_types_chart"></canvas>
+<div class="collapse show h-25" id="accountTypes_loadingCollapse">
+    <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+</div>
+<div class="collapse" id="accountTypes_chartCollapse" style="height: 100%; max-height: 100%;">
+    <canvas id="account_types_chart"></canvas>
+</div>
+<div class="collapse" id="accountTypes_errorCollapse">
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error</h4>
+        <p>There was an error loading the chart.</p>
+        <hr>
+        <p class="mb-0">Please try again later.</p>
+    </div>
+</div>
 <script src="/javascripts/reports/charts/account_types.js"></script>
-<script>
-    const accounts_types_labels = <%- JSON.stringify(labels) %>;
-    const accounts_types_data = <%- JSON.stringify(datasets[0]) %>;
-    const account_types_backgrounds =  <%- JSON.stringify(roleTypes.getList().map(type => roleTypes.roleTypeToRGB(type))) %>;
-    const account_types_borderColors =  <%- JSON.stringify(roleTypes.getList().map(type => roleTypes.roleTypeToRGB(type, true))) %>;
-</script>

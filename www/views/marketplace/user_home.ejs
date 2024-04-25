@@ -1,43 +1,103 @@
-<div class="items m-5">
-    <h2 class="my-5">Welcome <%= firstName %> </h2>
-    <div class="row my-5">
-        <h4>Marketplace</h4>
-        <% displayDevices = marketDevices.length <= 5 ? marketDevices : marketDevices.slice(0,5) %>
-        <% displayDevices.forEach(device => { if(device.visible){ %>
-            <div class="col-12 col-sm-6 col-md-4 col-xl-2 item">
-                <div class="card h-100">
-                    <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>" class="card-img-top img-fluid item-img" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title modelName"><%= device.model.name %></h5>
-                        <p class="m-0 p-0 text-muted deviceType"><small>Device Type: </small><%= device.device_type.name %></p>
-                        <p class="m-0 p-0 text-muted category">
-                            <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
-                        <p class="m-0">By: <span class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span></p>
-                    </div>
-                    <a class="btn btn-primary btn-sm mb-1 mx-2" href="/item/<%= device._id %>"> View</a>
-                </div>
-            </div>
-        <% }}) %>
-        <a href="/marketplace/" class="btn btn-primary w-auto h-25 my-auto">View All</a>
-    </div>
-    <h4>My Items</h4>
-    <div class="row mt-5">
-        <% var displayDevices = devices.length <= 5 ? devices : devices.slice(0,5) %>
-        <% displayDevices.forEach(device => { %>
-            <div class="col-12 col-sm-6 col-md-4 col-xl-2 item">
-                <div class="card h-100">
-                    <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>" class="card-img-top img-fluid item-img" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title modelName"><%= device.model.name %></h5>
-                        <p class="m-0 p-0 text-muted deviceType"><small>Device Type: </small><%= device.device_type.name %></p>
-                        <p class="m-0 p-0 text-muted category">
-                            <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
-                    </div>
-                    <a class="btn btn-primary btn-sm mb-1 mx-2" href="/item/<%= device._id %>"> View</a>
-                </div>
-            </div>
-        <% }) %>
-        <a href="/my-items/" class="btn btn-primary w-auto h-25 my-auto">View All</a>
+<div class="container-fluid mb-5">
+    <div class="mt-3 mb-5">
+        <p class="m-0">Welcome back,</p>
+        <h2 class="fw-semibold"><%= userData.first_name %> <%= userData.last_name %></h2>
+        <hr>
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body">
+                    <h4 class="fs-5 fw-bold mb-3">
+                        <i class="fas fa-store"></i>
+                        Marketplace
+                        <a href="/marketplace/" class="text-dark">
+                            <i class="fas fa-arrow-right"></i>
+                            <p class="visually-hidden">View marketplace</p>
+                        </a>
+                    </h4>
+                    <% if (marketContains) { %>
+
+                        <div class="d-inline-flex mb-3 w-100" style="overflow-x: scroll; white-space: nowrap">
+                            <% var displayDevices = marketDevices.length <= 6 ? marketDevices : marketDevices.slice(0, 6) %>
+
+                            <% displayDevices.forEach(device => { %>
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-auto item mb-2 d-flex px-2">
+                                    <div class="card rounded-4 shadow-sm w-100 h-100" style="max-width: 350px;">
+                                        <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>"
+                                             class="img-fluid d-block h-100 mx-auto rounded-top-4" alt="..."
+                                             style="max-height: 200px;">
+                                        <div class="card-body">
+                                            <h5 class="card-title modelName"><%= device.model.name %></h5>
+                                            <p class="m-0 p-0 text-muted deviceType"><small>Device
+                                                    Type: </small><%= device.device_type.name %></p>
+                                            <p class="m-0 p-0 text-muted category">
+                                                <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
+                                            <p class="m-0">By: <span
+                                                        class="fw-light fst-italic text-muted"><%= device.listing_user.first_name %></span>
+                                            </p>
+
+                                            <a class="btn btn-primary btn-sm mt-1  w-100" href="/item/<%= device._id %>"> View</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+
+                    <% } else { %>
+                        <p class="text-muted">Marketplace has no devices listed</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3 mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body">
+
+                    <h4 class="fs-5 fw-bold text-dark mb-3">
+                        <i class="fa-solid fa-mobile-screen"></i>
+                        My Items
+                        <a href="/my-items/" class="text-dark">
+                            <i class="fas fa-arrow-right"></i>
+                            <p class="visually-hidden">View all items</p>
+                        </a>
+                    </h4>
+
+                    <% if (userContains) { %>
+                        <% displayDevices = devices.length <= 6 ? devices : devices.slice(0, 6) %>
+
+                        <div class="d-inline-flex mb-3 w-100" style="overflow-x: scroll; white-space: nowrap">
+                            <% displayDevices.forEach(device => { %>
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 item mb-2 d-flex px-2">
+                                    <div class="card w-100 h-100 rounded-4 shadow-sm">
+                                        <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>"
+                                             class="img-fluid d-block h-100 mx-auto rounded-top-4" alt="..."
+                                             style="max-height: 200px;">
+                                        <div class="card-body">
+                                            <h5 class="card-title modelName"><%= device.model.name %></h5>
+                                            <p class="m-0 p-0 text-muted deviceType"><small>Device
+                                                    Type: </small><%= device.device_type.name %></p>
+                                            <p class="m-0 p-0 text-muted category">
+                                                <small>Classification: </small><%= deviceCategory.deviceCategoryToString(device.category) %>
+                                            </p>
+                                            <a class="btn btn-primary btn-sm mt-1  w-100"
+                                               href="/item/<%= device._id %>"> View</a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p class="text-muted">You have no devices listed here</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

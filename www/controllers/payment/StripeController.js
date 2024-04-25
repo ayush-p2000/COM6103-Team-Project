@@ -1,7 +1,11 @@
-const {request} = require("express");
-const {getMockPurchaseData} = require("../../util/mock/mockData");
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+/**
+ * Stripe integration method
+ * @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
+ */
 
+const {renderUserLayout} = require("../../util/layout/layoutUtils");
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 /**
  * Get method used to display the stripe gateway
@@ -19,7 +23,7 @@ function getStripe (req, res, next) {
         extension = req.query.extension
     }
     let queryString = Object.keys(data).map(key => key + '='+ encodeURIComponent(data[key])).join('&')
-    res.render('payment/StripeGateway', {key:process.env.STRIPE_PUBLISHABLE_KEY, data: queryString, extension: extension});
+    renderUserLayout(req, res, '../payment/StripeGateway', {key:process.env.STRIPE_PUBLISHABLE_KEY, data: queryString, extension: extension});
 }
 
 /**

@@ -1,3 +1,5 @@
+const roleTypes = require("../../model/enum/roleTypes");
+
 /**
  * Display the admin layout with the provided view embedded inside.
  * The user and auth variables are passed to the view automatically.
@@ -6,7 +8,7 @@
  * @author Benjamin Lister
  */
 function renderAdminLayout(req, res, page, data) {
-    res.render('admin/admin_layout', {currentRoute: page, ...data, placeholder: null, auth: req.isLoggedIn, user:req.user, isAdminRoute: true});
+    res.render('admin/admin_layout', {currentRoute: page, ...data, placeholder: null, auth: req.isLoggedIn, user:req.user, isAdminRoute: true, roleTypes});
 }
 
 /**
@@ -19,7 +21,7 @@ function renderAdminLayout(req, res, page, data) {
  * @author Benjamin Lister
  */
 function renderAdminLayoutPlaceholder(req, res, page, data, placeholder) {
-    res.render('admin/admin_layout', {currentRoute: page, ...data, placeholder, auth: req.isLoggedIn, user:req.user, isAdminRoute: true});
+    res.render('admin/admin_layout', {currentRoute: page, ...data, placeholder, auth: req.isLoggedIn, user:req.user, isAdminRoute: true, roleTypes});
 }
 
 function renderUserLayout(req, res, page, data) {

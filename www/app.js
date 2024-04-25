@@ -4,12 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require("passport")
-const session = require("express-session")
-const axios = require("axios");
 const bodyParser = require('body-parser');
 const fs = require('fs');
-
-const mongo = require('./model/mongodb')
 
 //Load routers
 const indexRouter = require('./routes/index');
@@ -22,11 +18,13 @@ const qrRouter = require('./routes/qr');
 const userRouter = require('./routes/user');
 
 const debugRouter = require('./routes/debug');
+
 const {
     passportStrategy,
     passportSerializeUser,
     passportDeserializeUser, passportSessionErrorHandler, sessionErrorHandler, sessionSetup
 } = require("./auth/passportAuth");
+
 const { isAuthenticated, authInfo, isStaff} = require("./middlewares/auth")
 
 const app = express();
@@ -82,11 +80,14 @@ if (process.env.ENVIRONMENT === undefined || process.env.ENVIRONMENT !== "prod")
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    next(createError(404));
+    //Get the route the user is trying to access
+    let url = req.url;
+
+    next(createError(404, {message: `The page you are looking for does not exist: ${url}`}));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function (err,req,  res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};

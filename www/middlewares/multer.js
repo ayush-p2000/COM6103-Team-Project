@@ -4,7 +4,6 @@
  */
 const multer = require('multer');
 
-
 /**
  * Set Up Files Storage Path
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>

@@ -75,31 +75,43 @@ document.addEventListener("DOMContentLoaded", function() {
      * Handling show/hide further condition
      * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
-    conditionYes.addEventListener('change', ()=> {
+    conditionYes.addEventListener('change', () => {
         // Show further condition term if yes
         if (conditionYes.checked) {
-            setSelectedRadioValue("functionalityRadio","5")
-            setSelectedRadioValue("btnRadio","5")
-            setSelectedRadioValue("cameraRadio","5")
-            setSelectedRadioValue("batteryRadio","5")
-            setSelectedRadioValue("bodyRadio","5")
-            setSelectedRadioValue("touchscreenRadio","5")
-            setSelectedRadioValue("displayRadio","5")
-
+            setConditionValues("5");
             conditionList.classList.remove("d-block");
             conditionList.classList.add("d-none")
         }
     });
-    conditionNo.addEventListener('change', ()=> {
-        // hide further condition term if no
+
+    conditionNo.addEventListener('change', () => {
+        // Show further condition term if no
         if (conditionNo.checked) {
+            setConditionValues("1");
             conditionList.classList.remove("d-none");
             conditionList.classList.add("d-block");
         }
     });
 
+    /**
+     * Function to set All the Radio to a Value
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
+    function setConditionValues(value) {
+        setSelectedRadioValue("functionalityRadio", value);
+        setSelectedRadioValue("btnRadio", value);
+        setSelectedRadioValue("cameraRadio", value);
+        setSelectedRadioValue("batteryRadio", value);
+        setSelectedRadioValue("bodyRadio", value);
+        setSelectedRadioValue("touchscreenRadio", value);
+        setSelectedRadioValue("displayRadio", value);
+    }
 
 
+    /**
+     * Function to set the value of a Radio Element
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     function setSelectedRadioValue(radio,value) {
         var radios = document.getElementsByName(radio);
 
@@ -111,6 +123,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    /**
+     * Function to get the value of a Radio Element
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     function getSelectedRadioValue(radios) {
         for (var i = 0; i < radios.length; i++) {
             if (radios[i].checked) {
@@ -165,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function() {
         showModelPreview()
         var selectedIndex = deviceModelElement.selectedIndex;
         var template = `
-            <div class="card p-3 ">
+            <div class="card rounded-4 shadow-sm p-3 rounded-bottom-0">
                 <div class="row" id="selected-model-content">
                     <div class="col-3">
                         <img src="${models[selectedIndex].properties[0].value}" class="img-fluid rounded-start" >
@@ -175,11 +191,17 @@ document.addEventListener("DOMContentLoaded", function() {
                             <h5 class="card-title">${models[selectedIndex].name}</h5>
                             <p class="card-text m-0"><small>Device Type:</small> ${deviceTypeElement.options[deviceTypeElement.selectedIndex].innerText}</p>
                             <p class="card-text m-0"><small>Brand:</small> ${deviceBrandElement.options[deviceBrandElement.selectedIndex].innerText}</p>
-                            <p class="card-text"><small class="text-muted">Release at ${models[selectedIndex].properties[2].value}</small></p>
+                            <p class="card-text"><small class="text-muted">Released ${models[selectedIndex].properties[2].value}</small></p>
                         </div>
                     </div>
                 </div>
-            </div>`
+            </div>
+            <div class="card rounded-4 shadow-sm rounded-top-0 bg-info-subtle">
+                <div class="card-body">
+                    <p class="p-0 m-0 small text-center">Is this the correct model you're selling?</p>
+                </div>
+            </div>
+            `
         document.getElementById('selected-model-content').innerHTML = template;
     }
 
@@ -255,16 +277,15 @@ document.addEventListener("DOMContentLoaded", function() {
             { name: "body", value: getSelectedRadioValue(bodyRadios)},
             { name: "touchscreen", value: getSelectedRadioValue(touchscreenRadios) },
             { name: "display", value: getSelectedRadioValue(displayRadios)},
-
-            { name: "color", value: deviceColor.value },
-            { name: "capacity", value: deviceCapacity.value },
-            { name: "years used", value: deviceYear.value }
         ];
 
         var formData = new FormData();
         formData.append('device_type', selectedType);
         formData.append('brand', selectedBrand);
         formData.append('model', selectedModel);
+        formData.append('color', deviceColor.value);
+        formData.append('capacity', deviceCapacity.value);
+        formData.append('years_used', deviceYear.value);
         formData.append('details', JSON.stringify(details));
         formData.append('category', category);
         formData.append('good_condition', conditionYes.checked);

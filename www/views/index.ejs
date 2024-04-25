@@ -25,9 +25,18 @@
                 </div>
 
                 <div class="lc-block d-grid gap-2 d-md-flex justify-content-md-start pb-3">
-                    <a class="btn btn-success px-4 me-md-2 mb-2 btn-bg <% if (auth) { %> d-none <% } %>" <% if (!auth) { %> href="/login" <% } %> role="button">Login</a>
-                    <a class="btn btn-outline-secondary px-4 me-md-2 mb-2 <% if (auth) { %> d-none <% } %>" <% if (!auth) { %> href="/register" <% } %> role="button">Sign Up</a>
-                    <a class="btn btn-success px-4 me-md-2 mb-2 btn-bg <% if (!auth) { %> d-none <% } %>" <% if (auth) { %> href="/dashboard" <% } %> role="button">Go to Dashboard</a>
+                    <a class="btn btn-success px-4 me-md-2 mb-2 btn-bg <% if (auth) { %> d-none <% } %>"
+                    <% if (!auth) { %> href="/login"
+                            <% } %>
+                       role="button">Login</a>
+                    <a class="btn btn-outline-secondary px-4 me-md-2 mb-2 <% if (auth) { %> d-none <% } %>"
+                    <% if (!auth) { %> href="/register"
+                            <% } %>
+                       role="button">Sign Up</a>
+                    <a class="btn btn-success px-4 me-md-2 mb-2 btn-bg <% if (!auth) { %> d-none <% } %>"
+                    <% if (auth) { %> href="/dashboard"
+                            <% } %>
+                       role="button">Go to Dashboard</a>
 
                 </div>
 
@@ -35,45 +44,69 @@
         </div>
     </div>
 
-    <!-- Carousel Section -->
-    <% if (items.length >= 3) { %>
-        <h2 class="text-center mt-5 mb-1">Our marketplace</h2>
-        <div id="landingCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner ">
-                <% for(let i = 0; i < Math.floor(items.length / imgPerCarousel); i++) { %>
-                    <div class="carousel-item <%= i === 0 ? "active" : "" %>" data-bs-interval="5000">
-                        <div class="row g-2 mb-4 w-100 gx-5 p-5 w-100 me-auto ms-auto ">
-                            <% for(let j = i * 3; j < i * imgPerCarousel + imgPerCarousel; j++) {
-                                const item = items[j];
-                            %>
-                            <div class="col-sm-4 col-md-3 col-lg-2 col-xl-2 item">
-                                <div class="card h-100">
-                                    <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data ?? "").toString('base64') %>"
-                                         class="card-img-top img-fluid item-img" alt="..."
-                                         style="height: 200px; object-fit: cover">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><%= item.model.name %></h5>
-                                        <p class="m-0 p-0 fs-6">Price: <span class="fw-bold"><%= item.quote ? quote.value : "Price not found" %></span></p>
+    <div class="container-fluid feature object-fit-cover">
+        <div class="row bg-light pb-3">
+            <div class="col-md-12">
+                <!-- Carousel Section -->
+                <h2 class="text-center mt-5 mb-1">Our Marketplace</h2>
+                <p class="text-center mb-2">Take a look at some of the items currently listed on our platform.</p>
+                <% if (items.length >= imgPerCarousel) { %>
+                    <div id="landingCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                        <div class="carousel-inner ">
+                            <% for(let i = 0; i < Math.floor(items.length / imgPerCarousel); i++) { %>
+                                <div class="carousel-item <%= i === 0 ? "active" : "" %>"
+                                     data-bs-interval="5000">
+                                    <div class="row g-2 w-100 gx-2 p-5 me-auto ms-auto justify-content-center">
+                                        <% for(let j = i * 3; j < i * imgPerCarousel + imgPerCarousel; j++) {
+                                            const item = items[j];
+                                        %>
+                                        <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 item">
+                                            <div class="card rounded-4 w-100 h-100 shadow-sm">
+                                                <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data ?? "").toString('base64') %>"
+                                                     class="img-fluid d-block mx-auto rounded-top-4" alt="..."
+                                                     style="height: 200px; object-fit: cover">
+                                                <div class="card-body">
+                                                    <h5 class="card-title"><%= item.model.name %></h5>
+                                                    <p class="m-0 p-0 fs-6">Price: <span
+                                                                class="fw-bold">£<%= item.quote ? item.quote.value : "Price not found" %></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% } %>
                                     </div>
                                 </div>
-                            </div>
                             <% } %>
+                        </div>
+                        <button class="carousel-control-prev arrow-control" type="button"
+                                data-bs-target="#landingCarousel"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next arrow-control" type="button"
+                                data-bs-target="#landingCarousel"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                <% } else { %>
+                    <!-- Placeholder for when there are not enough items to display -->
+                    <div class="my-5">
+                        <div class="row">
+                            <div class="col-mg-12 text-center">
+                                <h2 class="fw-medium">
+                                    <i class="fas fa-hourglass-half text-success opacity-50"></i>
+                                    <p class="fs-5">Something's cooking! Check back later for more items.</p>
+                                </h2>
+                            </div>
                         </div>
                     </div>
                 <% } %>
             </div>
-            <button class="carousel-control-prev arrow-control" type="button" data-bs-target="#landingCarousel"
-                    data-bs-slide="prev">
-                <span class="carousel-control-prev-icon bg-success" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next arrow-control" type="button" data-bs-target="#landingCarousel"
-                    data-bs-slide="next">
-                <span class="carousel-control-next-icon bg-success" aria-hidden="true" ></span>
-                <span class="visually-hidden">Next</span>
-            </button>
         </div>
-    <% } %>
+    </div>
 
     <!-- Features Section -->
     <div class="container-fluid feature mt-3 landing-page px-5 pb-5" id="features">
@@ -81,7 +114,7 @@
         <div class="row row-cols-1 row-cols-md-3 g-3 py-3">
             <h2 class="fw-medium fs-1 pt-2 text-light w-100">Why Use Our Website?</h2>
             <div class="col py-1">
-                <div class="card h-100 shadow">
+                <div class="card rounded-4 h-100 shadow">
                     <div class="card-body">
                         <h2 class="card-title">Eco-Friendly Recycling</h2>
                         <p class="card-text">Our recycling processes adhere to environmentally friendly standards to
@@ -90,7 +123,7 @@
                 </div>
             </div>
             <div class="col py-1">
-                <div class="card h-100 shadow">
+                <div class="card rounded-4 h-100 shadow">
                     <div class="card-body">
                         <h2 class="card-title">Data Security</h2>
                         <p class="card-text">Your data is safe with us. We guarantee the secure destruction of
@@ -99,11 +132,12 @@
                 </div>
             </div>
             <div class="col py-1">
-                <div class="card h-100 shadow">
+                <div class="card rounded-4 h-100 shadow">
                     <div class="card-body">
-                        <h2 class="card-title">Placeholder Feature</h2>
-                        <p class="card-text">We offer convenient pickup services for your electronic waste, ensuring a
-                            hassle-free recycling process.</p>
+                        <h2 class="card-title">Data Recovery Services</h2>
+                        <p class="card-text">We offer data recovery services for devices that are still functional via
+                            our
+                            recycling program.</p>
                     </div>
                 </div>
             </div>
@@ -115,33 +149,45 @@
 
         <div class="row row-cols-1 row-cols-md-3 g-3 py-4">
             <h2 class="fw-medium fs-1 pt-2 text-light w-100">Our Impact</h2>
-            <p class="text-light fw-medium py-4 w-100">We have saved at least 350 million tonnes of e-waste present in
-                our planet. And we aim to consistently
-                growing with your support.</p>
+            <p class="text-light fw-medium py-4 w-100">We are committed to reducing the environmental impact of
+                electronic waste by recycling and reusing electronic devices. By making use of our services, you are
+                contributing to a more sustainable future.</p>
         </div>
 
     </div>
 
     <!-- Contact Section -->
-    <div class="container-fluid features py-4 mb-5 landing-page px-5" id="contact">
+    <div class="container-fluid features py-4 pb-5 landing-page px-5" id="contact">
+
+        <% if (messages.length > 0) { %>
+            <div class="alert alert-success d-flex justify-content-center" role="alert">
+                <% messages.forEach(function(message) { %>
+                    <%= message %><br>
+                <% }); %>
+            </div>
+        <% } %>
+
         <div class="row">
             <div class="col-md-6">
                 <h2 class="fw-medium e-green">Contact Us</h2>
                 <p>Have any questions? Contact us today!</p>
             </div>
             <div class="col-md-6">
-                <form class="contact-form p-4 border-2 rounded-2 shadow-sm">
+                <form class="contact-form p-4 border-2 rounded-2 shadow-sm" method="post" action="/">
                     <div class="form-group">
                         <label for="name">Your Name</label>
-                        <input type="text" class="form-control mb-2" id="name" placeholder="Enter your name">
+                        <input name="name" type="text" class="form-control mb-2" id="name" placeholder="Enter your name"
+                               required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email address</label>
-                        <input type="email" class="form-control mb-2" id="email" placeholder="Enter your email">
+                        <input name="email" type="email" class="form-control mb-2" id="email"
+                               placeholder="Enter your email" required>
                     </div>
                     <div class="form-group">
                         <label for="message">Message</label>
-                        <textarea class="form-control mb-2" id="message" rows="3" placeholder="Your message"></textarea>
+                        <textarea name="message" class="form-control mb-2" id="message" rows="3"
+                                  placeholder="Your message" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-success btn-bg">Submit</button>
                 </form>
@@ -149,6 +195,7 @@
         </div>
 
     </div>
+
 </div>
 
 <%- include("components/footer.ejs") %>

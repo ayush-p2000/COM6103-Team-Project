@@ -1,3 +1,8 @@
+/**
+ * PayPal integration method
+ * @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+ */
+
 const paypal = require('paypal-rest-sdk')
 
 const { PAYPAL_MODE, PAYPAL_CLIENT_KEY, PAYPAL_SECRET_KEY } = process.env;
@@ -8,11 +13,9 @@ paypal.configure({
     'client_secret': PAYPAL_SECRET_KEY
 });
 
-let method = "";
-
-const {request} = require("express");
 const {updateTransaction} = require('../../model/mongodb')
 const transactionState = require('../../model/enum/transactionState')
+const {renderUserLayout} = require("../../util/layout/layoutUtils");
 
 
 
@@ -33,7 +36,7 @@ function getPaypal (req, res, next) {
         extension = req.query.extension
     }
     let queryString = Object.keys(data).map(key => key + '='+ encodeURIComponent(data[key])).join('&')
-    res.render('payment/paypalGateway', {data:queryString, extension: extension});
+    renderUserLayout(req, res, '../payment/paypalGateway', {data:queryString, extension: extension});
 }
 
 
@@ -155,7 +158,7 @@ const cancelPayment = async(req,res)=>{
             transaction.extension = req.query.extension
         }
         await updateTransaction(transaction)
-        res.render('payment/cancel');
+        renderUserLayout(req, res, '../payment/cancel');
 
     } catch (error) {
         console.log(error.message);

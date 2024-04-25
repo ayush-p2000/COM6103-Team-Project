@@ -1,8 +1,19 @@
-<canvas id="quotes_chart"></canvas>
+<div class="collapse show h-25" id="quotes_loadingCollapse">
+    <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+</div>
+<div class="collapse" id="quotes_chartCollapse" style="height: 100%; max-height: 100%;">
+    <canvas id="quotes_chart"></canvas>
+</div>
+<div class="collapse" id="quotes_errorCollapse">
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error</h4>
+        <p>There was an error loading the chart.</p>
+        <hr>
+        <p class="mb-0">Please try again later.</p>
+    </div>
+</div>
 <script src="/javascripts/reports/charts/quotes.js"></script>
-<script>
-    const quotes_labels = <%- JSON.stringify(labels) %>;
-    const quotes_data = <%- JSON.stringify(datasets[0]) %>;
-    const quotes_backgrounds = <%- JSON.stringify(quoteState.getList().map(category => quoteState.quoteStateToRGB(category))) %>;
-    const quotes_borderColours = <%- JSON.stringify(quoteState.getList().map(category => quoteState.quoteStateToRGB(category, true))) %>;
-</script>

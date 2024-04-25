@@ -55,6 +55,14 @@ a {
     object-fit: contain;
 }
 
+.user-home .item-img {
+    padding: 20px;
+    border-radius: 30px 30px 0px 0px;
+    height: 200px;
+    max-height: 200px;
+    object-fit: contain;
+}
+
 
 
 .user-dashboard .item-img {
@@ -107,6 +115,12 @@ a {
 }
 
 .height-500 {
+    height: 500px;
     max-height: 500px;
+}
+.footer-bottom {
+    position:absolute;
+    left: 0;
+    bottom: 0;
 }
 

@@ -1,292 +1,382 @@
 <%- include('../components/header') %>
 
 
-<div class="container-fluid item-detail mt-5">
-    <div class="row bg-light p-4">
-        <div class="col-md-6">
-            <div class="w-auto h-100">
-                <div id="deviceImgCarousel" class="carousel slide h-100" data-bs-theme="dark">
-                    <div class="carousel-inner ">
-                        <% if(item.photos?.length > 0) { %>
-                            <% item.photos.forEach((photo, index) => { %>
-                                <div class="carousel-item d-flex justify-content-center <%= index === 0 ? 'active' : '' %>">
-                                    <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data ?? "").toString('base64') %>"
-                                         class="img-fluid h-100 mx-auto"
-                                         alt="...">
-                                </div>
-                            <% }) %>
-                        <% } else { %>
-                            <div class="carousel-item d-flex justify-content-center active">
-                                <img src="https://placehold.co/600x600?text=No Images"
-                                     class="img-fluid h-100 mx-auto" height="400" alt="...">
-                            </div>
-                        <% } %>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#deviceImgCarousel"
-                            data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#deviceImgCarousel"
-                            data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
+<div class="container-fluid item-detail my-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="fw-semibold">
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square text-success"></i>
+                    <i class="fa-solid fa-stack-1x fa-mobile-screen text-white"></i>
+                </span>
+                Device Details
+            </h2>
         </div>
+    </div>
 
-        <div class="col-md-6">
-            <h3 class="display-4 fw-bold mb-3 d-flex align-content-center" id="modelName"><%= item.model.name %>
-            </h3>
+    <div class="card rounded-4 shadow-sm mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="display-5 fw-bold mb-3 text-center" id="modelName">
+                        <%= item.brand?.name %> <%= item.model.name %>
+                    </h3>
 
-            <p>
-                <span
-                        class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %> my-auto fs-6"
-                        id="stateBadge">
-                    <%= deviceState.deviceStateToString(item.state) %>
-                </span>
+                    <% if (user.id === item.listing_user._id.toString()) { %>
+                        <p class="text-center">
+                            <span class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %> my-auto fs-6"
+                                  id="stateBadge">
+                                <%= deviceState.deviceStateToString(item.state) %>
+                            </span>
 
-                <span
-                        class="badge <%= (!item.visible) ? "bg-danger" : "d-none" %> ms-2 fs-6">
-                    Hidden
-                </span>
-            </p>
-
-            <p class="lead text-muted"><%= deviceCategory.deviceCategoryToString(item.category) %></p>
-
-            <% if (user.id === item.listing_user._id.toString()) { %>
-                <div class="alert <%= deviceState.deviceStateToColour(item.state, "alert-") %> mt-3" role="alert">
-                    <p class="fw-bold m-0"><%= deviceState.deviceStateToNextStepString(item.state) %></p>
-                </div>
-                <% if (!item.visible) { %>
-                    <% if (deviceVisibilityHistory?.length > 0 && deviceVisibilityHistory?.at(0).history_type === historyType.ITEM_HIDDEN) { %>
-                        <div class="alert alert-danger mt-3 text-center" role="alert">
-                            <p>
-                                <i class="fa-solid fa-eye-slash fa-2x"></i>
-                            </p>
-                            <p class="fw-bold m-0"> This device has been hidden from the marketplace by our team. If you
-                                believe this is an error, please contact us.</p>
-                        </div>
-                    <% } else { %>
-                        <div class="alert alert-info mt-3 text-center" role="alert">
-                            <p>
-                                <i class="fa-solid fa-eye-slash fa-2x"></i>
-                            </p>
-                            <p class="fw-bold m-0">This device is currently hidden from the marketplace. If you would
-                                like to make it visible, please ensure that all details are correct, so that our team
-                                can review it before making it visible.</p>
-                        </div>
+                            <span class="badge <%= (!item.visible) ? "bg-danger" : "d-none" %> ms-2 fs-6">
+                                Hidden
+                            </span>
+                        </p>
                     <% } %>
-                <% } %>
-                <% if (deviceReviewHistory?.length > 0 && deviceReviewHistory?.at(0).history_type !== historyType.REVIEW_ACCEPTED) { %>
-                    <% const history = deviceReviewHistory[0]; %>
-                    <div class="alert alert-warning mt-3" role="alert">
-                        <p class="fw-bold m-0">This device has been reviewed by our team. Please see the latest review
-                            below.</p>
 
-                        <% if (history.history_type === historyType.REVIEW_REQUESTED) { %>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card">
-                                        <div class="card-body p-1">
-                                            <div class="row justify-content-between">
-                                                <div class="col-md-4 align-content-center">
-                                                    <div class="alert <%= historyType.historyTypeToColour(history.history_type, "alert-") %> p-1 my-auto"
-                                                         role="alert">
-                                                        <p class="fw-bold m-0 text-center"><%= historyType.historyTypeToString(history.history_type) %></p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <div class="border border-secondary w-100 p-1 rounded 1">
-                                                        <div class="d-inline-flex justify-content-between w-100">
-                                                            <img src="<%= history.actioned_by?.avatar %>"
-                                                                 class="img-fluid rounded-circle"
-                                                                 alt="Avatar"
-                                                                 style="max-width: 35px;">
-
-                                                            <p class="my-auto mx-2 text-center ">
-                                                                <%= history.actioned_by?.first_name + " " + history.actioned_by?.last_name %>
-                                                            </p>
-
-                                                            <div class="alert <%= roleTypes.roleTypeToColour(history.actioned_by?.role, 'alert-') %> my-auto p-1"
-                                                                 role="alert">
-                                                                <i class="fas fa-user<%= history.actioned_by?.role === roleTypes.ADMIN ? "-cog" : (history.actioned_by?.role === roleTypes.STAFF ? "-shield" : "") %>"></i>
-                                                                <%= roleTypes.roleTypeToString(history.actioned_by?.role) %>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mt-2">
-                                                <div class="col-12">
-                                                    <div class="alert alert-secondary p-0 m-0 text-center"
-                                                         style="max-height: 200px;">
-                                                        <p class="fw-bold m-0">Reasoning:</p>
-                                                        <p class="m-0 fst-italic small">"<%= history.data[0].value %>
-                                                            "</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <% } else if (history.history_type === historyType.REVIEW_REJECTED) { %>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card">
-                                        <div class="card-body p-1">
-                                            <div class="row justify-content-between">
-                                                <div class="col-md-4 align-content-center">
-                                                    <div class="alert <%= historyType.historyTypeToColour(history.history_type, "alert-") %> p-1 my-auto"
-                                                         role="alert">
-                                                        <p class="fw-bold m-0 text-center"><%= historyType.historyTypeToString(history.history_type) %></p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <div class="border border-secondary w-100 p-1 rounded 1">
-                                                        <div class="d-inline-flex justify-content-between w-100">
-                                                            <img src="<%= history.actioned_by?.avatar %>"
-                                                                 class="img-fluid rounded-circle"
-                                                                 alt="Avatar"
-                                                                 style="max-width: 35px;">
-
-                                                            <p class="my-auto mx-2 text-center ">
-                                                                <%= history.actioned_by?.first_name + " " + history.actioned_by?.last_name %>
-                                                            </p>
-
-                                                            <div class="alert <%= roleTypes.roleTypeToColour(history.actioned_by?.role, 'alert-') %> my-auto p-1"
-                                                                 role="alert">
-                                                                <i class="fas fa-user<%= history.actioned_by?.role === roleTypes.ADMIN ? "-cog" : (history.actioned_by?.role === roleTypes.STAFF ? "-shield" : "") %>"></i>
-                                                                <%= roleTypes.roleTypeToString(history.actioned_by?.role) %>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mt-2">
-                                                <div class="col-12">
-                                                    <div class="alert alert-secondary p-0 m-0 text-center"
-                                                         style="max-height: 200px;">
-                                                        <p>We're sorry, but your device has been rejected. If you
-                                                            believe this is an error, please contact us.</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        <% } %>
-                    </div>
-                <% } %>
-                <% if(item.state <= deviceState.LISTED) { %>
-                    <a href="/list-item/<%= item._id %>" class="btn btn-primary">Edit Details</a>
-                <% } %>
-            <% } %>
-
-            <hr class="my-4">
-
-            <div class="row" id="item-info">
-                <h5 class="fw-bold mb-4">Specification: </h5>
-                <div class="col">
-                    <p><span class="fw-bold">Device Type:</span> <%= item.device_type.name %></p>
-                    <% Object.keys(specs).forEach(spec => { %>
-                        <% if (['Announced', 'Status', 'Dimensions', 'Size', 'OS', 'USB'].includes(spec)) { %>
-                            <p><span class="fw-bold"><%= spec %>:</span> <%= specs[spec] %></p>
-                    <% }}) %>
-                    <p><span class="fw-bold">Device Condition:</span> <%= item.good_condition ? 'Good' : 'Poor' %>
-                    </p>
-                </div>
-                <h5 class="fw-bold mb-4">Condition: </h5>
-                <div class="col-6">
-                    <% item.details.slice(0, Math.ceil(item.details.length / 2)).forEach(detail => { %>
-                        <p>
-                            <span class="fw-bold"><%= detail.name.charAt(0).toUpperCase() + detail.name.slice(1) %>:</span> <%= detail.value %>
-                        </p>
-                    <% }) %>
-
-                </div>
-                <div class="col-6">
-                    <% item.details.slice(Math.ceil(item.details.length / 2)).forEach(detail => { %>
-                        <p>
-                            <span class="fw-bold"><%= detail.name.charAt(0).toUpperCase() + detail.name.slice(1) %>:</span> <%= detail.value %>
-                        </p>
-                    <% }) %>
-
+                    <p class="lead text-muted text-center p-0 m-0">This device has been classified
+                        as: <%= deviceCategory.deviceCategoryToString(item.category) %></p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row bg-light text-dark p-4 mt-4">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-12">
-                    <h5 class="fw-bold">Additional Details: </h5>
-                    <p class="lead"><%= item.additional_details %></p>
+    <% if (user.id === item.listing_user._id.toString()) { %>
+        <div class="card rounded-4 shadow-sm mb-3">
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="fw-bold fs-5">
+                            <i class="fa-solid fa-flag"></i> Notices
+                        </p>
+
+                        <div class="alert <%= deviceState.deviceStateToColour(item.state, "alert-") %>"
+                             role="alert">
+                            <p class="fw-bold m-0 text-center"><%= deviceState.deviceStateToNextStepString(item.state) %></p>
+                        </div>
+                        <% if (!item.visible) { %>
+                            <% if (deviceVisibilityHistory?.length > 0 && deviceVisibilityHistory?.at(0).history_type === historyType.ITEM_HIDDEN) { %>
+                                <div class="alert alert-danger mt-3 text-center" role="alert">
+                                    <p>
+                                        <i class="fa-solid fa-eye-slash fa-2x"></i>
+                                    </p>
+                                    <p class="fw-bold m-0"> This device has been hidden from the marketplace by our
+                                        team. If you
+                                        believe this is an error, please contact us.</p>
+                                </div>
+                            <% } else { %>
+                                <div class="alert alert-info mt-3 text-center" role="alert">
+                                    <p>
+                                        <i class="fa-solid fa-eye-slash fa-2x"></i>
+                                    </p>
+                                    <p class="fw-bold m-0">This device is currently hidden from the marketplace. If you
+                                        would
+                                        like to make it visible, please ensure that all details are correct, so that our
+                                        team
+                                        can review it before making it visible.</p>
+                                </div>
+                            <% } %>
+                        <% } %>
+                        <% if (deviceReviewHistory?.length > 0 && deviceReviewHistory?.at(0).history_type !== historyType.REVIEW_ACCEPTED) { %>
+                            <% const history = deviceReviewHistory[0]; %>
+                            <div class="alert alert-warning mt-3" role="alert">
+                                <p class="fw-bold m-0">This device has been reviewed by our team. Please see the latest
+                                    review
+                                    below.</p>
+
+                                <% if (history.history_type === historyType.REVIEW_REQUESTED) { %>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-body p-1">
+                                                    <div class="row justify-content-between">
+                                                        <div class="col-md-4 align-content-center">
+                                                            <div class="alert <%= historyType.historyTypeToColour(history.history_type, "alert-") %> p-1 my-auto"
+                                                                 role="alert">
+                                                                <p class="fw-bold m-0 text-center"><%= historyType.historyTypeToString(history.history_type) %></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="border border-secondary w-100 p-1 rounded 1">
+                                                                <div class="d-inline-flex justify-content-between w-100">
+                                                                    <img src="<%= history.actioned_by?.avatar %>"
+                                                                         class="img-fluid rounded-circle"
+                                                                         alt="Avatar"
+                                                                         style="max-width: 35px;">
+
+                                                                    <p class="my-auto mx-2 text-center ">
+                                                                        <%= history.actioned_by?.first_name + " " + history.actioned_by?.last_name %>
+                                                                    </p>
+
+                                                                    <div class="alert <%= roleTypes.roleTypeToColour(history.actioned_by?.role, 'alert-') %> my-auto p-1"
+                                                                         role="alert">
+                                                                        <i class="fas fa-user<%= history.actioned_by?.role === roleTypes.ADMIN ? "-cog" : (history.actioned_by?.role === roleTypes.STAFF ? "-shield" : "") %>"></i>
+                                                                        <%= roleTypes.roleTypeToString(history.actioned_by?.role) %>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mt-2">
+                                                        <div class="col-12">
+                                                            <div class="alert alert-secondary p-0 m-0 text-center"
+                                                                 style="max-height: 200px;">
+                                                                <p class="fw-bold m-0">Reasoning:</p>
+                                                                <p class="m-0 fst-italic small">
+                                                                    "<%= history.data[0].value %>
+                                                                    "</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% } else if (history.history_type === historyType.REVIEW_REJECTED) { %>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-body p-1">
+                                                    <div class="row justify-content-between">
+                                                        <div class="col-md-4 align-content-center">
+                                                            <div class="alert <%= historyType.historyTypeToColour(history.history_type, "alert-") %> p-1 my-auto"
+                                                                 role="alert">
+                                                                <p class="fw-bold m-0 text-center"><%= historyType.historyTypeToString(history.history_type) %></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="border border-secondary w-100 p-1 rounded 1">
+                                                                <div class="d-inline-flex justify-content-between w-100">
+                                                                    <img src="<%= history.actioned_by?.avatar %>"
+                                                                         class="img-fluid rounded-circle"
+                                                                         alt="Avatar"
+                                                                         style="max-width: 35px;">
+
+                                                                    <p class="my-auto mx-2 text-center ">
+                                                                        <%= history.actioned_by?.first_name + " " + history.actioned_by?.last_name %>
+                                                                    </p>
+
+                                                                    <div class="alert <%= roleTypes.roleTypeToColour(history.actioned_by?.role, 'alert-') %> my-auto p-1"
+                                                                         role="alert">
+                                                                        <i class="fas fa-user<%= history.actioned_by?.role === roleTypes.ADMIN ? "-cog" : (history.actioned_by?.role === roleTypes.STAFF ? "-shield" : "") %>"></i>
+                                                                        <%= roleTypes.roleTypeToString(history.actioned_by?.role) %>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mt-2">
+                                                        <div class="col-12">
+                                                            <div class="alert alert-secondary p-0 m-0 text-center"
+                                                                 style="max-height: 200px;">
+                                                                <p>We're sorry, but your device has been rejected. If
+                                                                    you
+                                                                    believe this is an error, please contact us.</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <% } %>
+                            </div>
+                        <% } %>
+                        <% if(item.state <= deviceState.LISTED) { %>
+                            <a href="/list-item/<%= item._id %>" class="btn btn-primary w-100">Edit Details</a>
+                        <% } %>
+                    </div>
                 </div>
             </div>
+        </div>
+    <% } %>
 
-            <% if (item.state === deviceState.DATA_RECOVERY) { %>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="border border-1 rounded-2 border-info m-2 p-2">
-                            <h5 class="fw-bold text-center">Data Retrieval Service: </h5>
-                            <p class="text-center"><span
-                                        class="alert <%= retrievalState.retrievalStateToColor(retrievalData.retrieval_state, "alert-") %> p-0 px-2"><%= retrievalState.retrievalStateToString(retrievalData.retrieval_state) %></span>
-                            </p>
-                            <p class="text-center"><span class="fw-bold">Next Steps:</span></p>
-                            <p class="text-center"><%= retrievalState.retrievalStateToNextStepString(retrievalData.retrieval_state) %></p>
-                            <p class="text-center">Service Cost: £8.99</p>
+    <div class="card rounded-4 shadow-sm mb-3">
+        <div class="card-body p-4">
+            <div class="row">
+                <div class="col-md-12 align-content-center">
 
-                            <% if (retrievalState.stateHasFiles(retrievalData.retrieval_state)) { %>
-                                <a class="btn btn-outline-info w-100" href="<%= item._id %>/retrieval">Access Data
-                                    Here</a>
+                    <p class="fw-bold fs-5">
+                        <i class="fa-solid fa-camera"></i> Images
+                    </p>
+
+                    <div id="deviceImgCarousel" class="carousel slide" data-bs-theme="dark">
+                        <div class="carousel-inner">
+                            <% if(item.photos?.length > 0) { %>
+                                <% item.photos.forEach((photo, index) => { %>
+                                    <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                        <img src="data:<%= photo?.img_type %>;base64,<%= Buffer.from(photo?.img_data ?? "").toString('base64') %>"
+                                             class="img-fluid d-block h-100 mx-auto" style="max-height: 400px;"
+                                             alt="...">
+                                    </div>
+                                <% }) %>
+                            <% } else { %>
+                                <div class="carousel-item d-flex justify-content-center active">
+                                    <img src="https://placehold.co/600x600?text=No Images"
+                                         class="img-fluid h-100 mx-auto" height="400" alt="...">
+                                </div>
                             <% } %>
                         </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#deviceImgCarousel"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#deviceImgCarousel"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
+
                 </div>
-            <% } %>
+            </div>
         </div>
     </div>
 
-    <% if (item.state <= deviceState.HAS_QUOTE) { %>
-        <div class="row bg-light text-dark p-4 mt-4">
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row" id="item-info">
+                        <h5 class="fw-bold mb-4">
+                            <i class="fa-solid fa-info-circle"></i>
+                            Specification
+                        </h5>
+                        <div class="col">
+                            <p><span class="fw-bold">Device Type:</span> <%= item.device_type.name %></p>
+                            <% Object.keys(specs).forEach(spec => { %>
+                                <% if (['Announced', 'Status', 'Dimensions', 'Size', 'OS', 'USB'].includes(spec)) { %>
+                                    <p><span class="fw-bold"><%= spec %>:</span> <%= specs[spec] %></p>
+                            <% }}) %>
+                            <p><span class="fw-bold">Color: </span> <%= item.color %></p>
+                            <p><span class="fw-bold">Capacity: </span> <%= item.capacity %></p>
+                            <p><span class="fw-bold">Years Used: </span> <%= item.years_used %> Years</p>
+                            </p>
+                        </div>
+                        <h5 class="fw-bold mt-2 mb-2">Condition: <%= item.good_condition ? 'Good' : 'Poor' %></h5>
+                        <div class="col-6">
+                            <% item.details.slice(0, Math.ceil(item.details.length / 2)).forEach(detail => { %>
+                                <p>
+                                    <span class="fw-bold"><%= detail.name.charAt(0).toUpperCase() + detail.name.slice(1) %>:</span> <%= /^\d+$/.test(detail.value) ? detail.value + " out of 5" : detail.value; %>
+                                </p>
+                            <% }) %>
+
+                        </div>
+                        <div class="col-6">
+                            <% item.details.slice(Math.ceil(item.details.length / 2)).forEach(detail => { %>
+                                <p>
+                                    <span class="fw-bold"><%= detail.name.charAt(0).toUpperCase() + detail.name.slice(1) %>:</span> <%= /^\d+$/.test(detail.value) ? detail.value + " out of 5" : detail.value; %>
+                                </p>
+                            <% }) %>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="fw-bold">
+                                <i class="fa-solid fa-comment"></i>
+                                Additional Details
+                            </h5>
+                            <div class="card rounded-4">
+                                <div class="card-body">
+                                    <p class="fst-italic"><%= item.additional_details %></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <% if (user.id === item.listing_user._id.toString() && item.state === deviceState.DATA_RECOVERY) { %>
+        <div class="row mb-3">
             <div class="col-md-12">
-                <h5 class="fw-bold mt-4">Quotes</h5>
-                <!--     Show device if the category is current       -->
-                <% if(item.category === deviceCategory.CURRENT) { %>
-                    <% quotes.forEach( (quote, index) => { %>
+                <div class="card rounded-4 shadow-sm border-info">
+                    <div class="card-body p-4">
+
+                        <h5 class="fw-bold">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            Data Retrieval Service
+                        </h5>
+                        <p class="text-center lead">
+                            <span class="alert <%= retrievalState.retrievalStateToColor(retrievalData.retrieval_state, "alert-") %> p-1 px-2">
+                                <%= retrievalState.retrievalStateToString(retrievalData.retrieval_state) %>
+                            </span>
+                        </p>
+                        <p class="text-center">
+                            <i class="fa-solid fa-forward"></i>
+                            <span class="fw-bold">
+                                Next Steps
+                            </span>
+                        </p>
+                        <p class="text-center">
+                            <%= retrievalState.retrievalStateToNextStepString(retrievalData.retrieval_state) %>
+                        </p>
+                        <p class="text-center">Service Cost: <strong>£8.99</strong></p>
+
+                        <% if (retrievalState.stateHasFiles(retrievalData.retrieval_state)) { %>
+                            <a class="btn btn-outline-info w-100" href="<%= item._id %>/retrieval">
+                                Access Data Here
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <% if (user.id === item.listing_user._id.toString() && item.state <= deviceState.HAS_QUOTE && item.state > deviceState.IN_REVIEW) { %>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold">
+                        <i class="fa-solid fa-comment-dollar"></i>
+                        Quotes
+                    </h5>
+                    <!--     Show device if the category is current       -->
+                    <% if(item.category === deviceCategory.CURRENT) { %>
+                        <% if(hasApprovedQuote) { %>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card border-primary mt-3">
                                     <div class="card-body">
                                         <div class="row justify-content-between">
                                             <div class="col-md-2 d-flex align-content-center">
-                                                <img src="<%= quote.provider.logo %>"
+                                                <img src="<%= approvedQuote.provider.logo %>"
                                                      class="img-fluid rounded-start my-auto"
                                                      alt="logo">
                                             </div>
 
                                             <div class="col-md-7 d-flex flex-column align-content-between">
                                                 <div class="row mb-auto">
-                                                    <h5 class="card-title">Price: £<%= quote.value %></h5>
-                                                    <p class="card-text">Quotation from <%= quote.provider.name %> for
+                                                    <h5 class="card-title">Price: £<%= approvedQuote.value %></h5>
+                                                    <p class="card-text">Quotation from <%= approvedQuote.provider.name %> for
                                                         the
                                                         same product or similar products.</p>
-                                                    <p class="card-text"><small>Fetched from <%= quote.provider.name %>
+                                                    <p class="card-text"><small>Fetched from <%= approvedQuote.provider.name %>
                                                             site</small></p>
                                                     <p id="quoteState" class="quote-state"
-                                                       data-quote-id="<%= quote._id %>">
-                                                        <%= Object.keys(quoteState).find(key => quoteState[key] === quote.state) %>
+                                                       data-quote-id="<%= approvedQuote._id %>">
+                                                        <%= Object.keys(quoteState).find(key => quoteState[key] === approvedQuote.state) %>
                                                     </p>
                                                 </div>
 
@@ -294,20 +384,20 @@
                                                 <div class="row">
                                                     <div class="col-md-12 mt-2 mx-auto">
                                                         <div class="d-flex justify-content-between align-items-center">
-                                                            <a href="<%= quote.url %>" target="_blank"
-                                                               class="btn btn-primary mx-2 my-2">Visit <%= quote.provider.name.toUpperCase() %></a>
+                                                            <a href="<%= approvedQuote.url %>" target="_blank"
+                                                               class="btn btn-primary mx-2 my-2">Visit <%= approvedQuote.provider.name.toUpperCase() %></a>
                                                             <button class="btn btn-warning mx-2 my-2 star-quote"
-                                                                    data-quote-id="<%= quote._id %>" id="star-quote">
+                                                                    data-quote-id="<%= approvedQuote._id %>" id="star-quote">
                                                                 Star
                                                                 Quote
                                                             </button>
                                                             <button class="btn btn-primary mx-2 my-2 accept-quote"
-                                                                    data-quote-id="<%= quote._id %>" id="accept-quote">
+                                                                    data-quote-id="<%= approvedQuote._id %>" id="accept-quote">
                                                                 Accept
                                                                 Quote
                                                             </button>
                                                             <button class="btn btn-danger mx-2 my-2 reject-quote"
-                                                                    data-quote-id="<%= quote._id %>" id="reject-quote">
+                                                                    data-quote-id="<%= approvedQuote._id %>" id="reject-quote">
                                                                 Reject
                                                                 Quote
                                                             </button>
@@ -329,13 +419,13 @@
 
                                                         <div class="row justify-content-between align-items-center">
                                                             <div class="col-9 d-flex justify-content-center">
-                                                                <a onclick="showQRModal('<%= quote._id %>')">
+                                                                <a onclick="showQRModal('<%= approvedQuote._id %>')">
                                                                     <img class="img-thumbnail h-100 hover-shadow mx-auto"
-                                                                         src="<%= quote.qr_code %>" alt="Quote QR Code">
+                                                                         src="<%= approvedQuote.qr_code %>" alt="Quote QR Code">
                                                                 </a>
                                                             </div>
                                                             <div class="col-2 d-flex justify-content-center align-content-center">
-                                                                <a href="/qr/<%= quote._id %>" class="hover-grow">
+                                                                <a href="/qr/<%= approvedQuote._id %>" class="hover-grow">
                                                                     <i class="fa-solid fa-chevron-right fa-5x my-auto"></i>
                                                                 </a>
                                                             </div>
@@ -348,144 +438,246 @@
                                 </div>
                             </div>
                         </div>
-                    <% }) %>
+                    <% } else { %>
+                        <% quotes.forEach( (quote, index) => { %>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card border-primary rounded-4 mt-3">
+                                        <div class="card-body">
+                                            <div class="row justify-content-between">
+                                                <div class="col-md-2 d-flex align-content-center">
+                                                    <img src="<%= quote.provider.logo %>"
+                                                         class="img-fluid rounded-start my-auto"
+                                                         alt="logo">
+                                                </div>
+
+                                            <div class="col-md-7 d-flex flex-column align-content-between">
+                                                <div class="row mb-auto">
+                                                    <h5 class="card-title">Price: £<%= quote.value %></h5>
+                                                    <p class="card-text">Quotation from <%= quote.provider.name %> for
+                                                        the
+                                                        same product or similar products.</p>
+                                                    <p class="card-text"><small>Fetched from <%= quote.provider.name %>
+                                                            site</small></p>
+                                                    <p id="quoteState" class="quote-state"
+                                                       data-quote-id="<%= quote._id %>">
+                                                        <%= Object.keys(quoteState).find(key => quoteState[key] === quote.state) %>
+                                                    </p>
+                                                </div>
+
+
+                                                    <div class="row">
+                                                        <div class="col-md-12 mt-2 mx-auto">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <a href="<%= quote.url %>" target="_blank"
+                                                                   class="btn btn-primary mx-2 my-2">Visit <%= quote.provider.name.toUpperCase() %></a>
+                                                                <button class="btn btn-warning mx-2 my-2 star-quote"
+                                                                        data-quote-id="<%= quote._id %>"
+                                                                        id="star-quote">
+                                                                    Star
+                                                                    Quote
+                                                                </button>
+                                                                <button class="btn btn-primary mx-2 my-2 accept-quote"
+                                                                        data-quote-id="<%= quote._id %>"
+                                                                        id="accept-quote">
+                                                                    Accept
+                                                                    Quote
+                                                                </button>
+                                                                <button class="btn btn-danger mx-2 my-2 reject-quote"
+                                                                        data-quote-id="<%= quote._id %>"
+                                                                        id="reject-quote">
+                                                                    Reject
+                                                                    Quote
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                <% if(quote.state !== quoteState.REJECTED) { %>
+
+                                                        <div class="card h-100">
+                                                            <div class="card-body">
+                                                                <div class="row justify-content-center align-items-center">
+                                                                    <div class="col-12">
+                                                                        <p class="fs-6 fst-italic text-center">Click the
+                                                                        QR code
+                                                                            to
+                                                                            see a larger version</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row justify-content-between align-items-center">
+                                                                    <div class="col-9 d-flex justify-content-center">
+                                                                        <a onclick="showQRModal('<%= quote._id %>')">
+                                                                            <img class="img-thumbnail h-100 hover-shadow mx-auto"
+                                                                                 src="<%= quote.qr_code %>"
+                                                                             alt="Quote QR Code">
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="col-2 d-flex justify-content-center align-content-center">
+                                                                        <a href="/qr/<%= quote._id %>"
+                                                                       class="hover-grow">
+                                                                            <i class="fa-solid fa-chevron-right fa-5x my-auto"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } %>
                 <% } %>
 
-                <!--     Show device if the category is rare    -->
-                <% if(Object.keys(deviceCategory).find(key => deviceCategory[key] === item.category) === "RARE") { %>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card border-primary mt-3">
-                                <div class="card-body">
-                                    <div class="row justify-content-between">
-                                        <div class="col-md-2 d-flex align-content-center">
+                    <!--     Show device if the category is rare    -->
+                    <% if(item.category === deviceCategory.RARE) { %>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card border-primary rounded-4 mt-3">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-5 col-lg-3 d-flex justify-content-sm-center mb-3r">
                                         <span class="fa-stack fa-5x my-auto">
                                             <i class="fa-solid fa-circle fa-stack-2x text-warning"></i>
                                             <i class="fa-solid fa-hand-holding-dollar fa-stack-1x text-white"></i>
                                         </span>
-                                        </div>
-
-                                        <div class="col-md-7 d-flex flex-column align-content-between">
-                                            <div class="row mb-auto">
-                                                <h5 class="card-title">Auction your device</h5>
-                                                <p class="card-text">This device is pretty rare! If you're looking to
-                                                    get the best price for it, consider auctioning it on eBay.</p>
-                                                <p class="card-text"><small>
-                                                        <i class="fa-solid fa-leaf text-success"></i>
-                                                        Auctioning your device is a great way to get the best price for
-                                                        it, whilst allowing a new owner to enjoy it!
-                                                    </small></p>
                                             </div>
 
+                                            <div class="col-md-7 d-flex flex-column align-content-between">
+                                                <div class="row mb-auto">
+                                                    <h5 class="card-title">Auction your device</h5>
+                                                    <p class="card-text">This device is pretty rare! If you're
+                                                        looking to
+                                                        get the best price for it, consider auctioning it on
+                                                        eBay.</p>
+                                                    <p class="card-text"><small>
+                                                            <i class="fa-solid fa-leaf text-success"></i>
+                                                            Auctioning your device is a great way to get the best
+                                                            price for
+                                                            it, whilst allowing a new owner to enjoy it!
+                                                        </small></p>
+                                                </div>
 
-                                            <div class="row">
-                                                <div class="col-md-12 mt-2 mx-auto w-100">
-                                                    <a href="https://www.ebay.co.uk/sl/prelist/suggest" target="_blank"
-                                                       class="btn btn-primary auction-quote"
-                                                       data-device-id="<%= item._id %>">
-                                                        Click here to go to eBay</a>
+
+                                                <div class="row">
+                                                    <div class="col-md-12 mt-2 mx-auto w-100">
+                                                        <a href="https://www.ebay.co.uk/sl/prelist/suggest"
+                                                           target="_blank"
+                                                           class="btn btn-primary auction-quote"
+                                                           data-device-id="<%= item._id %>">
+                                                            Click here to go to eBay</a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div class="col-md-3">
+                                            <div class="col-md-3">
 
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                <% } %>
+                    <% } %>
 
-                <!--     Show device if the category is 'recycle'       -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card border-primary mt-3">
-                            <div class="card-body">
-                                <div class="row justify-content-between">
-                                    <div class="col-md-2 d-flex align-content-center">
-                                    <span class="fa-stack fa-5x my-auto">
-                                        <i class="fa-solid fa-circle fa-stack-2x text-success"></i>
-                                        <i class="fa-solid fa-recycle fa-stack-1x text-white"></i>
-                                    </span>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <div class="row">
-                                            <h5 class="card-title">Recycle your device</h5>
-                                            <p class="card-text">Don't want to sell your device? Recycle it with us
-                                                instead.
-                                                We'll take care of it for you.</p>
-                                            <p class="card-text"><small>
-                                                    <i class="fa-solid fa-leaf text-success"></i>
-                                                    Recycling your device is a great way to help the environment!
-                                                </small></p>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <p class="mt-4">Would you like to recycle your device?</p>
+                    <!--     Show device if the category is 'recycle'       -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card border-primary rounded-4 mt-3">
+                                <div class="card-body">
+                                    <div class="row column-gap-5">
+                                        <div class="col-md-12 col-lg-8">
+                                            <div class="row">
+                                                <h5 class="card-title">Recycle your device</h5>
+                                                <p class="card-text">Don't want to sell your device?
+                                                    Recycle it with us instead.
+                                                    We'll take care of it for you.</p>
+                                                <p class="card-text"><small>
+                                                        <i class="fa-solid fa-leaf text-success"></i>
+                                                        Recycling your device is a great way to help the environment!
+                                                    </small></p>
                                             </div>
 
-                                            <div class="col-md-8 d-flex">
-                                                <div class="btn-group btn-group-sm w-100 my-auto" role="group">
-                                                    <input type="radio" class="btn-check btn-success" name="stateRadio"
-                                                           id="stateYes"
-                                                           autocomplete="off" <%= item.category === 2 ? 'checked' : '' %>>
-                                                    <label class="btn btn-outline-success" for="stateYes">Yes</label>
-
-                                                    <input type="radio" class="btn-check btn-danger" name="stateRadio"
-                                                           id="stateNo"
-                                                           autocomplete="off" <%= item.category !== 2 ? 'checked' : '' %>>
-                                                    <label class="btn btn-outline-danger" for="stateNo">No</label>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <p class="mt-4">Would you like to recycle your device?</p>
                                                 </div>
-                                            </div>
-                                        </div>
 
+                                                <div class="col-md-8 d-flex">
+                                                    <div class="btn-group btn-group-sm w-100 my-auto" role="group">
+                                                        <input type="radio" class="btn-check btn-success"
+                                                               name="stateRadio"
+                                                               id="stateYes"
+                                                               autocomplete="off" <%= item.category === 2 ? 'checked' : '' %>>
+                                                        <label class="btn btn-outline-success"
+                                                               for="stateYes">Yes</label>
 
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <p class="mt-4">Would you like your data retrieved from the device?
-                                                    <span class="fw-bold">(+£8.99)</span></p>
-                                            </div>
-                                            <div class="col-md-8 d-flex">
-                                                <div class="btn-group btn-group-sm w-100 my-auto" role="group">
-                                                    <input type="radio" class="btn-check" name="serviceRadio"
-                                                           id="serviceYes"
-                                                           autocomplete="off" <%= item.data_service === 2 ? 'checked' : '' %>>
-                                                    <label class="btn btn-outline-primary" for="serviceYes">Yes</label>
-
-                                                    <input type="radio" class="btn-check" name="serviceRadio"
-                                                           id="serviceNo"
-                                                           autocomplete="off" <%= item.data_service !== 2 ? 'checked' : '' %>>
-                                                    <label class="btn btn-outline-primary" for="serviceNo">No</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3 d-flex align-content-center">
-                                        <div class="row w-100 my-auto">
-                                            <div class="card h-100">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-content-center">
-                                                        <a class="btn btn-success w-100 text-center my-auto recycle-quote"
-                                                           data-quote-id="<%= item._id %>" id="checkBtn">Checkout</a>
+                                                        <input type="radio" class="btn-check btn-danger"
+                                                               name="stateRadio"
+                                                               id="stateNo"
+                                                               autocomplete="off" <%= item.category !== 2 ? 'checked' : '' %>>
+                                                        <label class="btn btn-outline-danger"
+                                                               for="stateNo">No</label>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                        </div>
-                                    </div>
 
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <p class="mt-4">Would you like your data retrieved from the
+                                                        device?
+                                                        <span class="fw-bold">(+£8.99)</span></p>
+                                                </div>
+                                                <div class="col-md-8 d-flex">
+                                                    <div class="btn-group btn-group-sm w-100 my-auto" role="group">
+                                                        <input type="radio" class="btn-check" name="serviceRadio"
+                                                               id="serviceYes"
+                                                               autocomplete="off" <%= item.data_service === 2 ? 'checked' : '' %>>
+                                                        <label class="btn btn-outline-primary"
+                                                               for="serviceYes">Yes</label>
+
+                                                        <input type="radio" class="btn-check" name="serviceRadio"
+                                                               id="serviceNo"
+                                                               autocomplete="off" <%= item.data_service !== 2 ? 'checked' : '' %>>
+                                                        <label class="btn btn-outline-primary"
+                                                               for="serviceNo">No</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 d-flex align-content-center">
+                                            <div class="row w-100 my-auto">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-content-center">
+                                                            <a class="btn btn-success w-100 text-center my-auto recycle-quote"
+                                                               data-quote-id="<%= item._id %>"
+                                                               id="checkBtn">Checkout</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <% } %>
         </div>
-    <% } %>
+    </div>
 </div>
 
 <section id="modals">
@@ -509,7 +701,8 @@
                                 <img id="qrModalImage"
                                      src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.google.com"
                                      alt="QR Code">
-                                <p class="text-center fst-italic">This QR code will contain the information that you
+                                <p class="text-center fst-italic">This QR code will contain the information that
+                                    you
                                     can
                                     take to the store
                                     to complete your transaction.</p>

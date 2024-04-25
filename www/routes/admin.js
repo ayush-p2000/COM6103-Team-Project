@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-
 const {getAdminDashboard,deactivateUser, activateUser} = require("../controllers/admin/adminController");
 
 const {
     getAccountDetailsPage, getAccountsPage, getEditAccountPage, createStaff, deleteUser
 } = require("../controllers/admin/adminAccountsController");
 
-const {getReportsPage, getReportPage} = require("../controllers/admin/adminReportsController");
+const {getReportsPage, getReportPage, getReportTableData, getReportChartData} = require("../controllers/admin/adminReportsController");
+
 const {
     getDevicesPage, getFlaggedDevicesPage, getDeviceTypePage, getDeviceTypeDetailsPage,
     getUserDeviceDetailsPage, updateUserDeviceDetailsPage, getModelsFromTypeAndBrand,postNewDeviceType,
@@ -17,11 +17,13 @@ const {
 } = require("../controllers/admin/adminDevicesController");
 
 const {getModerationDashboard} = require("../controllers/admin/adminModerationController");
-const {validateDeviceTypeEdit} = require("../middlewares/validators")
+const {validateDeviceTypeEdit, validateProfileUpdate,
+    validateAdminProfileUpdate} = require("../middlewares/validators")
 
 const {upload} = require('../middlewares/multer')
-const {validateRegistration} = require("../middlewares/validators");
+
 const {insertStaffDetails} = require("../controllers/admin/adminController");
+
 const {populateDeviceObject} = require("../middlewares/devices");
 
 /* GET home page. */
@@ -54,6 +56,8 @@ router.get('/moderation', getModerationDashboard);
 router.get('/reports', getReportsPage);
 
 router.get('/reports/:report_type', getReportPage);
+router.get('/reports/:report_type/chart', getReportChartData);
+router.get('/reports/:report_type/table', getReportTableData)
 
 router.get('/types/:subpage?', getDeviceTypePage);
 
@@ -65,7 +69,7 @@ router.get('/getModelFromBrandAndType', getModelsFromTypeAndBrand)
 
 
 router.post('/accounts/create', upload.none(), createStaff);
-router.post('/accounts/:id', insertStaffDetails);
+router.post('/accounts/:id', validateAdminProfileUpdate, insertStaffDetails);
 
 router.post('/deactivateUser', upload.none(), deactivateUser);
 
@@ -74,5 +78,6 @@ router.post('/activateUser', upload.none(), activateUser);
 router.get('/error', upload.none(),)
 
 router.post('/deleteUser',upload.none(),deleteUser);
+
 
 module.exports = router;

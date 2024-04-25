@@ -1,4 +1,6 @@
 const express = require('express');
+const fs = require("fs");
+const path = require("path");
 const router = express.Router();
 
 router.get('/routes', function (req, res) {
@@ -32,6 +34,17 @@ router.get('/routes', function (req, res) {
     });
 
     res.render('debug_links', {routes: routes});
+});
+
+router.get('/error/:code?', function (req, res, next) {
+    let code = req.params.code || 500;
+    const message = "This is a dummy error message to demonstrate error pages";
+    res.status(code);
+    if (fs.existsSync(path.join(__dirname, '../views', 'error', `${code}.ejs`)) === true) {
+        res.render(`error/${code}`, {error: {status: code, message: message}, auth: false, user: {}, message: message});
+    } else {
+        res.render('error', {error: {status: code, message: message}, auth: false, user: {}, message: message});
+    }
 });
 
 module.exports = router;

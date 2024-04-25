@@ -44,29 +44,42 @@ document.addEventListener("DOMContentLoaded", function() {
      * Handling show/hide further condition
      * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
-    conditionYes.addEventListener('change', ()=> {
+    conditionYes.addEventListener('change', () => {
         // Show further condition term if yes
         if (conditionYes.checked) {
-            setSelectedRadioValue("functionalityRadio","5")
-            setSelectedRadioValue("btnRadio","5")
-            setSelectedRadioValue("cameraRadio","5")
-            setSelectedRadioValue("batteryRadio","5")
-            setSelectedRadioValue("bodyRadio","5")
-            setSelectedRadioValue("touchscreenRadio","5")
-            setSelectedRadioValue("displayRadio","5")
-
+            setConditionValues("5");
             conditionList.classList.remove("d-block");
             conditionList.classList.add("d-none")
         }
     });
-    conditionNo.addEventListener('change', ()=> {
-        // hide further condition term if no
+
+    conditionNo.addEventListener('change', () => {
+        // Show further condition term if no
         if (conditionNo.checked) {
+            setConditionValues("1");
             conditionList.classList.remove("d-none");
             conditionList.classList.add("d-block");
         }
     });
 
+    /**
+     * Function to set All the Radio to a Value
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
+    function setConditionValues(value) {
+        setSelectedRadioValue("functionalityRadio", value);
+        setSelectedRadioValue("btnRadio", value);
+        setSelectedRadioValue("cameraRadio", value);
+        setSelectedRadioValue("batteryRadio", value);
+        setSelectedRadioValue("bodyRadio", value);
+        setSelectedRadioValue("touchscreenRadio", value);
+        setSelectedRadioValue("displayRadio", value);
+    }
+
+    /**
+     * Function to set the value of a Radio Element
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     function setSelectedRadioValue(radio,value) {
         var radios = document.getElementsByName(radio);
 
@@ -78,6 +91,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    /**
+     * Function to get the value of a Radio Element
+     * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
+     */
     function getSelectedRadioValue(radios) {
         for (var i = 0; i < radios.length; i++) {
             if (radios[i].checked) {
@@ -110,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const reader = new FileReader();
             // call back to append img
             reader.onload = function () {
-                var templateString = `<img src="${reader.result}" class="img-thumbnail col-2">`
+                var templateString = `<img src="${reader.result}" class="img-thumbnail" style="max-width: 100px;">`
                 imagePreview.innerHTML += templateString;
             }
             reader.readAsDataURL(file); // read file as url
@@ -124,8 +141,6 @@ document.addEventListener("DOMContentLoaded", function() {
      * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
      */
     function postUpdateDataToServer() {
-
-
         var details = [
             { name: "functionality",value: getSelectedRadioValue(functionalityRadios)},
             { name: "button", value: getSelectedRadioValue(btnRadios)},
@@ -134,13 +149,12 @@ document.addEventListener("DOMContentLoaded", function() {
             { name: "body", value: getSelectedRadioValue(bodyRadios)},
             { name: "touchscreen", value: getSelectedRadioValue(touchscreenRadios) },
             { name: "display", value: getSelectedRadioValue(displayRadios)},
-
-            { name: "color", value: deviceColor.value },
-            { name: "capacity", value: deviceCapacity.value },
-            { name: "years used", value: deviceYear.value }
         ];
 
         var formData = new FormData();
+        formData.append('color', deviceColor.value);
+        formData.append('capacity', deviceCapacity.value);
+        formData.append('years_used', deviceYear.value);
         formData.append('details', JSON.stringify(details));
         formData.append('good_condition', conditionYes.checked);
         formData.append('data_service', 0);

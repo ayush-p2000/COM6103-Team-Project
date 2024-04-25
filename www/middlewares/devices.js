@@ -1,4 +1,5 @@
 const {getItemDetail} = require("../model/mongodb");
+
 exports.populateDeviceObject = async (req, res, next) => {
     //Get the device ID from the request
     const {id} = req.params;

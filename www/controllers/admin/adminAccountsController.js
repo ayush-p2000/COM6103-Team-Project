@@ -2,19 +2,16 @@
  * This controller should handle any operations related to account management
  */
 
-const {getMockAccountsList, getMockUser} = require('../../util/mock/mockData')
 const {renderAdminLayout, renderAdminLayoutPlaceholder} = require("../../util/layout/layoutUtils");
 const {getAllUsers, getUserById, searchUserAndPopulate} = require("../../model/mongodb");
-const {promisify} = require("node:util");
-const {pbkdf2, randomBytes} = require("node:crypto");
-const {User} = require("../../model/schema/user");
-const {USER} = require("../../model/enum/roleTypes");
+const {User} = require("../../model/models");
+const roleTypes = require("../../model/enum/roleTypes");
 
 async function getAccountsPage(req, res, next) {
     let users = [];
     try {
         users = await getAllUsers();
-        renderAdminLayout(req, res, "user_management", {users});
+        renderAdminLayout(req, res, "user_management", {users, roleTypes});
     } catch (e) {
         console.error(e);
         renderAdminLayout(req, res, "user_management", {users, error: "Failed to retrieve user data"});
@@ -23,7 +20,8 @@ async function getAccountsPage(req, res, next) {
 
 async function getAccountDetailsPage(req, res, next) {
     const user = await searchUserAndPopulate({_id: req.params.id});
-    renderAdminLayout(req, res, "user_details", {userDetails: user});
+    const isGoogleAuthenticated = user.google_id !== null;
+    renderAdminLayout(req, res, "user_details", {userDetails: user, isGoogleAuthenticated: isGoogleAuthenticated, roleTypes});
 }
 
 function getEditAccountPage(req, res, next) {

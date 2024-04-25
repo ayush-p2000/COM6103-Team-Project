@@ -1,77 +1,141 @@
 <%- include("../components/header") %>
 
-<div class="container-fluid vh-100">
-    <div class="mx-4 my_items">
-
-        <!--Filter and Sorter-->
-        <div class="row mt-4 mt-3">
-            <div class="row mb-1">
-                <p class="fw-bold col-6 col-sm-8 col-md-10 mb-0">Category: </p>
-                <button class="btn btn-primary btn-sm col-6 col-sm-4 col-md-2" id="clearFiltersBtn">Clear Filters</button>
-            </div>
-            <div class="btn-group btn-group-sm flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
-                <% deviceCategory.getList().forEach(category => { %>
-                    <input type="checkbox" class="btn-check category-filter" id="<%= deviceCategory.deviceCategoryToString(category) %>">
-                    <label class="btn btn-outline-primary" for="<%= deviceCategory.deviceCategoryToString(category) %>"><%= deviceCategory.deviceCategoryToString(category) %></label>
-                <% }) %>
-            </div>
+<div class="container-fluid mb-5">
+    <div class="row mt-3">
+        <div class="col-12">
+            <h2 class="fw-semibold">
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square text-success"></i>
+                    <i class="fa-solid fa-stack-1x fa-mobile-screen text-white"></i>
+                </span>
+                My Items
+            </h2>
         </div>
+    </div>
 
-
-        <div class="row mt-2">
-            <p class="fw-bold mb-0">Device Type: </p>
-            <div class="btn-group btn-group-sm flex-wrap" role="group" aria-label="Basic checkbox toggle button group">
-                <% deviceTypes.forEach(deviceType => { %>
-                    <input type="checkbox" class="btn-check deviceType-filter" id="<%= deviceType.name %>" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="<%= deviceType.name %>"><%= deviceType.name %></label>
-                <% }) %>
-            </div>
-        </div>
-
-
-        <% items.forEach(item => { %>
-            <div class="card mt-4 item">
-                <div class="card-body row d-flex align-items-center">
-                    <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
-                        <% if (item.photos?.length > 0) { %>
-                            <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data ?? "").toString('base64') %>" class="img-fluid item-img cover-image"
-                                 alt="Image of <%= item.model.name %>">
-                        <% } else { %>
-                            <img src="https://placehold.co/600x600?text=No Images" class="img-fluid item-img cover-image"
-                                 alt="Image of <%= item.model.name %>">
-                        <% } %>
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body">
+                    <!--Filter and Sorter-->
+                    <div class="row justify-content-end">
+                        <div class="col-md-4">
+                            <button class="btn btn-primary btn-sm w-100" id="clearFiltersBtn">
+                                Clear Filters
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-8 col-sm-7 col-md-8 col-lg-9 col-xl-10 pt-1">
-                        <h4 class="d-flex align-items-center"><%= item.model.name %>
-                            <span
-                                    class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %> ms-2"
-                                    style="font-size: 0.5em;"><%= deviceState.deviceStateToString(item.state) %>
-                            </span>
 
-                            <span
-                                    class="badge <%= (!item.visible) ? "bg-danger" : "d-none" %> ms-2"
-                                    style="font-size: 0.5em">Hidden
-                            </span>
-                        </h4>
-                        <p class="m-0 p-0 text-muted deviceType"><small>Device Type: </small><%= item.device_type.name %></p>
-                        <p class="m-0 p-0 text-muted category">
-                            <small>Classification: </small><%= deviceCategory.deviceCategoryToString(item.category) %>
-                        </p>
-                        <% quotations.forEach(quoteArray => { %>
-                            <% if (quoteArray.length > 0) { %>
-                                <% const firstQuote = quoteArray[0] %>
-                                <% if(firstQuote.device.equals(item._id)) { %>
-                                    <p class="m-0 p-0 text-muted"><small>Price: </small>£<%= firstQuote.value %></p>
-                                <% } %>
-                            <% } %>
-                        <% }) %>
+                    <div class="row">
+                        <p class="fw-bold">Category: </p>
+                        <div class="btn-group btn-group-sm flex-wrap" role="group"
+                             aria-label="Basic checkbox toggle button group">
+                            <% deviceCategory.getList().forEach(category => { %>
+                                <input type="checkbox" class="btn-check category-filter"
+                                       id="<%= deviceCategory.deviceCategoryToString(category) %>">
+                                <label class="btn btn-outline-primary"
+                                       for="<%= deviceCategory.deviceCategoryToString(category) %>"><%= deviceCategory.deviceCategoryToString(category) %></label>
+                            <% }) %>
+                        </div>
                     </div>
-                    <div class="col-12 col-sm-2 col-lg-1">
-                        <a href="/item/<%= item._id %>" class="w-100 mt-2 btn btn-primary btn-sm ">View</a>
+
+
+                    <div class="row mt-2">
+                        <p class="fw-bold mb-0">Device Type: </p>
+                        <div class="btn-group btn-group-sm flex-wrap" role="group"
+                             aria-label="Basic checkbox toggle button group">
+                            <% deviceTypes.forEach(deviceType => { %>
+                                <input type="checkbox" class="btn-check deviceType-filter" id="<%= deviceType.name %>"
+                                       autocomplete="off">
+                                <label class="btn btn-outline-primary"
+                                       for="<%= deviceType.name %>"><%= deviceType.name %></label>
+                            <% }) %>
+                        </div>
                     </div>
+
                 </div>
             </div>
-        <% }) %>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="my_items h-100">
+
+                <% items.forEach(item => { %>
+                    <div class="row mb-2">
+                        <div class="col-12">
+
+                            <div class="card item rounded-4 shadow-sm">
+                                <div class="card-body">
+                                    <div class="row align-content-center">
+                                        <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-2">
+                                            <% if (item.photos?.length > 0) { %>
+                                                <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data ?? "").toString('base64') %>"
+                                                     class="img-fluid d-block h-100 mx-auto"
+                                                     style="height: 200px; width: 200px; object-fit: cover; object-position: center;"
+                                                     alt="Image of <%= item.model.name %>">
+                                            <% } else { %>
+                                                <img src="https://placehold.co/600x600?text=No Images"
+                                                     class="img-fluid item-img cover-image"
+                                                     alt="Image of <%= item.model.name %>">
+                                            <% } %>
+                                        </div>
+                                        <div class="col-8 col-sm-7 col-md-8 col-lg-9 col-xl-9 pt-1">
+                                            <h4 class="d-flex align-items-center"><%= item.model.name %>
+                                                <span
+                                                        class="badge <%= deviceState.deviceStateToColour(item.state, "bg-") %> ms-2"
+                                                        style="font-size: 0.5em;"><%= deviceState.deviceStateToString(item.state) %>
+                                                    </span>
+
+                                                <span
+                                                        class="badge <%= (!item.visible) ? "bg-danger" : "d-none" %> ms-2"
+                                                        style="font-size: 0.5em">Hidden
+                                                    </span>
+                                            </h4>
+
+                                            <p class="m-0 p-0 text-muted deviceType"><small>
+                                                    Device Type: </small><%= item.device_type.name %></p>
+                                            <p class="m-0 p-0 text-muted category">
+                                                <small>Classification: </small><%= deviceCategory.deviceCategoryToString(item.category) %>
+                                            </p>
+                                            <% quotations.forEach(quoteArray => { %>
+                                                <% if (quoteArray.length > 0 && (item.state === deviceState.LISTED || item.state === deviceState.HAS_QUOTE) && item.visible) { %>
+                                                    <% const firstQuote = quoteArray[0] %>
+                                                    <% if(firstQuote.device.equals(item._id)) { %>
+                                                        <p class="m-0 p-0 text-muted">
+                                                            <small>Price: </small>£<%= firstQuote?.value ?? "Not Found" %></p>
+                                                    <% } %>
+                                                <% } %>
+                                            <% }) %>
+                                            <p class="m-0 p-0 text-muted">
+                                                <small>Added: </small><%= Intl.DateTimeFormat("en-GB", {
+                                                    year: "numeric",
+                                                    month: '2-digit',
+                                                    day: '2-digit',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                    second: '2-digit',
+                                                    hour12: false,
+                                                    timeZone: "Europe/London"
+                                                }).format(item.createdAt) %></p>
+                                        </div>
+                                        <div class="col-12 col-sm-2 col-lg-1 align-content-center">
+                                            <a href="/item/<%= item._id %>"
+                                               class="w-100 mt-2 btn btn-primary btn-sm my-auto">
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                                <p class="visually-hidden">View Item</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+
+        </div>
     </div>
 </div>
 

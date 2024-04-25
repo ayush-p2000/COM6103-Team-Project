@@ -1,10 +1,34 @@
-<%- include('../components/header') %>
+<!---
+* PayPal Gateway Page frontend
+* @author Ayush Prajapati <aprajapati1@sheffield.ac.uk>
+*/
+---->
+<div class="container-fluid mb-5">
+    <div class="row mt-3">
+        <div class="col-12">
+            <h2 class="fw-semibold">
+                <span class="fa-stack">
+                    <i class="fa-solid fa-stack-2x fa-square text-success"></i>
+                    <i class="fa-solid fa-stack-1x fa-credit-card text-white"></i>
+                </span>
+                Payment Gateway
+            </h2>
+        </div>
+    </div>
 
-<%- include('../components/navbar') %>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="">
+                        <i class="fa-brands fa-paypal text-primary"></i>
+                        PayPal Payment Gateway </h2>
+                    <form action="/checkout/paypal/pay?<%= data %>&extension=<%= extension %>" method="post">
+                        <button type="submit" class="btn btn-primary mt-4 mx-5">Proceed to pay</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <h2 class="mt-2 mx-5"> Paypal Payment Gateway </h2>
-  <form action="/checkout/paypal/pay?<%= data %>&extension=<%= extension %>" method="post">
-    <button type="submit" class="btn btn-primary mt-4 mx-5">Proceed to pay</button>
-  </form>
-
-<%- include('../components/footer') %>
+</div>

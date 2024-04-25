@@ -45,6 +45,10 @@ const retrievalState = {
     },
 
     retrievalStateToColor: (state, prefix = "") => {
+        if (typeof prefix !== 'string') {
+            prefix = "";
+        }
+
         switch(state) {
             case AWAITING_DEVICE:
                 return prefix + 'secondary';
@@ -234,7 +238,7 @@ const retrievalState = {
      * @returns {boolean} - A boolean value that indicates whether the state has a previous step in the data retrieval process state machine
      * @author Benjamin Lister
      */
-    hasPreviousStep: (state) => (state !== AWAITING_DEVICE && state !== DATA_DELETED && state !== EXPIRING_SOON),
+    hasPreviousStep: (state) => (state !== AWAITING_DEVICE && state !== DATA_DELETED && state !== EXPIRING_SOON && retrievalState.isValidStateValue(state)),
 
     /**
      * Returns a boolean value that indicates whether the state has a next step in the data retrieval process state machine.
@@ -243,7 +247,7 @@ const retrievalState = {
      * @returns {boolean} - A boolean value that indicates whether the state has a next step in the data retrieval process state machine
      * @author Benjamin Lister
      */
-    hasNextStep: (state) => (state !== DATA_DELETED && state !== RETRIEVAL_EXPIRED && state !== DATA_RECOVERY_FAILED && state !== DATA_RECOVERY_CANCELLED && state !== AVAILABLE_FOR_RETREIVAL && state !== EXPIRING_SOON),
+    hasNextStep: (state) => (state !== DATA_DELETED && state !== RETRIEVAL_EXPIRED && state !== DATA_RECOVERY_FAILED && state !== DATA_RECOVERY_CANCELLED && state !== AVAILABLE_FOR_RETREIVAL && state !== EXPIRING_SOON && retrievalState.isValidStateValue(state)),
 
     /**
      * Returns a boolean value that indicates whether the given state should have files associated with it.

@@ -2,8 +2,6 @@
  * This controller should handle any operations related to the checkout process or payment processing
  */
 
-const {getMockPurchaseData} = require("../../util/mock/mockData");
-const {request} = require("express");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const {getItemDetail, addTransaction, updateTransaction, getTransactionByDevice, getTransactionById, updateDeviceState,
     getRetrieval
@@ -12,6 +10,7 @@ const transactionState = require('../../model/enum/transactionState')
 const deviceState = require('../../model/enum/deviceState')
 const paymentMethod = require('../../model/enum/paymentMethod')
 const retrievalState = require("../../model/enum/retrievalState");
+const {renderUserLayout} = require("../../util/layout/layoutUtils");
 
 
 /**
@@ -23,7 +22,7 @@ async function getCheckout(req, res, next) {
     let id = req.query.id
     let total = req.query.total
     let extension = 0
-    let type = req.query.type.toLowerCase()
+    let type = req.query.type?.toLowerCase()
     let product = ''
     let transactionDetails
     let transaction
@@ -33,14 +32,13 @@ async function getCheckout(req, res, next) {
         const state = deviceState.RECYCLED
         await updateDeviceState(id, state)
         const order = setTransactionDetails(id, total, 'Not Available', model, extension)
-        res.render('payment/checkout_complete', {title: 'Payment Completed', order: order, extension: extension})
+        renderUserLayout(req, res, 'payment/checkout_complete', {title: 'Payment Completed', order: order, extension: extension})
     } else {
         //Check to determine if the payment is for retrieval or for extending the retrieval time
         switch (type) {
             case 'payment_retrieval':
                 product = 'Data Retrieval'
                 transaction = await getTransactionByDevice(id)
-                await updateDeviceState(id, deviceState.DATA_RECOVERY)
                 if (!transaction) {
                     transactionDetails = {
                         deviceId: id,
@@ -70,7 +68,7 @@ async function getCheckout(req, res, next) {
                 break
         }
 
-        res.render('payment/checkout', {id: id, total: total, extension: extension, product: product})
+        renderUserLayout(req, res, '../payment/checkout', {id: id, total: total, extension: extension, product: product})
     }
 
 }
@@ -138,11 +136,18 @@ async function getCheckoutCompleted(req, res, next) {
         state: transactionState['PAYMENT_RECEIVED'],
         paymentMethod: paymentMethod[req.query.method.toUpperCase()]
     }
+
+    const retrieval = await getRetrieval(id)
+    const device = await getItemDetail(retrieval.device._id)
+
+    if (type === 'payment_retrieval') {
+        await updateDeviceState(device._id, deviceState.DATA_RECOVERY)
+    }
+
     if (type === 'retrieval_extension') {
         product = 'Data Retrieval Extension'
         transactionDetails.extension = extension
 
-        const retrieval = await getRetrieval(id)
         retrieval.retrieval_state = retrievalState.AVAILABLE_FOR_RETREIVAL;
         await retrieval.save()
     }
@@ -150,7 +155,7 @@ async function getCheckoutCompleted(req, res, next) {
 
     await updateTransaction(transactionDetails)
 
-    res.render('payment/checkout_complete', {title: 'Payment Completed', order: order, extension: extension});
+    renderUserLayout(req, res,'../payment/checkout_complete', {title: 'Payment Completed', order: order, extension: extension});
 }
 
 /**
