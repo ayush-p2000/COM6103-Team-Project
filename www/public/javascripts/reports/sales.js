@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 <tr>
                     <td>${item.date}</td>
                     <td>
-                        <a href="/admin/users/${item.user._id}">
+                        <a href="/admin/accounts/${item.user._id}">
                             ${item.user?.first_name} ${item.user?.last_name}
                         </a>
                     </td>
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                             ${item.product?.brand?.name} ${item.product?.model?.name}
                         </a>
                     </td>
-                    <td>${item.purchase_type == 1 ? 'Data Extension' : 'Retrieval'}</td>
+                    <td>${item.purchase_type === 1 ? 'Data Extension' : 'Retrieval'}</td>
                     <td>£${item.sale_value}</td>
                 </tr>
             `;

@@ -18,21 +18,22 @@ document.addEventListener('DOMContentLoaded', async function () {
                 <tr>
                     <td>${item.date_added}</td>
                     <td>
-                        <a href="/admin/users/${item.user?._id}">
+                        <a href="/admin/accounts/${item.user?._id}">
                             ${item.user?.first_name} ${item.user?.last_name}
                         </a>
                     </td>
                     <td>
-                        <a href="/admin/products/${item.quote_id}">
+                        <a href="/admin/devices/${item.quote_id}">
                             ${item.name}
                         </a>
                     </td>
-                    <td>
-                        ${item.provider !== 'Unknown provider' ? `<img src="${item.logo}" class="img-fluid w-auto h-auto" style="max-width: 100px; max-height: 75px">` : `<p class="text-muted">${item.provider}</p>`}
+                    <td class="d-flex align-content-center justify-content-center">
+                        ${item.provider !== "Unknown provider" 
+                            ? `<img src="${item.logo}" class="img-fluid w-auto h-auto" style="max-width: 100px; max-height: 75px">` 
+                            : `<p class="text-muted">${item.provider}</p>`}
                     </td>
-                    
                     <td>
-                        <p class="badge bg-${item.state_colour}">
+                        <p class="w-100 h-100 badge bg-${item.state_colour}">
                             ${item.state_string}
                         </p>
                     </td>
