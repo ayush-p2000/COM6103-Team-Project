@@ -589,87 +589,83 @@
             <div class="card rounded-4 shadow-sm">
                 <div class="card-body">
                     <div class="row">
-                        <% if (item.state !== deviceState.REJECTED && item.state !== deviceState.RECYCLED && item.state !== deviceState.IN_REVIEW && item.state !== deviceState.DRAFT && item.state !== deviceState.SOLD && item.state !== deviceState.DATA_RECOVERY) { %>
-                        <div class="col-sm-6">
-                            <% } else { %>
-                            <div class="col-sm-12">
-                                <% } %>
-                                <p class="text-center lead">Device State</p>
+                        <div class="col-sm-<%= (visibilityVisible) ? "6" : "12" %>">
+                            <p class="text-center lead">Device State</p>
 
-                                <div class="alert <%= deviceState.deviceStateToColour(item.state, "alert-") %> mb-0 rounded-bottom-0">
-                                    <div class="d-inline-flex justify-content-center w-100">
-                                        <h3 class="text-center"><%= deviceState.deviceStateToString(item.state) %></h3>
-                                        <div class="spinner-grow mx-2 d-none" role="status"
-                                             id="promotionSpinner">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
+                            <div class="alert <%= deviceState.deviceStateToColour(item.state, "alert-") %> mb-0 rounded-bottom-0">
+                                <div class="d-inline-flex justify-content-center w-100">
+                                    <h3 class="text-center"><%= deviceState.deviceStateToString(item.state) %></h3>
+                                    <div class="spinner-grow mx-2 d-none" role="status"
+                                         id="promotionSpinner">
+                                        <span class="visually-hidden">Loading...</span>
                                     </div>
-
                                 </div>
 
-                                <div class="d-inline-flex w-100">
-                                    <button class="btn btn-warning w-100 rounded-0 <%= (deviceState.hasPreviousStep(item.state)) ? "" : "disabled" %>"
-                                            onclick="onDemotePressed('<%= item._id %>')">
-                                        <i class="fa-solid fa-arrow-left"></i>
-                                        <%= deviceState.deviceStepToDemotionButtonString(item.state) %>
-                                    </button>
-                                    <button class="btn btn-success w-100 rounded-0 <%= (deviceState.hasNextStep(item.state)) ? "" : "disabled" %>"
-                                            onclick="onPromotePressed('<%= item._id %>')">
-                                        <%= deviceState.deviceStepToPromotionButtonString(item.state) %>
-                                        <i
-                                                class="fa-solid fa-arrow-right"></i>
-                                    </button>
-                                </div>
+                            </div>
 
-                                <div class="mb-2">
-                                    <button class="btn btn-outline-dark w-100 rounded-top-0"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#errorStatesCollapse">
-                                        <i class="fa-solid fa-exclamation-triangle"></i> Override State
-                                    </button>
+                            <div class="d-inline-flex w-100">
+                                <button class="btn btn-warning w-100 rounded-0 <%= (deviceState.hasPreviousStep(item.state)) ? "" : "disabled" %>"
+                                        onclick="onDemotePressed('<%= item._id %>')">
+                                    <i class="fa-solid fa-arrow-left"></i>
+                                    <%= deviceState.deviceStepToDemotionButtonString(item.state) %>
+                                </button>
+                                <button class="btn btn-success w-100 rounded-0 <%= (deviceState.hasNextStep(item.state)) ? "" : "disabled" %>"
+                                        onclick="onPromotePressed('<%= item._id %>')">
+                                    <%= deviceState.deviceStepToPromotionButtonString(item.state) %>
+                                    <i
+                                            class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
 
-                                    <div class="collapse" id="errorStatesCollapse">
-                                        <% deviceState.getList().forEach((state, i) => { %>
-                                            <button class="btn <%= deviceState.deviceStateToColour(state, "btn-") %> w-100 <%= (i === 0) ? 'rounded-bottom-0' : (i === deviceState.getList().length - 1) ? 'rounded-top-0' : 'rounded-0' %>"
-                                                    onclick="onOverrideStatePressed('<%= item._id %>', <%= state %>)">
-                                                <i class="fa-solid fa-exclamation-triangle"></i> <%= deviceState.deviceStateToString(state) %>
-                                            </button>
-                                        <% }) %>
-                                    </div>
+                            <div class="mb-2">
+                                <button class="btn btn-outline-dark w-100 rounded-top-0"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#errorStatesCollapse">
+                                    <i class="fa-solid fa-exclamation-triangle"></i> Override State
+                                </button>
+
+                                <div class="collapse" id="errorStatesCollapse">
+                                    <% deviceState.getList().forEach((state, i) => { %>
+                                        <button class="btn <%= deviceState.deviceStateToColour(state, "btn-") %> w-100 <%= (i === 0) ? 'rounded-bottom-0' : (i === deviceState.getList().length - 1) ? 'rounded-top-0' : 'rounded-0' %>"
+                                                onclick="onOverrideStatePressed('<%= item._id %>', <%= state %>)">
+                                            <i class="fa-solid fa-exclamation-triangle"></i> <%= deviceState.deviceStateToString(state) %>
+                                        </button>
+                                    <% }) %>
                                 </div>
                             </div>
-                            <% if (item.state !== deviceState.REJECTED && item.state !== deviceState.RECYCLED && item.state !== deviceState.IN_REVIEW && item.state !== deviceState.DRAFT && item.state !== deviceState.SOLD && item.state !== deviceState.DATA_RECOVERY) { %>
-                                <div class="col-sm-6">
-                                    <p class="text-center lead">
-                                        Visible to Public?
-                                        <span class="spinner-grow spinner-grow-sm mx-2 d-none" role="status"
-                                              id="visibilitySpinner">
+                        </div>
+                        <% if (visibilityVisible) { %>
+                            <div class="col-sm-6">
+                                <p class="text-center lead">
+                                    Visible to Public?
+                                    <span class="spinner-grow spinner-grow-sm mx-2 d-none" role="status"
+                                          id="visibilitySpinner">
                                         <span class="visually-hidden">Loading...</span>
                                     </span>
-                                    </p>
-                                    <label for="deviceVisible" class="visually-hidden">Is the device
-                                        visible to the public?</label>
-                                    <div class="btn-group w-100" role="group">
-                                        <input type="radio" class="btn-check" name="deviceVisible" id="visibleYes"
-                                               autocomplete="off" <%= item.visible === true ? 'checked' : '' %>
-                                               onclick="onVisibilityChange('<%= item._id %>', 'true')">
-                                        <label class="btn btn-outline-success" for="visibleYes">Yes</label>
+                                </p>
+                                <label for="deviceVisible" class="visually-hidden">Is the device
+                                    visible to the public?</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="deviceVisible" id="visibleYes"
+                                           autocomplete="off" <%= item.visible === true ? 'checked' : '' %>
+                                           onclick="onVisibilityChange('<%= item._id %>', 'true')">
+                                    <label class="btn btn-outline-success" for="visibleYes">Yes</label>
 
-                                        <input type="radio" class="btn-check" name="deviceVisible" id="visibleNo"
-                                               autocomplete="off" <%= item.visible === false ? 'checked' : '' %>
-                                               onclick="onVisibilityChange('<%= item._id %>', 'false')">
-                                        <label class="btn btn-outline-danger" for="visibleNo">No</label>
-                                    </div>
-
+                                    <input type="radio" class="btn-check" name="deviceVisible" id="visibleNo"
+                                           autocomplete="off" <%= item.visible === false ? 'checked' : '' %>
+                                           onclick="onVisibilityChange('<%= item._id %>', 'false')">
+                                    <label class="btn btn-outline-danger" for="visibleNo">No</label>
                                 </div>
-                            <% } %>
-                        </div>
 
+                            </div>
+                        <% } %>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <section id="modals">
