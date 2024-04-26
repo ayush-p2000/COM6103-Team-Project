@@ -268,5 +268,62 @@ describe('Test Device Category Enum', () => {
                 done();
             });
         });
+
+        describe('Test getList', () => {
+            it('should return an array of four values', (done) => {
+                // Arrange
+                const expectedLength = 4;
+
+                // Act
+                const result = deviceCategory.getList();
+                const length = result.length;
+
+                // Assert
+                expect(length).to.equal(expectedLength);
+                done();
+            });
+
+            it('should return an array with only numbers', (done) => {
+                // Arrange
+                const expectedType = 'number';
+
+                // Act
+                const result = deviceCategory.getList();
+
+                // Assert
+                // The result should only contain numbers
+                result.forEach(value => {
+                    expect(typeof value).to.equal(expectedType);
+                });
+
+                done();
+            });
+
+            it('should return an array with the values of the enum', (done) => {
+                // Arrange
+                const expected = [0, 1, 2, 3];
+
+                // Act
+                const result = deviceCategory.getList();
+
+                // Assert
+                // The result should contain all of the expected values in any order
+                expect(result).to.have.members(expected);
+
+                done();
+            });
+
+            it('should return an array with a length of four', (done) => {
+                // Arrange
+                const expected = 4;
+
+                // Act
+                const result = deviceCategory.getList();
+
+                // Assert
+                expect(result.length).to.equal(expected);
+                done();
+            });
+        });
     });
 });
