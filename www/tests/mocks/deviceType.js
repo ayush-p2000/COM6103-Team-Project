@@ -1,0 +1,23 @@
+const {faker} = require('@faker-js/faker');
+
+// 生成假设备类型数据
+const generateFakeDeviceType = () => {
+    return {
+        name: faker.string.alpha(10),
+        description: faker.lorem.sentence(),
+        is_deleted: false
+    };
+};
+
+const generateFakeDeviceTypes = (count) => {
+    const fakeDeviceTypes = [];
+    for (let i = 0; i < count; i++) {
+        fakeDeviceTypes.push(generateFakeDeviceType());
+    }
+    return fakeDeviceTypes;
+};
+
+module.exports = {
+    generateFakeDeviceType,
+    generateFakeDeviceTypes
+};
