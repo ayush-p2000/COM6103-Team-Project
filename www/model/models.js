@@ -20,7 +20,7 @@ const MONGO_DBNAME = process.env.MONGO_DBNAME || "test";
 const MONGO_CONNNAME = process.env.MONGO_CONNNAME || "mongodb";
 
 /* Connection String */
-const connectionString = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DBNAME}?retryWrites=true&w=majority`;
+const connectionString = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DBNAME}?retryWrites=true&w=majority&authsource=admin`;
 
 /* Variables */
 let connected = false;
