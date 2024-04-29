@@ -36,7 +36,6 @@ const getMarketplace = async (req, res, next) => {
         if (items.length > 0) {
             await handleMissingModels(items)
         }
-        console.log(items.length)
         renderUserLayout(req, res, '../marketplace/marketplace', {
             deviceTypes,
             devices: items,
