@@ -89,6 +89,7 @@ async function updateQuotes(items, providers) {
             quotations.push([]);
         }
     }
+    console.log(quotations)
     return quotations;
 }
 
@@ -100,6 +101,8 @@ async function getMyItems(req, res, next) {
 
         await handleMissingModels(items);
         const quotations = await updateQuotes(items, providers);
+
+
 
         renderUserLayout(req, res, '../marketplace/my_items', {
             deviceTypes,
@@ -113,11 +116,13 @@ async function getMyItems(req, res, next) {
         });
     } catch (e) {
         console.log(e);
+        res.status(500);
+        next(e);
     }
 }
 
 
 module.exports = {
     getMarketplace,
-    getMyItems
+    getMyItems,
 }

@@ -1,6 +1,5 @@
 const {faker} = require('@faker-js/faker');
 
-// 生成假设备类型数据
 const generateFakeDeviceType = () => {
     return {
         name: faker.string.alpha(10),

@@ -1,7 +1,8 @@
 const {faker} = require('@faker-js/faker');
 
 
-const generateFakeDevice = () => {
+const generateFakeDevice = (user = faker.database.mongodbObjectId()) => {
+
     return {
         device_type: faker.database.mongodbObjectId(),
         brand: faker.database.mongodbObjectId(),
@@ -44,7 +45,7 @@ const generateFakeDevice = () => {
         state: faker.number.int({ min: 0, max: 10 }),
         data_service: faker.number.int({ min: 0, max: 2 }),
         additional_details: faker.lorem.sentence(),
-        listing_user: faker.database.mongodbObjectId(), // 替换为你的假用户 ID
+        listing_user: user,
         photos: [
             {
                 img_type: "image/jpeg",
@@ -56,10 +57,10 @@ const generateFakeDevice = () => {
 };
 
 
-const generateFakeDevices = (count) => {
+const generateFakeDevices = (count,user = faker.database.mongodbObjectId()) => {
     const fakeDevices = [];
     for (let i = 0; i < count; i++) {
-        fakeDevices.push(generateFakeDevice());
+        fakeDevices.push(generateFakeDevice(user));
     }
     return fakeDevices;
 };
