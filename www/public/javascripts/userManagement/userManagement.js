@@ -48,12 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    if (response.status === 401) {
-                        //document.querySelector('.error-message').classList.remove('d-none');
                         $errorMessage.removeClass('d-none');
-                    } else {
-
-                    }
                 }
                 location.reload()
             })
