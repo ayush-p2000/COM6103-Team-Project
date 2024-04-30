@@ -31,7 +31,7 @@ const getMarketplace = async (req, res, next) => {
         let {
             items,
             pagination
-        } = await getPaginatedResults(Device, req.params.page, {}, {}, 10);
+        } = await getPaginatedResults(Device, req.params.page, {visible:true}, {}, 10);
 
         if (items.length > 0) {
             await handleMissingModels(items)
