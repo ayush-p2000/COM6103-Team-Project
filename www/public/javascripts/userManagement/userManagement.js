@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('submitUser').addEventListener('click', async function () {
         // Your code to handle form submission goes here
+        const $errorMessage = $('.error-message');
+        $errorMessage.addClass('d-none');
+
         const firstName = document.getElementById('firstName').value;
         const lastName = document.getElementById('lastName').value;
         const email = document.getElementById('email').value;
@@ -45,12 +48,9 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    if (response.status === 401) {
-                        document.querySelector('.error-message').classList.remove('d-none');
-                    } else {
-
-                    }
+                        $errorMessage.removeClass('d-none');
                 }
+                location.reload()
             })
             .catch(error => console.error('Error:', error));
     });
