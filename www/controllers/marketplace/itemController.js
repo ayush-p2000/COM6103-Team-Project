@@ -34,7 +34,7 @@ const {renderUserLayout} = require("../../util/layout/layoutUtils");
 const retrievalState = require("../../model/enum/retrievalState");
 const historyType = require("../../model/enum/historyType");
 const roleTypes = require("../../model/enum/roleTypes");
-const {handleMissingModels} = require("../../util/Devices/devices");
+const {handleMissingModel, handleMissingModels} = require("../../util/Devices/devices");
 
 /**
  * Handling Request to post item base on the info in request body
@@ -150,7 +150,7 @@ async function getItemDetails(req, res, next) {
                 specs = []
             }
         } else {
-            await handleMissingModels(item)
+            await handleMissingModel(item)
         }
 
         // Add a QR code to each quote
