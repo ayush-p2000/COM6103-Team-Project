@@ -78,7 +78,7 @@ const createStaff = async (req, res, next) => {
         const hashedPassword = await pbkdf2Promise(password, salt, 310000, 32, 'sha256')
         const emailCheck = await User.findOne({email});
         if (emailCheck) {
-            messages = ['User email already exists']
+            res.status(401).send('Email id already exists');
         } else {
             user = new User({
                 first_name: firstName,
@@ -102,7 +102,7 @@ const createStaff = async (req, res, next) => {
 
             }
         }else{
-            res.status(401).send('You do not have access');
+            res.status(401).send('You do not have access to create this user');
         }
 
 
