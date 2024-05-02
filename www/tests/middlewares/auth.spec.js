@@ -13,17 +13,6 @@ if (env.error) {
 }
 env = parse(env, {assignToProcessEnv: true, overrideProcessEnv: true})
 
-const findOne = sandbox.stub();
-
-const authMiddleware = proxyquire('../../middlewares/auth',
-    {
-        '../model/models': {
-            User: {
-                findOne
-            }
-        }
-    });
-
 describe("Test Authentication Middlewares", () => {
     afterEach(() => {
         sandbox.restore()
@@ -179,8 +168,19 @@ describe("Test Authentication Middlewares", () => {
         })
     })
     describe('validateVerification Middleware', () => {
-        let req, res, next;
+        let req, res, next, findOne, authMiddleware;
         beforeEach(() => {
+            findOne = sandbox.stub();
+
+            authMiddleware = proxyquire('../../middlewares/auth',
+                {
+                    '../model/models': {
+                        User: {
+                            findOne
+                        }
+                    }
+                });
+
             req = {
                 body: {
                     email: 'test@example.com'
