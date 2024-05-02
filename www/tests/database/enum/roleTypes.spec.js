@@ -1,6 +1,19 @@
-const expect = require('chai').expect;
+const {expect} = require("chai");
+const proxyquire = require('proxyquire');
+
+const sandbox = require('sinon').createSandbox();
+
+const dotenv = require('dotenv')
+const parse = require('dotenv-parse-variables')
+
+let env = dotenv.config({path: __dirname + '../../../../.env.test'})
+if (env.error) {
+    throw env.error
+}
+env = parse(env, {assignToProcessEnv: true, overrideProcessEnv: true})
 
 const roleTypes = require('../../../model/enum/roleTypes');
+
 
 describe('Test Role Types Enum', () => {
     describe('Test Role Types Values', () => {
@@ -39,7 +52,9 @@ describe('Test Role Types Enum', () => {
             expect(result).to.equal(expected);
             done();
         });
+    });
 
+    describe('Test getList',() => {
         it('should return an array with only numbers', (done) => {
             // Arrange
             const expectedType = 'number';
@@ -123,4 +138,22 @@ describe('Test Role Types Enum', () => {
             done();
         });
     });
-});
+    describe('Test dataTypeToColour', () => {
+        describe('Test with no prefix', () => {
+            it('should return "rgb(0, 128, 0)" when passed USER', (done) => {
+                // Arrange
+                const expected = 'rgba(0, 128, 0, 0.2)';
+                const dataType = roleTypes.USER;
+
+                // Act
+                const result = roleTypes.roleTypeToRGB(dataType);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
+
+
+            });
+        });
+    });
