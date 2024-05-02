@@ -6,6 +6,7 @@ const {renderAdminLayout, renderAdminLayoutPlaceholder} = require("../../util/la
 const {getAllUsers, getUserById, searchUserAndPopulate} = require("../../model/mongodb");
 const {User} = require("../../model/models");
 const roleTypes = require("../../model/enum/roleTypes");
+const {email} = require("../../public/javascripts/Emailing/emailing");
 
 async function getAccountsPage(req, res, next) {
     let users = [];
@@ -27,6 +28,12 @@ async function getAccountDetailsPage(req, res, next) {
 function getEditAccountPage(req, res, next) {
     //TODO: Add functionality for editing account details
     renderAdminLayoutPlaceholder(req, res, "edit_user", {}, "Edit Account Details (out of scope)");
+}
+
+const sendVerifyEmail = (name, userEmail, user_id) => {
+    const subject = "ePanda Verification"
+    const message = `<p>Dear ${name},<br><br> Please click <a href="${process.env.BASE_URL}:${process.env.PORT}/verify?id=${user_id}">here</a> to verify your email. <br><br> Regards,<br><p style="color: #2E8B57">Team Panda</p></p>`
+    email(userEmail, subject, message)
 }
 
 const createStaff = async (req, res, next) => {
@@ -94,7 +101,13 @@ const createStaff = async (req, res, next) => {
         }
         if (req.user.role > USER && req.body.role <= req.user.role) {
             try {
-                await user.save()
+                const userData = await user.save()
+
+                if(userData) {
+                    sendVerifyEmail(req.body.firstName, req.body.email, userData._id)
+                    console.log(userData._id)
+                }
+
                 let users = [];
                 users = await getAllUsers();
                 renderAdminLayout(req, res, "user_management", {users});
