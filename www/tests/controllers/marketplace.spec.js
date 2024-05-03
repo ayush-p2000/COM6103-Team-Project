@@ -184,7 +184,7 @@ describe('Test Marketplace Page', () => {
             // Assert
             expect(getAllDeviceType.called).to.be.true;
             expect(getAllDeviceType.resolves(fakeDeviceTypes));
-            expect(getUserItems.calledOnce).to.be.true;
+            expect(getUserItems.calledTwice).to.be.true;
             expect(getUserItems.resolves(fakeDevices));
             expect(getProviders.calledOnce).to.be.true;
             expect(getProviders.resolves(fakeProviders));
