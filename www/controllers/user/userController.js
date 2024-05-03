@@ -19,21 +19,32 @@ const {handleUserMissingModel, handleMissingModels} = require("../../util/Device
  */
 async function getUserDashboard(req, res, next) {
     try {
-        const userData = await User.findById({_id: req.user.id});
-        const firstName = userData.first_name
-        var userItems = await getUserItems(req.user.id)
-        userItems = await getUnknownDevices(userItems)
-        var marketplaceDevices = await getAllDevices()
-        marketplaceDevices = await getUnknownDevices(marketplaceDevices)
+        // Check if user is logged in and the user ID is available
+        if (!req.user || !req.user.id) {
+            return res.status(400).send("User ID is missing or invalid."); // Respond with 400 Bad Request if user ID is missing
+        }
 
-        const userItemsContainsDevices = userItems.length > 0
-        let marketDevices = []
+        // Fetch user data by ID
+        const userData = await User.findById(req.user.id); // Simplified to use req.user.id directly
+        if (!userData) {
+            return res.status(404).send("User not found."); // Respond with 404 Not Found if user data is not found
+        }
+
+        const firstName = userData.first_name;
+        var userItems = await getUserItems(req.user.id);
+        userItems = await getUnknownDevices(userItems);
+        var marketplaceDevices = await getAllDevices();
+        marketplaceDevices = await getUnknownDevices(marketplaceDevices);
+
+        const userItemsContainsDevices = userItems.length > 0;
+        let marketDevices = [];
         marketplaceDevices.forEach(devices => {
             if (devices.visible) {
-                marketDevices.push(devices)
+                marketDevices.push(devices);
             }
-        })
-        const marketContainsDevices = marketDevices.length > 0
+        });
+        const marketContainsDevices = marketDevices.length > 0;
+
         renderUserLayout(req, res, '../marketplace/user_home', {
             userData: userData,
             firstName: firstName,
@@ -43,11 +54,10 @@ async function getUserDashboard(req, res, next) {
             marketContains: marketContainsDevices,
             userContains: userItemsContainsDevices,
             auth: req.isLoggedIn
-        })
+        });
     } catch (err) {
-        console.log(err);
-        res.status(500);
-        next({message: err, status: 500});
+        console.error(err);
+        res.status(500).send("An internal server error occurred."); // Properly chaining status and send methods
     }
 }
 
@@ -130,7 +140,7 @@ async function updateUserDetails(req, res, next) {
         // Sample usage of email sending
         const emailid = req.user.email;
         const subject = 'Update profile successful';
-        const textmsg = `Dear ${checkUser.first_name}, <br><br> ${messages} <br><br><br><b>Thanks & Regards,<br><br><p style="color: #2E8B57">Team ePanda</p></b>`;
+        const textmsg = `Dear ${firstName}, <br><br> ${messages} <br><br><br><b>Thanks & Regards,<br><br><p style="color: #2E8B57">Team ePanda</p></b>`;
 
         email(emailid, subject, textmsg);
 
