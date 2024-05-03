@@ -321,7 +321,6 @@ async function confirmQuote(req, res, next) {
             res.status(500).send("Failed to update quote");
             return;
         }
-
         //Return a success message
         res.status(200).send("Quote confirmed");
     } catch (error) {

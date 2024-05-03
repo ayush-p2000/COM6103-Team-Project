@@ -1,9 +1,9 @@
 const {faker} = require('@faker-js/faker');
-const {deviceState} = require("../../model/enum/deviceState");
+
 const {generateFakeModel} = require("../mocks/model")
 
 const generateFakeDevice = (user = faker.database.mongodbObjectId(),
-                            state) => {
+                            state = 3) => {
     return {
         _id: faker.database.mongodbObjectId(),
         device_type: faker.database.mongodbObjectId(),

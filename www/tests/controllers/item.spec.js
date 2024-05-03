@@ -22,6 +22,7 @@ const retrievalState = require("../../model/enum/retrievalState");
 const historyType = require("../../model/enum/historyType");
 const roleTypes = require("../../model/enum/roleTypes");
 const quoteState = require("../../model/enum/quoteState")
+const fixedToCurrency = require("../../util/currency/fixedToCurrency");
 
 
 
@@ -45,6 +46,8 @@ const generateQR = sandbox.stub();
 const getRetrievalObjectByDeviceId = sandbox.stub();
 const handleMissingModel = sandbox.stub();
 const getHistoryByDevice = sandbox.stub();
+const getQuoteById = sandbox.stub();
+const updateQuote = sandbox.stub();
 
 const itemController = proxyquire('../../controllers/marketplace/itemController',
     {
@@ -59,7 +62,9 @@ const itemController = proxyquire('../../controllers/marketplace/itemController'
             getItemDetail,
             getQuotes,
             getRetrievalObjectByDeviceId,
-            getHistoryByDevice
+            getHistoryByDevice,
+            getQuoteById,
+            updateQuote
         },
         "../../util/layout/layoutUtils":{
             renderUserLayout
@@ -69,10 +74,10 @@ const itemController = proxyquire('../../controllers/marketplace/itemController'
         },
         "../../util/qr/qrcodeGenerator":{
             generateQR
-        }
+        },
     });
 
-describe('Test Landing Page', () => {
+describe('Test Item Page', () => {
     afterEach(() => {
         sandbox.restore()
     });
@@ -366,7 +371,7 @@ describe('Test Landing Page', () => {
 
         it('should call res.status with 500 and next with an error message', async () => {
             // Mock req and res objects
-            const fakeDevice = generateFakeDevice(mock_user,1)
+            const fakeDevice = generateFakeDevice(mock_user._id,1)
             const req = {
                 params: { id: fakeDevice._id },
                 user: mock_user,
@@ -391,9 +396,9 @@ describe('Test Landing Page', () => {
     describe('getItemDetails', () => {
         it('should update quote state to accepted', async () => {
             // Mock req and res objects
-            const fakeDevice = generateFakeDevice(mock_user,3)
+            const fakeDevice = generateFakeDevice(mock_user._id,3)
             const fakeProvider = generateFakeEbayProvider()
-            const fakeQuote = generateFakeQuote(fakeProvider,0)
+            const fakeQuote = generateFakeQuote(fakeProvider._id,0)
             const req = {
                 body: {
                     id: fakeQuote._id,
@@ -420,9 +425,9 @@ describe('Test Landing Page', () => {
 
         it('should call res.status with 500 and next with an error message', async () => {
             // Mock req and res objects
-            const fakeDevice = generateFakeDevice(mock_user,3)
+            const fakeDevice = generateFakeDevice(mock_user._id,3)
             const fakeProvider = generateFakeEbayProvider()
-            const fakeQuote = generateFakeQuote(fakeProvider,0)
+            const fakeQuote = generateFakeQuote(fakeProvider._id,0)
             const req = {
                 body: {
                     id: fakeQuote._id,
@@ -447,6 +452,350 @@ describe('Test Landing Page', () => {
 
             expect(res.status.calledWith(500)).to.be.true;
             expect(next.calledWith(err)).to.be.true;
+        });
+    })
+
+    describe('getItemQrCodeView', () => {
+        it('should render qr view with correct parameters', async () => {
+            // Mock req and res objects
+            const fakeProvider = generateFakeEbayProvider()
+            const fakeQuote = generateFakeQuote(fakeProvider._id,3)
+            const req = {
+                params: {
+                    id: fakeQuote._id
+                },
+                user: mock_user,
+                isLoggedIn: true
+            };
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+            const next = sandbox.spy()
+
+            getQuoteById.resolves(fakeQuote)
+
+
+            await itemController.getItemQrCodeView(req, res, next);
+
+            expect(res.render.calledOnce).to.be.true;
+            expect(res.render.calledWith('marketplace/qr_view', {
+                quote: fakeQuote,
+                auth: req.isLoggedIn,
+                user: req.user,
+                toCurrencyFunc: fixedToCurrency,
+                quoteState: quoteState.quoteState,
+                quoteActive: true
+            })).to.be.true;
+            expect(next.calledOnce).to.be.false;
+        });
+
+        it('should render 403unauthorised error page if user is undefined', async () => {
+            // Mock req and res objectsr()
+            const fakeProvider = generateFakeEbayProvider()
+            const fakeQuote = generateFakeQuote(fakeProvider._id,4)
+            const req = {
+                params: {
+                    id: fakeQuote._id
+                },
+                user: undefined,
+                isLoggedIn: true
+            };
+            const res = {
+                render: sandbox.stub(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+            const next = sandbox.spy()
+
+            getQuoteById.resolves(fakeQuote)
+
+            await itemController.getItemQrCodeView(req, res, next);
+
+            expect(res.render.calledWith('error/403unauthorised', {
+                auth: req.isLoggedIn,
+                user: req.user,
+                message: "This quote is no longer active or you are not the listing user. Please contact the listing user for more information."
+            })).to.be.true;
+        });
+
+        it('should call res.status with 404 ', async () => {
+            // Mock req and res objectsr()
+            const req = {
+                params: {
+                    id: undefined
+                },
+                user: mock_user,
+                isLoggedIn: true
+            };
+            const res = {
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+            const next = sandbox.spy()
+
+            getQuoteById.resolves(undefined)
+
+            await itemController.getItemQrCodeView(req, res, next);
+
+            expect(res.status.calledWith(404)).to.be.true;
+        });
+    })
+
+    describe('confirmQuote', () => {
+        it('should failed confirm quote when quote is not active with res.status(400)', async () => {
+            // Mock req and res objects
+            const fakeDevice = generateFakeDevice(mock_user._id,3)
+            const fakeProvider = generateFakeEbayProvider()
+            const fakeQuote = generateFakeQuote(fakeProvider._id,4)
+            const req = {
+                params: {
+                    id: fakeQuote._id
+                },
+                body:{
+                    final_price: 30,
+                    receipt_id: "1234",
+                    receipt_date: new Date(),
+                },
+                file: mock_photo,
+                user: mock_user,
+                isLoggedIn: true
+            };
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+            const next = sandbox.spy()
+
+            getQuoteById.resolves(fakeQuote)
+
+            await itemController.confirmQuote(req, res, next);
+
+            expect(res.status.calledWith(400)).to.be.true;
+        });
+
+        it('should confirmed quote with res.status(200)', async () => {
+            // Mock req and res objects
+            const fakeDevice = generateFakeDevice(mock_user._id,3)
+            const fakeProvider = generateFakeEbayProvider()
+            const fakeQuote = generateFakeQuote(fakeProvider._id,3)
+            const req = {
+                params: {
+                    id: fakeQuote._id
+                },
+                body:{
+                    final_price: 30,
+                    receipt_id: "1234",
+                    receipt_date: new Date(),
+                },
+                file: mock_photo,
+                user: mock_user,
+                isLoggedIn: true
+            };
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+            const next = sandbox.spy()
+
+
+            updateQuote.resolves(true);
+            const saveDevice = { ...fakeDevice, save: sandbox.stub().resolves(fakeDevice) };
+            getQuoteById.resolves(fakeQuote)
+            getDevice.resolves(saveDevice)
+
+            await itemController.confirmQuote(req, res, next);
+
+            expect(saveDevice.state === 4).to.be.true;
+            expect(res.status.calledWith(200)).to.be.true;
+        });
+
+        it('should failed confirmed quote with res.status(500) if now successfully save to database)', async () => {
+            // Mock req and res objects
+            const fakeDevice = generateFakeDevice(mock_user._id,3)
+            const fakeProvider = generateFakeEbayProvider()
+            const fakeQuote = generateFakeQuote(fakeProvider._id,3)
+            const req = {
+                params: {
+                    id: fakeQuote._id
+                },
+                body:{
+                    final_price: 30,
+                    receipt_id: "1234",
+                    receipt_date: new Date(),
+                },
+                file: mock_photo,
+                user: mock_user,
+                isLoggedIn: true
+            };
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+            const next = sandbox.spy()
+
+            const saveDevice = { ...fakeDevice, save: sandbox.stub().rejects() };
+            getQuoteById.resolves(fakeQuote)
+            getDevice.resolves(saveDevice)
+
+            await itemController.confirmQuote(req, res, next);
+
+            expect(res.status.calledWith(500)).to.be.true;
+        });
+
+        it('should failed confirmed quote with res.status(500)', async () => {
+            // Mock req and res objects
+            const fakeDevice = generateFakeDevice(mock_user._id,3)
+            const fakeProvider = generateFakeEbayProvider()
+            const fakeQuote = generateFakeQuote(fakeProvider._id,3)
+            const req = {
+                params: {
+                    id: fakeQuote._id
+                },
+                body:{
+                    final_price: 30,
+                    receipt_id: "1234",
+                    receipt_date: new Date(),
+                },
+                file: mock_photo,
+                user: mock_user,
+                isLoggedIn: true
+            };
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+            const next = sandbox.spy()
+
+            getQuoteById.resolves(fakeQuote)
+            getDevice.resolves(fakeDevice)
+
+            await itemController.confirmQuote(req, res, next);
+
+            expect(res.status.calledWith(500)).to.be.true;
+
+        });
+    })
+
+    describe('rejectQuote', () => {
+        it('should reject quote with res.status(200)', async () => {
+            // Mock req and res objects
+            const fakeDevice = generateFakeDevice(mock_user._id,3)
+            const fakeProvider = generateFakeEbayProvider()
+            const fakeQuote = generateFakeQuote(fakeProvider._id,3)
+            const req = {
+                params: {
+                    id: fakeQuote._id
+                },
+                user: mock_user,
+                isLoggedIn: true
+            };
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+            const next = sandbox.spy()
+
+            updateQuote.withArgs(fakeQuote._id, {state: 2}).returns(true);
+
+            await itemController.rejectQuote(req, res, next);
+
+            expect(res.status.calledWith(200)).to.be.true;
+        });
+
+        it('should failed reject quote with res.status(500)', async () => {
+            // Mock req and res objects
+            const fakeDevice = generateFakeDevice(mock_user._id,3);
+            const fakeProvider = generateFakeEbayProvider();
+            const fakeQuote = generateFakeQuote(fakeProvider._id,3);
+
+            const req = {
+                params: {
+                    id: fakeQuote._id
+                },
+                user: mock_user,
+                isLoggedIn: true
+            };
+
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+
+            const next = sandbox.spy();
+
+            updateQuote.withArgs(fakeQuote._id, {state: 2}).returns(false);
+
+            await itemController.rejectQuote(req, res, next);
+
+            expect(res.status.calledWith(500)).to.be.true;
+            expect(res.send.calledWith("Failed to update quote")).to.be.true;
+        });
+
+        it('should failed reject quote with res.status(500) with error', async () => {
+            // Mock req and res objects
+            const fakeDevice = generateFakeDevice(mock_user._id,3);
+            const fakeProvider = generateFakeEbayProvider();
+            const fakeQuote = generateFakeQuote(fakeProvider._id,3);
+
+            const req = {
+                params: {
+                    id: fakeQuote._id
+                },
+                user: mock_user,
+                isLoggedIn: true
+            };
+
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+
+            const next = sandbox.spy();
+
+            updateQuote.withArgs(fakeQuote._id, {state: 2}).throws(new Error('Failed to update quote'));;
+
+            await itemController.rejectQuote(req, res, next);
+
+            expect(res.status.calledWith(500)).to.be.true;
+            expect(res.send.calledWith("Failed to update quote")).to.be.true;
+        });
+    })
+
+    describe('generateQRCode', () => {
+        it('should send qr quote', async () => {
+            // Mock req and res objects
+            const fakeProvider = generateFakeEbayProvider()
+            const fakeQuote = generateFakeQuote(fakeProvider._id,3)
+            const req = {
+                params: {
+                    id: fakeQuote._id
+                },
+                user: mock_user,
+                isLoggedIn: true
+            };
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+            const next = sandbox.spy()
+            const fakeQRCode = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAACXBIWXMAAAsSAAALEgHS3X78AAAAJ0lEQVR42mJg5u9PPwMOnAE4DRiw9B7TQQ1YzUS4QmZCFhMS0xkAAAw8SURBVHja7F15aBdVFMZ/7DjRpAQNi4wZm5u3MxY1e3d3dzazmOq+u3iHd/5zKk1SB0gAkAAAAAAAAAAADgJgVU5n4EHmEAAAAAAAAAAHwIxHIDAAAAAAAAAABAB9jF5My5xMysnUolX6VPUO+9nGutu6+JzhDLJ6KygoAAAAAAAAAADAH4BeALDQAA4BaAgHwAAA8AxQGAAAAAABwCMRyAwAAAAAAAAAQBvAXgCAAAAAMAJ8gAAAAAAAAAAEAH2MXsTK5Zn1olVzqY5D9d/bpGfz2Z2JfcO9LrXaVf5dfbNp95n+SS9NvWn3P9J3XVX1/b9n9J3Y5f7Wz9J2n8X2z9Z5f7W3+9n9p/G9j//69r/8D4/K6UOAAAAAAAAAAAfACTid+1l25eDxWdHAAAAAElFTkSuQmCC';
+
+            generateQR.resolves(fakeQRCode)
+
+            await itemController.generateQRCode(req, res, next);
+
+            expect(generateQR.calledWith(req.params.id)).to.be.true;
+            expect(res.send.calledWith(fakeQRCode)).to.be.true;
         });
     })
 });

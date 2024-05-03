@@ -1,8 +1,12 @@
 const {faker} = require("@faker-js/faker");
-const generateFakeQuote = (provider= faker.database.mongodbObjectId(),state,  date = new Date()) => {
+const {generateFakeDevice} = require("../mocks/device")
+const generateFakeQuote = (provider= faker.database.mongodbObjectId(),
+                           state,
+                           date = new Date(),
+                           device = generateFakeDevice()) => {
     return {
         _id: faker.database.mongodbObjectId(),
-        device: faker.database.mongodbObjectId(),
+        device: device,
         provider: provider,
         value: faker.number.int({ min: 0, max: 500 }),
         state: state,
