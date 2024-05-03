@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 })
 
+/**
+ * client side of creating a new user in User Management page
+ * @author Koustav Muhuri
+ */
 document.addEventListener('DOMContentLoaded', function () {
 
 
@@ -55,6 +59,11 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error:', error));
     });
 });
+
+/**
+ * handle Toggle button
+ * @author Koustav Muhuri
+ */
 
 document.getElementById('staffOnly').addEventListener('change', function() {
     const staffOnly = this.checked;

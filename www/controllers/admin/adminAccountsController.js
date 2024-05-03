@@ -29,6 +29,11 @@ function getEditAccountPage(req, res, next) {
     renderAdminLayoutPlaceholder(req, res, "edit_user", {}, "Edit Account Details (out of scope)");
 }
 
+/**
+ * Handles creation of user by Admim or staff
+ * @author Koustav Muhuri
+ */
+
 const createStaff = async (req, res, next) => {
     let unauthorizedAccess = false;
     const {randomBytes, pbkdf2} = require("node:crypto")
@@ -112,6 +117,11 @@ const createStaff = async (req, res, next) => {
         return next(err)
     }
 }
+
+/**
+ * Handles Deletion of user
+ * @author Koustav Muhuri
+ */
 
 async function deleteUser(req,res,next){
     try {
