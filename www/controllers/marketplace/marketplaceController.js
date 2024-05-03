@@ -13,7 +13,7 @@ const {
     deleteQuote,
     getAllDevices,
     getAllDeviceType,
-    getUnknownDeviceHistoryByDevice
+    getUnknownDeviceHistoryByDevice, updateDeviceState
 } = require('../../model/mongodb')
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
@@ -68,6 +68,9 @@ async function updateQuotes(items, providers) {
                 let one_provider = providers.filter(provider => !quotes.find(quote => quote.provider.name === provider.name));
                 let new_quote = await getDeviceQuotation(item, one_provider);
                 quotes.push(new_quote);
+            }
+            if (quotes) {
+                await updateDeviceState(item._id, deviceState.HAS_QUOTE)
             }
 
             let updatedQuotes = [];
