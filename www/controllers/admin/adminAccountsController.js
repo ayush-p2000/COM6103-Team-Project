@@ -89,7 +89,8 @@ const createStaff = async (req, res, next) => {
                 password: hashedPassword,
                 salt,
                 address,
-                role: role
+                role: role,
+                verified: true
             });
         }
         if (req.user.role > USER && req.body.role <= req.user.role) {
