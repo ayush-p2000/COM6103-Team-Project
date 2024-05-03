@@ -74,7 +74,7 @@ const postListItem = async (req, res) => {
  * Respond form view for user to post item
  * @author Zhicong Jiang
  */
-async function getListItem(req, res) {
+async function getListItem(req, res, next) {
     var id = req.params.id;
     if (typeof id === 'undefined') {
         try {
@@ -86,6 +86,8 @@ async function getListItem(req, res) {
 
         } catch (err) {
             console.log(err);
+            res.status(500);
+            next(err)
         }
     } else {
         try {
@@ -97,7 +99,8 @@ async function getListItem(req, res) {
                 auth: req.isLoggedIn, user: req.user, device: device, colors: deviceColors, capacities: deviceCapacity
             })
         } catch (err) {
-            console.log(err);
+            res.status(500);
+            next(err)
         }
     }
 }
@@ -127,6 +130,7 @@ async function getItemDetails(req, res, next) {
         var specs = []
 
         var quotes = await getQuotes(req.params.id)
+
         if (quotes.length > 0 && item.state < deviceState.HAS_QUOTE && item.state !== deviceState.IN_REVIEW) {
             item.state = deviceState.HAS_QUOTE;
             await item.save()
@@ -167,6 +171,7 @@ async function getItemDetails(req, res, next) {
         if (item.state === deviceState.DATA_RECOVERY) {
             retrievalData = await getRetrievalObjectByDeviceId(item._id);
         }
+
         renderUserLayout(req, res, '../marketplace/item_details', {
             item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, retrievalData, retrievalState,deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes, approvedQuote, hasApprovedQuote
         })
@@ -185,7 +190,7 @@ async function getItemDetails(req, res, next) {
  * Also checks if the quote is accepted then it'll update other quote states to rejected
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang
  */
-async function postUpdateQuote(req, res) {
+async function postUpdateQuote(req, res, next) {
     try {
         const state = req.body.state
         const value = quoteState[state]
@@ -208,6 +213,8 @@ async function postUpdateQuote(req, res) {
 
     } catch (err) {
         console.log(err)
+        res.status(500);
+        next(err);
     }
 }
 

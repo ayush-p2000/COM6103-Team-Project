@@ -1,6 +1,7 @@
 const {faker} = require("@faker-js/faker");
 const generateFakeQuote = (provider= faker.database.mongodbObjectId(),state,  date = new Date()) => {
     return {
+        _id: faker.database.mongodbObjectId(),
         device: faker.database.mongodbObjectId(),
         provider: provider,
         value: faker.number.int({ min: 0, max: 500 }),
