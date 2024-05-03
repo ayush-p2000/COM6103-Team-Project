@@ -121,7 +121,7 @@ describe('Test Marketplace Page', () => {
             expect(next.notCalled).to.be.true;
         });
 
-        it("should call res.status with 500 and next with an error message", async () => {
+        it("should call res.status(500) and next when getPaginatedResults throws error", async () => {
             // Arrange
             // Arrange
             const req = {
@@ -202,56 +202,7 @@ describe('Test Marketplace Page', () => {
             expect(next.notCalled).to.be.true;
         })
 
-        it('should call renderUserLayout with the correct parameters', async () => {
-            const req = {
-                params: {
-                    page: 1
-                },
-                isLoggedIn: true,
-                user: mock_user
-            };
-
-            const res = {
-                render: sandbox.spy()
-            };
-
-            const next = sandbox.spy();
-
-            const fakeDeviceTypes = generateFakeDeviceTypes(1);
-            const fakeDevices = generateFakeDevices(0,mock_user._id);
-            const fakeProviders = generateFakeProviders(1);
-            const fakeQuotation = [];
-
-
-            getAllDeviceType.resolves(fakeDeviceTypes);
-            getUserItems.resolves(fakeDevices)
-            getProviders.resolves(fakeProviders)
-
-            // Act
-            await marketplaceController.getMyItems(req, res, next);
-
-            // Assert
-            expect(getAllDeviceType.called).to.be.true;
-            expect(getAllDeviceType.resolves(fakeDeviceTypes));
-            expect(getUserItems.called).to.be.true;
-            expect(getUserItems.resolves(fakeDevices));
-            expect(getProviders.called).to.be.true;
-            expect(getProviders.resolves(fakeProviders));
-
-            expect(renderUserLayout.calledWith(req, res, '../marketplace/my_items', {
-                deviceTypes: fakeDeviceTypes,
-                items: fakeDevices,
-                quotations: fakeQuotation,
-                deviceState,
-                deviceCategory,
-                auth: req.isLoggedIn,
-                user: req.user,
-                role: 'user'
-            })).to.be.true;
-            expect(next.notCalled).to.be.true;
-        })
-
-        it('should update quotes if no quote', async () => {
+        it('should update quotes for a device if it is no quote', async () => {
             const fakeDevices = generateFakeDevices(1, mock_user._id, 3);
             const fakeProviders = [generateFakeEbayProvider(), generateFakeCexProvider()];
             const fakeEbayQuote = generateFakeQuote(fakeProviders[0]._id,3,oneDayAgo)
@@ -326,7 +277,7 @@ describe('Test Marketplace Page', () => {
             expect(result).to.be.eql([[fakeEbayQuoteNew,fakeCexQuote]]);
         })
 
-        it("should call res.status with 500 and next with an error message", async () => {
+        it("should call res.status(500) and next if getUserItems throws error", async () => {
             // Arrange
             const req = {
                 params: {

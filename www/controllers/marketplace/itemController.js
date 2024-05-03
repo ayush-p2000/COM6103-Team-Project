@@ -250,7 +250,7 @@ async function getItemQrCodeView(req, res, next) {
     //This is to prevent any QR codes displaying sensitive information about the transaction
     if (!quoteActive) {
         if (typeof (req.user) === "undefined" || !quote.device.listing_user._id.equals(new mongoose.Types.ObjectId(req.user?.id))) {
-            res.render('error/403unauthorised', {
+            res.render('error/403', {
                 auth: req.isLoggedIn,
                 user: req.user,
                 message: "This quote is no longer active or you are not the listing user. Please contact the listing user for more information."

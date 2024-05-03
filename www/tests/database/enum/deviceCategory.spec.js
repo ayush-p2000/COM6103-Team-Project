@@ -1,6 +1,7 @@
 const expect = require('chai').expect;
 
 const deviceCategory = require('../../../model/enum/deviceCategory');
+const dataTypes = require("../../../model/enum/dataTypes");
 
 describe('Test Device Category Enum', () => {
     describe('Test Device Category Values', () => {
@@ -104,6 +105,17 @@ describe('Test Device Category Enum', () => {
             done();
         });
 
+        it('should return "Unknown" if provided invalid data', (done) => {
+            // Arrange
+            const expected = "Unknown";
+
+            // Act
+            const result = deviceCategory.deviceCategoryToString("Invalid");
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
 
     });
 
@@ -120,7 +132,6 @@ describe('Test Device Category Enum', () => {
                 expect(result).to.equal(expected);
                 done();
             });
-
 
             it('should return "success" for RECYCLE', (done) => {
                 // Arrange
@@ -152,6 +163,112 @@ describe('Test Device Category Enum', () => {
 
                 // Act
                 const result = deviceCategory.deviceCategoryToColour(deviceCategory.RARE);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
+        });
+
+        describe('Test with a prefix', () => {
+            it('should return "testsecondary" for UNKNOWN with prefix "test"', (done) => {
+                // Arrange
+                const expected = "testsecondary";
+                const prefix = "test";
+
+                // Act
+                const result =  deviceCategory.deviceCategoryToColour(deviceCategory.UNKNOWN, prefix);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
+
+            it('should return "testsuccess" for RECYCLE with prefix "test"', (done) => {
+                // Arrange
+                const expected = "testsuccess";
+                const prefix = "test";
+
+                // Act
+                const result = deviceCategory.deviceCategoryToColour(deviceCategory.RECYCLE, prefix);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
+
+            it('should return "testwarning" for CURRENT with prefix "test"', (done) => {
+                // Arrange
+                const expected = "testwarning";
+                const prefix = "test";
+
+                // Act
+                const result = deviceCategory.deviceCategoryToColour(deviceCategory.CURRENT, prefix);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
+
+            it('should return "testinfo" for RARE with prefix "test"', (done) => {
+                // Arrange
+                const expected = "testinfo";
+                const prefix = "test";
+
+                // Act
+                const result = deviceCategory.deviceCategoryToColour(deviceCategory.RARE,prefix);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
+
+            it('should return "nullsecondary" for UNKNOWN with prefix null', (done) => {
+                // Arrange
+                const expected = "nullsecondary";
+                const prefix = null;
+
+                // Act
+                const result =  deviceCategory.deviceCategoryToColour(deviceCategory.UNKNOWN, prefix);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
+
+            it('should return "0secondary" for UNKNOWN with prefix 0', (done) => {
+                // Arrange
+                const expected = "0secondary";
+                const prefix = 0;
+
+                // Act
+                const result =  deviceCategory.deviceCategoryToColour(deviceCategory.UNKNOWN, prefix);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
+
+            it('should return "truesecondary" for UNKNOWN with prefix true', (done) => {
+                // Arrange
+                const expected = "truesecondary";
+                const prefix = true;
+
+                // Act
+                const result =  deviceCategory.deviceCategoryToColour(deviceCategory.UNKNOWN, prefix);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
+
+            it('should return "falsesecondary" for UNKNOWN with prefix false', (done) => {
+                // Arrange
+                const expected = "falsesecondary";
+                const prefix = false;
+
+                // Act
+                const result =  deviceCategory.deviceCategoryToColour(deviceCategory.UNKNOWN, prefix);
 
                 // Assert
                 expect(result).to.equal(expected);

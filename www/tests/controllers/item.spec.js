@@ -115,6 +115,37 @@ describe('Test Item Page', () => {
             expect(res.status.calledWith(200)).to.be.true;
         });
 
+        it('should not create a new device but call res.status(500) if image in null', async () => {
+            // Mock req and res objects
+            const fakeDevice = generateFakeDevice(mock_user._id,1)
+
+            const req = {
+                params: { id: undefined },
+                body: {
+                    device_type: fakeDevice.device_type,
+                    brand: fakeDevice.brand,
+                    model: fakeDevice.model,
+                    color: fakeDevice.color,
+                    capacity: fakeDevice.capacity,
+                    years_used: fakeDevice.years_used,
+                    details: JSON.stringify(fakeDevice.details),
+                    good_condition: fakeDevice.good_condition,
+                    data_service: fakeDevice.data_service,
+                    additional_details: fakeDevice.additional_details,
+                    visible: false
+                },
+                user: mock_user
+            };
+            const res = {
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+
+            await itemController.postListItem(req, res);
+
+            expect(res.status.calledWith(500)).to.be.true;
+        });
+
         it('should update an existing device if id is provided', async () => {
             const fakeDevice = generateFakeDevice(mock_user._id,1)
             const fakeDeviceNew = generateFakeDevice(mock_user._id,1)
@@ -142,7 +173,7 @@ describe('Test Item Page', () => {
             expect(res.status.calledWith(200)).to.be.true;
         });
 
-        it('should not update with error throw ', async () => {
+        it('should not update device detail and call res.status(500) with error throw', async () => {
             const fakeDevice = generateFakeDevice(mock_user._id,1)
             const fakeDeviceNew = generateFakeDevice(mock_user._id,1)
 
@@ -177,8 +208,6 @@ describe('Test Item Page', () => {
     describe('getListItem', () => {
         it('should call list_item with correct parameter when id is undefind', async () => {
             // Mock req and res objects
-
-
             const req = {
                 params: { id: undefined },
                 user: mock_user,
@@ -207,7 +236,7 @@ describe('Test Item Page', () => {
             })).to.be.true;
         });
 
-        it('should not update with error throw ', async () => {
+        it('should not render ListItem Page and called res.status(500) with error throws ', async () => {
             const req = {
                 params: { id: undefined },
                 user: mock_user,
@@ -225,6 +254,7 @@ describe('Test Item Page', () => {
             await itemController.getListItem(req, res, next);
 
             expect(res.status.calledWith(500)).to.be.true;
+            expect(next.calledOnce).to.be.true;
         });
 
         it('should call edit_item with correct parameter when have device id', async () => {
@@ -300,7 +330,7 @@ describe('Test Item Page', () => {
             expect(res.send.calledWith(models)).to.be.true;
         });
 
-        it('should get list of model for brand and type', async () => {
+        it('should not get list of model for brand and type when error throws', async () => {
             // Mock req and res objects
             const req = {
                 query: { brand: 'SomeBrand', deviceType: 'SomeDeviceType' },
@@ -369,7 +399,7 @@ describe('Test Item Page', () => {
             })).to.be.true;
         });
 
-        it('should call res.status with 500 and next with an error message', async () => {
+        it('should call res.status(500) and next when getQuotes failed with error', async () => {
             // Mock req and res objects
             const fakeDevice = generateFakeDevice(mock_user._id,1)
             const req = {
@@ -393,8 +423,8 @@ describe('Test Item Page', () => {
         });
     });
 
-    describe('getItemDetails', () => {
-        it('should update quote state to accepted', async () => {
+    describe('postUpdateQuote', () => {
+        it('should update quote state to accepted when posting with ACCEPTED State', async () => {
             // Mock req and res objects
             const fakeDevice = generateFakeDevice(mock_user._id,3)
             const fakeProvider = generateFakeEbayProvider()
@@ -423,7 +453,7 @@ describe('Test Item Page', () => {
             expect(res.status.calledWith(200)).to.be.true;
         });
 
-        it('should call res.status with 500 and next with an error message', async () => {
+        it('should call res.status(500) and next when getQuotes throw an error', async () => {
             // Mock req and res objects
             const fakeDevice = generateFakeDevice(mock_user._id,3)
             const fakeProvider = generateFakeEbayProvider()
@@ -456,6 +486,7 @@ describe('Test Item Page', () => {
     })
 
     describe('getItemQrCodeView', () => {
+
         it('should render qr view with correct parameters', async () => {
             // Mock req and res objects
             const fakeProvider = generateFakeEbayProvider()
@@ -491,7 +522,7 @@ describe('Test Item Page', () => {
             expect(next.calledOnce).to.be.false;
         });
 
-        it('should render 403unauthorised error page if user is undefined', async () => {
+        it('should render 403 error page if user is undefined and quote is CONVERTED', async () => {
             // Mock req and res objectsr()
             const fakeProvider = generateFakeEbayProvider()
             const fakeQuote = generateFakeQuote(fakeProvider._id,4)
@@ -513,14 +544,14 @@ describe('Test Item Page', () => {
 
             await itemController.getItemQrCodeView(req, res, next);
 
-            expect(res.render.calledWith('error/403unauthorised', {
+            expect(res.render.calledWith('error/403', {
                 auth: req.isLoggedIn,
                 user: req.user,
                 message: "This quote is no longer active or you are not the listing user. Please contact the listing user for more information."
             })).to.be.true;
         });
 
-        it('should call res.status with 404 ', async () => {
+        it('should call res.status with 404 if the quote is undefined ', async () => {
             // Mock req and res objectsr()
             const req = {
                 params: {
@@ -541,10 +572,11 @@ describe('Test Item Page', () => {
 
             expect(res.status.calledWith(404)).to.be.true;
         });
+
     })
 
     describe('confirmQuote', () => {
-        it('should failed confirm quote when quote is not active with res.status(400)', async () => {
+        it('should failed confirm quote call res.status(400) if quote is CONVERTED', async () => {
             // Mock req and res objects
             const fakeDevice = generateFakeDevice(mock_user._id,3)
             const fakeProvider = generateFakeEbayProvider()
@@ -576,7 +608,7 @@ describe('Test Item Page', () => {
             expect(res.status.calledWith(400)).to.be.true;
         });
 
-        it('should confirmed quote with res.status(200)', async () => {
+        it('should confirmed quote and call res.status(200) with correct prove of transaction ', async () => {
             // Mock req and res objects
             const fakeDevice = generateFakeDevice(mock_user._id,3)
             const fakeProvider = generateFakeEbayProvider()
@@ -613,7 +645,7 @@ describe('Test Item Page', () => {
             expect(res.status.calledWith(200)).to.be.true;
         });
 
-        it('should failed confirmed quote with res.status(500) if now successfully save to database)', async () => {
+        it('should failed confirmed quote with res.status(500) if saving device is rejected )', async () => {
             // Mock req and res objects
             const fakeDevice = generateFakeDevice(mock_user._id,3)
             const fakeProvider = generateFakeEbayProvider()
@@ -647,7 +679,7 @@ describe('Test Item Page', () => {
             expect(res.status.calledWith(500)).to.be.true;
         });
 
-        it('should failed confirmed quote with res.status(500)', async () => {
+        it('should failed confirmed quote with res.status(500) if get device throws error', async () => {
             // Mock req and res objects
             const fakeDevice = generateFakeDevice(mock_user._id,3)
             const fakeProvider = generateFakeEbayProvider()
@@ -673,7 +705,7 @@ describe('Test Item Page', () => {
             const next = sandbox.spy()
 
             getQuoteById.resolves(fakeQuote)
-            getDevice.resolves(fakeDevice)
+            getDevice.throws(new Error('Internal server error'))
 
             await itemController.confirmQuote(req, res, next);
 
@@ -709,7 +741,7 @@ describe('Test Item Page', () => {
             expect(res.status.calledWith(200)).to.be.true;
         });
 
-        it('should failed reject quote with res.status(500)', async () => {
+        it('should failed reject quote with res.status(500) if updateQuote return false', async () => {
             // Mock req and res objects
             const fakeDevice = generateFakeDevice(mock_user._id,3);
             const fakeProvider = generateFakeEbayProvider();
@@ -771,7 +803,7 @@ describe('Test Item Page', () => {
     })
 
     describe('generateQRCode', () => {
-        it('should send qr quote', async () => {
+        it('should send qr quote if quote is valid', async () => {
             // Mock req and res objects
             const fakeProvider = generateFakeEbayProvider()
             const fakeQuote = generateFakeQuote(fakeProvider._id,3)
@@ -796,6 +828,31 @@ describe('Test Item Page', () => {
 
             expect(generateQR.calledWith(req.params.id)).to.be.true;
             expect(res.send.calledWith(fakeQRCode)).to.be.true;
+        });
+
+        it('should not send qr quote if quote is not valid', async () => {
+            // Mock req and res objects
+            const req = {
+                params: {
+                    id: undefined
+                },
+                user: mock_user,
+                isLoggedIn: true
+            };
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.stub()
+            };
+            const next = sandbox.spy()
+            const fakeQRCode = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAACXBIWXMAAAsSAAALEgHS3X78AAAAJ0lEQVR42mJg5u9PPwMOnAE4DRiw9B7TQQ1YzUS4QmZCFhMS0xkAAAw8SURBVHja7F15aBdVFMZ/7DjRpAQNi4wZm5u3MxY1e3d3dzazmOq+u3iHd/5zKk1SB0gAkAAAAAAAAAAADgJgVU5n4EHmEAAAAAAAAAAHwIxHIDAAAAAAAAAABAB9jF5My5xMysnUolX6VPUO+9nGutu6+JzhDLJ6KygoAAAAAAAAAADAH4BeALDQAA4BaAgHwAAA8AxQGAAAAAABwCMRyAwAAAAAAAAAQBvAXgCAAAAAMAJ8gAAAAAAAAAAEAH2MXsTK5Zn1olVzqY5D9d/bpGfz2Z2JfcO9LrXaVf5dfbNp95n+SS9NvWn3P9J3XVX1/b9n9J3Y5f7Wz9J2n8X2z9Z5f7W3+9n9p/G9j//69r/8D4/K6UOAAAAAAAAAAAfACTid+1l25eDxWdHAAAAAElFTkSuQmCC';
+
+            generateQR.resolves({})
+
+            await itemController.generateQRCode(req, res, next);
+
+            expect(generateQR.calledWith(undefined)).to.be.true;
+            expect(res.send.calledWith({})).to.be.true;
         });
     })
 });
