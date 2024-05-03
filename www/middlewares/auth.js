@@ -8,7 +8,7 @@ const {STAFF, ADMIN} = require("../model/enum/roleTypes")
 const {User} = require("../model/models");
 const isAuthenticated = (req, res, next) => {
     req.isLoggedIn = false;
-    if(req.isAuthenticated() && req.user){
+    if (req.isAuthenticated() && req.user) {
         req.isLoggedIn = true;
         next();
     } else {
@@ -22,54 +22,51 @@ const authInfo = (req, res, next) => {
     next()
 }
 
-const isStaff = (req,res,next) => {
-    if(req.user.role < STAFF){
-        res.redirect("/dashboard")
+const isStaff = (req, res, next) => {
+    if (req.user.role < STAFF) {
+        return res.redirect("/dashboard")
     }
     next();
 }
 
-const isSuperAdmin = (req,res,next) => {
-    if(req.user.role < ADMIN){
-        res.redirect("/dashboard")
+const isSuperAdmin = (req, res, next) => {
+    if (req.user.role < ADMIN) {
+        return res.redirect("/dashboard")
     }
     next();
 }
 
-const validateVerification = async (req, res,next) => {
+const validateVerification = async (req, res, next) => {
     const userFromEmail = await User.findOne({email: req.body.email})
 
-        const verifyMessage = ['Please verify your email']
-        const registerUserMessage = ['User does not exist. Please register before you can access']
-        if (userFromEmail) {
-            if(userFromEmail.google_id == null) {
-                if (userFromEmail.verified === false) {
-                    res.render("authentication/login", {
-                        auth: req.isLoggedIn, user: req.user, messages: verifyMessage,
-                        hasMessages: verifyMessage.length > 0,
-                    })
-                } else {
-                    next();
-                }
+    const verifyMessage = ['Please verify your email']
+    const registerUserMessage = ['User does not exist. Please register before you can access']
+    if (userFromEmail) {
+        if (userFromEmail.google_id == null) {
+            if (userFromEmail.verified === false) {
+                res.render("authentication/login", {
+                    auth: req.isLoggedIn, user: req.user, messages: verifyMessage,
+                    hasMessages: verifyMessage.length > 0,
+                })
+            } else {
+                next();
             }
-            else
-                {
-                    const verifyMessage = ['This account was registered using Google Authentication. Please log in with Google to continue']
-                    res.render("authentication/login", {
-                        auth: req.isLoggedIn, user: req.user, messages: verifyMessage,
-                        hasMessages: verifyMessage.length > 0,
-                    })
-                }
-        }
-        else {
-            res.render("authentication/register", {
-                auth: req.isLoggedIn, user: req.user, messages: registerUserMessage,
-                hasMessages: verifyMessage.length > 0
+        } else {
+            const verifyMessage = ['This account was registered using Google Authentication. Please log in with Google to continue']
+            res.render("authentication/login", {
+                auth: req.isLoggedIn, user: req.user, messages: verifyMessage,
+                hasMessages: verifyMessage.length > 0,
             })
-
         }
+    } else {
+        res.render("authentication/register", {
+            auth: req.isLoggedIn, user: req.user, messages: registerUserMessage,
+            hasMessages: verifyMessage.length > 0
+        })
 
     }
+
+}
 
 
 module.exports = {
