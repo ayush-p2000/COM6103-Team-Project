@@ -98,11 +98,12 @@ async function updateQuotes(items, providers) {
 async function getMyItems(req, res, next) {
     try {
         const deviceTypes = await getAllDeviceType();
-        const items = await getUserItems(req.user.id);
+        let items = await getUserItems(req.user.id);
         const providers = await getProviders();
 
         await handleMissingModels(items);
         const quotations = await updateQuotes(items, providers);
+        items = await getUserItems(req.user.id);
 
         renderUserLayout(req, res, '../marketplace/my_items', {
             deviceTypes,
