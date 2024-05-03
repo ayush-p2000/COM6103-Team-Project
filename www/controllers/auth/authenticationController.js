@@ -15,8 +15,6 @@ let token = ""
 
 const registerUser = async (req, res, next) => {
     let messages;
-    console.log("here")
-
     try {
         const {
             firstName,
