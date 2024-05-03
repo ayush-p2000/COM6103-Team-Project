@@ -13,7 +13,7 @@ const {
     deleteQuote,
     getAllDevices,
     getAllDeviceType,
-    getUnknownDeviceHistoryByDevice
+    getUnknownDeviceHistoryByDevice, updateDeviceState
 } = require('../../model/mongodb')
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
@@ -69,6 +69,9 @@ async function updateQuotes(items, providers) {
                 let new_quote = await getDeviceQuotation(item, one_provider);
                 quotes.push(new_quote);
             }
+            if (quotes) {
+                await updateDeviceState(item._id, deviceState.HAS_QUOTE)
+            }
 
             let updatedQuotes = [];
             for (const quote of quotes) {
@@ -95,11 +98,12 @@ async function updateQuotes(items, providers) {
 async function getMyItems(req, res, next) {
     try {
         const deviceTypes = await getAllDeviceType();
-        const items = await getUserItems(req.user.id);
+        let items = await getUserItems(req.user.id);
         const providers = await getProviders();
 
         await handleMissingModels(items);
         const quotations = await updateQuotes(items, providers);
+        items = await getUserItems(req.user.id);
 
         renderUserLayout(req, res, '../marketplace/my_items', {
             deviceTypes,
