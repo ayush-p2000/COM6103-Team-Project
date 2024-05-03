@@ -70,7 +70,7 @@
 
                 <!--items list-->
                 <div class="row g-2">
-                    <% devices.forEach(device => { if(device.visible){ %>
+                    <% devices.forEach(device =>  { %>
                         <div class="col-12 col-sm-6 col-md-6 col-lg-auto item mb-2">
                             <div class="card rounded-4 h-100 shadow-sm" style="max-width: 350px; ">
                                 <img src="data:<%= device.photos[0]?.img_type %>;base64,<%= Buffer.from(device.photos[0]?.img_data ?? "").toString('base64') %>"
@@ -90,7 +90,7 @@
                                 </div>
                             </div>
                         </div>
-                    <% }}) %>
+                    <% }) %>
                     <%- include("../components/pagination") %>
                 </div>
             </div>
