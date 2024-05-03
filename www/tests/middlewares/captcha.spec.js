@@ -38,7 +38,7 @@ describe("Test Captcha Middleware", () => {
         afterEach(() => {
             sandbox.restore()
         })
-        it("should call next is captcha validation has been successful", async () => {
+        it("should call next if captcha validation has been successful", async () => {
             sandbox.stub(axios, 'post').resolves({ data: { success: true } });
 
             await validateCaptcha(req,res,next)
