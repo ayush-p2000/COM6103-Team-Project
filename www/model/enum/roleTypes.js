@@ -21,6 +21,12 @@ const roleTypes = {
     },
 
     roleTypeToColour: function (rank, prefix = "") {
+
+        //Check if a prefix is a string, and not null, undefined, or true/false
+        if (typeof prefix !== 'string') {
+            prefix = "";
+        }
+
         switch (rank) {
             case USER:
                 return prefix + "success";

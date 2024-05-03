@@ -138,15 +138,16 @@ describe('Test Role Types Enum', () => {
             done();
         });
     });
-    describe('Test dataTypeToColour', () => {
+    describe('Test roleTypeToRGB', () => {
         describe('Test with no prefix', () => {
-            it('should return "rgb(0, 128, 0)" when passed USER', (done) => {
+            it('should return "rgba(0, 128, 0, 0.2)" when passed USER', (done) => {
                 // Arrange
                 const expected = 'rgba(0, 128, 0, 0.2)';
                 const dataType = roleTypes.USER;
+                const border = false;
 
                 // Act
-                const result = roleTypes.roleTypeToRGB(dataType);
+                const result = roleTypes.roleTypeToRGB(dataType,border);
 
                 // Assert
                 expect(result).to.equal(expected);
@@ -157,3 +158,279 @@ describe('Test Role Types Enum', () => {
             });
         });
     });
+
+describe('Test roleTypeToRGB', () => {
+    describe('Test with border false for admin', () => {
+        it('should return "rgba(0,0,255, 0.2)" when passed ADMIN', (done) => {
+            // Arrange
+            const expected = 'rgba(0,0,255, 0.2)';
+            const dataType = roleTypes.ADMIN;
+            const border = false;
+
+            // Act
+            const result = roleTypes.roleTypeToRGB(dataType,border);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+   
+
+        it('should return "rgba(255, 165, 0, 0.2)" when passed STAFF', (done) => {
+            // Arrange
+            const expected = 'rgba(255, 165, 0, 0.2)';
+            const dataType = roleTypes.STAFF;
+            const border = false;
+
+            // Act
+            const result = roleTypes.roleTypeToRGB(dataType,border);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+
+
+
+
+        it('should return "rgba(0, 128, 0, 0.2)" when passed USER', (done) => {
+            // Arrange
+            const expected = 'rgba(0, 128, 0, 0.2)';
+            const dataType = roleTypes.USER;
+            const border = false;
+
+            // Act
+            const result = roleTypes.roleTypeToRGB(dataType,border);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+
+
+        it('should return "rgb(255, 165, 0)" when passed STAFF', (done) => {
+            // Arrange
+            const expected = 'rgb(255, 165, 0)';
+            const dataType = roleTypes.STAFF;
+            const border = true;
+
+            // Act
+            const result = roleTypes.roleTypeToRGB(dataType,border);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+
+
+
+
+        it('should return "rgb(0, 128, 0)" when passed USER', (done) => {
+            // Arrange
+            const expected = 'rgb(0, 128, 0)';
+            const dataType = roleTypes.USER;
+            const border = true;
+
+            // Act
+            const result = roleTypes.roleTypeToRGB(dataType,border);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+
+
+        it('should return "rgb(0, 128, 0)" when passed USER', (done) => {
+            // Arrange
+            const expected = 'rgb(0, 128, 0)';
+            const dataType = roleTypes.USER;
+            const border = true;
+
+            // Act
+            const result = roleTypes.roleTypeToRGB(dataType,border);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+
+
+        it('should return "rgba(255, 165, 0, 0.2)" when passed null', (done) => {
+            // Arrange
+            const expected = 'rgba(255, 165, 0, 0.2)';
+            const dataType = null;
+            const border = false;
+
+            // Act
+            const result = roleTypes.roleTypeToRGB(dataType,border);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+
+
+
+        it('should return "rgba(255, 165, 0, 0.2)" when passed undefined', (done) => {
+            // Arrange
+            const expected = 'rgba(255, 165, 0, 0.2)';
+            const dataType = undefined;
+            const border = false;
+
+            // Act
+            const result = roleTypes.roleTypeToRGB(dataType, border);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+    });
+
+    describe('Test with border true for user', () => {
+        it('should return "success" when passed USER and prefix = "" ', (done) => {
+            // Arrange
+            const expected = 'success';
+            const rank = roleTypes.USER;
+            const prefix = "";
+
+            // Act
+            const result = roleTypes.roleTypeToColour(rank,prefix);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+        it('should return "success" when passed USER and prefix = "hello" ', (done) => {
+            // Arrange
+            const expected = 'hellosuccess';
+            const rank = roleTypes.USER;
+            const prefix = "hello";
+
+            // Act
+            const result = roleTypes.roleTypeToColour(rank,prefix);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+        it('should return "success" when passed USER and prefix = null ', (done) => {
+            // Arrange
+            const expected = 'success';
+            const rank = roleTypes.USER;
+            const prefix = null;
+
+            // Act
+            const result = roleTypes.roleTypeToColour(rank,prefix);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+        it('should return "warning" when passed STAFF and prefix = null ', (done) => {
+            // Arrange
+            const expected = 'warning';
+            const rank = roleTypes.STAFF;
+            const prefix = null;
+
+            // Act
+            const result = roleTypes.roleTypeToColour(rank,prefix);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+        it('should return "primary" when passed ADMIN and prefix = null ', (done) => {
+            // Arrange
+            const expected = 'primary';
+            const rank = roleTypes.ADMIN;
+            const prefix = null;
+
+            // Act
+            const result = roleTypes.roleTypeToColour(rank,prefix);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+        it('should return "warning" when passed USER and prefix = "hello" ', (done) => {
+            // Arrange
+            const expected = 'hellowarning';
+            const rank = roleTypes.STAFF;
+            const prefix = "hello";
+
+            // Act
+            const result = roleTypes.roleTypeToColour(rank,prefix);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+        it('should return "primary" when passed USER and prefix = "hello" ', (done) => {
+            // Arrange
+            const expected = 'helloprimary';
+            const rank = roleTypes.ADMIN;
+            const prefix = "hello";
+
+            // Act
+            const result = roleTypes.roleTypeToColour(rank,prefix);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+        it('should return "secondary" when passed USER and prefix = "hello" ', (done) => {
+            // Arrange
+            const expected = 'hellosecondary';
+            const rank = null;
+            const prefix = "hello";
+
+            // Act
+            const result = roleTypes.roleTypeToColour(rank,prefix);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+        it('should return "secondary" when passed USER and prefix = true ', (done) => {
+            // Arrange
+            const expected = 'secondary';
+            const rank = null;
+            const prefix = true;
+
+            // Act
+            const result = roleTypes.roleTypeToColour(rank,prefix);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+        it('should return "secondary" when passed USER and prefix = true ', (done) => {
+            // Arrange
+            const expected = 'secondary';
+            const rank = null;
+            const prefix = false;
+
+            // Act
+            const result = roleTypes.roleTypeToColour(rank,prefix);
+
+            // Assert
+            expect(result).to.equal(expected);
+            done();
+        });
+
+    });
+
+
+});
+
