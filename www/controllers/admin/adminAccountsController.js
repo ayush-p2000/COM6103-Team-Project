@@ -6,6 +6,10 @@ const {renderAdminLayout, renderAdminLayoutPlaceholder} = require("../../util/la
 const {getAllUsers, getUserById, searchUserAndPopulate} = require("../../model/mongodb");
 const {User} = require("../../model/models");
 const roleTypes = require("../../model/enum/roleTypes");
+const {randomBytes, pbkdf2} = require("node:crypto")
+const {promisify} = require("node:util");
+const pbkdf2Promise = promisify(pbkdf2)
+const {USER} = require("../../model/enum/roleTypes");
 
 async function getAccountsPage(req, res, next) {
     let users = [];
@@ -30,14 +34,7 @@ function getEditAccountPage(req, res, next) {
 }
 
 const createStaff = async (req, res, next) => {
-    let unauthorizedAccess = false;
-    const {randomBytes, pbkdf2} = require("node:crypto")
-    const {promisify} = require("node:util");
-    const pbkdf2Promise = promisify(pbkdf2)
-    const {User} = require("../../model/schema/user");
-    const {getAllUsers} = require("../../model/mongodb");
-    const {renderAdminLayout} = require("../../util/layout/layoutUtils");
-    const {USER} = require("../../model/enum/roleTypes");
+
     let user = ""
 
     let messages;
@@ -78,7 +75,7 @@ const createStaff = async (req, res, next) => {
         const hashedPassword = await pbkdf2Promise(password, salt, 310000, 32, 'sha256')
         const emailCheck = await User.findOne({email});
         if (emailCheck) {
-            res.status(401).send('Email id already exists');
+            res.status(400).send('This email is already registered to an account');
         } else {
             user = new User({
                 first_name: firstName,
@@ -102,7 +99,7 @@ const createStaff = async (req, res, next) => {
 
             }
         }else{
-            res.status(401).send('You do not have access to create this user');
+            res.status(401).send('You do not have permission to create this account');
         }
 
 

@@ -47,15 +47,17 @@ document.addEventListener('DOMContentLoaded', function () {
             body: formData,
         })
             .then(response => {
+                if(response.ok){
+                    location.reload()
+                }
                 if (!response.ok) {
                     return response.text().then(error => {
                         $errorMessage.text(error);
                         $errorMessage.removeClass('d-none');
-                        throw new Error(error);
                     });
 
                 }
-                location.reload()
+
             })
             .catch(error => console.error('Error:', error));
     });
