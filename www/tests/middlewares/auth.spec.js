@@ -197,6 +197,18 @@ describe("Test Authentication Middlewares", () => {
             sandbox.restore()
         });
 
+        it('should call next if its a valid user and not google verified', async () => {
+            findOne.withArgs({email: req.body.email}).returns({
+                google_id: null,
+                verified: true
+            })
+
+            await authMiddleware.validateVerification(req, res, next);
+
+            sandbox.assert.calledOnce(next);
+            expect(res.render.notCalled).to.be.true
+        });
+
         it('should render login page with verification message if user exists but not verified and not using Google authentication', async () => {
             findOne.withArgs({email: req.body.email}).returns({
                 google_id: null,
