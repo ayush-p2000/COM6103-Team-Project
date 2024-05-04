@@ -51,10 +51,17 @@ document.addEventListener('DOMContentLoaded', function () {
             body: formData,
         })
             .then(response => {
-                if (!response.ok) {
-                        $errorMessage.removeClass('d-none');
+                if(response.ok){
+                    location.reload()
                 }
-                location.reload()
+                if (!response.ok) {
+                    return response.text().then(error => {
+                        $errorMessage.text(error);
+                        $errorMessage.removeClass('d-none');
+                    });
+
+                }
+
             })
             .catch(error => console.error('Error:', error));
     });
