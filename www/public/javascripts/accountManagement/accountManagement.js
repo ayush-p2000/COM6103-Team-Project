@@ -1,3 +1,7 @@
+/**
+ * Deactivate or activate an user
+ * @author Koustav Muhuri
+ */
 document.addEventListener('DOMContentLoaded', function () {
     const deactivateUser = document.getElementById('deactivateUser');
     const activateUser = document.getElementById('activateUser');
