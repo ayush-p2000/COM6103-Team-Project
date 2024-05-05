@@ -79,7 +79,7 @@ const postListItem = async (req, res) => {
  * Respond form view for user to post item
  * @author Zhicong Jiang
  */
-async function getListItem(req, res) {
+async function getListItem(req, res, next) {
     var id = req.params.id;
     if (typeof id === 'undefined') {
         try {
@@ -91,6 +91,8 @@ async function getListItem(req, res) {
 
         } catch (err) {
             console.log(err);
+            res.status(500);
+            next(err)
         }
     } else {
         try {
@@ -102,7 +104,8 @@ async function getListItem(req, res) {
                 auth: req.isLoggedIn, user: req.user, device: device, colors: deviceColors, capacities: deviceCapacity
             })
         } catch (err) {
-            console.log(err);
+            res.status(500);
+            next(err)
         }
     }
 }
@@ -184,7 +187,8 @@ async function getItemDetails(req, res, next) {
 
         const providers = await getProviders();
         const quotations = await updateQuotes([item], providers);
-        item = await getDevicesWithQuotes([req.params.id]);
+        item = await getDevicesWithQuotes([req.params.id])
+;
         item = item[0];
 
         var quotes = item.quotes;
@@ -228,6 +232,7 @@ async function getItemDetails(req, res, next) {
         if (item.state === deviceState.DATA_RECOVERY) {
             retrievalData = await getRetrievalObjectByDeviceId(item._id);
         }
+
         renderUserLayout(req, res, '../marketplace/item_details', {
             item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, retrievalData, retrievalState,deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes, approvedQuote, hasApprovedQuote
         })
@@ -246,7 +251,7 @@ async function getItemDetails(req, res, next) {
  * Also checks if the quote is accepted then it'll update other quote states to rejected
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang
  */
-async function postUpdateQuote(req, res) {
+async function postUpdateQuote(req, res, next) {
     try {
         const state = req.body.state
         const value = quoteState[state]
@@ -269,6 +274,8 @@ async function postUpdateQuote(req, res) {
 
     } catch (err) {
         console.log(err)
+        res.status(500);
+        next(err);
     }
 }
 
@@ -304,7 +311,7 @@ async function getItemQrCodeView(req, res, next) {
     //This is to prevent any QR codes displaying sensitive information about the transaction
     if (!quoteActive) {
         if (typeof (req.user) === "undefined" || !quote.device.listing_user._id.equals(new mongoose.Types.ObjectId(req.user?.id))) {
-            res.render('error/403unauthorised', {
+            res.render('error/403', {
                 auth: req.isLoggedIn,
                 user: req.user,
                 message: "This quote is no longer active or you are not the listing user. Please contact the listing user for more information."
@@ -375,7 +382,6 @@ async function confirmQuote(req, res, next) {
             res.status(500).send("Failed to update quote");
             return;
         }
-
         //Return a success message
         res.status(200).send("Quote confirmed");
     } catch (error) {
