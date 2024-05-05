@@ -20,7 +20,6 @@ const {
 
 //------------------------------------------------ Rendering user Database -------------------------------------------------------------------------//
 
-
 /**
  * Get user dashboard, here the user's items and marketplace items can be viewed from the dashboard
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> and Ayush Prajapati <aprajapati1@sheffield.ac.uk>

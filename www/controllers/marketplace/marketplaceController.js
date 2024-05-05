@@ -96,6 +96,19 @@ async function updateQuotes(items, providers) {
     return quotations;
 }
 
+async function refreshMyQuotes(req, res, next) {
+    try {
+        const items = await getUserItems(req.user.id);
+        const providers = await getProviders();
+        const quotations = await updateQuotes(items, providers);
+        res.status(200).send("Quotes refreshed successfully");
+    } catch (e) {
+        console.log(e);
+        res.status(500).send(e);
+    }
+
+}
+
 async function getMyItems(req, res, next) {
     try {
         const deviceTypes = await getAllDeviceType();
@@ -123,5 +136,6 @@ async function getMyItems(req, res, next) {
 
 module.exports = {
     getMarketplace,
-    getMyItems
+    getMyItems,
+    refreshMyQuotes
 }

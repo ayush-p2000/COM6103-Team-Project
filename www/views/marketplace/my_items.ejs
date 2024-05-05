@@ -14,6 +14,27 @@
     </div>
 
     <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm text-center">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="fw-semibold">Been a while? Added a new device?</h3>
+                            <p class="text-muted">Click the button below to refresh the quotes for your items.</p>
+                            <div class="btn btn-success w-100" id="refreshButton">
+                                <i class="fa-solid fa-comment-dollar"></i> Refresh Quotes
+                                <div class="spinner-border spinner-border-sm d-none" role="status" id="refreshSpinner">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
         <div class="col-12">
             <div class="card rounded-4 shadow-sm">
                 <div class="card-body">
@@ -138,6 +159,44 @@
     </div>
 </div>
 
+<section id="toasts">
+    <div class="toast-container p-3 position-fixed end-0" id="toastContainer"
+     style="top:60px">
+        <div class="toast align-items-center text-white text-bg-info border-0" role="alert" aria-live="assertive"
+             aria-atomic="true" id="refreshingToast">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span class="ms-2">Refreshing quotes...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast align-items-center text-white text-bg-danger border-0" role="alert" aria-live="assertive"
+             aria-atomic="true" id="refreshErrorToast">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fa-solid fa-exclamation-triangle text-danger"></i>
+                    <span class="ms-2">Error refreshing quotes. Please try again later.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
+             aria-atomic="true" id="refreshSuccessToast">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fa-solid fa-check-circle text-white"></i>
+                    <span class="ms-2">Quotes refreshed successfully.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <script src="/javascripts/marketplace/filter.js"></script>
+<script src="/javascripts/marketplace/refresh_quotes.js"></script>
 
 
