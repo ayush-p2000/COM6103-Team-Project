@@ -26,6 +26,8 @@ async function getCheckout(req, res, next) {
     let product = ''
     let transactionDetails
     let transaction
+
+
     //Check if the device is for recycling
     if (total === '0') {
         let model = req.query.model
@@ -34,6 +36,9 @@ async function getCheckout(req, res, next) {
         const order = setTransactionDetails(id, total, 'Not Available', model, extension)
         renderUserLayout(req, res, 'payment/checkout_complete', {title: 'Payment Completed', order: order, extension: extension})
     } else {
+        if (!type || !id || !total) {
+            return res.status(400).send("Missing required parameters");
+        }
         //Check to determine if the payment is for retrieval or for extending the retrieval time
         switch (type) {
             case 'payment_retrieval':
@@ -79,17 +84,26 @@ async function getCheckout(req, res, next) {
  */
 function checkoutToProvider(req, res, next){
     let method = req.body.paymentProvider;
-    let type = req.query.type.toLowerCase()
+    let type = req.query.type?.toLowerCase()
     let id = req.body.transactionId
     let total = req.query.total
     let extension = req.query.extension
     let product = 'Data Retrieval'
+
+
+    if (!method || !type || !id || !total) {
+        return res.status(400).send("Missing required parameters");
+    }
 
     let data = {
         id: id,
         product: product,
         total: total,
         type: type
+    };
+
+    if (type === 'retrieval_extension' && !extension) {
+        return res.status(400).send("Missing extension for retrieval extension type");
     }
 
     if (type === 'retrieval_extension') {
@@ -115,6 +129,11 @@ async function getCheckoutCompleted(req, res, next) {
     let product = 'Data Retrieval'
     let type = req.query.type
 
+    if (!type || !id || !extension || !req.query.method) {
+        return res.status(400).send("Missing required parameters");
+    }
+
+
     //Check if the payment is done through stripe or paypal and  get the payment id for the same
     switch (req.query.method) {
         case 'stripe':
@@ -130,6 +149,7 @@ async function getCheckoutCompleted(req, res, next) {
             sessionId = 0
             total = 0
     }
+
     let transactionDetails = {
         id: id,
         value: total,

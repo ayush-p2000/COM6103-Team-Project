@@ -13,6 +13,9 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
  */
 function getStripe (req, res, next) {
     let extension = 0
+    if ( !req.query.id || !req.query.product || !req.query.total || !req.query.type) {
+        res.status(400).send('Missing required parameters')
+    }
     let data = {
         id: req.query.id,
         product: req.query.product,
@@ -36,6 +39,10 @@ const stripePayment = async (req, res) => {
     let total = req.query.total
     let extension = req.query.extension
     let type = req.query.type
+
+    if ( !id || !product || !total || !type || !extension) {
+        res.status(400).send('Missing required parameters')
+    }
     const session = await stripe.checkout.sessions.create({
         line_items: [
             {
