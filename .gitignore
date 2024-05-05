@@ -6,3 +6,4 @@ codestream.xml
 .nyc_output/
 
 coverage/
+.DS_Store
