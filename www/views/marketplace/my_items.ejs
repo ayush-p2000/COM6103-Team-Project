@@ -71,7 +71,7 @@
                                     <div class="row align-content-center">
                                         <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-2">
                                             <% if (item.photos?.length > 0) { %>
-                                                <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data ?? "").toString('base64') %>"
+                                                <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= /*Buffer.from(*/(item.photos[0]?.img_data ?? "").toString('base64') %>"
                                                      class="img-fluid d-block h-100 mx-auto"
                                                      style="height: 200px; width: 200px; object-fit: cover; object-position: center;"
                                                      alt="Image of <%= item.model.name %>">
@@ -99,15 +99,14 @@
                                             <p class="m-0 p-0 text-muted category">
                                                 <small>Classification: </small><%= deviceCategory.deviceCategoryToString(item.category) %>
                                             </p>
-                                            <% quotations.forEach(quoteArray => { %>
-                                                <% if (quoteArray.length > 0 && (item.state === deviceState.LISTED || item.state === deviceState.HAS_QUOTE) && item.visible) { %>
-                                                    <% const firstQuote = quoteArray[0] %>
-                                                    <% if(firstQuote.device.equals(item._id)) { %>
-                                                        <p class="m-0 p-0 text-muted">
-                                                            <small>Price: </small>£<%= firstQuote?.value ?? "Not Found" %></p>
-                                                    <% } %>
+                                            <% if (item.quotes?.length > 0 && (item.state === deviceState.LISTED || item.state === deviceState.HAS_QUOTE) && item.visible) { %>
+                                                <% const firstQuote = item.quotes[0] %>
+                                                <% if(firstQuote.device.equals(item._id)) { %>
+                                                    <p class="m-0 p-0 text-muted">
+                                                        <small>Price: </small>£<%= firstQuote?.value ?? "Not Found" %>
+                                                    </p>
                                                 <% } %>
-                                            <% }) %>
+                                            <% } %>
                                             <p class="m-0 p-0 text-muted">
                                                 <small>Added: </small><%= Intl.DateTimeFormat("en-GB", {
                                                     year: "numeric",

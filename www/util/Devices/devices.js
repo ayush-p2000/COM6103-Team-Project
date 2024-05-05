@@ -26,11 +26,15 @@ async function handleMissingModel(item) {
         item.brand = { name: brand };
         item.model = { name: model };
     }
+
+    return item;
 }
 async function handleMissingModels(devices) {
-    for (const device of devices) {
-        await handleMissingModel(device);
-    }
+    //Create a promise that resolves once every device has been handled
+    const promises = devices.map(device => {
+        return handleMissingModel(device);
+    });
+    return Promise.all(promises);
 }
 
 module.exports = {

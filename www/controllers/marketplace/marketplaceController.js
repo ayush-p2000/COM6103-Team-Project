@@ -13,7 +13,8 @@ const {
     deleteQuote,
     getAllDevices,
     getAllDeviceType,
-    getUnknownDeviceHistoryByDevice, updateDeviceState
+    getUnknownDeviceHistoryByDevice, updateDeviceState,
+    getDevicesWithQuotesFromUserID
 } = require('../../model/mongodb')
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
@@ -98,17 +99,16 @@ async function updateQuotes(items, providers) {
 async function getMyItems(req, res, next) {
     try {
         const deviceTypes = await getAllDeviceType();
-        let items = await getUserItems(req.user.id);
-        const providers = await getProviders();
+        let items = await getDevicesWithQuotesFromUserID(req.user.id);
+        //const providers = await getProviders();
 
         await handleMissingModels(items);
-        const quotations = await updateQuotes(items, providers);
-        items = await getUserItems(req.user.id);
+        //const quotations = await updateQuotes(items, providers);
+        //items = await getUserItems(req.user.id);
 
         renderUserLayout(req, res, '../marketplace/my_items', {
             deviceTypes,
             items,
-            quotations,
             deviceState,
             deviceCategory,
             auth: req.isLoggedIn,

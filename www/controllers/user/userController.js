@@ -5,9 +5,17 @@
 const {User} = require("../../model/models");
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const {renderUserLayout} = require("../../util/layout/layoutUtils");
-const {getAllUsers, getUserItems, getUnknownDeviceHistoryByDevice, getAllDevices} = require("../../model/mongodb");
+const {
+    getAllUsers,
+    getUserItems,
+    getUnknownDeviceHistoryByDevice,
+    getAllDevices
+} = require("../../model/mongodb");
 const deviceCategory = require("../../model/enum/deviceCategory")
-const {handleUserMissingModel, handleMissingModels} = require("../../util/Devices/devices");
+const {
+    handleUserMissingModel,
+    handleMissingModels
+} = require("../../util/Devices/devices");
 
 
 //------------------------------------------------ Rendering user Database -------------------------------------------------------------------------//
@@ -21,24 +29,21 @@ async function getUserDashboard(req, res, next) {
     try {
         const userData = await User.findById({_id: req.user.id});
         const firstName = userData.first_name
-        var userItems = await getUserItems(req.user.id)
-        userItems = await getUnknownDevices(userItems)
-        var marketplaceDevices = await getAllDevices()
-        marketplaceDevices = await getUnknownDevices(marketplaceDevices)
+        var marketplaceDevices = await getAllDevices({visible: {$ne: false}});
+        marketplaceDevices = await handleMissingModels(marketplaceDevices)
+
+        // Get the user's items
+        //They are defined as items where the listing_user is the user's ID
+        let userItems = marketplaceDevices.filter(device => device.listing_user._id.toString() === req.user.id.toString())
 
         const userItemsContainsDevices = userItems.length > 0
-        let marketDevices = []
-        marketplaceDevices.forEach(devices => {
-            if (devices.visible) {
-                marketDevices.push(devices)
-            }
-        })
-        const marketContainsDevices = marketDevices.length > 0
+        const marketContainsDevices = marketplaceDevices.length > 0
+
         renderUserLayout(req, res, '../marketplace/user_home', {
             userData: userData,
             firstName: firstName,
             devices: userItems,
-            marketDevices: marketDevices,
+            marketDevices: marketplaceDevices,
             deviceCategory,
             marketContains: marketContainsDevices,
             userContains: userItemsContainsDevices,
@@ -47,17 +52,11 @@ async function getUserDashboard(req, res, next) {
     } catch (err) {
         console.log(err);
         res.status(500);
-        next({message: err, status: 500});
+        next({
+            message: err,
+            status: 500
+        });
     }
-}
-
-/**
- * Get method to retrieve unknown devices from the database needed to be displayed in the web page
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
- */
-async function getUnknownDevices(items) {
-     await handleMissingModels(items)
-    return items
 }
 
 /**
@@ -72,7 +71,10 @@ async function getUserProfile(req, res, next) {
         const userData = await User.findById({_id: req.user.id});
         // Determine if the user has logged in with Google authentication
         const isGoogleAuthenticated = userData.google_id !== null;
-        renderUserLayout(req, res, 'user_profile', {userData, isGoogleAuthenticated: isGoogleAuthenticated});
+        renderUserLayout(req, res, 'user_profile', {
+            userData,
+            isGoogleAuthenticated: isGoogleAuthenticated
+        });
     } catch (err) {
         res.send('No user found');
     }
@@ -86,7 +88,17 @@ async function updateUserDetails(req, res, next) {
     let checkUser = await User.findOne({_id: req.user.id});
     try {
 
-        const {firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country} = req.body; // Assuming these fields can be updated
+        const {
+            firstName,
+            lastName,
+            phone,
+            addressFirst,
+            addressSecond,
+            postCode,
+            city,
+            county,
+            country
+        } = req.body; // Assuming these fields can be updated
         // Construct an object with the fields that need to be updated
         let updateFields = {};
 

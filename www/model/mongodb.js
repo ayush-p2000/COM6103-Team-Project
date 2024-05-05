@@ -73,6 +73,188 @@ async function getQuotes(deviceId) {
 
 }
 
+async function getAllDevicesWithQuotes() {
+    //Aggregate the quotes for each device
+    const devices = await Device.aggregate([
+        {
+            $lookup: {
+                from: 'quotes', // use the actual name of the quotes collection
+                let: { deviceId: '$_id' },
+                pipeline: [
+                    { $match: { $expr: { $eq: ['$device', '$$deviceId'] } } },
+                    {
+                        $lookup: {
+                            from: 'providers', // use the actual name of the providers collection
+                            localField: 'provider',
+                            foreignField: '_id',
+                            as: 'provider'
+                        }
+                    },
+                    { $unwind: '$provider' }
+                ],
+                as: 'quotes'
+            }
+        },
+        {
+            $lookup: {
+                from: 'models', // use the actual name of the models collection
+                localField: 'model',
+                foreignField: '_id',
+                as: 'model'
+            }
+        },
+        {
+            $lookup: {
+                from: 'devicetypes', // use the actual name of the deviceTypes collection
+                localField: 'device_type',
+                foreignField: '_id',
+                as: 'device_type'
+            }
+        },
+        {
+            $lookup: {
+                from: 'brands', // use the actual name of the brands collection
+                localField: 'brand',
+                foreignField: '_id',
+                as: 'brand'
+            }
+        },
+        {
+            $unwind: '$model'
+        },
+        {
+            $unwind: '$device_type'
+        },
+        {
+            $unwind: '$brand'
+        }
+    ]);
+
+    return devices;
+}
+
+async function getDevicesWithQuotes(ids) {
+    //Aggregate the quotes for each device
+    const devices = await Device.aggregate([
+        { $match: { '_id': { $in: ids } } },
+        {
+            $lookup: {
+                from: 'quotes', // use the actual name of the quotes collection
+                let: { deviceId: '$_id' },
+                pipeline: [
+                    { $match: { $expr: { $eq: ['$device', '$$deviceId'] } } },
+                    {
+                        $lookup: {
+                            from: 'providers', // use the actual name of the providers collection
+                            localField: 'provider',
+                            foreignField: '_id',
+                            as: 'provider'
+                        }
+                    },
+                    { $unwind: '$provider' }
+                ],
+                as: 'quotes'
+            }
+        },
+        {
+            $lookup: {
+                from: 'models', // use the actual name of the models collection
+                localField: 'model',
+                foreignField: '_id',
+                as: 'model'
+            }
+        },
+        {
+            $lookup: {
+                from: 'devicetypes', // use the actual name of the deviceTypes collection
+                localField: 'device_type',
+                foreignField: '_id',
+                as: 'device_type'
+            }
+        },
+        {
+            $lookup: {
+                from: 'brands', // use the actual name of the brands collection
+                localField: 'brand',
+                foreignField: '_id',
+                as: 'brand'
+            }
+        },
+        {
+            $unwind: '$model'
+        },
+        {
+            $unwind: '$device_type'
+        },
+        {
+            $unwind: '$brand'
+        }
+    ]);
+
+    return devices;
+}
+
+async function getDevicesWithQuotesFromUserID(userID) {
+    const id = new mongoose.Types.ObjectId(userID);
+    const devices = await Device.aggregate([
+        { $match: { 'listing_user': id } },
+        {
+            $lookup: {
+                from: 'quotes', // use the actual name of the quotes collection
+                let: { deviceId: '$_id' },
+                pipeline: [
+                    { $match: { $expr: { $eq: ['$device', '$$deviceId'] } } },
+                    {
+                        $lookup: {
+                            from: 'providers', // use the actual name of the providers collection
+                            localField: 'provider',
+                            foreignField: '_id',
+                            as: 'provider'
+                        }
+                    },
+                    { $unwind: '$provider' }
+                ],
+                as: 'quotes'
+            }
+        },
+        {
+            $lookup: {
+                from: 'models', // use the actual name of the models collection
+                localField: 'model',
+                foreignField: '_id',
+                as: 'model'
+            }
+        },
+        {
+            $lookup: {
+                from: 'devicetypes', // use the actual name of the deviceTypes collection
+                localField: 'device_type',
+                foreignField: '_id',
+                as: 'device_type'
+            }
+        },
+        {
+            $lookup: {
+                from: 'brands', // use the actual name of the brands collection
+                localField: 'brand',
+                foreignField: '_id',
+                as: 'brand'
+            }
+        },
+        {
+            $unwind: '$model'
+        },
+        {
+            $unwind: '$device_type'
+        },
+        {
+            $unwind: '$brand'
+        }
+    ]);
+
+    return devices;
+}
+
 /**
  * Get method to retrieve providers detail  from the database
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
@@ -555,7 +737,7 @@ const getAllDevices = async (filter = {}) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getCarouselDevices = async (imgPerCarousel) => {
-    const devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE, visible: true}).populate("model").select({
+    let devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE, visible: true}).populate("model").select({
         model: 1,
         photos: 1,
         listing_user: 0,
@@ -567,12 +749,7 @@ const getCarouselDevices = async (imgPerCarousel) => {
     const deviceIds = devices.map(device => device._id)
 
     //Query the Quotes model for all quotes that match the device IDs
-    const quotes = await Quote.find({device: {$in: deviceIds}}).populate("provider");
-
-    //For each quote, add it to the device object
-    devices.forEach(device => {
-        device.quote = quotes.find(quote => quote.device._id.toString() === device._id.toString())
-    });
+    devices = await getDevicesWithQuotes(deviceIds);
 
     return devices
 }
@@ -1284,6 +1461,9 @@ module.exports = {
     addModel,
     getDevice,
     getQuotes,
+    getDevicesWithQuotes,
+    getAllDevicesWithQuotes,
+    getDevicesWithQuotesFromUserID,
     deleteQuote,
     getProviders,
     addQuote,
