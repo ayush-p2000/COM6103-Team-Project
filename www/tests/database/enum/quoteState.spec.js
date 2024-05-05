@@ -98,7 +98,14 @@ describe('Quote State', function() {
             expect(quoteState.stateToColour(quoteState.ACCEPTED, "text-")).to.equal("text-warning");
             expect(quoteState.stateToColour(quoteState.CONVERTED)).to.equal("success");
             expect(quoteState.stateToColour(quoteState.EXPIRED)).to.equal("secondary");
-            expect(quoteState.stateToColour(999)).to.equal("light");  // Testing default case
+            expect(quoteState.stateToColour(999)).to.equal("light");
+        });
+        it('should handle non-string prefix values appropriately', function() {
+            expect(quoteState.stateToColour(quoteState.NEW, undefined)).to.equal("primary");
+            expect(quoteState.stateToColour(quoteState.SAVED, null)).to.equal("info");
+            expect(quoteState.stateToColour(quoteState.REJECTED, true)).to.equal("danger");
+            expect(quoteState.stateToColour(quoteState.ACCEPTED, false)).to.equal("warning");
+            expect(quoteState.stateToColour(quoteState.CONVERTED, 123)).to.equal("success");
         });
     });
 
@@ -108,8 +115,14 @@ describe('Quote State', function() {
             expect(quoteState.quoteStateToRGB(quoteState.NEW, true)).to.equal('rgb(13, 110, 253)');
             expect(quoteState.quoteStateToRGB(quoteState.SAVED, true)).to.equal('rgb(0, 191, 255)');
             expect(quoteState.quoteStateToRGB(quoteState.ACCEPTED, true)).to.be.equal('rgb(255, 165, 0)');
+            expect(quoteState.quoteStateToRGB(quoteState.REJECTED, true)).to.equal('rgb(255, 0, 0)');
+            expect(quoteState.quoteStateToRGB(quoteState.EXPIRED, true)).to.equal('rgb(128, 128, 128)');
+            expect(quoteState.quoteStateToRGB(quoteState.CONVERTED, true)).to.be.equal('rgb(0, 128, 0)')
+            expect(quoteState.quoteStateToRGB(quoteState.NEW, false)).to.equal('rgba(13, 110, 253, 0.2)');
+            expect(quoteState.quoteStateToRGB(quoteState.SAVED, false)).to.equal('rgba(0, 191, 255, 0.2)');
+            expect(quoteState.quoteStateToRGB(quoteState.ACCEPTED, false)).to.be.equal('rgba(255, 165, 0, 0.2)');
             expect(quoteState.quoteStateToRGB(quoteState.REJECTED, false)).to.equal('rgba(255, 0, 0, 0.2)');
-            expect(quoteState.quoteStateToRGB(quoteState.EXPIRED)).to.equal('rgba(128, 128, 128, 0.2)');
+            expect(quoteState.quoteStateToRGB(quoteState.EXPIRED, false)).to.equal('rgba(128, 128, 128, 0.2)');
             expect(quoteState.quoteStateToRGB(quoteState.CONVERTED, false)).to.be.equal('rgba(0, 128, 0, 0.2)')
             expect(quoteState.quoteStateToRGB(932)).to.be.equal('rgba(255, 165, 0, 0.2)')
         });
@@ -118,7 +131,11 @@ describe('Quote State', function() {
     describe('getList', function() {
         it('should return a list of all quote states as numbers', function() {
             const expectedList = [quoteState.NEW, quoteState.SAVED, quoteState.REJECTED, quoteState.ACCEPTED, quoteState.CONVERTED, quoteState.EXPIRED];
-            expect(quoteState.getList()).to.deep.equal(expectedList);
+
+            const resultList = quoteState.getList()
+            expect(resultList).to.deep.equal(expectedList);
+            expect(resultList).to.be.an('array').that.has.lengthOf(6);
+            resultList.forEach(item => expect(item).to.be.a('number'))
         });
     });
 });

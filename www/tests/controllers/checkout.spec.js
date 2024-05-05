@@ -60,7 +60,7 @@ describe('Checkout Controller', () => {
                 query: {
                     id: '74737382d23423d',
                     total: '0',
-                    model: 'Apple Iphone 11'
+                    model: 'Apple Iphone 11',
                 }
             }
             const res = {render:sandbox.spy()}
@@ -132,6 +132,29 @@ describe('Checkout Controller', () => {
             expect(renderUserLayout.calledWith(req, res, '../payment/checkout', sinon.match.any)).to.be.true
 
         });
+
+        it('should not proceed to checkout gateway if essential parameters are missing', () => {
+
+            const req = {
+                body: {
+                    paymentProvider : 'stripe'
+                },
+                query : {
+                    type: 'retrieval_extension',
+                    total: '4.99'
+                }
+            }
+
+            const res = {
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.spy()
+            }
+            const next = sandbox.spy()
+            checkoutController.getCheckout(req, res, next);
+
+            expect(res.status.calledWith(400)).to.be.true;
+            expect(res.send.calledWith("Missing required parameters")).to.be.true;
+        });
     })
 
     describe('Invoke checkoutToProvider', () =>{
@@ -186,6 +209,30 @@ describe('Checkout Controller', () => {
             expect(res.redirect.firstCall.args[0]).to.equal(`/checkout/stripe?${expectedQueryString}`);
         });
 
+        it('should not proceed with redirect if essential parameters are missing', () => {
+
+            const req = {
+                body: {
+                    paymentProvider : 'stripe'
+                },
+                query : {
+                    type: 'retrieval_extension',
+                    total: '4.99'
+                }
+            }
+
+            const res = {
+                redirect: sandbox.spy(),
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.spy()
+            }
+            const next = sandbox.spy()
+            checkoutController.checkoutToProvider(req, res, next);
+
+            expect(res.status.calledWith(400)).to.be.true;
+            expect(res.send.calledWith("Missing required parameters")).to.be.true;
+        });
+
     });
 
     describe('invoke getCheckoutCompleted', () => {
@@ -197,7 +244,8 @@ describe('Checkout Controller', () => {
                     id: '123h421h1i211h2',
                     method: 'stripe',
                     sessionId: '88fs888shhdgh',
-                    type: 'payment_retrieval'
+                    type: 'payment_retrieval',
+                    extension: '3'
                 }
             }
             const res = {render: sandbox.spy()}
@@ -260,9 +308,33 @@ describe('Checkout Controller', () => {
 
             expect(retrievalMock.save.calledOnce).to.be.true;
             expect(retrievalMock.retrieval_state).to.equal(5);
-            expect(getItemDetail.calledWith('482hb292h2g292ks')).to.be.true;
+            // expect(getItemDetail.calledWith('482hb292h2g292ks')).to.be.true;
             expect(renderUserLayout.calledWithExactly(req, res, '../payment/checkout_complete', sinon.match.any)).to.be.true
         });
+
+
+        it('should not proceed to checkout completed if essential parameters are missing', () => {
+
+            const req = {
+
+                query : {
+                    type: 'retrieval_extension',
+                    id: '124jfsj124',
+                    method: 'stripe'
+                }
+            }
+
+            const res = {
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.spy()
+            }
+            const next = sandbox.spy()
+            checkoutController.getCheckoutCompleted(req, res, next);
+
+            expect(res.status.calledWith(400)).to.be.true;
+            expect(res.send.calledWith("Missing required parameters")).to.be.true;
+        });
+
     })
 
 

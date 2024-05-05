@@ -34,6 +34,9 @@ const quoteState = {
     },
 
     stateToColour: (state, prefix="") => {
+        if (typeof prefix !== 'string' || prefix.length === 0) {
+            prefix = "";
+        }
         switch (state) {
             case NEW:
                 return prefix + "primary";

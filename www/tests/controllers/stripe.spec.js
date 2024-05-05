@@ -88,4 +88,49 @@ describe('Stripe controller tests', () => {
             }]
         });
     });
+
+    it('should not proceed to stripe payment page without essential parameters', () => {
+
+        const req = {
+
+            query : {
+                type: 'retrieval_extension',
+                id: '124jfsj124',
+                product: 'Data retrieval',
+            }
+        }
+
+        const res = {
+            status: sandbox.stub().returnsThis(),
+            send: sandbox.spy()
+        }
+        const next = sandbox.spy()
+        stripeController.getStripe(req, res, next);
+
+        expect(res.status.calledWith(400)).to.be.true;
+        expect(res.send.calledWith("Missing required parameters")).to.be.true;
+    });
+
+    it('should not create stripe session without essential parameters', () => {
+
+        const req = {
+
+            query : {
+                type: 'retrieval_extension',
+                id: '124jfsj124',
+                product: 'Data retrieval',
+                extension: '3'
+            }
+        }
+
+        const res = {
+            status: sandbox.stub().returnsThis(),
+            send: sandbox.spy()
+        }
+        const next = sandbox.spy()
+        stripeController.stripePayment(req, res);
+
+        expect(res.status.calledWith(400)).to.be.true;
+        expect(res.send.calledWith("Missing required parameters")).to.be.true;
+    });
 })

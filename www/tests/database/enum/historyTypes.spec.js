@@ -111,6 +111,13 @@ describe('Test History Types enum', () => {
             expect(historyType.historyTypeToColour(historyType.UNKNOWN_DEVICE)).to.equal("secondary");
             expect(historyType.historyTypeToColour(999, "text-")).to.equal("text-secondary");
         });
+        it('should handle non-string prefix values appropriately', function() {
+            expect(historyType.historyTypeToColour(historyType.REVIEW_REQUESTED, undefined)).to.equal("warning");
+            expect(historyType.historyTypeToColour(historyType.REVIEW_ACCEPTED, null)).to.equal("success");
+            expect(historyType.historyTypeToColour(historyType.REVIEW_REJECTED, true)).to.equal("danger");
+            expect(historyType.historyTypeToColour(historyType.ITEM_HIDDEN, false)).to.equal("warning");
+            expect(historyType.historyTypeToColour(historyType.ITEM_APPROVED, 123)).to.equal("success");
+        });
     });
 
     describe('getList', function() {
@@ -124,8 +131,10 @@ describe('Test History Types enum', () => {
                 historyType.ITEM_APPROVED,
                 historyType.UNKNOWN_DEVICE
             ];
-            expect(historyType.getList()).to.have.members(expectedList);
-            expect(historyType.getList()).to.be.an('array').that.does.not.include('historyTypeToString');
+            const resultList = historyType.getList()
+            expect(resultList).to.have.members(expectedList);
+            expect(resultList).to.be.an('array').that.does.not.include('historyTypeToString');
+            resultList.forEach(item => expect(item).to.be.a('number'))
         });
     });
 
