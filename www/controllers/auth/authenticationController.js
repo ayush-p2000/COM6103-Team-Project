@@ -94,7 +94,7 @@ const registerUser = async (req, res, next) => {
             res.send("Error in registering")
         }
     } catch (err) {
-        return next(err)
+            return next(err)
     }
 }
 
