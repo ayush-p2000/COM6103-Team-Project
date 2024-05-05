@@ -8,7 +8,11 @@ const {
     updateQuote,
     getQuoteById,
     getUnknownDeviceHistoryByDevice,
-    getRetrievalObjectByDeviceId, updateUserListedItem
+    getRetrievalObjectByDeviceId, updateUserListedItem,
+    deleteQuote,
+    getDevicesWithQuotes,
+    getProviders,
+    deleteQuotes
 } = require("../../model/mongodb");
 const mongoose = require("mongoose");
 const {
@@ -35,6 +39,7 @@ const retrievalState = require("../../model/enum/retrievalState");
 const historyType = require("../../model/enum/historyType");
 const roleTypes = require("../../model/enum/roleTypes");
 const {handleMissingModel, handleMissingModels} = require("../../util/Devices/devices");
+const {getDeviceQuotation} = require("../../util/web-scrape/getDeviceQuotation");
 
 /**
  * Handling Request to post item base on the info in request body
@@ -115,6 +120,55 @@ async function getModelByBrandAndType(req, res) {
     }
 }
 
+async function updateQuotes(itemIds, providers) {
+    const items = await getDevicesWithQuotes(itemIds);
+
+    let quotations = [];
+    for (const item of items) {
+        if (item.state === deviceState.LISTED || item.state === deviceState.HAS_QUOTE) {
+            let quotes = item.quotes;
+            if (quotes.length === 0) {
+                quotes = await getDeviceQuotation(item, providers);
+            } else if (quotes.length < providers.length) {
+                let one_provider = providers.filter(provider => !quotes.find(quote => quote.provider.name === provider.name));
+                let new_quote = await getDeviceQuotation(item, one_provider);
+                quotes.push(new_quote);
+            }
+            if (quotes) {
+                await updateDeviceState(item._id, deviceState.HAS_QUOTE)
+            }
+
+            let updatedQuotes = [];
+            let expiredProviders = [];
+            let expiredQuoteIds = [];
+            for (const quote of quotes) {
+                const currentDate = new Date();
+                if (item.state === quoteState.NEW || item.state === quoteState.ACCEPTED || item.state === quoteState.EXPIRED) {
+                    if (quote.expiry < currentDate) {
+                        expiredProviders.push(quote.provider);
+                        //let one_provider = [quote.provider];
+                        expiredQuoteIds.push(quote._id);
+                        //const deleted_quote = await deleteQuote(quote._id);
+                        //let new_quote = await getDeviceQuotation(item, one_provider);
+                        //updatedQuotes.push(new_quote);
+                    } else {
+                        updatedQuotes.push(quote);
+                    }
+                }
+            }
+
+            await deleteQuotes(expiredQuoteIds);
+            let new_quotes = await getDeviceQuotation(item, expiredProviders);
+
+            quotations.push(updatedQuotes);
+            quotations.push(new_quotes);
+        } else {
+            quotations.push([]);
+        }
+    }
+    return quotations;
+}
+
 
 /**
  * Get item details to display it in the User's item detail page, where it shows the device specifications
@@ -123,10 +177,17 @@ async function getModelByBrandAndType(req, res) {
  */
 async function getItemDetails(req, res, next) {
     try {
-        const item = await getItemDetail(req.params.id)
+        let item = await getDevicesWithQuotes([req.params.id])
         var specs = []
 
-        var quotes = await getQuotes(req.params.id)
+        item = item[0];
+
+        const providers = await getProviders();
+        const quotations = await updateQuotes([item], providers);
+        item = await getDevicesWithQuotes([req.params.id]);
+        item = item[0];
+
+        var quotes = item.quotes;
         if (quotes.length > 0 && item.state < deviceState.HAS_QUOTE && item.state !== deviceState.IN_REVIEW) {
             item.state = deviceState.HAS_QUOTE;
             await item.save()

@@ -1,4 +1,14 @@
-const {User, Device, DeviceType, Brand, Model, Provider, Quote, History, Retrieval} = require("./models");
+const {
+    User,
+    Device,
+    DeviceType,
+    Brand,
+    Model,
+    Provider,
+    Quote,
+    History,
+    Retrieval
+} = require("./models");
 
 const {UNKNOWN_DEVICE} = require("./enum/historyType");
 
@@ -79,9 +89,9 @@ async function getAllDevicesWithQuotes() {
         {
             $lookup: {
                 from: 'quotes', // use the actual name of the quotes collection
-                let: { deviceId: '$_id' },
+                let: {deviceId: '$_id'},
                 pipeline: [
-                    { $match: { $expr: { $eq: ['$device', '$$deviceId'] } } },
+                    {$match: {$expr: {$eq: ['$device', '$$deviceId']}}},
                     {
                         $lookup: {
                             from: 'providers', // use the actual name of the providers collection
@@ -90,7 +100,7 @@ async function getAllDevicesWithQuotes() {
                             as: 'provider'
                         }
                     },
-                    { $unwind: '$provider' }
+                    {$unwind: '$provider'}
                 ],
                 as: 'quotes'
             }
@@ -134,15 +144,16 @@ async function getAllDevicesWithQuotes() {
 }
 
 async function getDevicesWithQuotes(ids) {
+    const idObjs = ids.map(id => new mongoose.Types.ObjectId(id));
     //Aggregate the quotes for each device
     const devices = await Device.aggregate([
-        { $match: { '_id': { $in: ids } } },
+        {$match: {'_id': {$in: idObjs}}},
         {
             $lookup: {
                 from: 'quotes', // use the actual name of the quotes collection
-                let: { deviceId: '$_id' },
+                let: {deviceId: '$_id'},
                 pipeline: [
-                    { $match: { $expr: { $eq: ['$device', '$$deviceId'] } } },
+                    {$match: {$expr: {$eq: ['$device', '$$deviceId']}}},
                     {
                         $lookup: {
                             from: 'providers', // use the actual name of the providers collection
@@ -151,7 +162,7 @@ async function getDevicesWithQuotes(ids) {
                             as: 'provider'
                         }
                     },
-                    { $unwind: '$provider' }
+                    {$unwind: '$provider'}
                 ],
                 as: 'quotes'
             }
@@ -197,13 +208,13 @@ async function getDevicesWithQuotes(ids) {
 async function getDevicesWithQuotesFromUserID(userID) {
     const id = new mongoose.Types.ObjectId(userID);
     const devices = await Device.aggregate([
-        { $match: { 'listing_user': id } },
+        {$match: {'listing_user': id}},
         {
             $lookup: {
                 from: 'quotes', // use the actual name of the quotes collection
-                let: { deviceId: '$_id' },
+                let: {deviceId: '$_id'},
                 pipeline: [
-                    { $match: { $expr: { $eq: ['$device', '$$deviceId'] } } },
+                    {$match: {$expr: {$eq: ['$device', '$$deviceId']}}},
                     {
                         $lookup: {
                             from: 'providers', // use the actual name of the providers collection
@@ -212,7 +223,7 @@ async function getDevicesWithQuotesFromUserID(userID) {
                             as: 'provider'
                         }
                     },
-                    { $unwind: '$provider' }
+                    {$unwind: '$provider'}
                 ],
                 as: 'quotes'
             }
@@ -309,6 +320,10 @@ async function deleteQuote(id) {
     }
 }
 
+async function deleteQuotes(ids) {
+    return Quote.deleteMany({_id: {$in: ids}});
+}
+
 /**
  * Update method to save the device state to the database
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
@@ -319,7 +334,7 @@ async function updateDeviceState(id, state) {
             _id: id
         }
         const update = {
-            $set : {
+            $set: {
                 state: state
             }
         }
@@ -362,7 +377,8 @@ const getAllBrand = async () => {
 
 const getBrandById = async (id) => {
     return await Brand.findById(id).populate({
-        path: "models", populate: [{path: "deviceType"}, {path: "category"}
+        path: "models",
+        populate: [{path: "deviceType"}, {path: "category"}
         ]
     })
 }
@@ -391,7 +407,10 @@ const getAllModels = async () => {
 }
 
 const getAllModelsTableData = async () => {
-    return await Model.find({is_deleted: {$ne: true}}).populate("deviceType","name").populate("brand","name").select({_id:1, name:1})
+    return await Model.find({is_deleted: {$ne: true}}).populate("deviceType", "name").populate("brand", "name").select({
+        _id: 1,
+        name: 1
+    })
 }
 
 /**
@@ -399,7 +418,10 @@ const getAllModelsTableData = async () => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getAllModelsOfType = async (type) => {
-    return await Model.find({deviceType: type, is_deleted: {$ne: true}}).populate("deviceType").populate("brand")
+    return await Model.find({
+        deviceType: type,
+        is_deleted: {$ne: true}
+    }).populate("deviceType").populate("brand")
 }
 
 /**
@@ -449,9 +471,21 @@ const listDevice = async (deviceData, photos, user) => {
 
         if (!mongoose.Types.ObjectId.isValid(deviceData.model)) {
             const data = [
-                {name: 'device_type', value: deviceData.device_type, data_type: 0},
-                {name: 'brand', value: deviceData.brand, data_type: 0},
-                {name: 'model', value: deviceData.model, data_type: 0}
+                {
+                    name: 'device_type',
+                    value: deviceData.device_type,
+                    data_type: 0
+                },
+                {
+                    name: 'brand',
+                    value: deviceData.brand,
+                    data_type: 0
+                },
+                {
+                    name: 'model',
+                    value: deviceData.model,
+                    data_type: 0
+                }
             ];
             const newHistory = new History({
                 device: savedDevice,
@@ -611,8 +645,8 @@ const addModel = async (modelData, properties, category) => {
  * Update Unknown Devices if there is a custom model match the brand and model name
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
-const updateUnknownDevices = async (type,brand,model) => {
-    try{
+const updateUnknownDevices = async (type, brand, model) => {
+    try {
         const modelData = await Model.findById(model).populate("brand")
         const modelName = modelData.name
         const brandName = modelData.brand.name
@@ -621,7 +655,7 @@ const updateUnknownDevices = async (type,brand,model) => {
         var unknownDevices = await History.find({history_type: UNKNOWN_DEVICE}).populate("device")
 
         for (let device of unknownDevices) {
-            if (device.device.category === UNKNOWN){
+            if (device.device.category === UNKNOWN) {
                 var deviceBrand = "";
                 var deviceModel = "";
 
@@ -635,7 +669,7 @@ const updateUnknownDevices = async (type,brand,model) => {
                 const filter = {_id: device.device._id}
 
                 if (brandName.replace(/[^\w]/g, '').toLowerCase() === deviceBrand.replace(/[^\w]/g, '').toLowerCase()
-                    && modelName.replace(/[^\w]/g, '').toLowerCase() === deviceModel.replace(/[^\w]/g, '').toLowerCase()){
+                    && modelName.replace(/[^\w]/g, '').toLowerCase() === deviceModel.replace(/[^\w]/g, '').toLowerCase()) {
                     const device = {
                         $set: {
                             model: model,
@@ -648,7 +682,7 @@ const updateUnknownDevices = async (type,brand,model) => {
                 }
             }
         }
-    }catch (e) {
+    } catch (e) {
         console.log(e)
     }
 
@@ -702,7 +736,10 @@ const updateDevice = async (id, deviceData, photos) => {
  */
 const getUnknownDeviceHistoryByDevice = async (id) => {
     try {
-        return History.find({device: id, history_type: UNKNOWN_DEVICE});
+        return History.find({
+            device: id,
+            history_type: UNKNOWN_DEVICE
+        });
     } catch (error) {
         console.error("An error occurred while get History By Device:", error);
         throw error;
@@ -737,7 +774,11 @@ const getAllDevices = async (filter = {}) => {
  * @author Adrian Urbanczyk <aurbanczyk1@sheffield.ac.uk>
  */
 const getCarouselDevices = async (imgPerCarousel) => {
-    let devices = await Device.find({category: {$ne: UNKNOWN}, state: HAS_QUOTE, visible: true}).populate("model").select({
+    let devices = await Device.find({
+        category: {$ne: UNKNOWN},
+        state: HAS_QUOTE,
+        visible: true
+    }).populate("model").select({
         model: 1,
         photos: 1,
         listing_user: 0,
@@ -903,7 +944,6 @@ const getDevicesGroupByState = async () => {
 }
 
 
-
 /**
  * Returns a count of devices grouped by device type
  * Includes the device type name and the total count of devices of that type
@@ -1034,11 +1074,19 @@ const getSalesCountByMonth = async (numPrevMonths) => {
         {$replaceRoot: {newRoot: "$all_sales"}},
         {
             $group: {
-                _id: {month: "$_id.month", year: "$_id.year"},
+                _id: {
+                    month: "$_id.month",
+                    year: "$_id.year"
+                },
                 total: {$sum: "$count"}
             }
         },
-        {$sort: {"_id.year": 1, "_id.month": 1}}
+        {
+            $sort: {
+                "_id.year": 1,
+                "_id.month": 1
+            }
+        }
     ]);
 }
 
@@ -1104,11 +1152,19 @@ const getSalesValueByMonth = async (numPrevMonths) => {
         {$replaceRoot: {newRoot: "$all_sales"}},
         {
             $group: {
-                _id: {month: "$_id.month", year: "$_id.year"},
+                _id: {
+                    month: "$_id.month",
+                    year: "$_id.year"
+                },
                 value: {$sum: "$value"}
             }
         },
-        {$sort: {"_id.year": 1, "_id.month": 1}}
+        {
+            $sort: {
+                "_id.year": 1,
+                "_id.month": 1
+            }
+        }
     ]);
 }
 
@@ -1260,7 +1316,12 @@ const getReferralValueByMonth = async (numPrevMonths) => {
                 value: {$sum: {$add: [2.5, {$multiply: [0.1, "$confirmation_details.final_price"]}]}}
             }
         },
-        {$sort: {"_id.year": 1, "_id.month": 1}},
+        {
+            $sort: {
+                "_id.year": 1,
+                "_id.month": 1
+            }
+        },
     ]);
 }
 
@@ -1279,7 +1340,7 @@ async function getQuotesGroupByState() {
         {
             $group: {
                 _id: '$state',
-                total: {$sum:1}
+                total: {$sum: 1}
             }
         }
     ])
@@ -1308,6 +1369,7 @@ async function addTransaction(transactionDetails) {
 
 
 const DEFAULT_EXTENSION_LENGTH = 3
+
 /**
  * Get method used to set the expiry date based on extension i.e. number of months(3 or 6)
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
@@ -1337,56 +1399,56 @@ function getDate(extension) {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function updateTransaction(transactionDetails) {
-        const filter = { _id: transactionDetails.id }
-        let update
-        if (transactionDetails.extension > 0) {
-            let extension_details = {
-                        value: transactionDetails.value,
-                        transaction_state: transactionDetails.state,
-                        payment_date: new Date(),
-                        length: transactionDetails.extension,
-                        payment_method: transactionDetails.paymentMethod
-            };
+    const filter = {_id: transactionDetails.id}
+    let update
+    if (transactionDetails.extension > 0) {
+        let extension_details = {
+            value: transactionDetails.value,
+            transaction_state: transactionDetails.state,
+            payment_date: new Date(),
+            length: transactionDetails.extension,
+            payment_method: transactionDetails.paymentMethod
+        };
 
-            switch (transactionDetails.state) {
-                case transactionState.PAYMENT_CANCELLED:
-                    update = {
-                        $set: {
-                            extension_transaction: extension_details
-                        }
+        switch (transactionDetails.state) {
+            case transactionState.PAYMENT_CANCELLED:
+                update = {
+                    $set: {
+                        extension_transaction: extension_details
                     }
-                    break
-                case transactionState.PAYMENT_RECEIVED:
-                    const date = getDate(transactionDetails.extension)
-                    update = {
-                        $set: {
-                            expiry: date,
-                            extension_transaction: extension_details,
-                            is_extended: true,
-                        }
-                    };
-                    break
-                case transactionState.AWAITING_PAYMENT:
-                    update = {
-                        $set: {
-                            extension_transaction: extension_details
-                        }
-                    }
-                    break
-            }
-        } else {
-            update = {
-                $set: {
-                    transaction: {
-                        value: transactionDetails.value,
-                        transaction_state: transactionDetails.state,
-                        payment_method: transactionDetails.paymentMethod,
-                        payment_date: new Date()
-                    },
                 }
-            };
+                break
+            case transactionState.PAYMENT_RECEIVED:
+                const date = getDate(transactionDetails.extension)
+                update = {
+                    $set: {
+                        expiry: date,
+                        extension_transaction: extension_details,
+                        is_extended: true,
+                    }
+                };
+                break
+            case transactionState.AWAITING_PAYMENT:
+                update = {
+                    $set: {
+                        extension_transaction: extension_details
+                    }
+                }
+                break
         }
-        return Retrieval.updateOne(filter, update);
+    } else {
+        update = {
+            $set: {
+                transaction: {
+                    value: transactionDetails.value,
+                    transaction_state: transactionDetails.state,
+                    payment_method: transactionDetails.paymentMethod,
+                    payment_date: new Date()
+                },
+            }
+        };
+    }
+    return Retrieval.updateOne(filter, update);
 }
 
 /**
@@ -1426,13 +1488,12 @@ async function updateUserDob(id, birthday) {
 async function updateUserListedItem(id, deviceId) {
     const update = {
         $push: {
-            listed_devices : deviceId
+            listed_devices: deviceId
         }
     }
 
     return User.updateOne({_id: id}, update)
 }
-
 
 
 module.exports = {
@@ -1465,6 +1526,7 @@ module.exports = {
     getAllDevicesWithQuotes,
     getDevicesWithQuotesFromUserID,
     deleteQuote,
+    deleteQuotes,
     getProviders,
     addQuote,
     updateQuoteState,
