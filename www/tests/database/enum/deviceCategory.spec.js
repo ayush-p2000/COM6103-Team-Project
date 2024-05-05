@@ -168,6 +168,18 @@ describe('Test Device Category Enum', () => {
                 expect(result).to.equal(expected);
                 done();
             });
+
+            it('should return "secondary" for passing in a value not of deviceCategory', (done) => {
+                // Arrange
+                const expected = "secondary";
+
+                // Act
+                const result =  deviceCategory.deviceCategoryToColour(99);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
         });
 
         describe('Test with a prefix', () => {
@@ -223,9 +235,9 @@ describe('Test Device Category Enum', () => {
                 done();
             });
 
-            it('should return "nullsecondary" for UNKNOWN with prefix null', (done) => {
+            it('should return "secondary" for UNKNOWN with prefix null', (done) => {
                 // Arrange
-                const expected = "nullsecondary";
+                const expected = "secondary";
                 const prefix = null;
 
                 // Act
@@ -236,9 +248,9 @@ describe('Test Device Category Enum', () => {
                 done();
             });
 
-            it('should return "0secondary" for UNKNOWN with prefix 0', (done) => {
+            it('should return "secondary" for UNKNOWN with prefix 0', (done) => {
                 // Arrange
-                const expected = "0secondary";
+                const expected = "secondary";
                 const prefix = 0;
 
                 // Act
@@ -249,9 +261,9 @@ describe('Test Device Category Enum', () => {
                 done();
             });
 
-            it('should return "truesecondary" for UNKNOWN with prefix true', (done) => {
+            it('should return "secondary" for UNKNOWN with prefix true', (done) => {
                 // Arrange
-                const expected = "truesecondary";
+                const expected = "secondary";
                 const prefix = true;
 
                 // Act
@@ -262,13 +274,25 @@ describe('Test Device Category Enum', () => {
                 done();
             });
 
-            it('should return "falsesecondary" for UNKNOWN with prefix false', (done) => {
+            it('should return "secondary" for UNKNOWN with prefix false', (done) => {
                 // Arrange
-                const expected = "falsesecondary";
+                const expected = "secondary";
                 const prefix = false;
 
                 // Act
                 const result =  deviceCategory.deviceCategoryToColour(deviceCategory.UNKNOWN, prefix);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
+
+            it('should return "testsecondary" for passing in a value not of deviceCategory with prefix "test"', (done) => {
+                // Arrange
+                const expected = "testsecondary";
+                const prefix = "test";
+                // Act
+                const result =  deviceCategory.deviceCategoryToColour(99,prefix);
 
                 // Assert
                 expect(result).to.equal(expected);
@@ -330,10 +354,23 @@ describe('Test Device Category Enum', () => {
                 expect(result).to.equal(expected);
                 done();
             });
+
+            it('should return "rgba(255, 99, 132, 0.2)" for passing in a value not of deviceCategory', (done) => {
+                // Arrange
+                const expected = "rgba(255, 99, 132, 0.2)";
+                const border = false;
+
+                // Act
+                const result = deviceCategory.deviceCategoryToRGB(99);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
         });
 
         describe('Test with border = true', () => {
-            it('should return "rgb(255, 165, 0)" for CURRENT', (done) => {
+            it('should return "rgb(255, 165, 0)" for CURRENT with border', (done) => {
                 // Arrange
                 const expected = "rgb(255, 165, 0)";
                 const border = true;
@@ -346,7 +383,7 @@ describe('Test Device Category Enum', () => {
                 done();
             });
 
-            it('should return "rgb(13,202,240)" for RARE', (done) => {
+            it('should return "rgb(13,202,240)" for RARE with border', (done) => {
                 // Arrange
                 const expected = "rgb(13,202,240)";
                 const border = true;
@@ -359,7 +396,7 @@ describe('Test Device Category Enum', () => {
                 done();
             });
 
-            it('should return "rgb(0, 128, 0)" for RECYCLE', (done) => {
+            it('should return "rgb(0, 128, 0)" for RECYCLE with border', (done) => {
                 // Arrange
                 const expected = "rgb(0, 128, 0)";
                 const border = true;
@@ -372,13 +409,26 @@ describe('Test Device Category Enum', () => {
                 done();
             });
 
-            it('should return "rgb(255, 99, 132)" for UNKNOWN', (done) => {
+            it('should return "rgb(255, 99, 132)" for UNKNOWN with border', (done) => {
                 // Arrange
                 const expected = "rgb(255, 99, 132)";
                 const border = true;
 
                 // Act
                 const result = deviceCategory.deviceCategoryToRGB(deviceCategory.UNKNOWN,border);
+
+                // Assert
+                expect(result).to.equal(expected);
+                done();
+            });
+
+            it('should return "rgb(255, 99, 132)" for passing in a value not of deviceCategory with border', (done) => {
+                // Arrange
+                const expected = "rgb(255, 99, 132)";
+                const border = true;
+
+                // Act
+                const result = deviceCategory.deviceCategoryToRGB(99,border);
 
                 // Assert
                 expect(result).to.equal(expected);

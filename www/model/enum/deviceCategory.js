@@ -24,6 +24,9 @@ const deviceCategory = {
     },
 
     deviceCategoryToColour: function (deviceCategory, prefix = "") {
+        if (typeof prefix !== 'string') {
+            prefix = "";
+        }
         switch (deviceCategory) {
             case CURRENT:
                 return prefix + "warning";
