@@ -183,7 +183,7 @@ describe('UserController', () => {
             expect(next.notCalled).to.be.true;
         });
 
-        it('should return 404 if user not found', async () => {
+        it('should return 400 if user not found', async () => {
             const req = {
                 user: { id: '123' },
                 body: {
