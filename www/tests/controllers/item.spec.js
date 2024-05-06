@@ -48,6 +48,8 @@ const handleMissingModel = sandbox.stub();
 const getHistoryByDevice = sandbox.stub();
 const getQuoteById = sandbox.stub();
 const updateQuote = sandbox.stub();
+const updateQuoteState = sandbox.stub();
+const updateDeviceState = sandbox.stub();
 
 const itemController = proxyquire('../../controllers/marketplace/itemController',
     {
@@ -64,7 +66,9 @@ const itemController = proxyquire('../../controllers/marketplace/itemController'
             getRetrievalObjectByDeviceId,
             getHistoryByDevice,
             getQuoteById,
-            updateQuote
+            updateQuote,
+            updateQuoteState,
+            updateDeviceState
         },
         "../../util/layout/layoutUtils":{
             renderUserLayout
@@ -447,6 +451,8 @@ describe('Test Item Page', () => {
             const next = sandbox.spy()
 
             getQuotes.resolves([fakeQuote])
+            updateQuoteState.resolves();
+            updateDeviceState.resolves();
 
             await itemController.postUpdateQuote(req, res, next);
 
@@ -477,6 +483,7 @@ describe('Test Item Page', () => {
 
             const err = new Error('Internal server error')
             getQuotes.throws(err)
+            updateQuoteState.resolves();
 
             await itemController.postUpdateQuote(req, res, next);
 

@@ -35,6 +35,7 @@ const getDeviceQuotation = sandbox.stub();
 const getEbayQuote = sandbox.stub();
 const getCexQuote = sandbox.stub();
 const handleMissingModels = sandbox.stub();
+const updateDeviceState = sandbox.stub();
 
 const marketplaceController = proxyquire('../../controllers/marketplace/marketplaceController',
     {
@@ -47,6 +48,7 @@ const marketplaceController = proxyquire('../../controllers/marketplace/marketpl
             getAllDevices,
             getAllDeviceType,
             getUnknownDeviceHistoryByDevice,
+            updateDeviceState
         },
         "../../model/utils/utils":{
             getPaginatedResults
@@ -208,8 +210,12 @@ describe('Test Marketplace Page', () => {
             const fakeEbayQuote = generateFakeQuote(fakeProviders[0]._id,3,oneDayAgo)
             const fakeCexQuote = generateFakeQuote(fakeProviders[1]._id,3,oneDayAfter)
             const fakeEbayQuoteNew = generateFakeQuote(fakeProviders[0]._id,3,oneDayAfter)
+
             getQuotes.resolves([]);
             getDeviceQuotation.resolves([fakeEbayQuoteNew,fakeCexQuote]);
+            updateDeviceState.resolves();
+            deleteQuote.resolves();
+
             const result = await marketplaceController.updateQuotes(fakeDevices, fakeProviders);
             // Assert
             expect(result).to.be.eql([[fakeEbayQuoteNew,fakeCexQuote]]);
@@ -225,6 +231,8 @@ describe('Test Marketplace Page', () => {
 
             getQuotes.resolves([fakeEbayQuote]);
             getDeviceQuotation.resolves(fakeCexQuote);
+            updateDeviceState.resolves();
+            deleteQuote.resolves();
 
             const result = await marketplaceController.updateQuotes(fakeDevices, fakeProviders);
             // Assert
@@ -251,6 +259,9 @@ describe('Test Marketplace Page', () => {
             const fakeCexQuote = generateFakeQuote(fakeProviders[1]._id,3,oneDayAfter)
 
             getQuotes.resolves([fakeEbayQuote,fakeCexQuote]);
+            updateDeviceState.resolves();
+            deleteQuote.resolves();
+
 
             const result = await marketplaceController.updateQuotes(fakeDevices, fakeProviders);
             // Assert
@@ -270,6 +281,8 @@ describe('Test Marketplace Page', () => {
 
             getQuotes.resolves([fakeEbayQuote,fakeCexQuote]);
             getDeviceQuotation.resolves(fakeEbayQuoteNew);
+            updateDeviceState.resolves();
+            deleteQuote.resolves();
 
 
             const result = await marketplaceController.updateQuotes(fakeDevices, fakeProviders);
