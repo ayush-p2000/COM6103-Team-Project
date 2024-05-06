@@ -18,6 +18,7 @@ const {generateFakeModel} = require("../../mocks/model");
 const {generateFakeDeviceType} = require("../../mocks/deviceType");
 const {generateFakeQuote} = require("../../mocks/quote");
 const {generateFakeProvider} = require("../../mocks/provider");
+const rewire = require("rewire");
 
 const sandbox = require('sinon').createSandbox();
 
@@ -37,6 +38,24 @@ let getAllUsers = sandbox.stub();
 let getAccountsCountByType = sandbox.stub();
 let getQuotesGroupByState = sandbox.stub();
 let getAllQuotes = sandbox.stub();
+
+let prepareSalesChart = sandbox.stub();
+let prepareReferralsChart = sandbox.stub();
+let prepareClassesChart = sandbox.stub();
+let prepareCasesChart = sandbox.stub();
+let prepareTypesChart = sandbox.stub();
+let prepareActiveAccountsChart = sandbox.stub();
+let prepareAccountTypesChart = sandbox.stub();
+let prepareQuotesChart = sandbox.stub();
+
+let prepareSalesTable = sandbox.stub();
+let prepareReferralsTable = sandbox.stub();
+let prepareClassesTable = sandbox.stub();
+let prepareCasesTable = sandbox.stub();
+let prepareTypesTable = sandbox.stub();
+let prepareActiveAccountsTable = sandbox.stub();
+let prepareAccountTypesTable = sandbox.stub();
+let prepareQuotesTable = sandbox.stub();
 
 let renderAdminLayout = sandbox.spy();
 let renderAdminLayoutPlaceholder = sandbox.spy();
@@ -140,10 +159,337 @@ describe('Test Admin Reports Controller', () => {
     });
 
     describe('Test getReportChartData', () => {
+        beforeEach(() => {
+            adminReportsController = rewire('../../../controllers/admin/adminReportsController');
 
+            prepareSalesChart = sandbox.stub();
+            prepareReferralsChart = sandbox.stub();
+            prepareClassesChart = sandbox.stub();
+            prepareCasesChart = sandbox.stub();
+            prepareTypesChart = sandbox.stub();
+            prepareActiveAccountsChart = sandbox.stub();
+            prepareAccountTypesChart = sandbox.stub();
+            prepareQuotesChart = sandbox.stub();
+
+            adminReportsController.__set__('prepareSalesChart', prepareSalesChart);
+            adminReportsController.__set__('prepareReferralsChart', prepareReferralsChart);
+            adminReportsController.__set__('prepareClassesChart', prepareClassesChart);
+            adminReportsController.__set__('prepareCasesChart', prepareCasesChart);
+            adminReportsController.__set__('prepareTypesChart', prepareTypesChart);
+            adminReportsController.__set__('prepareActiveAccountsChart', prepareActiveAccountsChart);
+            adminReportsController.__set__('prepareAccountTypesChart', prepareAccountTypesChart);
+            adminReportsController.__set__('prepareQuotesChart', prepareQuotesChart);
+        });
+
+        it('should call the correct function for the sales report', async () => {
+            req.params = {
+                report_type: "sales"
+            }
+
+            prepareSalesChart.resolves({});
+
+            const data = await adminReportsController.getReportChartData(req, res, next);
+
+            expect(prepareSalesChart.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the referrals report', async () => {
+            req.params = {
+                report_type: "referrals"
+            }
+
+            prepareReferralsChart.resolves({});
+
+            const data = await adminReportsController.getReportChartData(req, res, next);
+
+            expect(prepareReferralsChart.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the classes report', async () => {
+            req.params = {
+                report_type: "classes"
+            }
+
+            prepareClassesChart.resolves({});
+
+            const data = await adminReportsController.getReportChartData(req, res, next);
+
+            expect(prepareClassesChart.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the cases report', async () => {
+            req.params = {
+                report_type: "cases"
+            }
+
+            prepareCasesChart.resolves({});
+
+            const data = await adminReportsController.getReportChartData(req, res, next);
+
+            expect(prepareCasesChart.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the types report', async () => {
+            req.params = {
+                report_type: "types"
+            }
+
+            prepareTypesChart.resolves({});
+
+            const data = await adminReportsController.getReportChartData(req, res, next);
+
+            expect(prepareTypesChart.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the active accounts report', async () => {
+            req.params = {
+                report_type: "accounts"
+            }
+
+            prepareActiveAccountsChart.resolves({});
+
+            const data = await adminReportsController.getReportChartData(req, res, next);
+
+            expect(prepareActiveAccountsChart.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the account types report', async () => {
+            req.params = {
+                report_type: "account_types"
+            }
+
+            prepareAccountTypesChart.resolves({});
+
+            const data = await adminReportsController.getReportChartData(req, res, next);
+
+            expect(prepareAccountTypesChart.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the quotes report', async () => {
+            req.params = {
+                report_type: "quotes"
+            }
+
+            prepareQuotesChart.resolves({});
+
+            const data = await adminReportsController.getReportChartData(req, res, next);
+
+            expect(prepareQuotesChart.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should return a 400 status code if the report type is invalid', async () => {
+            req.params = {
+                report_type: "invalid"
+            }
+
+            await adminReportsController.getReportChartData(req, res, next);
+
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.calledWith(400));
+        });
+
+        it('should return a 400 status code if the report type is not provided', async () => {
+            await adminReportsController.getReportChartData(req, res, next);
+
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.calledWith(400));
+        });
+
+        it('should return a 500 status code if an error occurs', async () => {
+            req.params = {
+                report_type: "sales"
+            }
+
+            prepareSalesChart.rejects();
+
+            await adminReportsController.getReportChartData(req, res, next);
+
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.calledWith(500));
+        });
     });
 
     describe('Test getReportTableData', () => {
+        beforeEach(() => {
+            adminReportsController = rewire('../../../controllers/admin/adminReportsController');
+
+            prepareSalesTable = sandbox.stub();
+            prepareReferralsTable = sandbox.stub();
+            prepareClassesTable = sandbox.stub();
+            prepareCasesTable = sandbox.stub();
+            prepareTypesTable = sandbox.stub();
+            prepareActiveAccountsTable = sandbox.stub();
+            prepareAccountTypesTable = sandbox.stub();
+            prepareQuotesTable = sandbox.stub();
+
+            adminReportsController.__set__('prepareSalesTable', prepareSalesTable);
+            adminReportsController.__set__('prepareReferralsTable', prepareReferralsTable);
+            adminReportsController.__set__('prepareClassesTable', prepareClassesTable);
+            adminReportsController.__set__('prepareCasesTable', prepareCasesTable);
+            adminReportsController.__set__('prepareTypesTable', prepareTypesTable);
+            adminReportsController.__set__('prepareActiveAccountsTable', prepareActiveAccountsTable);
+            adminReportsController.__set__('prepareAccountTypesTable', prepareAccountTypesTable);
+            adminReportsController.__set__('prepareQuotesTable', prepareQuotesTable);
+        });
+
+        it('should call the correct function for the sales report', async () => {
+            req.params = {
+                report_type: "sales"
+            }
+
+            prepareSalesTable.resolves({});
+
+            const data = await adminReportsController.getReportTableData(req, res, next);
+
+            expect(prepareSalesTable.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the referrals report', async () => {
+            req.params = {
+                report_type: "referrals"
+            }
+
+            prepareReferralsTable.resolves({});
+
+            const data = await adminReportsController.getReportTableData(req, res, next);
+
+            expect(prepareReferralsTable.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the classes report', async () => {
+            req.params = {
+                report_type: "classes"
+            }
+
+            prepareClassesTable.resolves({});
+
+            const data = await adminReportsController.getReportTableData(req, res, next);
+
+            expect(prepareClassesTable.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the cases report', async () => {
+            req.params = {
+                report_type: "cases"
+            }
+
+            prepareCasesTable.resolves({});
+
+            const data = await adminReportsController.getReportTableData(req, res, next);
+
+            expect(prepareCasesTable.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the types report', async () => {
+            req.params = {
+                report_type: "types"
+            }
+
+            prepareTypesTable.resolves({});
+
+            const data = await adminReportsController.getReportTableData(req, res, next);
+
+            expect(prepareTypesTable.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the active accounts report', async () => {
+            req.params = {
+                report_type: "accounts"
+            }
+
+            prepareActiveAccountsTable.resolves({});
+
+            const data = await adminReportsController.getReportTableData(req, res, next);
+
+            expect(prepareActiveAccountsTable.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the account types report', async () => {
+            req.params = {
+                report_type: "account_types"
+            }
+
+            prepareAccountTypesTable.resolves({});
+
+            const data = await adminReportsController.getReportTableData(req, res, next);
+
+            expect(prepareAccountTypesTable.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should call the correct function for the quotes report', async () => {
+            req.params = {
+                report_type: "quotes"
+            }
+
+            prepareQuotesTable.resolves({});
+
+            const data = await adminReportsController.getReportTableData(req, res, next);
+
+            expect(prepareQuotesTable.calledOnce).to.be.true;
+            expect(res.json.calledOnce).to.be.true;
+            expect(res.json.calledWith(data));
+        });
+
+        it('should return a 400 status code if the report type is invalid', async () => {
+            req.params = {
+                report_type: "invalid"
+            }
+
+            await adminReportsController.getReportTableData(req, res, next);
+
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.calledWith(400));
+        });
+
+        it('should return a 400 status code if the report type is not provided', async () => {
+            await adminReportsController.getReportTableData(req, res, next);
+
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.calledWith(400));
+        });
+
+        it('should return a 500 status code if an error occurs', async () => {
+            req.params = {
+                report_type: "sales"
+            }
+
+            prepareSalesTable.rejects();
+
+            await adminReportsController.getReportTableData(req, res, next);
+
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.calledWith(500));
+        });
 
     });
 
@@ -692,7 +1038,7 @@ describe('Test Admin Reports Controller', () => {
                     _id: quoteState.REJECTED,
                     total: 3
                 }
-                ]);
+            ]);
 
             const quoteData = [
                 generateFakeQuote(),
