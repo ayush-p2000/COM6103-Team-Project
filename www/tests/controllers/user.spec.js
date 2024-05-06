@@ -207,12 +207,12 @@ describe('UserController', () => {
             expect(UserStub.findByIdAndUpdate.notCalled).to.be.true;
             expect(emailStub.notCalled).to.be.true;
             expect(renderUserLayoutStub.notCalled).to.be.true;
-            expect(res.status.calledWith(404)).to.be.true;
+            expect(res.status.calledWith(400)).to.be.true;
             expect(res.send.calledWith('User not found.')).to.be.true;
             expect(next.notCalled).to.be.true;
         });
 
-        it('should return 404 if user ID is missing', async () => {
+        it('should return 400 if user ID is missing', async () => {
             const req = {
                 user: {},
                 body: {
@@ -235,7 +235,7 @@ describe('UserController', () => {
             expect(UserStub.findByIdAndUpdate.notCalled).to.be.true;
             expect(emailStub.notCalled).to.be.true;
             expect(renderUserLayoutStub.notCalled).to.be.true;
-            expect(res.status.calledWith(404)).to.be.true;
+            expect(res.status.calledWith(400)).to.be.true;
             expect(res.send.calledWith('User not found.')).to.be.true;
             expect(next.notCalled).to.be.true;
         });

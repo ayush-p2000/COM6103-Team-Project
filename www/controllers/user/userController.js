@@ -98,7 +98,7 @@ async function updateUserDetails(req, res, next) {
 
     if (!req.user || !req.user.id) {
         console.error('User ID missing from the request');
-        return res.status(404).send('User not found.');
+        return res.status(400).send('User not found.');
     }
 
     try {
@@ -107,7 +107,7 @@ async function updateUserDetails(req, res, next) {
         const checkUser = await User.findOne({_id: req.user.id});
         if (!checkUser) {
             console.error('User not found with ID:', req.user.id);
-            return res.status(404).send('User not found.');
+            return res.status(400).send('User not found.');
         }
         // Update the names and avatar if necessary
         if (firstName || lastName) {
@@ -141,7 +141,7 @@ async function updateUserDetails(req, res, next) {
 
         const updatedUser = await User.findByIdAndUpdate(req.user.id, updateFields, { new: true });
         if (!updatedUser) {
-            return res.status(404).send('User not found.');
+            return res.status(400).send('User not found.');
         }
 
         // Send confirmation email after successful update
