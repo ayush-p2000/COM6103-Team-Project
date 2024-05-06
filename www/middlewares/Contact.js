@@ -2,11 +2,19 @@ const nodemailer = require("nodemailer");
 const { email } = require('../public/javascripts/Emailing/emailing');
 
 const contactUs = async (req, res, next) => {
-    const { name, email: senderEmail, message } = req.body; // Renamed 'email' variable to 'senderEmail' to avoid conflict
-    const subject = `Message from ${senderEmail}`;
+    const { name, email: senderEmail, message } = req.body; // Destructuring with renaming
 
+    // Check if any of the required fields are missing
+    if (!name || !senderEmail || !message) {
+        const missingParamError = 'Missing required parameters';
+        console.error(missingParamError);
+        res.redirect('/?messages=' + encodeURIComponent(JSON.stringify([missingParamError])));
+        return; // Stop execution if there are missing parameters
+    }
+
+    const subject = `Message from ${senderEmail}`;
     const confirm_subject = "Thanks for contacting us!";
-    const confirm_message = `Dear ${name}, <br><br> Thank you for contacting us. We confirm that we have received your message. Please for any further query, contact us without hesitation. <br><br> Kind Regards, <br><p style="color:#2E8B57;"> Team ePanda </p>`;
+    const confirm_message = `Dear ${name}, <br><br> Thank you for contacting us. We have received your message and will be in touch shortly. <br><br> Best Regards, <br>Your Team`;
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -16,40 +24,29 @@ const contactUs = async (req, res, next) => {
         auth: {
             user: process.env.SENDER_EMAIL,
             pass: process.env.SENDER_PASSWORD
-        },
+        }
     });
 
-    // Emailing details of sender and receiver, as well as the contents. Can be changed according to necessity.
     const mailOptions = {
-        from: {
-            name: name,
-            address: senderEmail
-        },
+        from: senderEmail,
         to: process.env.CONTACT_RECEIVER_EMAIL,
         subject: subject,
-        html: message // This will be the HTML/text content of your email
+        html: message
     };
 
-    // Function to send the email
-    const sendMail = async (transporter, mailOptions) => {
-        try {
-            await transporter.sendMail(mailOptions);
-            console.log("Email sent");
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log("Email sent to contact receiver");
+        await email(senderEmail, confirm_subject, confirm_message); // Assuming this function is promisified and handles sending emails
+        console.log("Confirmation email sent to sender");
+    } catch (error) {
+        console.error("Failed to send email:", error);
+        res.redirect('/?messages=' + encodeURIComponent(JSON.stringify(['Error sending message'])));
+        return;
+    }
 
-    // Calling function to send the email
-    sendMail(transporter, mailOptions);
-
-    // Calling the 'email' function passing the necessary arguments
-    email(senderEmail, confirm_subject, confirm_message);
-
-    const messages = ['Message has been sent. Check your email to find the confirmation email']; // Set up your actual message here
-
-    // Redirect the user to the landing page with the message in the URL query parameters
-    res.redirect('/?messages=' + encodeURIComponent(JSON.stringify(messages)));
+    const successMessage = 'Message has been sent. Check your email to find the confirmation email';
+    res.redirect('/?messages=' + encodeURIComponent(JSON.stringify([successMessage])));
 };
 
 module.exports = contactUs;
