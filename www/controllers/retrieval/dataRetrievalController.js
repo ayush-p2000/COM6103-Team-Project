@@ -213,7 +213,7 @@ async function deleteDataRetrieval(req, res, next) {
         const retrievalObject = req.retrieval;
 
         //Delete the retrieval object
-        await deleteRetrieval(id);
+        await deleteRetrieval(retrievalObject._id);
 
         res.status(200).send('Retrieval deleted successfully');
     } catch (error) {
@@ -460,6 +460,11 @@ async function deleteFile(req, res, next) {
     try {
         //Get the file ID from the request
         const {file_id} = req.params;
+
+        if (typeof (file_id) === 'undefined' || file_id === null) {
+            res.status(400).send('File ID not provided');
+            return;
+        }
 
         //Get the retrieval object from the request
         const retrievalObject = req.retrieval;
