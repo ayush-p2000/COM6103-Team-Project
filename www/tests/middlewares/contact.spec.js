@@ -8,11 +8,7 @@ const nodemailer = require('nodemailer');
 const proxyquire = require('proxyquire');
 
 describe('contactUs', () => {
-    let contactUs;
-    let sendMailStub;
-    let emailStub;
-    let req;
-    let res;
+    let contactUs, sendMailStub, emailStub, req, res;
 
     beforeEach(() => {
         sendMailStub = sinon.stub();
@@ -29,14 +25,6 @@ describe('contactUs', () => {
             }
         });
 
-        req = {
-            body: {
-                name: 'John Doe',
-                email: 'johndoe@example.com',
-                message: 'This is a test message.'
-            }
-        };
-
         res = {
             redirect: sinon.spy()
         };
@@ -46,15 +34,50 @@ describe('contactUs', () => {
         sinon.restore();
     });
 
-    it('should send an email to the recipient and a confirmation email to the sender', async () => {
+    it('should redirect with error message when required parameters are missing', async () => {
+        req = {
+            body: {
+                email: 'johndoe@example.com', // Missing 'name' and 'message'
+            }
+        };
+
+        await contactUs(req, res, () => {});
+
+        const expectedMessages = encodeURIComponent(JSON.stringify(['Missing required parameters']));
+        expect(res.redirect).to.have.been.calledWith('/?messages=' + expectedMessages);
+        expect(sendMailStub).not.to.have.been.called;
+        expect(emailStub).not.to.have.been.called;
+    });
+
+    it('should send an email and a confirmation email when all parameters are provided', async () => {
+        req = {
+            body: {
+                name: 'John Doe',
+                email: 'johndoe@example.com',
+                message: 'This is a test message.'
+            }
+        };
+
         await contactUs(req, res, () => {});
 
         expect(sendMailStub).to.have.been.calledOnce;
-        expect(emailStub).to.have.been.calledOnce;
-        expect(res.redirect).to.have.been.calledWith('/?messages=' + encodeURIComponent(JSON.stringify(['Message has been sent. Check your email to find the confirmation email'])));
+        expect(emailStub).to.have.been.calledOnceWith(
+            'johndoe@example.com',
+            'Thanks for contacting us!',
+            sinon.match.string // Matches any string for the message
+        );
+        const successMessage = encodeURIComponent(JSON.stringify(['Message has been sent. Check your email to find the confirmation email']));
+        expect(res.redirect).to.have.been.calledWith('/?messages=' + successMessage);
     });
 
-    it('should handle errors when sending the email', async () => {
+    it('should handle errors when sending the email (nodemailer error)', async () => {
+        req = {
+            body: {
+                name: 'John Doe',
+                email: 'johndoe@example.com',
+                message: 'This is a test message.'
+            }
+        };
         const error = new Error('Failed to send email');
         sendMailStub.rejects(error);
 
@@ -63,9 +86,10 @@ describe('contactUs', () => {
         await contactUs(req, res, () => {});
 
         expect(sendMailStub).to.have.been.calledOnce;
-        expect(emailStub).to.have.been.calledOnce;
-        expect(consoleErrorStub).to.have.been.calledWith(error);
-        expect(res.redirect).to.have.been.calledWith('/?messages=' + encodeURIComponent(JSON.stringify(['Message has been sent. Check your email to find the confirmation email'])));
+        expect(emailStub).not.to.have.been.called; // Email confirmation should not be sent if initial send fails
+        expect(consoleErrorStub).to.have.been.calledWith('Failed to send email:', error);
+        const errorMessage = encodeURIComponent(JSON.stringify(['Error sending message']));
+        expect(res.redirect).to.have.been.calledWith('/?messages=' + errorMessage);
 
         consoleErrorStub.restore();
     });
