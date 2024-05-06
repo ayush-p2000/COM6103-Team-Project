@@ -6,8 +6,16 @@ const { expect } = chai;
 
 const nodemailer = require('nodemailer');
 const proxyquire = require('proxyquire');
+const dotenv = require("dotenv");
+const parse = require("dotenv-parse-variables");
 
-describe('contactUs', () => {
+let env = dotenv.config({path: __dirname + '/../../.env.test'})
+if (env.error) {
+    throw env.error
+}
+env = parse(env, {assignToProcessEnv: true, overrideProcessEnv: true})
+
+describe('contactUs form control', () => {
     let contactUs, sendMailStub, emailStub, req, res;
 
     beforeEach(() => {
