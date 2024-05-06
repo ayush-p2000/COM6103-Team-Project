@@ -92,74 +92,74 @@ async function getUserProfile(req, res, next) {
 
 
 async function updateUserDetails(req, res, next) {
-    let messages;
-    let checkUser = await User.findOne({_id: req.user.id});
+    if (req.session.messages && req.session.messages.length > 0) {
+        return res.redirect("/profile");
+    }
+
+    if (!req.user || !req.user.id) {
+        console.error('User ID missing from the request');
+        return res.status(404).send('User not found.');
+    }
+
     try {
-
-        const {firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country} = req.body; // Assuming these fields can be updated
-        // Construct an object with the fields that need to be updated
+        const { firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country } = req.body;
         let updateFields = {};
-
-
-        if (req.session.messages.length > 0) {
-            return res.redirect("/profile")
+        const checkUser = await User.findOne({_id: req.user.id});
+        if (!checkUser) {
+            console.error('User not found with ID:', req.user.id);
+            return res.status(404).send('User not found.');
         }
+        // Update the names and avatar if necessary
+        if (firstName || lastName) {
+            if (firstName) updateFields.first_name = firstName;
+            if (lastName) updateFields.last_name = lastName;
 
-        if (firstName) {
-            updateFields.first_name = firstName; // Update first name
             if (checkUser.google_id == null && checkUser.facebook_id == null) {
-                updateFields.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName)}+${encodeURIComponent(lastName || req.user.last_name)}`;
+                updateFields.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName || checkUser.first_name)}+${encodeURIComponent(lastName || checkUser.last_name)}`;
             }
         }
 
-        if (lastName) {
-            updateFields.last_name = lastName; // Update last name
-            if (checkUser.google_id == null && checkUser.facebook_id == null) {
-                updateFields.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName || req.user.first_name)}+${encodeURIComponent(lastName)}`;
-            }
-        }
+        if (phone) updateFields.phone_number = phone;
 
-        if (phone) updateFields.phone_number = phone; // Update phone
-
-        // Update address fields
+        // Consolidate address update logic
         if (addressFirst || addressSecond || postCode || city || county || country) {
             updateFields.address = {
-                address_1: addressFirst || req.user.address.address_1,
-                address_2: addressSecond || req.user.address.address_2,
-                postcode: postCode || req.user.address.postcode,
-                city: city || req.user.address.city,
-                county: county || req.user.address.county,
-                country: country || req.user.address.country
+                address_1: addressFirst || req.user.address?.address_1 || '',
+                address_2: addressSecond || req.user.address?.address_2 || '',
+                postcode: postCode || req.user.address?.postcode || '',
+                city: city || req.user.address?.city || '',
+                county: county || req.user.address?.county || '',
+                country: country || req.user.address?.country || ''
             };
         }
 
+        if (Object.keys(updateFields).length === 0) {
+            console.log("No fields to update.");
+            // Optionally, redirect or send a response indicating no update was needed.
+            return res.redirect("/profile");  // This line can be adjusted based on your application's logic.
+        }
 
-        // Message displayed after the successful profile update
-        messages = ['Profile Successfully Updated.'];
+        const updatedUser = await User.findByIdAndUpdate(req.user.id, updateFields, { new: true });
+        if (!updatedUser) {
+            return res.status(404).send('User not found.');
+        }
 
-        // Sample usage of email sending
+        // Send confirmation email after successful update
         const emailid = req.user.email;
-        const subject = 'Update profile successful';
-        const textmsg = `Dear ${firstName}, <br><br> ${messages} <br><br><br><b>Thanks & Regards,<br><br><p style="color: #2E8B57">Team ePanda</p></b>`;
-
+        const subject = 'Update Profile Successful';
+        const textmsg = `Dear ${firstName || checkUser.first_name}, <br><br> Profile Successfully Updated. <br><br> Thanks & Regards,<br><p style="color: #2E8B57">Team ePanda</p>`;
         email(emailid, subject, textmsg);
 
-        // Find the user by ID and update the specified fields
-        const updatedUser = await User.findByIdAndUpdate(req.user.id, updateFields, {new: true});
-
-        if (!updatedUser) {
-            return res.status(404).send('Server Error');
-        }
         renderUserLayout(req, res, 'user_profile', {
-            messages: messages,
-            hasMessages: messages.length > 0,
+            messages: ['Profile Successfully Updated.'],
+            hasMessages: true,
             userData: updatedUser,
             auth: req.isLoggedIn,
             isGoogleAuthenticated: updatedUser.google_id !== null
-        })
+        });
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Server error');
+        console.error('Error updating user details:', err);
+        res.status(500).send('Server error during profile update.');
     }
 }
 
