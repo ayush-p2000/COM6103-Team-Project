@@ -28,20 +28,16 @@ env = parse(env, {assignToProcessEnv: true, overrideProcessEnv: true})
 
 describe("Test Authentication Controller", () => {
     describe("Register user", () => {
-        let req, res, next, findOne, authController, save, constructor,mockUser;
+        let req, res, next, findOne, authController, create;
         beforeEach(() => {
             findOne = sandbox.stub();
-            save = sandbox.stub();
-            mockUser = {
-                save: save
-            };
-            constructor = sandbox.stub().returns(mockUser);
+            create = sandbox.stub();
             authController = proxyquire('../../controllers/auth/authenticationController',
                 {
                     '../../model/models': {
                         User: {
                             findOne,
-                            constructor
+                            create,
                         }
                     }
                 });
@@ -62,6 +58,9 @@ describe("Test Authentication Controller", () => {
                     country: faker.location.country(),
                     password: 'passwordpassword'
                 },
+                session: {
+                    messages: []
+                }
             }
             res = {
                 render: sandbox.spy(),
@@ -75,13 +74,11 @@ describe("Test Authentication Controller", () => {
                 isLoggedIn: false
             };
             findOne.withArgs(req.body.email).resolves(null)
-            constructor.returns({mock_user})
-            save.resolves()
+            create.resolves(mock_user)
             await authController.registerUser(req, res, next);
 
             // Assertions
             expect(req.login.calledOnce).to.be.true;
-            // Add more assertions as needed
         });
         //
         it('should render registration page with error message if email already exists', async () => {
@@ -109,7 +106,6 @@ describe("Test Authentication Controller", () => {
 
             // Assertions
             expect(next.calledOnce).to.be.true;
-            // Add more assertions as needed
         });
     })
 
