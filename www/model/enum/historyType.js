@@ -37,6 +37,9 @@ const historyType = {
     },
 
     historyTypeToColour: function (type, prefix = "") {
+        if (typeof prefix !== 'string' || prefix.length === 0) {
+            prefix = "";
+        }
         switch (type) {
             case REVIEW_REQUESTED:
                 return prefix + "warning";
