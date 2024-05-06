@@ -212,7 +212,7 @@
                             <% if(item.photos?.length > 0) { %>
                                 <% item.photos.forEach((photo, index) => { %>
                                     <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                        <img src="data:<%= photo?.img_type %>;base64,<%= /*Buffer.from*/(photo?.img_data ?? "").toString('base64') %>"
+                                        <img src="data:<%= photo?.img_type %>;base64,<%= (photo?.img_data ?? "").toString('base64') %>"
                                              class="img-fluid d-block h-100 mx-auto" style="max-height: 400px;"
                                              alt="...">
                                     </div>

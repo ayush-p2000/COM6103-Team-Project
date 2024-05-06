@@ -62,7 +62,7 @@
                                         %>
                                         <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 item">
                                             <div class="card rounded-4 w-100 h-100 shadow-sm">
-                                                <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= /*Buffer.from*/(item.photos[0]?.img_data ?? "").toString('base64') %>"
+                                                <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= (item.photos[0]?.img_data ?? "").toString('base64') %>"
                                                      class="img-fluid d-block mx-auto rounded-top-4" alt="..."
                                                      style="height: 200px; object-fit: cover">
                                                 <div class="card-body">

@@ -382,8 +382,6 @@ describe('Test Item Page', () => {
 
             fakeDevice.quotes = fakeQuotes;
 
-            // getItemDetail.resolves(fakeDevice)
-            // getQuotes.resolves(fakeQuotes)
             getDevicesWithQuotes.resolves([fakeDevice]);
             generateQR.resolves({})
             getHistoryByDevice.resolves([])
