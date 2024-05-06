@@ -302,7 +302,7 @@ async function prepareTypesTable() {
                 hour: "numeric",
                 minute: "numeric"
             }),
-            user: device.listing_user,
+            user: device.listing_user.toJSON(),
             device_id: device._id,
         });
     });
@@ -643,7 +643,7 @@ async function prepareQuotesTable() {
                 hour: "numeric",
                 minute: "numeric"
             }),
-            user: quote.device?.listing_user,
+            user: quote.device?.listing_user.toJSON(),
             quote_id: quote._id,
             device_id: quote.device?._id,
         });

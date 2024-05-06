@@ -12,6 +12,12 @@ const {quoteState} = require("../../../model/enum/quoteState");
 const {generateFakeDevice} = require("../../mocks/device");
 
 const {faker} = require('@faker-js/faker');
+const {mock_user} = require("../../mocks/user");
+const {generateFakeBrand} = require("../../mocks/brand");
+const {generateFakeModel} = require("../../mocks/model");
+const {generateFakeDeviceType} = require("../../mocks/deviceType");
+const {generateFakeQuote} = require("../../mocks/quote");
+const {generateFakeProvider} = require("../../mocks/provider");
 
 const sandbox = require('sinon').createSandbox();
 
@@ -23,6 +29,14 @@ let getReferralValueByMonth = sandbox.stub();
 let getAllReferralsOrderedByDate = sandbox.stub();
 let getDevicesGroupByCategory = sandbox.stub();
 let getAllDevices = sandbox.stub();
+let getDevicesGroupByState = sandbox.stub();
+let getDevicesGroupByType = sandbox.stub();
+let getAllDeviceTypes = sandbox.stub();
+let getAccountsCountByStatus = sandbox.stub();
+let getAllUsers = sandbox.stub();
+let getAccountsCountByType = sandbox.stub();
+let getQuotesGroupByState = sandbox.stub();
+let getAllQuotes = sandbox.stub();
 
 let renderAdminLayout = sandbox.spy();
 let renderAdminLayoutPlaceholder = sandbox.spy();
@@ -318,16 +332,12 @@ describe('Test Admin Reports Controller', () => {
                 total: 3
             }]);
 
-            const deviceData = [
-                generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.CURRENT),
-                generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.CURRENT),
-                generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE),
-                generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE),
-                generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE)
-            ];
+            const deviceData = [generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.CURRENT), generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.CURRENT), generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE), generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE), generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE)];
 
             deviceData.forEach(device => {
-                device.listing_user = generateFakeUser();
+                device.listing_user = mock_user;
+                device.brand = generateFakeBrand();
+                device.model = generateFakeModel();
             })
 
             getAllDevices.resolves(deviceData);
@@ -354,7 +364,7 @@ describe('Test Admin Reports Controller', () => {
                         minute: 'numeric'
                     }),
 
-                    user: device.listing_user,
+                    user: device.listing_user.toJSON(),
 
                     device_id: device._id
                 }
@@ -371,6 +381,369 @@ describe('Test Admin Reports Controller', () => {
     });
 
     describe('Test prepareCasesData', () => {
+        beforeEach(() => {
+            getAllDevices = sandbox.stub();
+            getDevicesGroupByState = sandbox.stub();
 
+            adminReportsController = proxyquire('../../../controllers/admin/adminReportsController', {
+                '../../model/mongodb': {
+                    getAllDevices,
+                    getDevicesGroupByState
+                }
+            });
+        });
+
+        it('should prepare the data for the cases report', async () => {
+            // Arrange
+            getDevicesGroupByState.resolves([{
+                _id: deviceState.IN_REVIEW,
+                total: 2
+            }, {
+                _id: deviceState.HAS_QUOTE,
+                total: 3
+            }]);
+
+            const deviceData = [generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.CURRENT), generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.CURRENT), generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE), generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE), generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE)];
+
+            deviceData.forEach(device => {
+                device.listing_user = mock_user;
+                device.brand = generateFakeBrand();
+                device.model = generateFakeModel();
+            })
+
+            getAllDevices.resolves(deviceData);
+
+            const expectedLabels = ["Draft", "In Review", "Listed", "Has Quote", "Sold", "Recycled", "Auction", "Data Recovery", "Closed", "Hidden", "Rejected"];
+            const expectedData = [0, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0];
+            const expectedTable = deviceData.map(device => {
+                return {
+                    name: device.brand.name + " " + device.model.name,
+
+                    category: device.category,
+                    category_string: deviceCategory.deviceCategoryToString(device.category),
+                    category_colour: deviceCategory.deviceCategoryToColour(device.category),
+
+                    state: device.state,
+                    state_string: deviceState.deviceStateToString(device.state),
+                    state_colour: deviceState.deviceStateToColour(device.state),
+
+                    date_added: device.createdAt.toLocaleString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric'
+                    }),
+
+                    user: device.listing_user.toJSON(),
+
+                    device_id: device._id
+                }
+            });
+
+            // Act
+            const data = await adminReportsController.prepareCasesData();
+
+            // Assert
+            expect(data.labels).to.eql(expectedLabels);
+            expect(data.datasets[0]).to.eql(expectedData);
+            expect(data.table).to.eql(expectedTable);
+        });
+    });
+
+    describe('Test prepareTypesData', () => {
+        beforeEach(() => {
+            getAllDevices = sandbox.stub();
+            getDevicesGroupByType = sandbox.stub();
+            getAllDeviceTypes = sandbox.stub();
+
+            adminReportsController = proxyquire('../../../controllers/admin/adminReportsController', {
+                '../../model/mongodb': {
+                    getAllDevices,
+                    getDevicesGroupByType,
+                    getAllDeviceTypes
+                }
+            });
+        });
+
+        it('should prepare the data for the types report', async () => {
+            // Arrange
+            getDevicesGroupByType.resolves([{
+                _id: faker.database.mongodbObjectId(),
+                name: "Laptop",
+                total: 2
+            }, {
+                _id: faker.database.mongodbObjectId(),
+                name: "Phone",
+                total: 3
+            }]);
+
+            getAllDeviceTypes.resolves([{
+                _id: faker.database.mongodbObjectId(),
+                name: "Laptop"
+            }, {
+                _id: faker.database.mongodbObjectId(),
+                name: "Phone"
+            }]);
+
+            const deviceData = [
+                generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.CURRENT),
+                generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.CURRENT),
+                generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE),
+                generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE),
+                generateFakeDevice(faker.database.mongodbObjectId(), deviceCategory.RARE)];
+
+            deviceData.forEach(device => {
+                device.listing_user = mock_user;
+                device.brand = generateFakeBrand();
+                device.model = generateFakeModel();
+                device.device_type = generateFakeDeviceType();
+            })
+
+            getAllDevices.resolves(deviceData);
+
+            const expectedLabels = ["Laptop", "Phone"];
+            const expectedData = [2, 3];
+            const expectedTable = deviceData.map(device => {
+                return {
+                    name: device.brand.name + " " + device.model.name,
+                    device_type: device.device_type.name,
+
+                    category: device.category,
+                    category_string: deviceCategory.deviceCategoryToString(device.category),
+                    category_colour: deviceCategory.deviceCategoryToColour(device.category),
+
+                    state: device.state,
+                    state_string: deviceState.deviceStateToString(device.state),
+                    state_colour: deviceState.deviceStateToColour(device.state),
+
+                    date_added: device.createdAt.toLocaleString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric'
+                    }),
+
+                    user: device.listing_user.toJSON(),
+
+                    device_id: device._id
+                }
+            });
+
+            // Act
+            const data = await adminReportsController.prepareTypesData();
+
+            // Assert
+            expect(data.labels).to.eql(expectedLabels);
+            expect(data.datasets[0]).to.eql(expectedData);
+            expect(data.table).to.eql(expectedTable);
+        });
+    });
+
+    describe('Test prepareActiveAccountsData', () => {
+        beforeEach(() => {
+            getAccountsCountByStatus = sandbox.stub();
+            getAllUsers = sandbox.stub();
+
+            adminReportsController = proxyquire('../../../controllers/admin/adminReportsController', {
+                '../../model/mongodb': {
+                    getAccountsCountByStatus,
+                    getAllUsers
+                }
+            });
+        });
+
+        it('should prepare the data for the active accounts report', async () => {
+            // Arrange
+            getAccountsCountByStatus.resolves([{
+                _id: true,
+                count: 2
+            }, {
+                _id: false,
+                count: 3
+            }]);
+
+            const accountData = [mock_user, mock_user];
+            accountData.forEach(account => {
+                account.role = roleTypes.USER;
+                account.active = true;
+            });
+
+            getAllUsers.resolves(accountData);
+
+            const expectedLabels = ["Active", "Inactive"];
+            const expectedData = [2, 3];
+            const expectedTable = accountData.map(account => {
+                return {
+                    name: account.first_name + " " + account.last_name,
+                    id: account._id,
+                    active: account.active,
+
+                    role: account.role,
+                    role_string: roleTypes.roleTypeToString(account.role),
+                    role_colour: roleTypes.roleTypeToColour(account.role),
+
+                    email: account.email,
+                    date_added: account.createdAt.toLocaleString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric'
+                    }),
+                }
+            });
+
+            // Act
+            const data = await adminReportsController.prepareActiveAccountsData();
+
+            // Assert
+            expect(data.labels).to.eql(expectedLabels);
+            expect(data.datasets[0]).to.eql(expectedData);
+            expect(data.table).to.eql(expectedTable);
+        });
+    });
+
+    describe('Test prepareAccountTypesData', () => {
+        beforeEach(() => {
+            getAccountsCountByType = sandbox.stub();
+            getAllUsers = sandbox.stub();
+
+            adminReportsController = proxyquire('../../../controllers/admin/adminReportsController', {
+                '../../model/mongodb': {
+                    getAccountsCountByType,
+                    getAllUsers
+                }
+            });
+        });
+
+        it('should prepare the data for the account types report', async () => {
+            // Arrange
+            getAccountsCountByType.resolves([{
+                _id: roleTypes.USER,
+                count: 2
+            }, {
+                _id: roleTypes.ADMIN,
+                count: 3
+            }]);
+
+            const accountData = [mock_user, mock_user];
+            accountData.forEach(account => {
+                account.role = roleTypes.USER;
+                account.active = true;
+            });
+
+            getAllUsers.resolves(accountData);
+
+            const expectedLabels = ["User", "Admin"];
+            const expectedData = [2, 3];
+            const expectedTable = accountData.map(account => {
+                return {
+                    name: account.first_name + " " + account.last_name,
+                    id: account._id,
+                    active: account.active,
+
+                    role: roleTypes.roleTypeToString(account.role),
+                    role_colour: roleTypes.roleTypeToColour(account.role),
+
+                    email: account.email,
+                    date_added: account.createdAt.toLocaleString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric'
+                    }),
+                }
+            });
+
+            // Act
+            const data = await adminReportsController.prepareAccountTypesData();
+
+            // Assert
+            expect(data.labels).to.eql(expectedLabels);
+            expect(data.datasets[0]).to.eql(expectedData);
+            expect(data.table).to.eql(expectedTable);
+        });
+    });
+
+    describe('Test prepareQuotesData', () => {
+        beforeEach(() => {
+            getQuotesGroupByState = sandbox.stub();
+            getAllQuotes = sandbox.stub();
+
+            adminReportsController = proxyquire('../../../controllers/admin/adminReportsController', {
+                '../../model/mongodb': {
+                    getQuotesGroupByState,
+                    getAllQuotes
+                }
+            });
+        });
+
+        it('should prepare the data for the quotes report', async () => {
+            // Arrange
+            getQuotesGroupByState.resolves([
+                {
+                    _id: quoteState.ACCEPTED,
+                    total: 2
+                },
+                {
+                    _id: quoteState.REJECTED,
+                    total: 3
+                }
+                ]);
+
+            const quoteData = [
+                generateFakeQuote(),
+                generateFakeQuote(),
+                generateFakeQuote()
+            ];
+
+            quoteData.forEach(quote => {
+                quote.device = generateFakeDevice();
+                quote.device.listing_user = mock_user;
+                quote.device.brand = generateFakeBrand();
+                quote.device.model = generateFakeModel();
+                quote.provider = generateFakeProvider();
+            });
+
+            getAllQuotes.resolves(quoteData);
+
+            const expectedLabels = [
+                "New", "Saved", "Rejected", "Accepted", "Converted", "Expired"];
+            const expectedData = [0, 0, 3, 2, 0, 0];
+            const expectedTable = quoteData.map(quote => {
+                return {
+                    name: quote.device.model.name,
+                    provider: quote.provider.name,
+
+                    state: quote.state,
+                    state_string: quoteState.stateToString(quote.state),
+                    state_colour: quoteState.stateToColour(quote.state),
+
+                    logo: quote.provider.logo,
+                    date_added: quote.createdAt.toLocaleString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric'
+                    }),
+
+                    user: quote.device.listing_user.toJSON(),
+                    quote_id: quote._id,
+                    device_id: quote.device._id
+                }
+            });
+
+            // Act
+            const data = await adminReportsController.prepareQuotesData();
+
+            // Assert
+            expect(data.labels).to.eql(expectedLabels);
+            expect(data.datasets[0]).to.eql(expectedData);
+            expect(data.table).to.eql(expectedTable);
+        });
     });
 });
