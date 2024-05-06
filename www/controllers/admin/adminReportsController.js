@@ -672,4 +672,10 @@ module.exports = {
     getReportTableData,
     prepareSalesData,
     prepareReferralsData,
+    prepareQuotesData,
+    prepareClassesData,
+    prepareCasesData,
+    prepareTypesData,
+    prepareActiveAccountsData,
+    prepareAccountTypesData
 }

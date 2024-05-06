@@ -22,7 +22,11 @@ const mock_user = {
     avatar: faker.image.avatar(),
     createdAt: faker.date.past(),
     updatedAt: faker.date.recent(),
-    verified: true
+    verified: true,
+    toJSON: () => {
+        //Return the user object without the toJSON function
+        return this;
+    }
 }
 
 module.exports = {
