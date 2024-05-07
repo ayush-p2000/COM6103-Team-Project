@@ -118,6 +118,11 @@ a {
     height: 500px;
     max-height: 500px;
 }
+
+.min-height-500 {
+    min-height: 500px;
+}
+
 .footer-bottom {
     position:absolute;
     left: 0;

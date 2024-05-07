@@ -22,7 +22,27 @@ const mock_user = {
     avatar: faker.image.avatar(),
     createdAt: faker.date.past(),
     updatedAt: faker.date.recent(),
-    verified: true
+    verified: true,
+}
+
+mock_user.toJSON = function () {
+    return {
+        _id: this._id,
+        role: this.role,
+        active: this.active,
+        first_name: this.first_name,
+        last_name: this.last_name,
+        date_of_birth: this.date_of_birth,
+        email: this.email,
+        phone_number: this.phone_number,
+        address: this.address,
+        savedCo2: this.savedCo2,
+        listed_devices: this.listed_devices,
+        avatar: this.avatar,
+        createdAt: this.createdAt,
+        updatedAt: this.updatedAt,
+        verified: this.verified,
+    }
 }
 
 module.exports = {

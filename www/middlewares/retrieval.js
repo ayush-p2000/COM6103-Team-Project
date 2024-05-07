@@ -42,7 +42,8 @@ exports.verifyRetrievalExpiry = async (req, res, next) => {
         const currentDate = new Date();
 
         //If the current date is after the expiry date, delete the retrieval
-        if (currentDate > expiryDate) {
+        if (currentDate > expiryDate && !retrieval.emails_sent?.expired) {
+        retrieval.emails_sent.expired = true;
             await deleteRetrieval(retrieval._id);
 
             //Send the user an email informing them that their retrieval has expired
@@ -68,8 +69,9 @@ exports.verifyRetrievalExpiry = async (req, res, next) => {
         const expiryLessSevenDays = new Date(expiryDate);
         expiryLessSevenDays.setSeconds(expiryLessSevenDays.getSeconds() - SEVEN_DAYS_S);
 
-        if (currentDate > (expiryLessSevenDays)) {
+        if (currentDate > (expiryLessSevenDays) && !retrieval.emails_sent?.near_expiry) {
             retrieval.retrieval_state = retrievalState.EXPIRING_SOON;
+            retrieval.emails_sent.near_expiry = true;
             await retrieval.save();
 
             //Send the user an email informing them that their retrieval is expiring soon

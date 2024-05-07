@@ -6,19 +6,19 @@ const deviceSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'DeviceType',
             required: true,
-            autopopulate: true
+            autopopulate: { maxDepth: 1 }
         },
         brand: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Brand',
             required: true,
-            autopopulate: true
+            autopopulate: { maxDepth: 1 }
         },
         model: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Model',
             required: true,
-            autopopulate: true
+            autopopulate: { maxDepth: 1 }
         },
         color: {
             type: String,
@@ -69,7 +69,7 @@ const deviceSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
-            autopopulate: true
+            autopopulate: { maxDepth: 1 }
         },
         photos: [
             {
