@@ -271,8 +271,6 @@ const updateDeviceType = async (req, res, next) => {
                 res.redirect("/admin/types")
         }
     } catch (err) {
-        console.log("here")
-
         res.status(500)
         console.log(err)
         return next(err)
