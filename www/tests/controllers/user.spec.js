@@ -183,7 +183,7 @@ describe('UserController', () => {
             expect(next.notCalled).to.be.true;
         });
 
-        it('should return 400 if user not found', async () => {
+        it('should return 404 if user not found', async () => {
             const req = {
                 user: { id: '123' },
                 body: {
@@ -207,7 +207,7 @@ describe('UserController', () => {
             expect(UserStub.findByIdAndUpdate.notCalled).to.be.true;
             expect(emailStub.notCalled).to.be.true;
             expect(renderUserLayoutStub.notCalled).to.be.true;
-            expect(res.status.calledWith(400)).to.be.true;
+            expect(res.status.calledWith(404)).to.be.true;
             expect(res.send.calledWith('User not found.')).to.be.true;
             expect(next.notCalled).to.be.true;
         });
