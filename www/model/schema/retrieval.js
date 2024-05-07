@@ -88,6 +88,18 @@ const retrievalSchema = new mongoose.Schema({
             required: true,
             default: false
         },
+        emails_sent: {
+            near_expiry: {
+                type: Boolean,
+                required: true,
+                default: false
+            },
+            expired: {
+                type: Boolean,
+                required: true,
+                default: false
+            }
+        }
     },
     {
         timestamps: true
