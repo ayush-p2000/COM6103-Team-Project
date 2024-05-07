@@ -60,8 +60,8 @@ async function getUserDashboard(req, res, next) {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).send("An internal server error occurred."); // Properly chaining
-            statusand send methods
+        res.status(500);
+        next(err); // Properly chaining
     }
 }
 
@@ -82,7 +82,8 @@ async function getUserProfile(req, res, next) {
             isGoogleAuthenticated: isGoogleAuthenticated
         });
     } catch (err) {
-        res.send('No user found');
+        res.status(500);
+        next(err);
     }
 }
 
