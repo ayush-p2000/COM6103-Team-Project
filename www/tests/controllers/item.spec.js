@@ -48,6 +48,8 @@ const handleMissingModel = sandbox.stub();
 const getHistoryByDevice = sandbox.stub();
 const getQuoteById = sandbox.stub();
 const updateQuote = sandbox.stub();
+const getDevicesWithQuotes = sandbox.stub();
+const getProviders = sandbox.stub();
 const updateQuoteState = sandbox.stub();
 const updateDeviceState = sandbox.stub();
 
@@ -67,6 +69,8 @@ const itemController = proxyquire('../../controllers/marketplace/itemController'
             getHistoryByDevice,
             getQuoteById,
             updateQuote,
+            getDevicesWithQuotes,
+            getProviders,
             updateQuoteState,
             updateDeviceState
         },
@@ -376,10 +380,12 @@ describe('Test Item Page', () => {
             const fakeCexProvider = generateFakeCexProvider()
             const fakeQuotes = [generateFakeQuote(fakeEbayProvider,3),generateFakeQuote(fakeCexProvider),2]
 
-            getItemDetail.resolves(fakeDevice)
-            getQuotes.resolves(fakeQuotes)
+            fakeDevice.quotes = fakeQuotes;
+
+            getDevicesWithQuotes.resolves([fakeDevice]);
             generateQR.resolves({})
             getHistoryByDevice.resolves([])
+            getProviders.resolves([fakeEbayProvider,fakeCexProvider])
 
             await itemController.getItemDetails(req, res);
 
@@ -403,7 +409,7 @@ describe('Test Item Page', () => {
             })).to.be.true;
         });
 
-        it('should call res.status(500) and next when getQuotes failed with error', async () => {
+        it('should call res.status(500) and next when getDevicesWithQuotes failed with error', async () => {
             // Mock req and res objects
             const fakeDevice = generateFakeDevice(mock_user._id,1)
             const req = {
@@ -418,7 +424,7 @@ describe('Test Item Page', () => {
             const next = sandbox.spy();
 
             const err = new Error("Internal server error")
-            getQuotes.throws(err)
+            getDevicesWithQuotes.throws(err)
 
             await itemController.getItemDetails(req, res,next);
             expect(res.status.calledOnce).to.be.true;
@@ -450,8 +456,8 @@ describe('Test Item Page', () => {
             };
             const next = sandbox.spy()
 
-            getQuotes.resolves([fakeQuote])
             updateQuoteState.resolves();
+            getQuotes.resolves([fakeQuote])
             updateDeviceState.resolves();
 
             await itemController.postUpdateQuote(req, res, next);

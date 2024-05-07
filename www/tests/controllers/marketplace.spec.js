@@ -35,6 +35,7 @@ const getDeviceQuotation = sandbox.stub();
 const getEbayQuote = sandbox.stub();
 const getCexQuote = sandbox.stub();
 const handleMissingModels = sandbox.stub();
+const getDevicesWithQuotesFromUserID = sandbox.stub();
 const updateDeviceState = sandbox.stub();
 
 const marketplaceController = proxyquire('../../controllers/marketplace/marketplaceController',
@@ -48,6 +49,7 @@ const marketplaceController = proxyquire('../../controllers/marketplace/marketpl
             getAllDevices,
             getAllDeviceType,
             getUnknownDeviceHistoryByDevice,
+            getDevicesWithQuotesFromUserID,
             updateDeviceState
         },
         "../../model/utils/utils":{
@@ -177,24 +179,18 @@ describe('Test Marketplace Page', () => {
 
 
             getAllDeviceType.resolves(fakeDeviceTypes);
-            getUserItems.resolves(fakeDevices)
-            getProviders.resolves(fakeProviders)
+            getDevicesWithQuotesFromUserID.resolves(fakeDevices)
+            //getProviders.resolves(fakeProviders)
 
             // Act
             await marketplaceController.getMyItems(req, res, next);
 
             // Assert
-            expect(getAllDeviceType.called).to.be.true;
-            expect(getAllDeviceType.resolves(fakeDeviceTypes));
-            expect(getUserItems.calledTwice).to.be.true;
-            expect(getUserItems.resolves(fakeDevices));
-            expect(getProviders.calledOnce).to.be.true;
-            expect(getProviders.resolves(fakeProviders));
+            expect(getDevicesWithQuotesFromUserID.calledOnce);
 
             expect(renderUserLayout.calledWith(req, res, '../marketplace/my_items', {
                 deviceTypes: fakeDeviceTypes,
                 items: fakeDevices,
-                quotations: fakeQuotation,
                 deviceState,
                 deviceCategory,
                 auth: req.isLoggedIn,
@@ -204,6 +200,37 @@ describe('Test Marketplace Page', () => {
             expect(next.notCalled).to.be.true;
         })
 
+        it("should call res.status(500) and next if getUserItems throws error", async () => {
+            // Arrange
+            const req = {
+                params: {
+                    page: 1
+                },
+                isLoggedIn: true,
+                user: { mock_user }
+            };
+
+            const res = {
+                render: sandbox.spy(),
+                status: sandbox.stub().returnsThis()
+            };
+
+            const next = sandbox.spy();
+
+            const error = new Error("Internal Server Error");
+            getDevicesWithQuotesFromUserID.throws(error);
+
+            // Act
+            await marketplaceController.getMyItems(req, res, next);
+            // Assert
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.calledWith(500)).to.be.true;
+            expect(next.calledOnce).to.be.true;
+            expect(next.calledWith(error)).to.be.true;
+        });
+    })
+
+    describe('Invoke updateQuotes', () => {
         it('should update quotes for a device if it is no quote', async () => {
             const fakeDevices = generateFakeDevices(1, mock_user._id, 3);
             const fakeProviders = [generateFakeEbayProvider(), generateFakeCexProvider()];
@@ -259,9 +286,9 @@ describe('Test Marketplace Page', () => {
             const fakeCexQuote = generateFakeQuote(fakeProviders[1]._id,3,oneDayAfter)
 
             getQuotes.resolves([fakeEbayQuote,fakeCexQuote]);
+            getDeviceQuotation.resolves();
             updateDeviceState.resolves();
             deleteQuote.resolves();
-
 
             const result = await marketplaceController.updateQuotes(fakeDevices, fakeProviders);
             // Assert
@@ -281,28 +308,61 @@ describe('Test Marketplace Page', () => {
 
             getQuotes.resolves([fakeEbayQuote,fakeCexQuote]);
             getDeviceQuotation.resolves(fakeEbayQuoteNew);
-            updateDeviceState.resolves();
             deleteQuote.resolves();
+            updateDeviceState.resolves();
 
 
             const result = await marketplaceController.updateQuotes(fakeDevices, fakeProviders);
             // Assert
             expect(result).to.be.eql([[fakeEbayQuoteNew,fakeCexQuote]]);
         })
+    });
 
-        it("should call res.status(500) and next if getUserItems throws error", async () => {
+    describe('Test refreshMyQuotes', () => {
+        it('should call updateQuotes with the correct parameters', async () => {
             // Arrange
             const req = {
-                params: {
-                    page: 1
-                },
-                isLoggedIn: true,
-                user: { mock_user }
+                user: mock_user
             };
 
             const res = {
-                render: sandbox.spy(),
-                status: sandbox.stub().returnsThis()
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.spy()
+            };
+
+            const next = sandbox.spy();
+
+            const fakeDevices = generateFakeDevices(10, mock_user._id, 3);
+            const fakeProviders = generateFakeProviders(2);
+            const fakeQuotes = generateFakeQuote(2, 3);
+
+            getUserItems.resolves(fakeDevices);
+            getProviders.resolves(fakeProviders);
+            updateDeviceState.resolves();
+            getQuotes.resolves([fakeQuotes]);
+            getDeviceQuotation.resolves([fakeQuotes]);
+
+            // Act
+            await marketplaceController.refreshMyQuotes(req, res, next);
+            // Assert
+            expect(getUserItems.calledOnce).to.be.true;
+            expect(getProviders.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.calledWith(200)).to.be.true;
+            expect(res.send.calledOnce).to.be.true;
+            expect(res.send.calledWith("Quotes refreshed successfully")).to.be.true;
+            expect(next.notCalled).to.be.true;
+        })
+
+        it('should call res.status(500) if getUserItems throws error', async () => {
+            // Arrange
+            const req = {
+                user: mock_user
+            };
+
+            const res = {
+                status: sandbox.stub().returnsThis(),
+                send: sandbox.spy()
             };
 
             const next = sandbox.spy();
@@ -311,12 +371,12 @@ describe('Test Marketplace Page', () => {
             getUserItems.throws(error);
 
             // Act
-            await marketplaceController.getMyItems(req, res, next);
+            await marketplaceController.refreshMyQuotes(req, res, next);
             // Assert
             expect(res.status.calledOnce).to.be.true;
             expect(res.status.calledWith(500)).to.be.true;
-            expect(next.calledOnce).to.be.true;
-            expect(next.calledWith(error)).to.be.true;
+            expect(res.send.calledOnce).to.be.true;
+            expect(res.send.calledWith(error)).to.be.true;
         });
-    })
+    });
 });
