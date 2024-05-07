@@ -5,7 +5,9 @@ const PAYMENT_CANCELLED = 2;
 const transactionState = {
     AWAITING_PAYMENT,
     PAYMENT_RECEIVED,
-    PAYMENT_CANCELLED
+    PAYMENT_CANCELLED,
+
+    getList: () => Object.values(transactionState).filter(value => typeof value === 'number')
 };
 
 module.exports = transactionState;

@@ -489,6 +489,7 @@ describe('Test Item Page', () => {
 
             const err = new Error('Internal server error')
             getQuotes.throws(err)
+            updateQuoteState.resolves();
 
             await itemController.postUpdateQuote(req, res, next);
 

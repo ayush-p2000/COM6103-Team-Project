@@ -20,7 +20,9 @@ const generateFakeQuote = (provider= faker.database.mongodbObjectId(),
                 img_type: "image/jpeg",
                 img_data: Buffer.from(faker.image.dataUri().split(',')[1], 'base64')
             }
-        }
+        },
+        createdAt: faker.date.recent(),
+        updatedAt: faker.date.recent(),
     };
 };
 
