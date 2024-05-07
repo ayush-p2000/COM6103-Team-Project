@@ -51,89 +51,99 @@ async function getReportPage(req, res, next) {
 }
 
 async function getReportChartData(req, res, next) {
-    const type = req.params.report_type;
+    try {
+        const type = req.params.report_type;
 
-    let data;
+        let data;
 
-    switch (type) {
-        case "classes":
-            data = await prepareClassesChart();
-            data.backgrounds = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category));
-            data.borderColors = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category, true));
-            break;
-        case "cases":
-            data = await prepareCasesChart();
-            data.backgrounds = deviceState.getList().map(state => deviceState.deviceStateToRGB(state));
-            data.borderColors = deviceState.getList().map(state => deviceState.deviceStateToRGB(state, true));
-            break;
-        case "types":
-            data = await prepareTypesChart();
-            data.backgrounds = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category));
-            data.borderColors = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category, true));
-            break;
-        case "accounts":
-            data = await prepareActiveAccountsChart();
-            data.backgrounds = accountStatus.getList().map(status => accountStatus.accountStatusToRGB(status));
-            data.borderColors = accountStatus.getList().map(status => accountStatus.accountStatusToRGB(status, true));
-            break;
-        case "account_types":
-            data = await prepareAccountTypesChart();
-            data.backgrounds = roleTypes.getList().map(type => roleTypes.roleTypeToRGB(type));
-            data.borderColors = roleTypes.getList().map(type => roleTypes.roleTypeToRGB(type, true));
-            break;
-        case "referrals":
-            data = await prepareReferralsChart();
-            break;
-        case "sales":
-            data = await prepareSalesChart();
-            break;
-        case "quotes":
-            data = await prepareQuotesChart();
-            data.backgrounds = quoteState.getList().map(state => quoteState.quoteStateToRGB(state));
-            data.borderColors = quoteState.getList().map(state => quoteState.quoteStateToRGB(state, true));
-            break;
-        default:
-            return res.status(400).json({error: "Invalid report type"});
+        switch (type) {
+            case "classes":
+                data = await prepareClassesChart();
+                data.backgrounds = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category));
+                data.borderColors = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category, true));
+                break;
+            case "cases":
+                data = await prepareCasesChart();
+                data.backgrounds = deviceState.getList().map(state => deviceState.deviceStateToRGB(state));
+                data.borderColors = deviceState.getList().map(state => deviceState.deviceStateToRGB(state, true));
+                break;
+            case "types":
+                data = await prepareTypesChart();
+                data.backgrounds = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category));
+                data.borderColors = deviceCategory.getList().map(category => deviceCategory.deviceCategoryToRGB(category, true));
+                break;
+            case "accounts":
+                data = await prepareActiveAccountsChart();
+                data.backgrounds = accountStatus.getList().map(status => accountStatus.accountStatusToRGB(status));
+                data.borderColors = accountStatus.getList().map(status => accountStatus.accountStatusToRGB(status, true));
+                break;
+            case "account_types":
+                data = await prepareAccountTypesChart();
+                data.backgrounds = roleTypes.getList().map(type => roleTypes.roleTypeToRGB(type));
+                data.borderColors = roleTypes.getList().map(type => roleTypes.roleTypeToRGB(type, true));
+                break;
+            case "referrals":
+                data = await prepareReferralsChart();
+                break;
+            case "sales":
+                data = await prepareSalesChart();
+                break;
+            case "quotes":
+                data = await prepareQuotesChart();
+                data.backgrounds = quoteState.getList().map(state => quoteState.quoteStateToRGB(state));
+                data.borderColors = quoteState.getList().map(state => quoteState.quoteStateToRGB(state, true));
+                break;
+            default:
+                return res.status(400).json({error: "Invalid report type"});
+        }
+
+        return res.json(data);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({error: "An error occurred while generating the report data"});
     }
-
-    return res.json(data);
 }
 
 async function getReportTableData(req, res, next) {
-    const type = req.params.report_type;
+    try {
+        const type = req.params.report_type;
 
-    let data = {};
+        let data = {};
 
-    switch (type) {
-        case "classes":
-            data.table = await prepareClassesTable();
-            break;
-        case "cases":
-            data.table = await prepareCasesTable();
-            break;
-        case "types":
-            data.table = await prepareTypesTable();
-            break;
-        case "accounts":
-            data.table = await prepareActiveAccountsTable();
-            break;
-        case "account_types":
-            data.table = await prepareAccountTypesTable();
-            break;
-        case "referrals":
-            data.table = await prepareReferralsTable();
-            break;
-        case "sales":
-            data.table = await prepareSalesTable();
-            break;
-        case "quotes":
-            data.table = await prepareQuotesTable();
-            break;
-        default:
-            return res.status(400).json({error: "Invalid report type"});
+        switch (type) {
+            case "classes":
+                data.table = await prepareClassesTable();
+                break;
+            case "cases":
+                data.table = await prepareCasesTable();
+                break;
+            case "types":
+                data.table = await prepareTypesTable();
+                break;
+            case "accounts":
+                data.table = await prepareActiveAccountsTable();
+                break;
+            case "account_types":
+                data.table = await prepareAccountTypesTable();
+                break;
+            case "referrals":
+                data.table = await prepareReferralsTable();
+                break;
+            case "sales":
+                data.table = await prepareSalesTable();
+                break;
+            case "quotes":
+                data.table = await prepareQuotesTable();
+                break;
+            default:
+                return res.status(400).json({error: "Invalid report type"});
+        }
+
+        return res.json(data);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({error: "An error occurred while generating the report data"});
     }
-
-    return res.json(data);
 }
 
 //region Classes Data
@@ -302,7 +312,7 @@ async function prepareTypesTable() {
                 hour: "numeric",
                 minute: "numeric"
             }),
-            user: device.listing_user,
+            user: device.listing_user.toJSON(),
             device_id: device._id,
         });
     });
@@ -643,7 +653,7 @@ async function prepareQuotesTable() {
                 hour: "numeric",
                 minute: "numeric"
             }),
-            user: quote.device?.listing_user,
+            user: quote.device?.listing_user.toJSON(),
             quote_id: quote._id,
             device_id: quote.device?._id,
         });
@@ -672,4 +682,10 @@ module.exports = {
     getReportTableData,
     prepareSalesData,
     prepareReferralsData,
+    prepareQuotesData,
+    prepareClassesData,
+    prepareCasesData,
+    prepareTypesData,
+    prepareActiveAccountsData,
+    prepareAccountTypesData
 }

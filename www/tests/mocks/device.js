@@ -54,7 +54,9 @@ const generateFakeDevice = (user = faker.database.mongodbObjectId(),
                 img_data: Buffer.from(faker.image.dataUri().split(',')[1], 'base64')
             },
         ],
-        visible: true
+        visible: true,
+        createdAt: faker.date.recent(),
+        updatedAt: faker.date.recent(),
     };
 };
 

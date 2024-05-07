@@ -97,5 +97,37 @@ describe('Test Landing Page', () => {
             expect(next.calledOnce).to.be.true;
             expect(next.calledWith({message: "Internal Server Error", state: 500})).to.be.true;
         });
+
+        it("should forward and session messages to the view", async () => {
+            // Arrange
+            const items = [
+
+            ]
+            const user = mock_user;
+            const messages = ["Test Message"];
+
+            getCarouselDevices.returns(items)
+
+            const req = {
+                isLoggedIn: true,
+                user: user,
+                query: {
+                    messages: encodeURIComponent(JSON.stringify(messages))
+                }
+            };
+
+            const res = {
+                render: sandbox.spy()
+            };
+
+            const next = sandbox.spy();
+
+            // Act
+            await landingController.getLandingPage(req, res, next);
+
+            // Assert
+            expect(res.render.calledOnce).to.be.true;
+            expect(res.render.calledWith('index', {title: 'Express', auth: req.isLoggedIn, user: req.user, items, imgPerCarousel: 6, messages})).to.be.true;
+        });
     });
 });
