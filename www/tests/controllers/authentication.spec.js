@@ -60,7 +60,8 @@ describe("Test Authentication Controller", () => {
                 },
                 session: {
                     messages: []
-                }
+                },
+                user: mock_user
             }
             res = {
                 render: sandbox.spy(),
@@ -68,7 +69,7 @@ describe("Test Authentication Controller", () => {
                 send: sandbox.spy()
             }
         })
-        it('should register a new user', async () => {
+        it("should register a new user with correct input data and when user with the same email doesn't exist", async () => {
             req = {
                 ...req,
                 isLoggedIn: false
@@ -86,13 +87,14 @@ describe("Test Authentication Controller", () => {
                 ...req,
                 isLoggedIn: false
             }
+            const messages = ['User email already exists']
             findOne.resolves(mock_user)
 
             // Invoke the function
             await authController.registerUser(req, res, next);
 
             // Assertions
-            expect(res.render.calledWith("authentication/register")).to.be.true;
+            expect(res.render.calledWithExactly("authentication/register",{messages: messages, hasMessages: messages.length > 0, auth: req.isLoggedIn, user:req.user})).to.be.true;
             expect(req.isLoggedIn).to.be.false
         });
 
@@ -261,6 +263,15 @@ describe("Test Authentication Controller", () => {
             expect(updateOne.calledOnce).to.be.true;
             expect(res.render.calledOnce).to.be.false;
         });
+
+        it("should handle error when userID is missing", async () => {
+            updateOne.rejects(new Error("User ID is missing"))
+
+            await authController.verifyEmail(req,res)
+
+            expect(updateOne.calledOnce).to.be.true
+            expect(res.render.calledOnce).to.be.false
+        })
     });
 
     describe('getForgotPassword', () => {
@@ -268,8 +279,7 @@ describe("Test Authentication Controller", () => {
 
         beforeEach(() => {
             req = {
-                isLoggedIn: true,
-                user: {...mock_user}
+                isLoggedIn: false,
             };
             res = {
                 render: sandbox.stub()
@@ -294,8 +304,7 @@ describe("Test Authentication Controller", () => {
 
         beforeEach(() => {
             req = {
-                isLoggedIn: true,
-                user: {...mock_user}
+                isLoggedIn: false,
             };
             res = {
                 render: sandbox.stub()
@@ -336,7 +345,7 @@ describe("Test Authentication Controller", () => {
             };
             res = {
                 send: sandbox.stub(),
-                status: sandbox.stub()
+                status: sandbox.stub().returnsThis()
             }
             next = sandbox.spy()
         })
@@ -367,8 +376,17 @@ describe("Test Authentication Controller", () => {
             await authController.getForgotUser(req, res, next);
 
             expect(findOneAndUpdate.calledOnce).to.be.true;
-            expect(res.send.calledWith('User not found')).to.be.true;
+            expect(res.send.calledWith("User not found"));
         });
+        it("should handle email not being passed", async () => {
+            findOneAndUpdate.rejects(new Error("Email not found!"));
+
+            // Invoke the function
+            await authController.getForgotUser(req, res, next);
+
+            expect(findOneAndUpdate.calledOnce).to.be.true;
+            expect(res.status.calledWith(500)).to.be.true
+        })
     });
 
     describe('Generate Random Token', () => {
@@ -385,22 +403,22 @@ describe("Test Authentication Controller", () => {
             // Hexadecimal string length is twice the bytes
             expect(token).to.length(16 * 2);
         });
+        it("should throw error is size is less or equal 0", () => {
+
+            expect(() => generateRandomToken(-1)).to.throw(RangeError, "The value of \"size\" is out of range. It must be >= 0 && <= 2147483647.");
+        })
     });
 
     describe('resetPasswordLink', () => {
-        it('should generate the reset password link with provided token', () => {
+            it('should generate the reset password link with provided token', () => {
             // Mock process.env object
-            const mockBaseUrl = 'http://localhost';
-            const mockPort = '3000';
             const originalEnv = {...process.env}; // Backup original process.env
-            process.env.BASE_URL = mockBaseUrl;
-            process.env.PORT = mockPort;
 
             const token = 'mocked_token';
 
             const link = resetPasswordLink(token);
 
-            const expectedLink = `${mockBaseUrl}:${mockPort}/reset-password?token=${token}`;
+            const expectedLink = `${originalEnv.BASE_URL}:${originalEnv.PORT}/reset-password?token=${token}`;
             expect(link).to.equal(expectedLink);
 
             // Restore process.env to its original state
@@ -412,7 +430,6 @@ describe("Test Authentication Controller", () => {
         let req, res, next, user, updateOne, authController, findOneAndUpdate, findOne, token, pbkdf2Promise;
         beforeEach(() => {
             token = "104i102phf"
-            user = mock_user
             req = {
                 body: {
                     password: 'new_password',
@@ -500,6 +517,42 @@ describe("Test Authentication Controller", () => {
             expect(res.status.calledWithExactly(500)).to.be.true; // Ensure 500 status is sent
             expect(res.send.calledWithExactly(`Error resetting password`)).to.be.true; // Ensure appropriate error message is sent
         });
+        it("should handle missing password field", async () => {
+            req = {
+                body: {
+                    confirmPassword: 'new_password'
+                }
+            }
+            findOne.resolves(mock_user)
+            await authController.resetPassword(req, res, next);
+
+            expect(res.status.calledWith(400)).to.be.true;
+            expect(res.send.calledWithExactly("Passwords do not match")).to.be.true; // Ensure appropriate error message is sent
+
+        })
+        it("should handle missing confirm password field", async () => {
+            req = {
+                body: {
+                    password: "new_password",
+                }
+            }
+            findOne.resolves(mock_user)
+            await authController.resetPassword(req, res, next);
+
+            expect(res.status.calledWith(400)).to.be.true;
+            expect(res.send.calledWithExactly("Passwords do not match")).to.be.true; // Ensure appropriate error message is sent
+
+        })
+        it("should handle missing all fields", async () => {
+            req = {}
+
+            findOne.resolves(null)
+            await authController.resetPassword(req, res, next);
+
+            expect(res.status.calledWith(500)).to.be.true;
+            expect(res.send.calledWithExactly("Error resetting password")).to.be.true; // Ensure appropriate error message is sent
+
+        })
     });
 
 

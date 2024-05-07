@@ -56,7 +56,7 @@ const registerUser = async (req, res, next) => {
                 hasMessages: messages.length > 0,
                 auth: req.isLoggedIn,
                 user: req.user
-            }) // needs refined alert
+            })
         }
 
         let user = await User.create({
@@ -129,7 +129,7 @@ const sendVerifyEmail = (name, userEmail, user_id) => {
     email(userEmail, subject, message)
 }
 
-const verifyEmail = async(req, res) => {
+const verifyEmail = async(req, res,next) => {
     try {
         const updateInfo = await User.updateOne({_id: req.query.id},
             {
