@@ -37,6 +37,7 @@ async function getUserDashboard(req, res, next) {
         if (!userData) {
             return res.status(404).send("User not found."); // Respond with 404 Not Found if user data is not found
         }
+        const firstName = userData.first_name;
 
         var marketplaceDevices = await getAllDevices({visible: {$ne: false}});
         marketplaceDevices = await handleMissingModels(marketplaceDevices)
