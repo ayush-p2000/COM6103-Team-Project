@@ -186,7 +186,7 @@ async function getItemDetails(req, res, next) {
         item = item[0];
 
         const providers = await getProviders();
-        const quotations = await updateQuotes([item], providers);
+        const quotations = await updateQuotes([item._id], providers);
         item = await getDevicesWithQuotes([req.params.id])
 ;
         item = item[0];
