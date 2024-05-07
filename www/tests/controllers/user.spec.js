@@ -62,7 +62,7 @@ describe('UserController', () => {
             await UserController.getUserDashboard(req, res, next);
 
             expect(res.status.calledWith(500)).to.be.true;
-            expect(res.send.calledWith("An internal server error occurred.")).to.be.true;
+            expect(next.calledOnce).to.be.true;
         });
     });
 

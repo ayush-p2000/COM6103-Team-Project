@@ -5,13 +5,20 @@
 const {User} = require("../../model/models");
 const {email} = require("../../public/javascripts/Emailing/emailing");
 const {renderUserLayout} = require("../../util/layout/layoutUtils");
-const {getAllUsers, getUserItems, getUnknownDeviceHistoryByDevice, getAllDevices} = require("../../model/mongodb");
+const {
+    getAllUsers,
+    getUserItems,
+    getUnknownDeviceHistoryByDevice,
+    getAllDevices
+} = require("../../model/mongodb");
 const deviceCategory = require("../../model/enum/deviceCategory")
-const {handleUserMissingModel, handleMissingModels} = require("../../util/Devices/devices");
+const {
+    handleUserMissingModel,
+    handleMissingModels
+} = require("../../util/Devices/devices");
 
 
 //------------------------------------------------ Rendering user Database -------------------------------------------------------------------------//
-
 
 /**
  * Get user dashboard, here the user's items and marketplace items can be viewed from the dashboard
@@ -21,7 +28,8 @@ async function getUserDashboard(req, res, next) {
     try {
         // Check if user is logged in and the user ID is available
         if (!req.user || !req.user.id) {
-            return res.status(400).send("User ID is missing or invalid."); // Respond with 400 Bad Request if user ID is missing
+            res.status(400);
+            return next({message: "User ID is missing or invalid."}); // Respond with 400 Bad Request if user ID is missing
         }
 
         // Fetch user data by ID
@@ -29,27 +37,23 @@ async function getUserDashboard(req, res, next) {
         if (!userData) {
             return res.status(404).send("User not found."); // Respond with 404 Not Found if user data is not found
         }
-
         const firstName = userData.first_name;
-        var userItems = await getUserItems(req.user.id);
-        userItems = await getUnknownDevices(userItems);
-        var marketplaceDevices = await getAllDevices();
-        marketplaceDevices = await getUnknownDevices(marketplaceDevices);
 
-        const userItemsContainsDevices = userItems.length > 0;
-        let marketDevices = [];
-        marketplaceDevices.forEach(devices => {
-            if (devices.visible) {
-                marketDevices.push(devices);
-            }
-        });
-        const marketContainsDevices = marketDevices.length > 0;
+        var marketplaceDevices = await getAllDevices({visible: {$ne: false}});
+        marketplaceDevices = await handleMissingModels(marketplaceDevices)
+
+        // Get the user's items
+        //They are defined as items where the listing_user is the user's ID
+        let userItems = marketplaceDevices.filter(device => device.listing_user._id.toString() === req.user.id.toString())
+
+        const userItemsContainsDevices = userItems.length > 0
+        const marketContainsDevices = marketplaceDevices.length > 0
 
         renderUserLayout(req, res, '../marketplace/user_home', {
             userData: userData,
             firstName: firstName,
             devices: userItems,
-            marketDevices: marketDevices,
+            marketDevices: marketplaceDevices,
             deviceCategory,
             marketContains: marketContainsDevices,
             userContains: userItemsContainsDevices,
@@ -57,17 +61,9 @@ async function getUserDashboard(req, res, next) {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).send("An internal server error occurred."); // Properly chaining status and send methods
+        res.status(500);
+        next(err); // Properly chaining
     }
-}
-
-/**
- * Get method to retrieve unknown devices from the database needed to be displayed in the web page
- * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
- */
-async function getUnknownDevices(items) {
-     await handleMissingModels(items)
-    return items
 }
 
 /**
@@ -82,9 +78,13 @@ async function getUserProfile(req, res, next) {
         const userData = await User.findById({_id: req.user.id});
         // Determine if the user has logged in with Google authentication
         const isGoogleAuthenticated = userData.google_id !== null;
-        renderUserLayout(req, res, 'user_profile', {userData, isGoogleAuthenticated: isGoogleAuthenticated});
+        renderUserLayout(req, res, 'user_profile', {
+            userData,
+            isGoogleAuthenticated: isGoogleAuthenticated
+        });
     } catch (err) {
-        res.send('No user found');
+        res.status(500);
+        next(err);
     }
 }
 
@@ -102,7 +102,18 @@ async function updateUserDetails(req, res, next) {
     }
 
     try {
-        const { firstName, lastName, phone, addressFirst, addressSecond, postCode, city, county, country } = req.body;
+
+        const {
+            firstName,
+            lastName,
+            phone,
+            addressFirst,
+            addressSecond,
+            postCode,
+            city,
+            county,
+            country
+        } = req.body;
         let updateFields = {};
         const checkUser = await User.findOne({_id: req.user.id});
         if (!checkUser) {

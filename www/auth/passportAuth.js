@@ -39,7 +39,7 @@ const passportStrategy = new LocalStrategy({
                     return callback(null, false, {message: 'Incorrect email or password.'});
                 }
 
-                return callback(null, user);
+                return callback(null, user, {});
             });
         } catch (err) {
             return callback(err);
