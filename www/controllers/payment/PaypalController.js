@@ -53,6 +53,12 @@ const payProduct = async(req,res)=>{
         let extension = req.query.extension
         let type = req.query.type
         let sku
+
+        if (!id || !product || !total || !type) {
+            res.status(400).send('Missing required parameters');
+            return; // Stop further execution in case of missing parameters
+        }
+
         switch (extension) {
             case 0: sku = 1
                 break
@@ -60,6 +66,7 @@ const payProduct = async(req,res)=>{
                 break
             case 6: sku = 3
                 break
+            default: sku = 1;
         }
         const create_payment_json = {
             "intent": "sale",
@@ -90,21 +97,22 @@ const payProduct = async(req,res)=>{
 
         paypal.payment.create(create_payment_json, function (error, payment) {
             if (error) {
-                throw error;
+                console.error('Error creating payment:', error);
+                return res.status(500).send('Error creating payment');
             } else {
-                for(let i = 0;i < payment.links.length;i++){
-                    if(payment.links[i].rel === 'approval_url'){
-                        res.redirect(payment.links[i].href);
-                    }
+                let approvalUrl = payment.links.find(link => link.rel === 'approval_url');
+                if (approvalUrl) {
+                    res.redirect(approvalUrl.href);
+                } else {
+                    res.status(500).send('No approval URL found');
                 }
             }
         });
 
-
     } catch (error) {
-        console.log(error.message);
+        console.error('Unexpected error in payProduct:', error.message);
+        res.status(500).send('Error processing payment');
     }
-
 }
 
 const paypalSuccess = async(req,res)=>{
@@ -115,6 +123,9 @@ const paypalSuccess = async(req,res)=>{
         const paymentId = req.query.paymentId;
         const total = req.query.total
 
+        if (!payerId || !paymentId || !total) {
+            return res.status(400).render('error', { message: 'Missing required parameters.' });
+        }
         const execute_payment_json = {
             "payer_id": payerId,
             "transactions": [{
@@ -145,25 +156,33 @@ const paypalSuccess = async(req,res)=>{
  * Method used to display the cancel payment page and update the transaction in the database
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Ayush Prajapati <aprajapati1@sheffield.ac.uk>
  */
-const cancelPayment = async(req,res)=>{
-
+const cancelPayment = async(req, res) => {
     try {
+        const { id, total, type, extension } = req.query;
+
+        // Check for missing required parameters
+        if (!id || !total || !type) {
+            return renderUserLayout(req, res, '../payment/error', {
+                message: 'Missing required parameters'
+            });
+        }
+
         let transaction = {
-            deviceId: req.query.id,
-            value: req.query.total,
+            deviceId: id,
+            value: total,
             state: transactionState['PAYMENT_CANCELLED'],
-            paymentMethod: req.query.type,
+            paymentMethod: type,
+        };
+        if (type === 'retrieval_extension') {
+            transaction.extension = extension;
         }
-        if (req.query.type === 'retrieval_extension') {
-            transaction.extension = req.query.extension
-        }
-        await updateTransaction(transaction)
+        await updateTransaction(transaction);
         renderUserLayout(req, res, '../payment/cancel');
 
     } catch (error) {
         console.log(error.message);
+        renderUserLayout(req, res, '../payment/error', { message: 'Error processing your request' });
     }
-
 }
 
 module.exports = {

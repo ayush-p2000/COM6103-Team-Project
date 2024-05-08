@@ -13,7 +13,8 @@ const {
     deleteQuote,
     getAllDevices,
     getAllDeviceType,
-    getUnknownDeviceHistoryByDevice, updateDeviceState
+    getUnknownDeviceHistoryByDevice, updateDeviceState,
+    getDevicesWithQuotesFromUserID
 } = require('../../model/mongodb')
 const deviceState = require("../../model/enum/deviceState")
 const deviceCategory = require("../../model/enum/deviceCategory")
@@ -95,20 +96,29 @@ async function updateQuotes(items, providers) {
     return quotations;
 }
 
+async function refreshMyQuotes(req, res, next) {
+    try {
+        const items = await getUserItems(req.user.id);
+        const providers = await getProviders();
+        const quotations = await updateQuotes(items, providers);
+        res.status(200).send("Quotes refreshed successfully");
+    } catch (e) {
+        console.log(e);
+        res.status(500).send(e);
+    }
+
+}
+
 async function getMyItems(req, res, next) {
     try {
         const deviceTypes = await getAllDeviceType();
-        let items = await getUserItems(req.user.id);
-        const providers = await getProviders();
+        let items = await getDevicesWithQuotesFromUserID(req.user.id);
 
         await handleMissingModels(items);
-        const quotations = await updateQuotes(items, providers);
-        items = await getUserItems(req.user.id);
 
         renderUserLayout(req, res, '../marketplace/my_items', {
             deviceTypes,
             items,
-            quotations,
             deviceState,
             deviceCategory,
             auth: req.isLoggedIn,
@@ -117,11 +127,15 @@ async function getMyItems(req, res, next) {
         });
     } catch (e) {
         console.log(e);
+        res.status(500);
+        next(e);
     }
 }
 
 
 module.exports = {
     getMarketplace,
-    getMyItems
+    updateQuotes,
+    getMyItems,
+    refreshMyQuotes
 }

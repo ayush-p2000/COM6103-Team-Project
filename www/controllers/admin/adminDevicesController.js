@@ -57,13 +57,19 @@ const {
  * @author Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 async function getDevicesPage(req, res, next) {
-    const devices = await getAllDevices();
-    await handleMissingModels(devices);
-    renderAdminLayout(req, res, "devices", {
-        devices: devices,
-        deviceState,
-        deviceCategory
-    });
+    try {
+        const devices = await getAllDevices();
+        await handleMissingModels(devices);
+        renderAdminLayout(req, res, "devices", {
+            devices: devices,
+            deviceState,
+            deviceCategory
+        });
+    } catch (e) {
+        console.log(e)
+        res.status(500);
+        next(e);
+    }
 }
 
 /**
@@ -114,10 +120,22 @@ async function getRetrievalDevicesPage(req, res, next) {
  */
 async function postNewDeviceType(req, res, next) {
     try {
+        //If body is empty
+        if (Object.keys(req.body).length === 0) {
+            res.status(400).send("Bad Request")
+            return
+        }
+
+        if (req.body.name === "" || req.body.description === "" || req.body.name === undefined || req.body.description === undefined) {
+            res.status(400).send("Bad Request")
+            return
+        }
+
         const deviceType = await addDeviceType(req.body.name, req.body.description)
         res.status(200).send("Device Type Added Successfully")
     } catch (e) {
         console.log(e)
+        res.status(500).send("Internal Server Error");
     }
 }
 
@@ -127,10 +145,22 @@ async function postNewDeviceType(req, res, next) {
  */
 async function postNewBrand(req, res, next) {
     try {
+        //If body is empty
+        if (Object.keys(req.body).length === 0) {
+            res.status(400).send("Bad Request")
+            return
+        }
+
+        if (req.body.name === "" || req.body.name === undefined) {
+            res.status(400).send("Bad Request")
+            return
+        }
+
         const brand = await addBrand(req.body.name)
         res.status(200).send("Brand Added Successfully")
     } catch (e) {
         console.log(e)
+        res.status(500).send("Internal Server Error");
     }
 }
 
@@ -140,9 +170,19 @@ async function postNewBrand(req, res, next) {
  */
 async function postNewModel(req, res, next) {
     try {
+        //If body is empty
+        if (Object.keys(req.body).length === 0) {
+            res.status(400).send("Bad Request")
+            return
+        }
+
+        if (!req.body.name || !req.body.brand || !req.body.deviceType) {
+            res.status(400).send("Bad Request")
+            return
+        }
 
         var properties = []
-        var category = 3
+        var category = deviceCategory.UNKNOWN
 
         const devices = await gsmarena.search.search(req.body.name);
         if (devices[0]) {
@@ -166,11 +206,11 @@ async function postNewModel(req, res, next) {
                 const currentDate = new Date();
                 const currentYear = currentDate.getFullYear()
                 if ((currentYear - released) <= 5) {
-                    category = 0
+                    category = deviceCategory.CURRENT
                 } else if ((currentYear - released) > 5 && (currentYear - released) <= 10) {
-                    category = 1
+                    category = deviceCategory.RARE
                 } else {
-                    category = 2
+                    category = deviceCategory.RECYCLE
                 }
             }
         }
@@ -179,23 +219,30 @@ async function postNewModel(req, res, next) {
 
         const updatedUnknownDevices = await updateUnknownDevices(model.deviceType, model.brand, model._id)
 
-        res.status(200).send("successfully")
+        res.status(200).send("Model Added Successfully")
     } catch (e) {
         console.log(e)
+        res.status(500).send("Internal Server Error");
     }
 }
 
 async function getDeviceTypePage(req, res, next) {
-    const subpage = req.params.subpage ? req.params.subpage : "brands";
-    const deviceTypes = await getAllDeviceType()
-    const brands = await getAllBrand()
-    const models = subpage === "models" ? await getAllModelsTableData() : [];
-    renderAdminLayoutPlaceholder(req, res, "device_types", {
-        brands,
-        deviceTypes,
-        subpage,
-        models
-    }, null)
+    try {
+        const subpage = req.params.subpage ? req.params.subpage : "brands";
+        const deviceTypes = await getAllDeviceType()
+        const brands = await getAllBrand()
+        const models = subpage === "models" ? await getAllModelsTableData() : [];
+        renderAdminLayout(req, res, "device_types", {
+            brands,
+            deviceTypes,
+            subpage,
+            models
+        })
+    } catch (e) {
+        console.log(e)
+        res.status(500)
+        next(e)
+    }
 }
 
 /**
@@ -225,7 +272,7 @@ async function getDeviceTypeDetailsPage(req, res, next) {
                 typeModels = await getAllModelsOfType(item._id)
                 break;
             default:
-                res.redirect("/admin/types")
+                return res.redirect("/admin/types")
         }
     } catch (err) {
         res.status(500)
@@ -236,7 +283,7 @@ async function getDeviceTypeDetailsPage(req, res, next) {
 // Make subpage singular form
     const itemType = subpage.slice(0, -1)
 
-    renderAdminLayoutPlaceholder(req, res, "device_type_details", {
+    renderAdminLayout(req, res, "device_type_details", {
         item,
         itemType,
         brands,
@@ -252,7 +299,19 @@ async function getDeviceTypeDetailsPage(req, res, next) {
 const updateDeviceType = async (req, res, next) => {
     const id = req.params.id
     const subpage = req.params.subpage
-    if (req.session.messages.length > 0) {
+
+    if (req.session?.messages?.length > 0) {
+        return res.redirect(`/admin/types/${subpage}/${id}`)
+    }
+
+    //If the body is empty
+    if (Object.keys(req.body).length === 0) {
+        req.session.messages = ["Empty body"]
+        return res.redirect(`/admin/types/${subpage}/${id}`)
+    }
+
+    if (!req.body.name || req.body.name === "") {
+        req.session.messages = ["Name is required"]
         return res.redirect(`/admin/types/${subpage}/${id}`)
     }
 
@@ -262,17 +321,25 @@ const updateDeviceType = async (req, res, next) => {
                 await updateBrandDetails(id, req.body.name)
                 break;
             case "models":
+                if (!req.body.modelBrand || !req.body.modelType) {
+                    req.session.messages = ["Brand and Type are required"]
+                    return res.redirect(`/admin/types/${subpage}/${id}`)
+                }
+
                 await updateModelDetails(id, req.body.name, req.body.modelBrand, req.body.modelType)
                 break;
             case "device-types":
+                if (!req.body.description || req.body.description === "") {
+                    req.session.messages = ["Description is required"]
+                    return res.redirect(`/admin/types/${subpage}/${id}`)
+                }
+
                 await updateDeviceTypeDetails(id, req.body.name, req.body.description)
                 break;
             default:
-                res.redirect("/admin/types")
+                return res.redirect("/admin/types")
         }
     } catch (err) {
-        console.log("here")
-
         res.status(500)
         console.log(err)
         return next(err)
@@ -299,7 +366,7 @@ const deleteDeviceType = async (req, res, next) => {
                 await deleteType(id)
                 break;
             default:
-                res.redirect("/admin/types")
+                return res.redirect("/admin/types")
         }
     } catch (err) {
         res.status(500)
@@ -370,10 +437,18 @@ async function getUserDeviceDetailsPage(req, res, next) {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk>
  */
 async function getModelsFromTypeAndBrand(req, res) {
-    const {
-        deviceType,
-        deviceBrand
-    } = req.body
+    const deviceType = req.body.deviceType;
+    const deviceBrand = req.body.deviceBrand;
+
+    //If body is empty
+    if (Object.keys(req.body).length === 0) {
+        return res.status(400).json({error: "Bad Request"})
+    }
+
+    if (!deviceType || !deviceBrand) {
+        return res.status(400).json({error: "deviceType and deviceBrand are required"})
+    }
+
     try {
         const models = await getModels(deviceType, deviceBrand)
         res.json({models})
@@ -388,12 +463,18 @@ async function getModelsFromTypeAndBrand(req, res) {
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang <zjiang34@sheffield.ac.uk>
  */
 const updateUserDeviceDetailsPage = async (req, res) => {
+    //If body is empty
+    if (Object.keys(req.body).length === 0) {
+        return res.status(400).send("Bad Request")
+    }
+
     try {
         const item_id = req.params.id;
         const updatedItem = await updateDeviceDetails(item_id, req.body)
         res.status(200).send(updatedItem._id)
     } catch (err) {
         console.log(err)
+        res.status(500).send("Internal Server Error")
     }
 }
 
@@ -481,28 +562,6 @@ const postDeviceDemotion = async (req, res) => {
                     actioned_by: req.user.id
                 };
                 await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
-            } else if (newValue === deviceState.LISTED) {
-                item.visible = true;
-
-                const historyObject = {
-                    device: item._id,
-                    history_type: historyType.ITEM_APPROVED,
-                    data: [],
-                    actioned_by: req.user.id
-                };
-                await addHistory(historyObject.device, historyObject.history_type, historyObject.data, historyObject.actioned_by);
-
-                const reviewHistory = await getReviewHistory(item._id);
-                if (reviewHistory.length > 0 && reviewHistory[0]?.history_type === historyType.REVIEW_REQUESTED || reviewHistory[0]?.history_type === historyType.REVIEW_REJECTED) {
-                    //Add another history item approving the review
-                    const newHistoryObject = {
-                        device: item._id,
-                        history_type: historyType.REVIEW_ACCEPTED,
-                        data: [],
-                        actioned_by: req.user.id
-                    };
-                    await addHistory(newHistoryObject.device, newHistoryObject.history_type, newHistoryObject.data, newHistoryObject.actioned_by);
-                }
             } else if (newValue === deviceState.HIDDEN) {
                 item.visible = false;
 
@@ -678,9 +737,9 @@ const postDeviceVisibility = async (req, res) => {
                 actioned_by: req.user.id
             };
         }
-        await addHistory(history.device, history.history_type, history.data, history.actioned_by);
-
         await item.save();
+
+        await addHistory(history.device, history.history_type, history.data, history.actioned_by);
 
         res.status(200).send('Device visibility updated successfully');
     } catch (error) {

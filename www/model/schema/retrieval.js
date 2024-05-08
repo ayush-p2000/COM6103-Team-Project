@@ -54,7 +54,7 @@ const retrievalSchema = new mongoose.Schema({
                 required: false
             },
             payment_method: {
-                type:Number
+                type: Number
             }
         },
         extension_transaction: {
@@ -70,12 +70,12 @@ const retrievalSchema = new mongoose.Schema({
                 type: Date,
                 required: false
             },
-            length : {
+            length: {
                 type: Number,
                 required: false
             },
             payment_method: {
-                type:Number
+                type: Number
             }
         },
         is_extended: {
@@ -88,6 +88,18 @@ const retrievalSchema = new mongoose.Schema({
             required: true,
             default: false
         },
+        emails_sent: {
+            near_expiry: {
+                type: Boolean,
+                required: true,
+                default: false
+            },
+            expired: {
+                type: Boolean,
+                required: true,
+                default: false
+            }
+        }
     },
     {
         timestamps: true

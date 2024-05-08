@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon -e js -i 'views/*' -i 'public/*' ./bin/www",
+    "dev": "nodemon -e js -i 'views/*' -i public/* ./bin/www",
     "test": "mocha \"./tests/**/*.js\" --recursive",
     "coverage": "nyc --reporter=text --reporter=html npm test"
   },
@@ -46,6 +46,7 @@
     "@faker-js/faker": "^8.4.1",
     "chai": "^4.4.1",
     "mocha": "^10.4.0",
+    "mock-req-res": "^1.2.1",
     "nodemon": "^3.1.0",
     "nyc": "^15.1.0",
     "proxyquire": "^2.1.3",

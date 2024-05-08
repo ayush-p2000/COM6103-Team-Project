@@ -8,7 +8,11 @@ const {
     updateQuote,
     getQuoteById,
     getUnknownDeviceHistoryByDevice,
-    getRetrievalObjectByDeviceId, updateUserListedItem
+    getRetrievalObjectByDeviceId, updateUserListedItem,
+    deleteQuote,
+    getDevicesWithQuotes,
+    getProviders,
+    deleteQuotes
 } = require("../../model/mongodb");
 const mongoose = require("mongoose");
 const {
@@ -35,6 +39,7 @@ const retrievalState = require("../../model/enum/retrievalState");
 const historyType = require("../../model/enum/historyType");
 const roleTypes = require("../../model/enum/roleTypes");
 const {handleMissingModel, handleMissingModels} = require("../../util/Devices/devices");
+const {getDeviceQuotation} = require("../../util/web-scrape/getDeviceQuotation");
 
 /**
  * Handling Request to post item base on the info in request body
@@ -74,7 +79,7 @@ const postListItem = async (req, res) => {
  * Respond form view for user to post item
  * @author Zhicong Jiang
  */
-async function getListItem(req, res) {
+async function getListItem(req, res, next) {
     var id = req.params.id;
     if (typeof id === 'undefined') {
         try {
@@ -86,6 +91,8 @@ async function getListItem(req, res) {
 
         } catch (err) {
             console.log(err);
+            res.status(500);
+            next(err)
         }
     } else {
         try {
@@ -97,7 +104,8 @@ async function getListItem(req, res) {
                 auth: req.isLoggedIn, user: req.user, device: device, colors: deviceColors, capacities: deviceCapacity
             })
         } catch (err) {
-            console.log(err);
+            res.status(500);
+            next(err)
         }
     }
 }
@@ -115,6 +123,55 @@ async function getModelByBrandAndType(req, res) {
     }
 }
 
+async function updateQuotes(itemIds, providers) {
+    const items = await getDevicesWithQuotes(itemIds);
+
+    let quotations = [];
+    for (const item of items) {
+        if (item.state === deviceState.LISTED || item.state === deviceState.HAS_QUOTE) {
+            let quotes = item.quotes;
+            if (quotes.length === 0) {
+                quotes = await getDeviceQuotation(item, providers);
+            } else if (quotes.length < providers.length) {
+                let one_provider = providers.filter(provider => !quotes.find(quote => quote.provider.name === provider.name));
+                let new_quote = await getDeviceQuotation(item, one_provider);
+                quotes.push(new_quote);
+            }
+            if (quotes) {
+                await updateDeviceState(item._id, deviceState.HAS_QUOTE)
+            }
+
+            let updatedQuotes = [];
+            let expiredProviders = [];
+            let expiredQuoteIds = [];
+            for (const quote of quotes) {
+                const currentDate = new Date();
+                if (item.state === quoteState.NEW || item.state === quoteState.ACCEPTED || item.state === quoteState.EXPIRED) {
+                    if (quote.expiry < currentDate) {
+                        expiredProviders.push(quote.provider);
+                        //let one_provider = [quote.provider];
+                        expiredQuoteIds.push(quote._id);
+                        //const deleted_quote = await deleteQuote(quote._id);
+                        //let new_quote = await getDeviceQuotation(item, one_provider);
+                        //updatedQuotes.push(new_quote);
+                    } else {
+                        updatedQuotes.push(quote);
+                    }
+                }
+            }
+
+            await deleteQuotes(expiredQuoteIds);
+            let new_quotes = await getDeviceQuotation(item, expiredProviders);
+
+            quotations.push(updatedQuotes);
+            quotations.push(new_quotes);
+        } else {
+            quotations.push([]);
+        }
+    }
+    return quotations;
+}
+
 
 /**
  * Get item details to display it in the User's item detail page, where it shows the device specifications
@@ -123,10 +180,18 @@ async function getModelByBrandAndType(req, res) {
  */
 async function getItemDetails(req, res, next) {
     try {
-        const item = await getItemDetail(req.params.id)
+        let item = await getDevicesWithQuotes([req.params.id])
         var specs = []
 
-        var quotes = await getQuotes(req.params.id)
+        item = item[0];
+
+        const providers = await getProviders();
+        const quotations = await updateQuotes([item._id], providers);
+        item = await getDevicesWithQuotes([req.params.id])
+;
+        item = item[0];
+
+        var quotes = item.quotes;
         if (quotes.length > 0 && item.state < deviceState.HAS_QUOTE && item.state !== deviceState.IN_REVIEW) {
             item.state = deviceState.HAS_QUOTE;
             await item.save()
@@ -167,6 +232,7 @@ async function getItemDetails(req, res, next) {
         if (item.state === deviceState.DATA_RECOVERY) {
             retrievalData = await getRetrievalObjectByDeviceId(item._id);
         }
+
         renderUserLayout(req, res, '../marketplace/item_details', {
             item, specs, deviceCategory, deviceState, quoteState, quotes, auth: req.isLoggedIn, user: req.user, retrievalData, retrievalState,deviceReviewHistory, deviceVisibilityHistory, historyType, roleTypes, approvedQuote, hasApprovedQuote
         })
@@ -185,7 +251,7 @@ async function getItemDetails(req, res, next) {
  * Also checks if the quote is accepted then it'll update other quote states to rejected
  * @author Vinroy Miltan Dsouza <vmdsouza1@sheffield.ac.uk> & Zhicong Jiang
  */
-async function postUpdateQuote(req, res) {
+async function postUpdateQuote(req, res, next) {
     try {
         const state = req.body.state
         const value = quoteState[state]
@@ -208,6 +274,8 @@ async function postUpdateQuote(req, res) {
 
     } catch (err) {
         console.log(err)
+        res.status(500);
+        next(err);
     }
 }
 
@@ -243,7 +311,7 @@ async function getItemQrCodeView(req, res, next) {
     //This is to prevent any QR codes displaying sensitive information about the transaction
     if (!quoteActive) {
         if (typeof (req.user) === "undefined" || !quote.device.listing_user._id.equals(new mongoose.Types.ObjectId(req.user?.id))) {
-            res.render('error/403unauthorised', {
+            res.render('error/403', {
                 auth: req.isLoggedIn,
                 user: req.user,
                 message: "This quote is no longer active or you are not the listing user. Please contact the listing user for more information."
@@ -314,7 +382,6 @@ async function confirmQuote(req, res, next) {
             res.status(500).send("Failed to update quote");
             return;
         }
-
         //Return a success message
         res.status(200).send("Quote confirmed");
     } catch (error) {

@@ -14,6 +14,27 @@
     </div>
 
     <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card rounded-4 shadow-sm text-center">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="fw-semibold">Been a while? Added a new device?</h3>
+                            <p class="text-muted">Click the button below to refresh the quotes for your items.</p>
+                            <div class="btn btn-success w-100" id="refreshButton">
+                                <i class="fa-solid fa-comment-dollar"></i> Refresh Quotes
+                                <div class="spinner-border spinner-border-sm d-none" role="status" id="refreshSpinner">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
         <div class="col-12">
             <div class="card rounded-4 shadow-sm">
                 <div class="card-body">
@@ -71,7 +92,7 @@
                                     <div class="row align-content-center">
                                         <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-2">
                                             <% if (item.photos?.length > 0) { %>
-                                                <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= Buffer.from(item.photos[0]?.img_data ?? "").toString('base64') %>"
+                                                <img src="data:<%= item.photos[0]?.img_type %>;base64,<%= /*Buffer.from(*/(item.photos[0]?.img_data ?? "").toString('base64') %>"
                                                      class="img-fluid d-block h-100 mx-auto"
                                                      style="height: 200px; width: 200px; object-fit: cover; object-position: center;"
                                                      alt="Image of <%= item.model.name %>">
@@ -99,15 +120,14 @@
                                             <p class="m-0 p-0 text-muted category">
                                                 <small>Classification: </small><%= deviceCategory.deviceCategoryToString(item.category) %>
                                             </p>
-                                            <% quotations.forEach(quoteArray => { %>
-                                                <% if (quoteArray.length > 0 && (item.state === deviceState.LISTED || item.state === deviceState.HAS_QUOTE) && item.visible) { %>
-                                                    <% const firstQuote = quoteArray[0] %>
-                                                    <% if(firstQuote.device.equals(item._id)) { %>
-                                                        <p class="m-0 p-0 text-muted">
-                                                            <small>Price: </small>£<%= firstQuote?.value ?? "Not Found" %></p>
-                                                    <% } %>
+                                            <% if (item.quotes?.length > 0 && (item.state === deviceState.LISTED || item.state === deviceState.HAS_QUOTE) && item.visible) { %>
+                                                <% const firstQuote = item.quotes[0] %>
+                                                <% if(firstQuote.device.equals(item._id)) { %>
+                                                    <p class="m-0 p-0 text-muted">
+                                                        <small>Price: </small>£<%= firstQuote?.value ?? "Not Found" %>
+                                                    </p>
                                                 <% } %>
-                                            <% }) %>
+                                            <% } %>
                                             <p class="m-0 p-0 text-muted">
                                                 <small>Added: </small><%= Intl.DateTimeFormat("en-GB", {
                                                     year: "numeric",
@@ -139,6 +159,44 @@
     </div>
 </div>
 
+<section id="toasts">
+    <div class="toast-container p-3 position-fixed end-0" id="toastContainer"
+     style="top:60px">
+        <div class="toast align-items-center text-white text-bg-info border-0" role="alert" aria-live="assertive"
+             aria-atomic="true" id="refreshingToast">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span class="ms-2">Refreshing quotes...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast align-items-center text-white text-bg-danger border-0" role="alert" aria-live="assertive"
+             aria-atomic="true" id="refreshErrorToast">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fa-solid fa-exclamation-triangle text-danger"></i>
+                    <span class="ms-2">Error refreshing quotes. Please try again later.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
+             aria-atomic="true" id="refreshSuccessToast">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fa-solid fa-check-circle text-white"></i>
+                    <span class="ms-2">Quotes refreshed successfully.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <script src="/javascripts/marketplace/filter.js"></script>
+<script src="/javascripts/marketplace/refresh_quotes.js"></script>
 
 

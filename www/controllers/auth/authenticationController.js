@@ -56,10 +56,10 @@ const registerUser = async (req, res, next) => {
                 hasMessages: messages.length > 0,
                 auth: req.isLoggedIn,
                 user: req.user
-            }) // needs refined alert
+            })
         }
 
-        let user = new User({
+        let user = await User.create({
             first_name: firstName,
             last_name: lastName,
             date_of_birth: dateOfBirth,
@@ -74,13 +74,11 @@ const registerUser = async (req, res, next) => {
             return res.redirect("/register")
         }
 
-        const userData = await user.save()
 
-        if(userData)
+        if(user)
         {
             const messages = ['Verification link has been sent to your email. Please verify email.']
-            sendVerifyEmail(req.body.firstName, req.body.email, userData._id)
-            console.log(userData._id)
+            sendVerifyEmail(req.body.firstName, req.body.email, user._id)
 
             req.login(user, err => {
                     if (err)
@@ -94,7 +92,7 @@ const registerUser = async (req, res, next) => {
             res.send("Error in registering")
         }
     } catch (err) {
-        return next(err)
+            return next(err)
     }
 }
 
@@ -131,7 +129,7 @@ const sendVerifyEmail = (name, userEmail, user_id) => {
     email(userEmail, subject, message)
 }
 
-const verifyEmail = async(req, res) => {
+const verifyEmail = async(req, res,next) => {
     try {
         const updateInfo = await User.updateOne({_id: req.query.id},
             {

@@ -31,7 +31,6 @@ async function getLandingPage(req, res, next) {
         res.status(500);
         next({message: "Internal Server Error", state: 500})
     }
-    // console.log(items)
 }
 
 module.exports = {
