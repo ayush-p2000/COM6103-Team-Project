@@ -5,6 +5,7 @@ const sinon = require('sinon');
 const { mock_user } = require("../mocks/user");
 const dotenv = require("dotenv");
 const parse = require("dotenv-parse-variables");
+const {mockResponse} = require("mock-req-res");
 
 let env = dotenv.config({path: __dirname + '/../../.env.test'})
 if (env.error) {
@@ -272,9 +273,7 @@ describe('UserController', () => {
                     id: '123'
                 }
             };
-            const res = {
-                send: sandbox.spy()
-            };
+            const res = mockResponse();
             const next = sandbox.spy();
 
             UserStub.findById.resolves(null);
@@ -283,8 +282,8 @@ describe('UserController', () => {
 
             expect(UserStub.findById.calledWith({ _id: '123' })).to.be.true;
             expect(renderUserLayoutStub.notCalled).to.be.true;
-            expect(res.send.calledWith('No user found')).to.be.true;
-            expect(next.notCalled).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(next.calledOnce).to.be.true;
         });
     });
 });

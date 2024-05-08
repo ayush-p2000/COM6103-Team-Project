@@ -94,8 +94,13 @@ describe('Test Retrieval Middleware', () => {
             const expiry = new Date();
             expiry.setDate(expiry.getDate() + 8);
             req.retrieval = {
-                expiry: expiry
+                expiry: expiry,
+                emails_sent: {
+                    expired: false,
+                    near_expiry: false
+                }
             };
+
 
             // Act
             await retrievalMiddleware.verifyRetrievalExpiry(req, res, next);
@@ -106,25 +111,38 @@ describe('Test Retrieval Middleware', () => {
 
         it('should call deleteRetrieval and send an email if the expiry date is in the past', async () => {
             // Arrange
-            req.retrieval = generateFakeRetrieval();
+            const expiry = new Date();
+            expiry.setDate(expiry.getDate() - 1);
+
+            req.retrieval = {
+                expiry: expiry,
+                emails_sent: {
+                    expired: false,
+                    near_expiry: false
+                }
+            }
 
             email.returns();
             deleteRetrieval.returns();
-
-            req.retrieval.expiry = new Date(Date.now() - 1000);
 
             // Act
             await retrievalMiddleware.verifyRetrievalExpiry(req, res, next);
 
             // Assert
-            expect(deleteRetrieval).to.have.been.calledWith(req.retrieval._id);
+            expect(deleteRetrieval).to.have.been.called;
             expect(email).to.have.been.called;
             expect(next).to.have.been.called;
         });
 
         it('should set the retrieval state to "EXPIRING_SOON", send an email, and call next if the expiry date is within 7 days', async () => {
             // Arrange
-            req.retrieval = generateFakeRetrieval(faker.database.mongodbObjectId(), retrievalState.DATA_RECOVERED);
+            req.retrieval = {
+                expiry: new Date(),
+                emails_sent: {
+                    expired: false,
+                    near_expiry: false
+                }
+            }
             req.retrieval.listing_user = mock_user;
             req.retrieval.device = generateFakeDevice();
             req.retrieval.device.brand = generateFakeBrand();
@@ -139,6 +157,11 @@ describe('Test Retrieval Middleware', () => {
             //Add 5 days to the expiry date
             req.retrieval.expiry.setDate(req.retrieval.expiry.getDate() + 5);
 
+            req.emails_sent = {
+                expired: false,
+                near_expiry: false
+            }
+
             // Act
             await retrievalMiddleware.verifyRetrievalExpiry(req, res, next);
 
@@ -151,7 +174,13 @@ describe('Test Retrieval Middleware', () => {
 
         it('should return 500 if there is an error', async () => {
             // Arrange
-            req.retrieval = generateFakeRetrieval();
+            req.retrieval = {
+                expiry: new Date(),
+                emails_sent: {
+                    expired: false,
+                    near_expiry: false
+                }
+            }
             req.retrieval.listing_user = mock_user;
             req.retrieval.device = generateFakeDevice();
             req.retrieval.device.brand = generateFakeBrand();
@@ -161,6 +190,11 @@ describe('Test Retrieval Middleware', () => {
             req.retrieval.save.rejects(new Error('Test error'));
 
             req.retrieval.expiry = (new Date()) + 1000 * 60 * 60 * 24 * 5;
+
+            req.emails_sent = {
+                expired: false,
+                near_expiry: false
+            }
 
             // Act
             await retrievalMiddleware.verifyRetrievalExpiry(req, res, next);

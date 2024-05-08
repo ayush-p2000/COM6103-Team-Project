@@ -1,4 +1,8 @@
-const {deleteRetrieval, getRetrieval, getRetrievalObjectByDeviceId} = require("../model/mongodb");
+const {
+    deleteRetrieval,
+    getRetrieval,
+    getRetrievalObjectByDeviceId
+} = require("../model/mongodb");
 const {SEVEN_DAYS_S} = require("../util/time/time");
 const retrievalState = require("../model/enum/retrievalState");
 const {email} = require("../public/javascripts/Emailing/emailing");
@@ -43,7 +47,7 @@ exports.verifyRetrievalExpiry = async (req, res, next) => {
 
         //If the current date is after the expiry date, delete the retrieval
         if (currentDate > expiryDate && !retrieval.emails_sent?.expired) {
-        retrieval.emails_sent.expired = true;
+            retrieval.emails_sent.expired = true;
             await deleteRetrieval(retrieval._id);
 
             //Send the user an email informing them that their retrieval has expired
@@ -105,7 +109,12 @@ exports.verifyRetrievalExpiry = async (req, res, next) => {
         return next();
     } catch (error) {
         //If there is an error, return a 500 status code
-        res.status(500).render("error/500", {auth: req.isLoggedIn, user: req.user, message: "An error occurred while verifying the retrieval expiry", status: 500})
+        res.status(500).render("error/500", {
+            auth: req.isLoggedIn,
+            user: req.user,
+            message: "An error occurred while verifying the retrieval expiry",
+            status: 500
+        })
     }
 }
 
@@ -138,8 +147,13 @@ exports.isValidRetrievalUser = async (req, res, next) => {
     const user = req.user;
 
     //If the user is null, reject the request as anonymous users cannot access retrievals
-    if (typeof(user) === 'undefined' || user === null) {
-        return res.render("error/401", {auth: req.isLoggedIn, user: req.user, message: "You do not have permission to access this resource", status: 401});
+    if (typeof (user) === 'undefined' || user === null) {
+        return res.render("error/401", {
+            auth: req.isLoggedIn,
+            user: req.user,
+            message: "You do not have permission to access this resource",
+            status: 401
+        });
     }
 
     //If the user is the owner of the retrieval, continue on
@@ -148,7 +162,12 @@ exports.isValidRetrievalUser = async (req, res, next) => {
     }
 
     //If the user is not the owner of the retrieval, send a 403 status code
-    res.render("error/403", {auth: req.isLoggedIn, user: req.user, message: "You do not have permission to access this retrieval", status: 403});
+    res.render("error/403", {
+        auth: req.isLoggedIn,
+        user: req.user,
+        message: "You do not have permission to access this retrieval",
+        status: 403
+    });
 }
 
 exports.populateRetrievalObject = async (req, res, next) => {
@@ -199,6 +218,11 @@ exports.populateRetrievalObject = async (req, res, next) => {
         return next();
     } catch (error) {
         //If there is an error, return a 500 status code
-        res.status(500).render("error/500", {auth: req.isLoggedIn, user: req.user, message: "An error occurred while populating the retrieval object", status: 500})
+        res.status(500).render("error/500", {
+            auth: req.isLoggedIn,
+            user: req.user,
+            message: "An error occurred while populating the retrieval object",
+            status: 500
+        })
     }
 }
