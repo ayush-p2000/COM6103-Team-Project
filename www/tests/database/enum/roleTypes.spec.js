@@ -16,7 +16,7 @@ const roleTypes = require('../../../model/enum/roleTypes');
 
 
 describe('Test Role Types Enum', () => {
-    describe('Test Role Types Values', () => {
+    describe('Test roleTypes', () => {
         it('should have an USER value of 0', (done) => {
             // Arrange
             const expected = 0;
@@ -85,7 +85,7 @@ describe('Test Role Types Enum', () => {
             done();
         });
 
-        it('should return an array with a length of four', (done) => {
+        it('should return an array with a length of three', (done) => {
             // Arrange
             const expected = 3;
 
@@ -139,8 +139,7 @@ describe('Test Role Types Enum', () => {
         });
     });
 
-    describe('Test roleTypeToRGB', () => {
-        describe('Test with border false for admin', () => {
+        describe('Test roleTypeToRGB', () => {
             it('should return "rgba(0,0,255, 0.2)" when passed ADMIN', (done) => {
                 // Arrange
                 const expected = 'rgba(0,0,255, 0.2)';
@@ -276,7 +275,7 @@ describe('Test Role Types Enum', () => {
                 done();
             });
 
-            it('should return "success" when passed USER and prefix = "hello" ', (done) => {
+            it('should return "hellosuccess" when passed USER and prefix = "hello" ', (done) => {
                 // Arrange
                 const expected = 'hellosuccess';
                 const rank = roleTypes.USER;
@@ -331,7 +330,7 @@ describe('Test Role Types Enum', () => {
                 expect(result).to.equal(expected);
                 done();
             });
-            it('should return "warning" when passed USER and prefix = "hello" ', (done) => {
+            it('should return "hellowarning" when passed STAFF and prefix = "hello" ', (done) => {
                 // Arrange
                 const expected = 'hellowarning';
                 const rank = roleTypes.STAFF;
@@ -344,7 +343,7 @@ describe('Test Role Types Enum', () => {
                 expect(result).to.equal(expected);
                 done();
             });
-            it('should return "primary" when passed USER and prefix = "hello" ', (done) => {
+            it('should return "helloprimary" when passed ADMIN and prefix = "hello" ', (done) => {
                 // Arrange
                 const expected = 'helloprimary';
                 const rank = roleTypes.ADMIN;
@@ -358,7 +357,7 @@ describe('Test Role Types Enum', () => {
                 done();
             });
 
-            it('should return "secondary" when passed USER and prefix = "hello" ', (done) => {
+            it('should return "hellosecondary" when passed null and prefix = "hello" ', (done) => {
                 // Arrange
                 const expected = 'hellosecondary';
                 const rank = null;
@@ -371,7 +370,7 @@ describe('Test Role Types Enum', () => {
                 expect(result).to.equal(expected);
                 done();
             });
-            it('should return "secondary" when passed USER and prefix = true ', (done) => {
+            it('should return "secondary" when passed null and prefix = true ', (done) => {
                 // Arrange
                 const expected = 'secondary';
                 const rank = null;
@@ -384,7 +383,7 @@ describe('Test Role Types Enum', () => {
                 expect(result).to.equal(expected);
                 done();
             });
-            it('should return "secondary" when passed USER and prefix = true ', (done) => {
+            it('should return "secondary" when passed null and prefix = false ', (done) => {
                 // Arrange
                 const expected = 'secondary';
                 const rank = null;
@@ -401,6 +400,5 @@ describe('Test Role Types Enum', () => {
         });
 
     });
-});
 
 
